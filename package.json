@@ -1,0 +1,11 @@
+{
+  "name": "recast-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "workspaces": [
+    "packages/docs",
+    "packages/lib",
+    "packages/primitives"
+  ]
+}
