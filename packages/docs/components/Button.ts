@@ -1,4 +1,4 @@
-import { Button as recast } from "recast-primitives";
+import { Button as recast } from "@rpxl/recast-primitives";
 
 const Button = recast("Button", {
   defaults: { variant: "vanilla", size: "md" },

@@ -4,7 +4,7 @@ import {
   RecastThemeProps,
   useRecastClasses,
   createRecastComponent,
-} from "recast"
+} from "@rpxl/recast"
 
 const DEFAULT_THEME_KEY = "button"
 

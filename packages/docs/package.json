@@ -1,5 +1,5 @@
 {
-  "name": "recast-docs",
+  "name": "@rpxl/recast-docs",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -17,8 +17,8 @@
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
     "autoprefixer": "10.4.14",
-    "recast": "*",
-    "recast-primitives": "*",
+    "@rpxl/recast": "*",
+    "@rpxl/recast-primitives": "*",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.2",
     "next": "13.3.2",
