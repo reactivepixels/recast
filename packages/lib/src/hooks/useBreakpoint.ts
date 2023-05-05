@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import debounce from "lodash.debounce"
-import { Viewports } from "../svm"
+import { Viewports } from "../recast"
 
 export const useBreakpoint = (
   viewports: Viewports,

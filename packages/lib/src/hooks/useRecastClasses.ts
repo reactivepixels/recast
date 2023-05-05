@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from "react"
-import { getTheme } from "../svmThemeInstance"
+import { getTheme } from "../recastThemeInstance"
 import { getModifierClasses } from "../utils/getModifierClasses"
 import { getSizeClasses } from "../utils/getSizeClasses"
 import { getVariantClasses } from "../utils/getVariantClasses"
 import { mergeThemeClassNames } from "../utils/mergeThemeClassNames"
 import { Styles } from "../types"
-import { useSVMContext } from "../svm"
+import { useRecastContext } from "../recast"
 import { isObject } from "../utils/isObject"
 import { useBreakpoint } from "./useBreakpoint"
 import mergeWith from "lodash.mergewith"
@@ -19,13 +19,13 @@ type Props = {
 
 type State<K> = Record<keyof K, string> | undefined
 
-export const useSVMClasses = <K extends Record<string, string | string[]>>({
+export const useRecastClasses = <K extends Record<string, string | string[]>>({
   themekey,
   size,
   variant,
   modifier,
 }: Props) => {
-  const { viewports, delay } = useSVMContext()
+  const { viewports, delay } = useRecastContext()
 
   const viewportKeys = useMemo(
     () => Object.keys(viewports).sort((a, b) => viewports[a] - viewports[b]),

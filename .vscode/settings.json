@@ -3,7 +3,7 @@
   // Tailwind intellisense for JavaScript theme object
   // https://github.com/paolotiu/tailwind-regex-list#plain-javascript-object
   "tailwindCSS.experimental.classRegex": [
-    ["svm([^)]*)", ":*?[\"'`]([^\"'`]*).*?,"]
+    ["recast([^)]*)", ":*?[\"'`]([^\"'`]*).*?,"]
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

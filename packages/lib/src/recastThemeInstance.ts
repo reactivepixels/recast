@@ -5,7 +5,7 @@ import { Styles } from "./types"
  * Provides mechanism for components to 'attach'
  * styles to the global theme object
  */
-const SVMThemeInstance = (() => {
+const RecastThemeInstance = (() => {
   let theme: Record<string, Styles> = {}
 
   const set = <S extends object>(key: string, styles: S) => {
@@ -22,7 +22,7 @@ const SVMThemeInstance = (() => {
   }
 })()
 
-export const getTheme = SVMThemeInstance.get
-export const setTheme = SVMThemeInstance.set
+export const getTheme = RecastThemeInstance.get
+export const setTheme = RecastThemeInstance.set
 
-export default SVMThemeInstance
+export default RecastThemeInstance

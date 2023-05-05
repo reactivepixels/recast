@@ -1,4 +1,4 @@
-export type SVMThemeProps = {
+export type RecastThemeProps = {
   modifier?: string | string[] | Record<string, string | string[]>
   size?: string | Record<string, string>
   variant?: string | Record<string, string>
@@ -47,7 +47,7 @@ export type Theme<B, S, V, M> = {
 }
 
 /**
- * SVM Theme wrapper types
+ * Recast Theme wrapper types
  */
 export type SizeProps<S> = {
   size?: keyof S | (Record<"default", keyof S> & Record<string, keyof S>)

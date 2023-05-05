@@ -32,7 +32,7 @@ export function Layout({
   return (
     <>
       <Head>
-        <title>React SVM</title>
+        <title>Recast</title>
         <meta
           name="description"
           content="Beautiful code blocks for your MD/MDX docs"
@@ -44,7 +44,7 @@ export function Layout({
           className="text-zinc-100 mx-auto mt-12 text-4xl sm:text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 uppercase"
           style={{ lineHeight: "1.2" }}
         >
-          React SVM
+          Recast
         </h1>
 
         <article className="text-zinc-400">

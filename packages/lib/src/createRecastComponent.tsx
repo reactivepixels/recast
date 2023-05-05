@@ -1,13 +1,13 @@
 import React, { forwardRef } from "react"
-import { setTheme } from "./svmThemeInstance"
+import { setTheme } from "./recastThemeInstance"
 import { ComponentProps } from "./types"
 import omit from "lodash.omit"
 
-export const createSVMComponent = <P, BaseTheme>(
+export const createRecastComponent = <P, BaseTheme>(
   Component: React.ComponentType<P>,
   key: string
 ) => {
-  type SVMStyles<S, V, M> = {
+  type RecastStyles<S, V, M> = {
     themekey?: string
     defaults?: Defaults<S, V>
     base?: BaseTheme
@@ -57,7 +57,7 @@ export const createSVMComponent = <P, BaseTheme>(
     M extends Modifier<M, S, V>
   >(
     displayName: D,
-    styles: SVMStyles<S, V, M>
+    styles: RecastStyles<S, V, M>
   ) => {
     setTheme(styles?.themekey || key, styles)
 

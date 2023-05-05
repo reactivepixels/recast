@@ -1,6 +1,10 @@
 import React, { ElementType, forwardRef } from "react"
 import classNames from "classnames"
-import { SVMThemeProps, useSVMClasses, createSVMComponent } from "recast"
+import {
+  RecastThemeProps,
+  useRecastClasses,
+  createRecastComponent,
+} from "recast"
 
 const DEFAULT_THEME_KEY = "button"
 
@@ -19,7 +23,7 @@ type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>
 type Props = HTMLButtonProps &
   HTMLAnchorProps &
   HTMLDivProps &
-  SVMThemeProps & {
+  RecastThemeProps & {
     /**
      * Element placed before the label.
      */
@@ -57,7 +61,7 @@ const ButtonPrimitive = forwardRef<
     },
     ref
   ) => {
-    const classes = useSVMClasses<BaseTheme>({
+    const classes = useRecastClasses<BaseTheme>({
       themekey,
       size,
       variant,
@@ -83,7 +87,7 @@ const ButtonPrimitive = forwardRef<
 if (process.env["NODE_ENV"] !== "production")
   ButtonPrimitive.displayName = "ButtonPrimitive"
 
-export const Button = createSVMComponent<
+export const Button = createRecastComponent<
   React.ComponentPropsWithRef<typeof ButtonPrimitive>,
   BaseTheme
 >(ButtonPrimitive, DEFAULT_THEME_KEY)

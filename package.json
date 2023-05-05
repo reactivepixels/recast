@@ -7,5 +7,12 @@
     "packages/docs",
     "packages/lib",
     "packages/primitives"
-  ]
+  ],
+  "scripts": {
+    "build:recast": "npm run build -w packages/lib",
+    "build:recast-primitives": "npm run build -w packages/primitives",
+    "build:all": "npm run build:recast && npm run build:recast-primitives",
+    "publish:recast": "npm publish -w packages/lib",
+    "dev:docs": "npm run dev -w packages/docs"
+  }
 }

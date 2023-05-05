@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Button from "../components/Button";
 
-const ReactSVM: NextPage = () => {
+const Recast: NextPage = () => {
   return (
     <main className="flex flex-col gap-8">
       <div className="flex gap-4">
@@ -32,4 +32,4 @@ const ReactSVM: NextPage = () => {
   );
 };
 
-export default ReactSVM;
+export default Recast;
