@@ -10,6 +10,12 @@ import { isObject } from "../utils/isObject"
 import { useBreakpoint } from "./useBreakpoint"
 import mergeWith from "lodash.mergewith"
 
+type RecastPropUnion =
+  | string
+  | string[]
+  | Record<string, string | string[]>
+  | undefined
+
 type Props = {
   themekey?: string
   size?: string | Record<string, string>
@@ -33,7 +39,8 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   )
 
   const hasResponsiveStyles = useMemo(() => {
-    const isResponsive = (x: any) => typeof x !== "string" && isObject(x)
+    const isResponsive = (x: RecastPropUnion) =>
+      typeof x !== "string" && isObject(x)
 
     return isResponsive(size) || isResponsive(variant) || isResponsive(modifier)
   }, [size, variant, modifier])
@@ -41,9 +48,14 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   const { breakpoint } = useBreakpoint(viewports, hasResponsiveStyles, delay)
 
   const getResponsiveProp = useCallback(
-    (prop: any, viewport: string) => {
+    (prop: RecastPropUnion = {}, viewport: string) => {
       // Check if a responsive styles object
-      if (typeof prop !== "string" && isObject(prop)) {
+      if (
+        typeof prop !== "string" &&
+        typeof prop === "object" &&
+        !Array.isArray(prop) &&
+        prop !== null
+      ) {
         // Check if component has responsive mapping that matches
         // viewport or else find the next closest one
         if (prop[viewport]) {
@@ -62,7 +74,6 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
           return prop[matchingViewport]
         }
       }
-      // If not responsive just return the prop as is
       return prop
     },
     [viewportKeys]
@@ -71,25 +82,31 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   const handleResize = useCallback(() => {
     const theme = themekey ? getTheme()?.[themekey] : ({} as Styles)
 
+    const sizeProp = getResponsiveProp(size, breakpoint)
+    const variantProp = getResponsiveProp(variant, breakpoint)
     const sizes = getSizeClasses({
-      prop: getResponsiveProp(size, breakpoint),
+      prop: typeof sizeProp === "string" ? sizeProp : "",
       sizes: theme?.size,
       fallback: theme?.defaults?.size,
     })
 
     const variants = getVariantClasses({
       theme,
-      size: getResponsiveProp(size, breakpoint) || theme?.defaults?.size,
-      prop: getResponsiveProp(variant, breakpoint),
+      size:
+        typeof sizeProp === "string" ? sizeProp : "" || theme?.defaults?.size,
+      prop: typeof variantProp === "string" ? variantProp : "",
       variants: theme?.variant,
       fallback: theme?.defaults?.variant,
     })
 
     const modifiers = getModifierClasses({
       theme,
-      size: getResponsiveProp(size, breakpoint) || theme?.defaults?.size,
+      size:
+        typeof sizeProp === "string" ? sizeProp : "" || theme?.defaults?.size,
       variant:
-        getResponsiveProp(variant, breakpoint) || theme?.defaults?.variant,
+        typeof variantProp === "string"
+          ? variantProp
+          : "" || theme?.defaults?.variant,
       prop: getResponsiveProp(modifier, breakpoint),
       modifiers: theme?.modifier,
     })

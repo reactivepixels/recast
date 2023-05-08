@@ -5,13 +5,7 @@ const Recast: NextPage = () => {
   return (
     <main className="flex flex-col gap-8">
       <div className="flex gap-4">
-        <Button size="sm" variant="vanilla" floating>
-          Button
-        </Button>
-        <Button variant="orange" size="md" floating>
-          Button
-        </Button>
-        <Button variant="avocado" size="lg" floating>
+        <Button size="sm" variant="avocado">
           Button
         </Button>
       </div>
