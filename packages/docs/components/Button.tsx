@@ -1,6 +1,7 @@
 import { Button as recast } from "@rpxl/recast-primitives";
+import { forwardRef } from "react";
 
-const Button = recast("Button", {
+const ButtonPrimitive = recast("ButtonPrimitive", {
   defaults: { variant: "vanilla", size: "md" },
   base: {
     root: [
@@ -100,5 +101,18 @@ const Button = recast("Button", {
     },
   },
 });
+
+type ButtonPrimitiveProps = React.ComponentPropsWithRef<typeof ButtonPrimitive>;
+
+const Button = forwardRef(
+  (
+    props: ButtonPrimitiveProps,
+    ref: React.ForwardedRef<React.ComponentRef<typeof ButtonPrimitive>>
+  ) => {
+    return <ButtonPrimitive ref={ref} {...props} />;
+  }
+);
+
+Button.displayName = "Button";
 
 export default Button;
