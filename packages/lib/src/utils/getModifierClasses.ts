@@ -1,7 +1,6 @@
-import mergeWith from "lodash.mergewith"
-import omit from "lodash.omit"
 import { Styles } from "../types"
-import { mergeThemeClassNames } from "./mergeThemeClassNames"
+import { mergeClassNames } from "./mergeClassNames"
+import { omit } from "./omit"
 
 type Modifiers = Record<
   string,
@@ -46,17 +45,13 @@ export const getModifierClasses = ({
     const variantModifier =
       variant && modifier ? modifiers?.[modifier]?.[variant] : {}
 
-    // Merge all modifier classes together
-    return mergeWith(
+    return mergeClassNames(
       acc,
       // Merge base modifier classes with size based modifier classes
-      mergeWith(
-        omit(baseModifier, sizeKeys, variantKeys),
-        sizeModifier,
-        variantModifier,
-        mergeThemeClassNames
-      ),
-      mergeThemeClassNames
+      mergeClassNames(
+        omit([...sizeKeys, ...variantKeys], baseModifier),
+        mergeClassNames(sizeModifier, variantModifier)
+      )
     )
   }, {})
 }

@@ -6,7 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "jsx": "preserve",
-    "types": ["node", "react"],
+    "types": ["node", "react", "jest"],
     "lib": ["ESNext", "dom", "dom.iterable"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

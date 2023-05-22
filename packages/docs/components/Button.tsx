@@ -89,15 +89,15 @@ const ButtonPrimitive = recast("ButtonPrimitive", {
       },
 
       // Variant specific modifiers
-      // vanilla: {
-      //   root: "!bg-blue-500",
-      // },
-      // avocado: {
-      //   root: "!bg-blue-500",
-      // },
-      // orange: {
-      //   root: "!bg-purple-500",
-      // },
+      vanilla: {
+        root: "!bg-blue-500",
+      },
+      avocado: {
+        root: "!bg-blue-500",
+      },
+      orange: {
+        root: "!bg-purple-500",
+      },
     },
   },
 });

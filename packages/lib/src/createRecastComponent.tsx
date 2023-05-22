@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react"
 import { setTheme } from "./recastThemeInstance"
 import { ComponentProps } from "./types"
-import omit from "lodash.omit"
+import { omit } from "./utils/omit"
 
 export const createRecastComponent = <P, BaseTheme>(
   Component: React.ComponentType<P>,
@@ -86,7 +86,7 @@ export const createRecastComponent = <P, BaseTheme>(
             modifier={modifierProps.length ? modifierProps : undefined}
             themekey={styles?.themekey}
             ref={ref}
-            {...(omit(props, modifierKeys) as P)}
+            {...(omit(modifierKeys as string[], props) as P)}
           />
         )
       }

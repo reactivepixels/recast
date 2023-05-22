@@ -3,12 +3,11 @@ import { getTheme } from "../recastThemeInstance"
 import { getModifierClasses } from "../utils/getModifierClasses"
 import { getSizeClasses } from "../utils/getSizeClasses"
 import { getVariantClasses } from "../utils/getVariantClasses"
-import { mergeThemeClassNames } from "../utils/mergeThemeClassNames"
 import { Styles } from "../types"
 import { useRecastContext } from "../recast"
 import { isObject } from "../utils/isObject"
 import { useBreakpoint } from "./useBreakpoint"
-import mergeWith from "lodash.mergewith"
+import { mergeClassNames } from "../utils/mergeClassNames"
 
 type RecastPropUnion =
   | string
@@ -113,10 +112,14 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
 
     const classes = [theme?.base, sizes, variants, modifiers].reduce(
       (acc, curr) => {
-        return mergeWith(acc, curr, mergeThemeClassNames)
+        if (!!acc && !!curr) return mergeClassNames(acc, curr)
+
+        return acc
       },
       {} as Record<string, string>
     )
+
+    console.log(classes)
 
     return classes
   }, [modifier, size, variant, themekey, breakpoint, getResponsiveProp])

@@ -10,11 +10,12 @@
 code {
   -webkit-font-smoothing: initial;
 }
-/* 
+
 body {
   @apply p-8;
 }
 
+/* 
 h1 {
   font-size: 3rem;
   font-weight: 700;

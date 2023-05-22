@@ -4,11 +4,11 @@ import Button from "../components/Button";
 const Recast: NextPage = () => {
   return (
     <main className="flex flex-col gap-8">
-      <div className="flex gap-4">
+      {/* <div className="flex gap-4">
         <Button size="sm" variant="avocado">
           Button
         </Button>
-      </div>
+      </div> */}
 
       <div className="flex  flex-col gap-4">
         <Button

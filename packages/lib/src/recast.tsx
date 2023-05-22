@@ -10,7 +10,7 @@ interface RecastContext {
 // Set the default values for the RecastContext
 const DEFAULT_RECAST_CONTEXT: RecastContext = {
   viewports: { sm: 640, md: 768, lg: 1024, xl: 1280 },
-  delay: 50, // ms
+  delay: 0, // ms
 }
 
 // Create the RecastContext and set its default value to DEFAULT_RECAST_CONTEXT

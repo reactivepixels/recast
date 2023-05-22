@@ -87,7 +87,7 @@ const ButtonPrimitive = forwardRef<
 if (process.env["NODE_ENV"] !== "production")
   ButtonPrimitive.displayName = "ButtonPrimitive"
 
-export const Button = createRecastComponent<
-  React.ComponentPropsWithRef<typeof ButtonPrimitive>,
-  BaseTheme
->(ButtonPrimitive, DEFAULT_THEME_KEY)
+export const Button = createRecastComponent<Props, BaseTheme>(
+  ButtonPrimitive,
+  DEFAULT_THEME_KEY
+)

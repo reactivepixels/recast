@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react"
-import debounce from "lodash.debounce"
 import { Viewports } from "../recast"
+import { debounce } from "../utils/debounce"
 
 export const useBreakpoint = (
   viewports: Viewports,
   isResponsive = false,
-  delay = 250
+  delay = 0
 ) => {
   const [innerWidth, setInnerWidth] = useState(0)
   const [state, setState] = useState({
@@ -41,7 +41,10 @@ export const useBreakpoint = (
 
     if (isResponsive) {
       // debounce to improve performance
-      const debouncedHandleResize = debounce(handleResize, delay)
+      const [debouncedHandleResize, clearTimeout] = debounce(
+        handleResize,
+        delay
+      )
 
       // eslint-disable-next-line no-undef
       window.addEventListener("resize", debouncedHandleResize)
@@ -50,7 +53,10 @@ export const useBreakpoint = (
       handleResize()
 
       // eslint-disable-next-line no-undef
-      return () => window.removeEventListener("resize", debouncedHandleResize)
+      return () => {
+        clearTimeout()
+        window.removeEventListener("resize", debouncedHandleResize)
+      }
     }
   }, [isResponsive, innerWidth, viewports, viewportKeys, delay])
 

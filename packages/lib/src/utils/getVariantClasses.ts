@@ -1,7 +1,6 @@
-import mergeWith from "lodash.mergewith"
-import omit from "lodash.omit"
 import { Styles } from "../types"
-import { mergeThemeClassNames } from "./mergeThemeClassNames"
+import { omit } from "./omit"
+import { mergeClassNames } from "./mergeClassNames"
 
 type GetVariantClassesProps = {
   theme: Styles
@@ -36,10 +35,6 @@ export const getVariantClasses = ({
   const baseVariant = variant ? variants?.[variant] : {}
   // Get any size based variants
   const sizeVariant = size && variant ? variants?.[variant]?.[size] : {}
-  // Merge results together and return string of classnames
-  return mergeWith(
-    omit(baseVariant, sizeKeys),
-    sizeVariant,
-    mergeThemeClassNames
-  )
+
+  return mergeClassNames(omit(sizeKeys, baseVariant), sizeVariant)
 }
