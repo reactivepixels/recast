@@ -119,8 +119,6 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
       {} as Record<string, string>
     )
 
-    console.log(classes)
-
     return classes
   }, [modifier, size, variant, themekey, breakpoint, getResponsiveProp])
 

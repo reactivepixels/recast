@@ -1,6 +1,6 @@
 import { Styles } from "../types"
 import { omit } from "./omit"
-import { mergeClassNames } from "./mergeClassNames"
+import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
 
 type GetVariantClassesProps = {
   theme: Styles
@@ -36,5 +36,8 @@ export const getVariantClasses = ({
   // Get any size based variants
   const sizeVariant = size && variant ? variants?.[variant]?.[size] : {}
 
-  return mergeClassNames(omit(sizeKeys, baseVariant), sizeVariant)
+  return mergeClassNames(
+    omit(sizeKeys, baseVariant) as ClassNameRecord,
+    sizeVariant as ClassNameRecord
+  )
 }

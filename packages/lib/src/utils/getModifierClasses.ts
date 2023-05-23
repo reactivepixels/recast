@@ -1,5 +1,5 @@
 import { Styles } from "../types"
-import { mergeClassNames } from "./mergeClassNames"
+import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
 import { omit } from "./omit"
 
 type Modifiers = Record<
@@ -49,8 +49,11 @@ export const getModifierClasses = ({
       acc,
       // Merge base modifier classes with size based modifier classes
       mergeClassNames(
-        omit([...sizeKeys, ...variantKeys], baseModifier),
-        mergeClassNames(sizeModifier, variantModifier)
+        omit([...sizeKeys, ...variantKeys], baseModifier) as ClassNameRecord,
+        mergeClassNames(
+          sizeModifier as ClassNameRecord,
+          variantModifier as ClassNameRecord
+        )
       )
     )
   }, {})

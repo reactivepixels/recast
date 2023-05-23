@@ -68,7 +68,6 @@ const ButtonPrimitive = recast("ButtonPrimitive", {
       // lg: { root: "!border-8" },
     },
   },
-  //
   modifier: {
     block: {
       root: "w-full",
