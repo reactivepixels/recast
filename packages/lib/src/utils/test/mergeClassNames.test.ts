@@ -56,4 +56,28 @@ describe("mergeClassNames", () => {
 
     expect(mergeClassNames(target, source)).toEqual(expectedResult)
   })
+
+  it("should handle an `undefined` target value", () => {
+    const target = undefined
+    const source = { root: ["world"] }
+    const expectedResult = { root: "world" }
+
+    expect(mergeClassNames(target, source)).toEqual(expectedResult)
+  })
+
+  it("should handle an `undefined` source value", () => {
+    const target = { root: ["hello"] }
+    const source = undefined
+    const expectedResult = { root: "hello" }
+
+    expect(mergeClassNames(target, source)).toEqual(expectedResult)
+  })
+
+  it("should handle an `undefined` target and source value", () => {
+    const target = undefined
+    const source = undefined
+    const expectedResult = {}
+
+    expect(mergeClassNames(target, source)).toEqual(expectedResult)
+  })
 })

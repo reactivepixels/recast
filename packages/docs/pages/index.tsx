@@ -11,8 +11,10 @@ const Recast: NextPage = () => {
       </div> */}
 
       <div className="flex  flex-col gap-4">
-        <Button block>Button</Button>
-        <Button
+        <Button dark variant="vanilla">
+          Button
+        </Button>
+        {/* <Button
           size={{ default: "sm", sm: "md", lg: "lg" }}
           variant={{ default: "vanilla", sm: "orange", lg: "avocado" }}
           modifier={{
@@ -21,7 +23,7 @@ const Recast: NextPage = () => {
           }}
         >
           Button
-        </Button>
+        </Button> */}
       </div>
     </main>
   );

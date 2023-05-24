@@ -72,6 +72,12 @@ const ButtonPrimitive = recast("ButtonPrimitive", {
     block: {
       root: "w-full",
     },
+    dark: {
+      // root: "bg-red-500",
+      vanilla: {
+        root: "!bg-blue-500",
+      },
+    },
     floating: {
       // Defaults
       // root: "!shadow-sm",
@@ -88,15 +94,15 @@ const ButtonPrimitive = recast("ButtonPrimitive", {
       },
 
       // Variant specific modifiers
-      vanilla: {
-        root: "!bg-blue-500",
-      },
-      avocado: {
-        root: "!bg-blue-500",
-      },
-      orange: {
-        root: "!bg-purple-500",
-      },
+      // vanilla: {
+      //   root: "!bg-blue-500",
+      // },
+      // avocado: {
+      //   root: "!bg-blue-500",
+      // },
+      // orange: {
+      //   root: "!bg-purple-500",
+      // },
     },
   },
 });
