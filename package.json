@@ -12,7 +12,7 @@
     "build:recast-primitives": "npm run build -w packages/primitives",
     "build:all": "npm run build:recast && npm run build:recast-primitives",
     "dev:docs": "npm run dev -w packages/docs",
-    "release": "npm run build:all && npx changeset publish"
+    "release": "npm run build:all && npx changeset publish --access public"
   },
   "dependencies": {
     "@changesets/cli": "^2.26.1"
