@@ -1,7 +1,6 @@
 {
   "name": "@rpxl/recast-docs",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
