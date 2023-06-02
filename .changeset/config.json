@@ -3,7 +3,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "linked": [],
+  "linked": [["@rpxl/recast", "@rpxl/recast-primitives"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
