@@ -1,3 +1,4 @@
+"use client"
 import React, { createContext, FC, ReactNode, useContext } from "react"
 
 export type Viewports = Record<string, number>
