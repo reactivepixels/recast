@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react"
-import { setTheme } from "./recastThemeInstance"
-import { ComponentProps } from "./types"
-import { omit } from "./utils/omit"
+import { setTheme } from "../core/recastThemeInstance"
+import { ComponentProps } from "../server/types"
+import { omit } from "../core/utils/omit"
 
 export const createRecastComponent = <P, BaseTheme>(
   Component: React.ComponentType<P>,
@@ -17,7 +17,6 @@ export const createRecastComponent = <P, BaseTheme>(
   }
 
   type Nullish = null | undefined
-
   type MaybeSize<S> = keyof S extends Nullish ? "size" : ""
   type MaybeVariant<V> = keyof V extends Nullish ? "variant" : ""
 
@@ -50,15 +49,12 @@ export const createRecastComponent = <P, BaseTheme>(
    * @param displayName - Display name for component
    * @param styles - A styles object that conforms to the components `BaseTheme` API
    */
-  return <
+  function WrappedComponent<
     D extends string,
     S extends Size<S>,
     V extends Variant<V, S>,
     M extends Modifier<M, S, V>
-  >(
-    displayName: D,
-    styles: RecastStyles<S, V, M>
-  ) => {
+  >(displayName: D, styles: RecastStyles<S, V, M>) {
     setTheme(styles?.themekey || key, styles)
 
     type Props = Omit<
@@ -97,4 +93,6 @@ export const createRecastComponent = <P, BaseTheme>(
 
     return ComponentWithThemedProps
   }
+
+  return WrappedComponent
 }

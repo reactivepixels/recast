@@ -1,13 +1,13 @@
+import { Viewports } from "../types"
+import { isObject } from "../../core/utils/isObject"
 import { useCallback, useMemo } from "react"
-import { getTheme } from "../recastThemeInstance"
-import { getModifierClasses } from "../utils/getModifierClasses"
-import { getSizeClasses } from "../utils/getSizeClasses"
-import { getVariantClasses } from "../utils/getVariantClasses"
-import { Styles } from "../types"
-import { useRecastContext } from "../recast"
-import { isObject } from "../utils/isObject"
 import { useBreakpoint } from "./useBreakpoint"
-import { mergeClassNames } from "../utils/mergeClassNames"
+import { getTheme } from "../../core/recastThemeInstance"
+import { Styles } from "../../core/types"
+import { getSizeClasses } from "../../core/utils/getSizeClasses"
+import { getVariantClasses } from "../../core/utils/getVariantClasses"
+import { getModifierClasses } from "../../core/utils/getModifierClasses"
+import { mergeClassNames } from "../../core/utils/mergeClassNames"
 
 type RecastPropUnion =
   | string
@@ -30,7 +30,8 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   variant,
   modifier,
 }: Props) => {
-  const { viewports, delay } = useRecastContext()
+  const viewports: Viewports = { sm: 640, md: 768, lg: 1024, xl: 1280 }
+  const delay = 0
 
   const viewportKeys = useMemo(
     () => Object.keys(viewports).sort((a, b) => viewports[a] - viewports[b]),

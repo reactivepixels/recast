@@ -1,10 +1,10 @@
 import React, { ElementType, forwardRef } from "react"
 import classNames from "classnames"
 import {
-  RecastThemeProps,
   useRecastClasses,
   createRecastComponent,
-} from "@rpxl/recast"
+  RecastThemeProps,
+} from "@rpxl/recast/server"
 
 const DEFAULT_THEME_KEY = "button"
 
