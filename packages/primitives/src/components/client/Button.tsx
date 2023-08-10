@@ -55,6 +55,7 @@ const ButtonPrimitive = forwardRef<
       size,
       variant,
       modifier,
+      options,
       children,
       className,
       ...props
@@ -66,6 +67,7 @@ const ButtonPrimitive = forwardRef<
       size,
       variant,
       modifier,
+      options,
     })
 
     Tag = Tag || "button"

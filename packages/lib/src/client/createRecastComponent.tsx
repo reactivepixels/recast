@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react"
 import { setTheme } from "../core/recastThemeInstance"
-import { ComponentProps } from "../client/types"
+import { ComponentProps, RecastClientOptions } from "../client/types"
 import { omit } from "../core/utils/omit"
 
 export const createRecastComponent = <P, BaseTheme>(
@@ -54,7 +54,11 @@ export const createRecastComponent = <P, BaseTheme>(
     S extends Size<S>,
     V extends Variant<V, S>,
     M extends Modifier<M, S, V>
-  >(displayName: D, styles: RecastStyles<S, V, M>) {
+  >(
+    displayName: D,
+    styles: RecastStyles<S, V, M>,
+    options?: RecastClientOptions
+  ) {
     setTheme(styles?.themekey || key, styles)
 
     type Props = Omit<
@@ -79,6 +83,7 @@ export const createRecastComponent = <P, BaseTheme>(
 
         return (
           <Component
+            options={options}
             modifier={modifierProps.length ? modifierProps : undefined}
             themekey={styles?.themekey}
             ref={ref}

@@ -3,7 +3,11 @@ export type RecastThemeProps = {
   size?: string
   variant?: string
   themekey?: string
+  options?: RecastServerOptions
 }
+
+// Additional Recast configuration
+export type RecastServerOptions = object
 
 /**
  * Recast Theme wrapper types

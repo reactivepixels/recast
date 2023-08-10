@@ -5,10 +5,11 @@ export type RecastThemeProps = {
   size?: string | Record<string, string>
   variant?: string | Record<string, string>
   themekey?: string
+  options?: RecastClientOptions
 }
 
 // Additional Recast configuration
-export type RecastContext = {
+export type RecastClientOptions = {
   viewports?: Viewports
   delay?: number
 }

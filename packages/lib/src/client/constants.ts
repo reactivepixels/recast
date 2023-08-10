@@ -1,7 +1,7 @@
-import { RecastContext } from "./types"
+import { RecastClientOptions } from "./types"
 
-// Set the default values for the RecastContext
-export const DEFAULT_RECAST_CONTEXT: RecastContext = {
+// Set the default values for any Recast client options
+export const DEFAULT_RECAST_CLIENT_OPTIONS: RecastClientOptions = {
   viewports: { sm: 640, md: 768, lg: 1024, xl: 1280 },
   delay: 0, // ms
 }

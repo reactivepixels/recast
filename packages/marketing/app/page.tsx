@@ -6,10 +6,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <Button variant="orange">Hello 2</Button>
 
-      <Button
-        variant={{ default: "orange", lg: "avocado", sm: "avocado" }}
-        size="lg"
-      >
+      <Button variant={{ default: "orange", lg: "avocado" }} size="lg">
         Hello 2
       </Button>
 
