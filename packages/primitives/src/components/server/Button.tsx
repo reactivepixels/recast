@@ -4,15 +4,14 @@ import {
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
+  RecastThemeProp,
 } from "@rpxl/recast/server"
 
 const DEFAULT_THEME_KEY = "button"
 
-type BaseTheme = {
-  root?: string | string[]
-  startIcon?: string | string[]
-  endIcon?: string | string[]
-}
+type BaseTheme = RecastThemeProp<"root"> &
+  RecastThemeProp<"startIcon"> &
+  RecastThemeProp<"endIcon">
 
 type HTMLButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 

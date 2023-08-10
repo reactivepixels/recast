@@ -4,13 +4,12 @@ import {
   RecastThemeProps,
   useRecastClasses,
   createRecastComponent,
+  RecastThemeProp,
 } from "@rpxl/recast/client"
 
 const DEFAULT_THEME_KEY = "card"
 
-export type BaseTheme = {
-  root?: string | string[]
-}
+type BaseTheme = RecastThemeProp<"root">
 
 type Props = React.HTMLAttributes<HTMLElement> &
   RecastThemeProps & {

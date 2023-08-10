@@ -4,15 +4,14 @@ import {
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
+  RecastThemeProp,
 } from "@rpxl/recast/client"
 
 const DEFAULT_THEME_KEY = "button"
 
-type BaseTheme = {
-  root?: string | string[]
-  startIcon?: string | string[]
-  endIcon?: string | string[]
-}
+type BaseTheme = RecastThemeProp<"root"> &
+  RecastThemeProp<"startIcon"> &
+  RecastThemeProp<"endIcon">
 
 type HTMLButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
@@ -27,11 +26,11 @@ type Props = HTMLButtonProps &
     /**
      * Element placed before the label.
      */
-    startIcon?: React.ReactNode
+    startIcon?: React.ReactNode // TODO - change to `startElement`
     /**
      * Element placed after the label.
      */
-    endIcon?: React.ReactNode
+    endIcon?: React.ReactNode // TODO - change to `endElement`
     /**
      * Element type override. Can be useful if using button styles
      * within an anchor tag or a pseudo button `div`.
