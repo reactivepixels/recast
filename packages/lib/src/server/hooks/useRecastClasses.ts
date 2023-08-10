@@ -4,12 +4,14 @@ import { getModifierClasses } from "../../core/utils/getModifierClasses"
 import { getSizeClasses } from "../../core/utils/getSizeClasses"
 import { getVariantClasses } from "../../core/utils/getVariantClasses"
 import { mergeClassNames } from "../../core/utils/mergeClassNames"
+import { RecastServerOptions } from "server/types"
 
 type Props = {
   themekey?: string
-  size?: string | Record<string, string>
-  variant?: string | Record<string, string>
+  size?: string
+  variant?: string
   modifier?: string | string[]
+  options?: RecastServerOptions
 }
 
 type State<K> = Record<keyof K, string> | undefined

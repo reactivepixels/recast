@@ -1,92 +1,16 @@
-import React, { ElementType, forwardRef } from "react"
-import classNames from "classnames"
 import {
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-  RecastThemeProp,
 } from "@rpxl/recast/server"
 
-const DEFAULT_THEME_KEY = "button"
+import ButtonPrimitive, {
+  DEFAULT_THEME_KEY,
+  BaseTheme,
+  Props,
+} from "../base/Button"
 
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"startIcon"> &
-  RecastThemeProp<"endIcon">
-
-type HTMLButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
-
-type HTMLAnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>
-
-type HTMLDivProps = React.HTMLAttributes<HTMLDivElement>
-
-type Props = HTMLButtonProps &
-  HTMLAnchorProps &
-  HTMLDivProps &
-  RecastThemeProps & {
-    /**
-     * Element placed before the label.
-     */
-    startIcon?: React.ReactNode
-    /**
-     * Element placed after the label.
-     */
-    endIcon?: React.ReactNode
-    /**
-     * Element type override. Can be useful if using button styles
-     * within an anchor tag or a pseudo button `div`.
-     * */
-    as?: ElementType
-  }
-
-/**
- * Button Element
- */
-const ButtonPrimitive = forwardRef<
-  HTMLButtonElement & HTMLAnchorElement & HTMLDivElement,
-  Props
->(
-  (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      as: Tag,
-      startIcon,
-      endIcon,
-      size,
-      variant,
-      modifier,
-      children,
-      className,
-      ...props
-    },
-    ref
-  ) => {
-    const classes = useRecastClasses<BaseTheme>({
-      themekey,
-      size,
-      variant,
-      modifier,
-    })
-
-    Tag = Tag || "button"
-
-    return (
-      <Tag
-        className={classNames(classes?.root, className)}
-        ref={ref}
-        {...props}
-      >
-        {startIcon && <div className={classes?.startIcon}>{startIcon}</div>}
-        {children}
-        {endIcon && <div className={classes?.endIcon}>{endIcon}</div>}
-      </Tag>
-    )
-  }
-)
-
-if (process.env["NODE_ENV"] !== "production")
-  ButtonPrimitive.displayName = "ButtonPrimitive"
-
-export const Button = createRecastComponent<Props, BaseTheme>(
-  ButtonPrimitive,
+export const Button = createRecastComponent<Props<RecastThemeProps>, BaseTheme>(
+  ButtonPrimitive<RecastThemeProps>(useRecastClasses),
   DEFAULT_THEME_KEY
 )

@@ -8,6 +8,10 @@
     "node": ">=18"
   },
   "exports": {
+    "./core": {
+      "require": "./dist/core.cjs",
+      "default": "./dist/core.modern.js"
+    },
     "./client": {
       "require": "./dist/client.cjs",
       "default": "./dist/client.modern.js"
@@ -19,6 +23,7 @@
   },
   "files": [
     "dist",
+    "core",
     "client",
     "server"
   ],
@@ -35,8 +40,8 @@
     }
   },
   "scripts": {
-    "build": "microbundle src/{client,server}.ts --jsx React.createElement",
-    "dev": "microbundle watch src/{client,server}.ts --jsx React.createElement",
+    "build": "microbundle src/{core,client,server}.ts --jsx React.createElement",
+    "dev": "microbundle watch src/{core,client,server}.ts --jsx React.createElement",
     "test": "jest",
     "test:watch": "jest --watch"
   },
