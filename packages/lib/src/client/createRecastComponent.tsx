@@ -2,47 +2,20 @@ import React, { forwardRef } from "react"
 import { setTheme } from "../core/recastThemeInstance"
 import { ComponentProps, RecastClientOptions } from "../client/types"
 import { omit } from "../core/utils/omit"
+import type {
+  MaybeSize,
+  MaybeVariant,
+  Modifier,
+  RecastStyles,
+  Size,
+  Variant,
+} from "../core/types"
+import { validateRecastStyles } from "core"
 
 export const createRecastComponent = <P, BaseTheme>(
   Component: React.ComponentType<P>,
   key: string
 ) => {
-  type RecastStyles<S, V, M> = {
-    themekey?: string
-    defaults?: Defaults<S, V>
-    base?: BaseTheme
-    size?: Size<S>
-    variant?: Variant<V, S>
-    modifier?: Modifier<M, S, V>
-  }
-
-  type Nullish = null | undefined
-  type MaybeSize<S> = keyof S extends Nullish ? "size" : ""
-  type MaybeVariant<V> = keyof V extends Nullish ? "variant" : ""
-
-  type Defaults<S, V> = Omit<
-    {
-      size?: keyof S
-      variant?: keyof V
-    },
-    MaybeSize<S> | MaybeVariant<V>
-  >
-
-  type Size<S> = keyof S extends Nullish
-    ? Record<never, BaseTheme>
-    : Record<keyof S, BaseTheme>
-
-  type Variant<V, S> = keyof S extends Nullish
-    ? Record<keyof V, BaseTheme>
-    : Record<keyof V, BaseTheme | Partial<Record<keyof S, BaseTheme>>>
-
-  type Modifier<M, S, V> = Record<
-    keyof M,
-    | BaseTheme
-    | Partial<Record<keyof S, BaseTheme>>
-    | Partial<Record<keyof V, BaseTheme>>
-  >
-
   /**
    * Returns an enhanced primitive component that is decorated with dynamic style props.
    *
@@ -51,12 +24,12 @@ export const createRecastComponent = <P, BaseTheme>(
    */
   function WrappedComponent<
     D extends string,
-    S extends Size<S>,
-    V extends Variant<V, S>,
-    M extends Modifier<M, S, V>
+    S extends Size<BaseTheme, S>,
+    V extends Variant<BaseTheme, V, S>,
+    M extends Modifier<BaseTheme, M, S, V>
   >(
     displayName: D,
-    styles: RecastStyles<S, V, M>,
+    styles: RecastStyles<BaseTheme, S, V, M>,
     options?: RecastClientOptions
   ) {
     setTheme(styles?.themekey || key, styles)
@@ -99,5 +72,8 @@ export const createRecastComponent = <P, BaseTheme>(
     return ComponentWithThemedProps
   }
 
-  return WrappedComponent
+  return {
+    recast: WrappedComponent,
+    validate: validateRecastStyles<BaseTheme>(),
+  }
 }

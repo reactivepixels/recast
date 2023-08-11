@@ -43,38 +43,38 @@ export type Theme<B, S, V, M> = {
 }
 
 // Create Recast Component
-// export type RecastStyles<BaseTheme, S, V, M> = {
-//   themekey?: string
-//   defaults?: Defaults<S, V>
-//   base?: BaseTheme
-//   size?: Size<BaseTheme, S>
-//   variant?: Variant<BaseTheme, V, S>
-//   modifier?: Modifier<BaseTheme, M, S, V>
-// }
+export type RecastStyles<BaseTheme, S, V, M> = {
+  themekey?: string
+  defaults?: Defaults<S, V>
+  base?: BaseTheme
+  size?: Size<BaseTheme, S>
+  variant?: Variant<BaseTheme, V, S>
+  modifier?: Modifier<BaseTheme, M, S, V>
+}
 
-// export type Nullish = null | undefined
-// export type MaybeSize<S> = keyof S extends Nullish ? "size" : ""
-// export type MaybeVariant<V> = keyof V extends Nullish ? "variant" : ""
+export type Nullish = null | undefined
+export type MaybeSize<S> = keyof S extends Nullish ? "size" : ""
+export type MaybeVariant<V> = keyof V extends Nullish ? "variant" : ""
 
-// export type Defaults<S, V> = Omit<
-//   {
-//     size?: keyof S
-//     variant?: keyof V
-//   },
-//   MaybeSize<S> | MaybeVariant<V>
-// >
+export type Defaults<S, V> = Omit<
+  {
+    size?: keyof S
+    variant?: keyof V
+  },
+  MaybeSize<S> | MaybeVariant<V>
+>
 
-// export type Size<BaseTheme, S> = keyof S extends Nullish
-//   ? Record<never, BaseTheme>
-//   : Record<keyof S, BaseTheme>
+export type Size<BaseTheme, S> = keyof S extends Nullish
+  ? Record<never, BaseTheme>
+  : Record<keyof S, BaseTheme>
 
-// export type Variant<BaseTheme, V, S> = keyof S extends Nullish
-//   ? Record<keyof V, BaseTheme>
-//   : Record<keyof V, BaseTheme | Partial<Record<keyof S, BaseTheme>>>
+export type Variant<BaseTheme, V, S> = keyof S extends Nullish
+  ? Record<keyof V, BaseTheme>
+  : Record<keyof V, BaseTheme | Partial<Record<keyof S, BaseTheme>>>
 
-// export type Modifier<BaseTheme, M, S, V> = Record<
-//   keyof M,
-//   | BaseTheme
-//   | Partial<Record<keyof S, BaseTheme>>
-//   | Partial<Record<keyof V, BaseTheme>>
-// >
+export type Modifier<BaseTheme, M, S, V> = Record<
+  keyof M,
+  | BaseTheme
+  | Partial<Record<keyof S, BaseTheme>>
+  | Partial<Record<keyof V, BaseTheme>>
+>

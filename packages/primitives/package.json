@@ -6,7 +6,15 @@
   "engines": {
     "node": ">=18"
   },
+  "source": "src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.module.js",
+  "types": "dist/index.d.ts",
   "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.modern.js"
+    },
     "./client": {
       "require": "./dist/client.cjs",
       "default": "./dist/client.modern.js"
@@ -35,8 +43,8 @@
     }
   },
   "scripts": {
-    "build": "microbundle src/{client,server}.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement",
-    "dev": "microbundle watch src/{client,server}.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement"
+    "build": "microbundle src/{index,client,server}.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement",
+    "dev": "microbundle watch src/{index,client,server}.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement"
   },
   "devDependencies": {
     "@types/node": "^18.16.3",

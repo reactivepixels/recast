@@ -1,6 +1,6 @@
 import React, { ElementType, forwardRef } from "react"
 import classNames from "classnames"
-import type { RecastThemeProp } from "@rpxl/recast/core"
+import { RecastThemeProp } from "@rpxl/recast/core"
 import type { RecastClasses, RecastThemeProps } from "../../types"
 
 export const DEFAULT_THEME_KEY = "card"
