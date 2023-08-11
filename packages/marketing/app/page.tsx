@@ -8,7 +8,16 @@ export default function Home() {
         Hello 2
       </Button>
 
-      <Button variant={{ default: "orange", lg: "avocado" }} size="lg">
+      <Button
+        variant={{
+          default: "orange",
+          sm: "avocado",
+          md: "orange",
+          lg: "vanilla",
+        }}
+        size={{ default: "sm", sm: "md", xl: "lg" }}
+        modifier={{ default: "block", lg: "dark", xl: "floating" }}
+      >
         Hello 2
       </Button>
 

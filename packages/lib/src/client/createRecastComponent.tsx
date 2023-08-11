@@ -1,6 +1,11 @@
 import React, { forwardRef } from "react"
 import { setTheme } from "../core/recastThemeInstance"
-import { ComponentProps, RecastClientOptions } from "../client/types"
+import {
+  Breakpoints,
+  MaybeBreakpoints,
+  ComponentProps,
+  RecastClientOptionsTyped,
+} from "../client/types"
 import { omit } from "../core/utils/omit"
 import type {
   MaybeSize,
@@ -26,16 +31,17 @@ export const createRecastComponent = <P, BaseTheme>(
     D extends string,
     S extends Size<BaseTheme, S>,
     V extends Variant<BaseTheme, V, S>,
-    M extends Modifier<BaseTheme, M, S, V>
+    M extends Modifier<BaseTheme, M, S, V>,
+    B extends Breakpoints<B>
   >(
     displayName: D,
     styles: RecastStyles<BaseTheme, S, V, M>,
-    options?: RecastClientOptions
+    options?: RecastClientOptionsTyped<B>
   ) {
     setTheme(styles?.themekey || key, styles)
 
     type Props = Omit<
-      Extract<ComponentProps<P, S, V, M>, P>,
+      Extract<ComponentProps<P, S, V, M, MaybeBreakpoints<B>>, P>,
       MaybeSize<S> | MaybeVariant<V>
     > &
       Partial<Record<keyof M, boolean>>

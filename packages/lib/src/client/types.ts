@@ -14,26 +14,44 @@ export type RecastClientOptions = {
   delay?: number
 }
 
+export type Breakpoints<B> = Record<keyof B, number>
+
+export type MaybeBreakpoints<B> = Record<
+  keyof B extends never
+    ? keyof { sm: number; md: number; lg: number; xl: number }
+    : keyof B,
+  number
+>
+
+export type RecastClientOptionsTyped<B> = {
+  viewports?: Breakpoints<B>
+  delay?: number
+}
+
 /**
  * Recast Theme wrapper types
  */
-export type SizeProps<S> = {
-  size?: keyof S | (Record<"default", keyof S> & Record<string, keyof S>)
+export type SizeProps<S, B> = {
+  size?:
+    | keyof S
+    | (Record<"default", keyof S> & Partial<Record<keyof B, keyof S>>)
 }
 
-export type VariantProps<V> = {
-  variant?: keyof V | (Record<"default", keyof V> & Record<string, keyof V>)
+export type VariantProps<V, B> = {
+  variant?:
+    | keyof V
+    | (Record<"default", keyof V> & Partial<Record<keyof B, keyof V>>)
 }
 
-export type ModifierProps<M> = {
+export type ModifierProps<M, B> = {
   modifier?:
     | keyof M
     | Array<keyof M>
     | (Record<"default", keyof M | Array<keyof M>> &
-        Record<string, keyof M | Array<keyof M>>)
+        Partial<Record<keyof B, keyof M | Array<keyof M>>>)
 }
 
-export type ComponentProps<P, S, V, M> = SizeProps<S> &
-  VariantProps<V> &
-  ModifierProps<M> &
+export type ComponentProps<P, S, V, M, B> = SizeProps<S, B> &
+  VariantProps<V, B> &
+  ModifierProps<M, B> &
   Omit<P, "size" | "variant" | "modifier">
