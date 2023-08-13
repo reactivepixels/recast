@@ -16,7 +16,7 @@ export default function Home() {
           lg: "vanilla",
         }}
         size={{ default: "sm", sm: "md", xl: "lg" }}
-        modifier={{ default: "block", lg: "dark", xl: "floating" }}
+        modifier={{ default: "block", lg: "dark", xl: ["floating", "dark"] }}
       >
         Hello 2
       </Button>

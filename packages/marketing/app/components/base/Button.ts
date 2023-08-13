@@ -60,7 +60,7 @@ export const styles = ButtonPrimitive.validate({
     },
     dark: {
       vanilla: {
-        root: "!bg-blue-500",
+        root: "!bg-black !text-white",
       },
     },
     floating: {

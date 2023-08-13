@@ -1,12 +1,13 @@
 import React, { forwardRef } from "react"
 import { setTheme } from "../core/recastThemeInstance"
-import {
+import { validateRecastStyles } from "../core/validateRecastStyles"
+import { omit } from "../core/utils/omit"
+import type {
   Breakpoints,
   MaybeBreakpoints,
   ComponentProps,
   RecastClientOptionsTyped,
 } from "../client/types"
-import { omit } from "../core/utils/omit"
 import type {
   MaybeSize,
   MaybeVariant,
@@ -15,7 +16,6 @@ import type {
   Size,
   Variant,
 } from "../core/types"
-import { validateRecastStyles } from "core"
 
 export const createRecastComponent = <P, BaseTheme>(
   Component: React.ComponentType<P>,
