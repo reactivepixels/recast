@@ -1,6 +1,6 @@
-import { Styles } from "../types"
 import { omit } from "./omit"
 import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
+import { Styles } from "../types"
 
 type GetVariantClassesProps = {
   theme: Styles

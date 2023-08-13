@@ -1,11 +1,3 @@
-export type RecastThemeProps = {
-  modifier?: string | string[] | Record<string, string | string[]>
-  size?: string | Record<string, string>
-  variant?: string | Record<string, string>
-  themekey?: string
-  viewports?: Record<string, number>
-}
-
 /** Loosley typed component styles object shape */
 export type Styles = {
   themekey?: string
@@ -21,6 +13,10 @@ export type Styles = {
     Record<string, string | string[] | Record<string, string | string[]>>
   >
 }
+
+export type RecastThemeProp<P extends string> = Partial<
+  Record<P, string | string[]>
+>
 
 /**
  * Default theme types
@@ -46,26 +42,39 @@ export type Theme<B, S, V, M> = {
   modifier?: Modifiers<M>
 }
 
-/**
- * Recast Theme wrapper types
- */
-export type SizeProps<S> = {
-  size?: keyof S | (Record<"default", keyof S> & Record<string, keyof S>)
+// Create Recast Component
+export type RecastStyles<BaseTheme, S, V, M> = {
+  themekey?: string
+  defaults?: Defaults<S, V>
+  base?: BaseTheme
+  size?: Size<BaseTheme, S>
+  variant?: Variant<BaseTheme, V, S>
+  modifier?: Modifier<BaseTheme, M, S, V>
 }
 
-export type VariantProps<V> = {
-  variant?: keyof V | (Record<"default", keyof V> & Record<string, keyof V>)
-}
+export type Nullish = null | undefined
+export type MaybeSize<S> = keyof S extends Nullish ? "size" : ""
+export type MaybeVariant<V> = keyof V extends Nullish ? "variant" : ""
 
-export type ModifierProps<M> = {
-  modifier?:
-    | keyof M
-    | Array<keyof M>
-    | (Record<"default", keyof M | Array<keyof M>> &
-        Record<string, keyof M | Array<keyof M>>)
-}
+export type Defaults<S, V> = Omit<
+  {
+    size?: keyof S
+    variant?: keyof V
+  },
+  MaybeSize<S> | MaybeVariant<V>
+>
 
-export type ComponentProps<P, S, V, M> = SizeProps<S> &
-  VariantProps<V> &
-  ModifierProps<M> &
-  Omit<P, "size" | "variant" | "modifier">
+export type Size<BaseTheme, S> = keyof S extends Nullish
+  ? Record<never, BaseTheme>
+  : Record<keyof S, BaseTheme>
+
+export type Variant<BaseTheme, V, S> = keyof S extends Nullish
+  ? Record<keyof V, BaseTheme>
+  : Record<keyof V, BaseTheme | Partial<Record<keyof S, BaseTheme>>>
+
+export type Modifier<BaseTheme, M, S, V> = Record<
+  keyof M,
+  | BaseTheme
+  | Partial<Record<keyof S, BaseTheme>>
+  | Partial<Record<keyof V, BaseTheme>>
+>

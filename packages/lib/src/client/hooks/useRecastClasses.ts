@@ -1,13 +1,14 @@
+import { RecastClientOptions } from "../types"
+import { isObject } from "../../core/utils/isObject"
 import { useCallback, useMemo } from "react"
-import { getTheme } from "../recastThemeInstance"
-import { getModifierClasses } from "../utils/getModifierClasses"
-import { getSizeClasses } from "../utils/getSizeClasses"
-import { getVariantClasses } from "../utils/getVariantClasses"
-import { Styles } from "../types"
-import { useRecastContext } from "../recast"
-import { isObject } from "../utils/isObject"
 import { useBreakpoint } from "./useBreakpoint"
-import { mergeClassNames } from "../utils/mergeClassNames"
+import { getTheme } from "../../core/recastThemeInstance"
+import { Styles } from "../../core/types"
+import { getSizeClasses } from "../../core/utils/getSizeClasses"
+import { getVariantClasses } from "../../core/utils/getVariantClasses"
+import { getModifierClasses } from "../../core/utils/getModifierClasses"
+import { mergeClassNames } from "../../core/utils/mergeClassNames"
+import { DEFAULT_RECAST_CLIENT_OPTIONS } from "../constants"
 
 type RecastPropUnion =
   | string
@@ -20,6 +21,7 @@ type Props = {
   size?: string | Record<string, string>
   variant?: string | Record<string, string>
   modifier?: string | string[] | Record<string, string | string[]>
+  options?: RecastClientOptions
 }
 
 type State<K> = Record<keyof K, string> | undefined
@@ -29,8 +31,12 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   size,
   variant,
   modifier,
+  options,
 }: Props) => {
-  const { viewports, delay } = useRecastContext()
+  const { viewports = {}, delay = 0 } = {
+    ...DEFAULT_RECAST_CLIENT_OPTIONS,
+    ...options,
+  }
 
   const viewportKeys = useMemo(
     () => Object.keys(viewports).sort((a, b) => viewports[a] - viewports[b]),

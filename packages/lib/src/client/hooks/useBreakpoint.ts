@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
-import { Viewports } from "../recast"
-import { debounce } from "../utils/debounce"
+import { debounce } from "../../core/utils/debounce"
+import { Viewports } from "../types"
 
 export const useBreakpoint = (
   viewports: Viewports,

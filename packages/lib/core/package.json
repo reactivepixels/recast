@@ -1,0 +1,7 @@
+{
+  "internal": true,
+  "main": "../dist/core.cjs",
+  "module": "../dist/core.esm.js",
+  "unpkg": "../dist/core.umd.js",
+  "types": "../dist/core.d.ts"
+}
