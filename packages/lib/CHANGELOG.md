@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 1.0.0
+
+### Major Changes
+
+- 64d330a: Add server component capabilities
+
 ## 0.1.6
 
 ### Patch Changes
