@@ -1,2 +1,2 @@
-export type { RecastThemeProp, RecastStyles } from "./core/types"
+export type * from "./core/types"
 export { validateRecastStyles } from "./core/validateRecastStyles"
