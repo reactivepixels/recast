@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 1.0.2
+
+### Patch Changes
+
+- 98dd90b: Remove transient type definitions
+
 ## 1.0.1
 
 ### Patch Changes
