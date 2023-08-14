@@ -1,10 +1,10 @@
-import type { Styles } from "../../core/types"
-import type { RecastServerOptions } from "../../server/types"
-import { getTheme } from "../../core/recastThemeInstance"
-import { getModifierClasses } from "../../core/utils/getModifierClasses"
-import { getSizeClasses } from "../../core/utils/getSizeClasses"
-import { getVariantClasses } from "../../core/utils/getVariantClasses"
-import { mergeClassNames } from "../../core/utils/mergeClassNames"
+import type { Styles } from "../../core/types.js"
+import type { RecastServerOptions } from "../../server/types.js"
+import { getTheme } from "../../core/recastThemeInstance.js"
+import { getModifierClasses } from "../../core/utils/getModifierClasses.js"
+import { getSizeClasses } from "../../core/utils/getSizeClasses.js"
+import { getVariantClasses } from "../../core/utils/getVariantClasses.js"
+import { mergeClassNames } from "../../core/utils/mergeClassNames.js"
 
 type Props = {
   themekey?: string

@@ -4,7 +4,11 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast/server"
 
-import BaseButton, { DEFAULT_THEME_KEY, BaseTheme, Props } from "../base/Button"
+import BaseButton, {
+  DEFAULT_THEME_KEY,
+  BaseTheme,
+  Props,
+} from "../base/Button.js"
 
 export const ButtonPrimitive = createRecastComponent<
   Props<RecastThemeProps>,

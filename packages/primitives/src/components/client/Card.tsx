@@ -4,7 +4,7 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast/client"
 
-import BaseCard, { DEFAULT_THEME_KEY, BaseTheme, Props } from "../base/Card"
+import BaseCard, { DEFAULT_THEME_KEY, BaseTheme, Props } from "../base/Card.js"
 
 export const CardPrimitive = createRecastComponent<
   Props<RecastThemeProps>,

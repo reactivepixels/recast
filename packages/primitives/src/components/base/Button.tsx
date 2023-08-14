@@ -1,7 +1,7 @@
 import React, { ElementType, forwardRef } from "react"
 import classNames from "classnames"
 import { RecastThemeProp } from "@rpxl/recast/core"
-import type { RecastClasses, RecastThemeProps } from "../../types"
+import type { RecastClasses, RecastThemeProps } from "../../types.js"
 
 type HTMLButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 type HTMLAnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement>
