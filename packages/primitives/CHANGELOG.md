@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 1.0.3
+
+### Patch Changes
+
+- ce7cc82: Add .js suffix to all imports/exports
+- Updated dependencies [ce7cc82]
+  - @rpxl/recast@1.0.2
+
 ## 1.0.2
 
 ### Patch Changes

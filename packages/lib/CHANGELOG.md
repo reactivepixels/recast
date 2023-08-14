@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 1.0.2
+
+### Patch Changes
+
+- ce7cc82: Add .js suffix to all imports/exports
+
 ## 1.0.1
 
 ### Patch Changes
