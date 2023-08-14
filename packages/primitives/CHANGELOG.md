@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 1.0.8
+
+### Patch Changes
+
+- b4c2f5c: Export all types from core
+- Updated dependencies [b4c2f5c]
+  - @rpxl/recast@1.0.4
+
 ## 1.0.7
 
 ### Patch Changes
