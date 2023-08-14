@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 1.0.6
+
+### Patch Changes
+
+- 4bf9a27: Restore internal packages for module resolution
+
 ## 1.0.5
 
 ### Patch Changes
