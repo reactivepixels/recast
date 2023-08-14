@@ -1,6 +1,6 @@
-import { Styles } from "../types.js"
-import { ClassNameRecord, mergeClassNames } from "./mergeClassNames.js"
-import { omit } from "./omit.js"
+import { Styles } from "../types"
+import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
+import { omit } from "./omit"
 
 type Modifiers = Record<
   string,

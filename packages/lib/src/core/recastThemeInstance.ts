@@ -1,4 +1,4 @@
-import { Styles } from "./types.js"
+import { Styles } from "./types"
 
 /**
  * Theme instance singleton

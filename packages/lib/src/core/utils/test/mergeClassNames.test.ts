@@ -1,4 +1,4 @@
-import { mergeClassNames } from "../mergeClassNames.js"
+import { mergeClassNames } from "../mergeClassNames"
 
 describe("mergeClassNames", () => {
   it("should combine two string values from duplicate key", () => {

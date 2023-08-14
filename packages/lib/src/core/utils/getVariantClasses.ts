@@ -1,6 +1,6 @@
-import { omit } from "./omit.js"
-import { ClassNameRecord, mergeClassNames } from "./mergeClassNames.js"
-import { Styles } from "../types.js"
+import { omit } from "./omit"
+import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
+import { Styles } from "../types"
 
 type GetVariantClassesProps = {
   theme: Styles
