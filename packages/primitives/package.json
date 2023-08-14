@@ -7,19 +7,22 @@
     "node": ">=18"
   },
   "source": "src/index.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.esm.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "default": "./dist/index.modern.js"
     },
     "./client": {
+      "types": "./dist/client.d.ts",
       "require": "./dist/client.cjs",
       "default": "./dist/client.modern.js"
     },
     "./server": {
+      "types": "./dist/server.d.ts",
       "require": "./dist/server.cjs",
       "default": "./dist/server.modern.js"
     }
