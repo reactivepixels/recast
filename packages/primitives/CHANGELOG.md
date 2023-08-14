@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 1.0.4
+
+### Patch Changes
+
+- cbc765f: Remove index default exports
+
 ## 1.0.3
 
 ### Patch Changes
