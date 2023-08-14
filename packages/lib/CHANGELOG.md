@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 1.0.4
+
+### Patch Changes
+
+- b4c2f5c: Export all types from core
+
 ## 1.0.3
 
 ### Patch Changes
