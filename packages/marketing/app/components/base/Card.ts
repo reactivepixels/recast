@@ -1,4 +1,4 @@
-import { CardPrimitive } from "@rpxl/recast-primitives";
+import { CardPrimitive } from "@rpxl/recast-primitives/server";
 
 export const styles = CardPrimitive.validate({
   defaults: { variant: "light" },

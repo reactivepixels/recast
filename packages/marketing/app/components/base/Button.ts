@@ -1,4 +1,4 @@
-import { ButtonPrimitive } from "@rpxl/recast-primitives";
+import { ButtonPrimitive } from "@rpxl/recast-primitives/server";
 
 export const styles = ButtonPrimitive.validate({
   defaults: { variant: "vanilla" },
