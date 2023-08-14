@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 1.0.5
+
+### Patch Changes
+
+- 613ae46: Remove internal module resolution packages
+
 ## 1.0.4
 
 ### Patch Changes
