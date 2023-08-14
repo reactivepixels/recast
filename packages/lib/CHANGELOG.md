@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 1.0.3
+
+### Patch Changes
+
+- a6731ba: Remove relative import filename extensions
+
 ## 1.0.2
 
 ### Patch Changes
