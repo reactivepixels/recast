@@ -1,3 +1,5 @@
+import { Nullish } from "../core/types"
+
 export type Viewports = Record<string, number>
 
 export type RecastThemeProps = {
@@ -32,15 +34,15 @@ export type RecastClientOptionsTyped<B> = {
  * Recast Theme wrapper types
  */
 export type SizeProps<S, B> = {
-  size?:
-    | keyof S
-    | (Record<"default", keyof S> & Partial<Record<keyof B, keyof S>>)
+  size?: keyof S extends Nullish
+    ? never
+    : keyof S | (Record<"default", keyof S> & Partial<Record<keyof B, keyof S>>)
 }
 
 export type VariantProps<V, B> = {
-  variant?:
-    | keyof V
-    | (Record<"default", keyof V> & Partial<Record<keyof B, keyof V>>)
+  variant?: keyof V extends Nullish
+    ? never
+    : keyof V | (Record<"default", keyof V> & Partial<Record<keyof B, keyof V>>)
 }
 
 export type ModifierProps<M, B> = {

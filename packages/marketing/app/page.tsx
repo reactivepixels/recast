@@ -1,5 +1,5 @@
 import { Button } from "./components/client/Button";
-import { Card } from "./components/server/Card";
+import { Card } from "./components/client/Card";
 
 export default function Home() {
   return (
@@ -21,10 +21,10 @@ export default function Home() {
         Hello 2
       </Button>
 
-      <Card variant="dark" elevated clickable>
+      <Card variant="dark" clickable>
         Hello 1
       </Card>
-      <Card>Hello 2</Card>
+      <Card size="lg">s</Card>
       <Card>Hello 3</Card>
     </main>
   );
