@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 1.0.9
+
+### Patch Changes
+
+- ca77fa8: Fix ES imports
+- Updated dependencies [ca77fa8]
+  - @rpxl/recast@1.0.5
+
 ## 1.0.8
 
 ### Patch Changes

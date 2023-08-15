@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 1.0.5
+
+### Patch Changes
+
+- ca77fa8: Fix ES imports
+
 ## 1.0.4
 
 ### Patch Changes
