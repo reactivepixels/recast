@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 1.0.10
+
+### Patch Changes
+
+- 08c3748: Map type imports for ESM
+- Updated dependencies [08c3748]
+  - @rpxl/recast@1.0.6
+
 ## 1.0.9
 
 ### Patch Changes
