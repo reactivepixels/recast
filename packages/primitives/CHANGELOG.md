@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 1.0.11
+
+### Patch Changes
+
+- acdd183: Fix conditional Size and Variant client props
+- Updated dependencies [acdd183]
+  - @rpxl/recast@1.0.7
+
 ## 1.0.10
 
 ### Patch Changes
