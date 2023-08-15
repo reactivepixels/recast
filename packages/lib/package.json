@@ -43,6 +43,15 @@
       "import": "./dist/server.esm.js",
       "require": "./dist/server.cjs",
       "default": "./dist/server.modern.js"
+    },
+    "./dist/core/types": {
+      "types": "./dist/core/types.d.ts"
+    },
+    "./dist/client/types": {
+      "types": "./dist/client/types.d.ts"
+    },
+    "./dist/server/types": {
+      "types": "./dist/server/types.d.ts"
     }
   },
   "files": [
