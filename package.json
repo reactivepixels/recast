@@ -9,11 +9,13 @@
     "packages/primitives"
   ],
   "scripts": {
+    "build:marketing": "npm run build -w packages/marketing",
     "build:recast": "npm run build -w packages/lib",
     "build:recast-primitives": "npm run build -w packages/primitives",
     "build:all": "npm run build:recast && npm run build:recast-primitives",
     "dev:docs": "npm run dev -w packages/docs",
     "dev:marketing": "npm run dev -w packages/marketing",
+    "export:marketing": "npm run export -w packages/marketing",
     "release": "npm run build:all && npx changeset publish"
   },
   "dependencies": {
