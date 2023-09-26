@@ -1,4 +1,4 @@
-import { Modifier, RecastStyles, Size, Variant } from "./types"
+import { Modifier, RecastStyles, Size, Variant } from "./types";
 
 /**
  * Utility to validate a components recast styles object shape
@@ -8,8 +8,8 @@ export const validateRecastStyles = <BaseTheme>() => {
   return function validate<
     S extends Size<BaseTheme, S>,
     V extends Variant<BaseTheme, V, S>,
-    M extends Modifier<BaseTheme, M, S, V>
+    M extends Modifier<BaseTheme, M, S, V>,
   >(styles: RecastStyles<BaseTheme, S, V, M>) {
-    return styles
-  }
-}
+    return styles;
+  };
+};

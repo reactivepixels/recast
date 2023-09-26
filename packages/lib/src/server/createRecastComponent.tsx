@@ -1,8 +1,8 @@
-import React, { forwardRef } from "react"
-import { setTheme } from "../core/recastThemeInstance"
-import { omit } from "../core/utils/omit"
-import { validateRecastStyles } from "../core/validateRecastStyles"
-import type { ComponentProps, RecastServerOptions } from "../server/types"
+import React, { forwardRef } from "react";
+import { setTheme } from "../core/recastThemeInstance";
+import { omit } from "../core/utils/omit";
+import { validateRecastStyles } from "../core/validateRecastStyles";
+import type { ComponentProps, RecastServerOptions } from "../server/types";
 import type {
   MaybeSize,
   MaybeVariant,
@@ -10,11 +10,13 @@ import type {
   RecastStyles,
   Size,
   Variant,
-} from "../core/types"
+} from "../core/types";
 
 export const createRecastComponent = <P, BaseTheme>(
-  Component: React.ComponentType<P>,
-  key: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Component: any,
+  // Component: React.ComponentType<P>,
+  key: string,
 ) => {
   /**
    * Returns an enhanced primitive component that is decorated with dynamic style props.
@@ -26,19 +28,19 @@ export const createRecastComponent = <P, BaseTheme>(
     D extends string,
     S extends Size<BaseTheme, S>,
     V extends Variant<BaseTheme, V, S>,
-    M extends Modifier<BaseTheme, M, S, V>
+    M extends Modifier<BaseTheme, M, S, V>,
   >(
     displayName: D,
     styles: RecastStyles<BaseTheme, S, V, M>,
-    options?: RecastServerOptions
+    options?: RecastServerOptions,
   ) {
-    setTheme(styles?.themekey || key, styles)
+    setTheme(styles?.themekey || key, styles);
 
     type Props = Omit<
       Extract<ComponentProps<P, S, V, M>, P>,
       MaybeSize<S> | MaybeVariant<V>
     > &
-      Partial<Record<keyof M, boolean>>
+      Partial<Record<keyof M, boolean>>;
 
     const ComponentWithThemedProps = forwardRef<
       React.ElementRef<typeof Component>,
@@ -49,10 +51,10 @@ export const createRecastComponent = <P, BaseTheme>(
           ...props
         }: Omit<P, MaybeSize<S> | MaybeVariant<V>> &
           Partial<Record<keyof M, boolean>>,
-        ref
+        ref,
       ) => {
-        const modifierKeys = Object.keys(styles.modifier || {}) as [keyof M]
-        const modifierProps = modifierKeys.filter((x) => !!props[x])
+        const modifierKeys = Object.keys(styles.modifier || {}) as [keyof M];
+        const modifierProps = modifierKeys.filter((x) => !!props[x]);
 
         return (
           <Component
@@ -62,18 +64,18 @@ export const createRecastComponent = <P, BaseTheme>(
             ref={ref}
             {...(omit(modifierKeys as string[], props) as P)}
           />
-        )
-      }
-    )
+        );
+      },
+    );
 
     if (process.env["NODE_ENV"] !== "production")
-      ComponentWithThemedProps.displayName = displayName
+      ComponentWithThemedProps.displayName = displayName;
 
-    return ComponentWithThemedProps
+    return ComponentWithThemedProps;
   }
 
   return {
     recast: WrappedComponent,
     validate: validateRecastStyles<BaseTheme>(),
-  }
-}
+  };
+};

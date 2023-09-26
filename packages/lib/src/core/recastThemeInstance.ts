@@ -1,4 +1,4 @@
-import { Styles } from "./types"
+import { Styles } from "./types";
 
 /**
  * Theme instance singleton
@@ -6,23 +6,23 @@ import { Styles } from "./types"
  * styles to the global theme object
  */
 const RecastThemeInstance = (() => {
-  let theme: Record<string, Styles> = {}
+  let theme: Record<string, Styles> = {};
 
   const set = <S extends object>(key: string, styles: S) => {
-    theme = { ...theme, [key]: { ...styles } }
-  }
+    theme = { ...theme, [key]: { ...styles } };
+  };
 
   const get = () => {
-    return theme
-  }
+    return theme;
+  };
 
   return {
     get,
     set,
-  }
-})()
+  };
+})();
 
-export const getTheme = RecastThemeInstance.get
-export const setTheme = RecastThemeInstance.set
+export const getTheme = RecastThemeInstance.get;
+export const setTheme = RecastThemeInstance.set;
 
-export default RecastThemeInstance
+export default RecastThemeInstance;

@@ -1,20 +1,20 @@
-import type { Styles } from "../../core/types"
-import type { RecastServerOptions } from "../../server/types"
-import { getTheme } from "../../core/recastThemeInstance"
-import { getModifierClasses } from "../../core/utils/getModifierClasses"
-import { getSizeClasses } from "../../core/utils/getSizeClasses"
-import { getVariantClasses } from "../../core/utils/getVariantClasses"
-import { mergeClassNames } from "../../core/utils/mergeClassNames"
+import type { Styles } from "../../core/types";
+import type { RecastServerOptions } from "../../server/types";
+import { getTheme } from "../../core/recastThemeInstance";
+import { getModifierClasses } from "../../core/utils/getModifierClasses";
+import { getSizeClasses } from "../../core/utils/getSizeClasses";
+import { getVariantClasses } from "../../core/utils/getVariantClasses";
+import { mergeClassNames } from "../../core/utils/mergeClassNames";
 
 type Props = {
-  themekey?: string
-  size?: string
-  variant?: string
-  modifier?: string | string[]
-  options?: RecastServerOptions
-}
+  themekey?: string;
+  size?: string;
+  variant?: string;
+  modifier?: string | string[];
+  options?: RecastServerOptions;
+};
 
-type State<K> = Record<keyof K, string> | undefined
+type State<K> = Record<keyof K, string> | undefined;
 
 export const useRecastClasses = <K extends Record<string, string | string[]>>({
   themekey,
@@ -22,13 +22,13 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   variant,
   modifier,
 }: Props) => {
-  const theme = themekey ? getTheme()?.[themekey] : ({} as Styles)
+  const theme = themekey ? getTheme()?.[themekey] : ({} as Styles);
 
   const sizes = getSizeClasses({
     prop: typeof size === "string" ? size : "",
     sizes: theme?.size,
     fallback: theme?.defaults?.size,
-  })
+  });
 
   const variants = getVariantClasses({
     theme,
@@ -36,7 +36,7 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
     prop: typeof variant === "string" ? variant : "",
     variants: theme?.variant,
     fallback: theme?.defaults?.variant,
-  })
+  });
 
   const modifiers = getModifierClasses({
     theme,
@@ -45,16 +45,16 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
       typeof variant === "string" ? variant : "" || theme?.defaults?.variant,
     prop: modifier,
     modifiers: theme?.modifier,
-  })
+  });
 
   const classes = [theme?.base, sizes, variants, modifiers].reduce(
     (acc, curr) => {
-      if (!!acc && !!curr) return mergeClassNames(acc, curr)
+      if (!!acc && !!curr) return mergeClassNames(acc, curr);
 
-      return acc
+      return acc;
     },
-    {} as Record<string, string>
-  )
+    {} as Record<string, string>,
+  );
 
-  return classes as State<K>
-}
+  return classes as State<K>;
+};

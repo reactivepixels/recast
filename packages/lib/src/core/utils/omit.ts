@@ -3,13 +3,13 @@ export const omit = (
   originalObject: Record<
     string,
     string | string[] | Record<string, string | string[]>
-  > = {}
+  > = {},
 ) => {
-  const clonedObject = { ...originalObject }
+  const clonedObject = { ...originalObject };
 
   for (const path of keysToOmit) {
-    delete clonedObject[path]
+    delete clonedObject[path];
   }
 
-  return clonedObject
-}
+  return clonedObject;
+};

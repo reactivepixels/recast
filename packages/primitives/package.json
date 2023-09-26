@@ -6,24 +6,16 @@
   "engines": {
     "node": ">=18"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.module.mjs",
   "exports": {
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "import": "./dist/client.esm.js",
-      "require": "./dist/client.cjs",
-      "default": "./dist/client.modern.js"
-    },
-    "./server": {
-      "types": "./dist/server.d.ts",
-      "import": "./dist/server.esm.js",
-      "require": "./dist/server.cjs",
-      "default": "./dist/server.modern.js"
-    }
+    "types": "./dist/index.d.ts",
+    "require": "./dist/index.js",
+    "default": "./dist/index.modern.mjs"
   },
+  "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "client",
-    "server"
+    "dist"
   ],
   "peerDependencies": {
     "@rpxl/recast": "*",
@@ -39,31 +31,34 @@
     }
   },
   "scripts": {
-    "build": "microbundle src/{client,server}.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement",
-    "dev": "microbundle watch src/{client,server}.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement"
+    "prebuild": "rimraf dist",
+    "build": "microbundle src/index.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement",
+    "dev": "microbundle watch src/index.ts --globals @rpxl/recast/client=recastClient,@rpxl/recast/server=recastServer --jsx React.createElement"
   },
   "devDependencies": {
-    "@types/node": "^18.16.3",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.1",
-    "@typescript-eslint/eslint-plugin": "^5.59.1",
-    "@typescript-eslint/parser": "^5.59.1",
     "@rpxl/recast": "*",
-    "eslint": "^8.39.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-import-resolver-typescript": "^3.5.5",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "@types/node": "^18.16.3",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react": "^7.33.2",
     "microbundle": "^0.15.1",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "typescript": "5.1.6"
+    "typescript": "5.2.2"
   },
   "dependencies": {
-    "classnames": "^2.3.2"
+    "clsx": "^2.0.0",
+    "react-aria": "^3.28.0",
+    "rimraf": "^5.0.1"
   }
 }

@@ -1,4 +1,4 @@
-export type ClassNameRecord = Record<string, string | string[]>
+export type ClassNameRecord = Record<string, string | string[]>;
 
 /**
  * Normalizes the given classes by removing leading and trailing whitespace and joining them with a space.
@@ -7,10 +7,10 @@ export type ClassNameRecord = Record<string, string | string[]>
  * @returns {string} The normalized classes.
  */
 const normalizeValue = (classes?: string | string[]) => {
-  if (Array.isArray(classes)) return classes.map((x) => x.trim()).join(" ")
+  if (Array.isArray(classes)) return classes.map((x) => x.trim()).join(" ");
 
-  return classes
-}
+  return classes;
+};
 
 /**
  * Merges two values by normalizing them and concatenating them with a space.
@@ -22,18 +22,18 @@ const normalizeValue = (classes?: string | string[]) => {
  */
 const mergeValues = (
   objValue?: string | string[],
-  value?: string | string[]
+  value?: string | string[],
 ) => {
   if (!!objValue && !!value) {
-    return `${normalizeValue(objValue)} ${normalizeValue(value)}`
+    return `${normalizeValue(objValue)} ${normalizeValue(value)}`;
   } else if (!!objValue) {
-    return normalizeValue(objValue) || ""
+    return normalizeValue(objValue) || "";
   } else if (!!value) {
-    return normalizeValue(value) || ""
+    return normalizeValue(value) || "";
   } else {
-    return ""
+    return "";
   }
-}
+};
 
 /**
  * Merges class names from a target and source object, normalizing and concatenating them.
@@ -46,7 +46,7 @@ const mergeValues = (
  */
 export const mergeClassNames = (
   target: ClassNameRecord = {},
-  source: ClassNameRecord = {}
+  source: ClassNameRecord = {},
 ) => {
   /**
    * Normalizes the class names in an object by removing leading and trailing whitespace.
@@ -55,25 +55,25 @@ export const mergeClassNames = (
    * @returns {ClassNameRecord} The object with normalized class names.
    */
   const normalizeTarget = (x: ClassNameRecord) => {
-    const keys = Object.keys(x)
+    const keys = Object.keys(x);
 
     if (keys?.length) {
       return keys.reduce((acc, curr) => {
-        return { ...acc, [curr]: normalizeValue(x[curr]) || "" }
-      }, {} as ClassNameRecord)
+        return { ...acc, [curr]: normalizeValue(x[curr]) || "" };
+      }, {} as ClassNameRecord);
     }
 
-    return x
-  }
+    return x;
+  };
 
   return Object.keys(source).reduce((acc, curr) => {
     if (acc[curr] && source[curr]) {
-      return { ...acc, [curr]: mergeValues(acc[curr], source[curr]) }
+      return { ...acc, [curr]: mergeValues(acc[curr], source[curr]) };
     } else if (acc[curr]) {
-      return { ...acc, [curr]: normalizeValue(acc[curr]) || "" }
+      return { ...acc, [curr]: normalizeValue(acc[curr]) || "" };
     } else if (source[curr]) {
-      return { ...acc, [curr]: normalizeValue(source[curr]) || "" }
+      return { ...acc, [curr]: normalizeValue(source[curr]) || "" };
     }
-    return acc
-  }, normalizeTarget(target))
-}
+    return acc;
+  }, normalizeTarget(target));
+};

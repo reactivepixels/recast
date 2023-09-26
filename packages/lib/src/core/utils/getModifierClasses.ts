@@ -1,19 +1,19 @@
-import { Styles } from "../types"
-import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
-import { omit } from "./omit"
+import { Styles } from "../types";
+import { ClassNameRecord, mergeClassNames } from "./mergeClassNames";
+import { omit } from "./omit";
 
 type Modifiers = Record<
   string,
   Record<string, string | string[] | Record<string, string | string[]>>
->
+>;
 
 type GetModifierClassesProps = {
-  theme: Styles
-  modifiers?: Modifiers
-  prop?: string | string[]
-  size?: string
-  variant?: string
-}
+  theme: Styles;
+  modifiers?: Modifiers;
+  prop?: string | string[];
+  size?: string;
+  variant?: string;
+};
 
 export const getModifierClasses = ({
   theme,
@@ -27,23 +27,23 @@ export const getModifierClasses = ({
       string
     >
   | string => {
-  if (!modifiers) return {}
+  if (!modifiers) return {};
 
   // Normalize modifier props into array
-  const modifierProps: string[] = Array.isArray(prop) ? prop : [prop || ""]
+  const modifierProps: string[] = Array.isArray(prop) ? prop : [prop || ""];
   // Extract size keys
-  const sizeKeys = Object.keys(theme?.size || {})
+  const sizeKeys = Object.keys(theme?.size || {});
   // Extract variant keys
-  const variantKeys = Object.keys(theme?.variant || {})
+  const variantKeys = Object.keys(theme?.variant || {});
 
   return modifierProps.reduce((acc, modifier) => {
     // Get base modifier styles
-    const baseModifier = modifier ? modifiers?.[modifier] : {}
+    const baseModifier = modifier ? modifiers?.[modifier] : {};
     // Get any size based modifiers
-    const sizeModifier = size && modifier ? modifiers?.[modifier]?.[size] : {}
+    const sizeModifier = size && modifier ? modifiers?.[modifier]?.[size] : {};
     // Get any variant based modifiers
     const variantModifier =
-      variant && modifier ? modifiers?.[modifier]?.[variant] : {}
+      variant && modifier ? modifiers?.[modifier]?.[variant] : {};
 
     return mergeClassNames(
       acc,
@@ -52,9 +52,9 @@ export const getModifierClasses = ({
         omit([...sizeKeys, ...variantKeys], baseModifier) as ClassNameRecord,
         mergeClassNames(
           sizeModifier as ClassNameRecord,
-          variantModifier as ClassNameRecord
-        )
-      )
-    )
-  }, {})
-}
+          variantModifier as ClassNameRecord,
+        ),
+      ),
+    );
+  }, {});
+};

@@ -17,6 +17,6 @@
     "release": "npm run build:all && npx changeset publish"
   },
   "dependencies": {
-    "@changesets/cli": "^2.26.1"
+    "@changesets/cli": "^2.26.2"
   }
 }

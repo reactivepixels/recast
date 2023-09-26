@@ -5,4 +5,4 @@
  * @returns {boolean} Whether the value is an object and not an array or null.
  */
 export const isObject = (x: unknown) =>
-  typeof x === "object" && !Array.isArray(x) && x !== null
+  typeof x === "object" && !Array.isArray(x) && x !== null;

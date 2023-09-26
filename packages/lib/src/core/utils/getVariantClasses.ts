@@ -1,17 +1,17 @@
-import { omit } from "./omit"
-import { ClassNameRecord, mergeClassNames } from "./mergeClassNames"
-import { Styles } from "../types"
+import { omit } from "./omit";
+import { ClassNameRecord, mergeClassNames } from "./mergeClassNames";
+import { Styles } from "../types";
 
 type GetVariantClassesProps = {
-  theme: Styles
+  theme: Styles;
   variants?: Record<
     string,
     Record<string, string | string[] | Record<string, string | string[]>>
-  >
-  prop?: string
-  size?: string
-  fallback?: string
-}
+  >;
+  prop?: string;
+  size?: string;
+  fallback?: string;
+};
 
 export const getVariantClasses = ({
   theme,
@@ -25,19 +25,19 @@ export const getVariantClasses = ({
       string
     >
   | string => {
-  if (!variants) return {}
+  if (!variants) return {};
 
   // Extract size keys
-  const sizeKeys = Object.keys(theme?.size || {})
+  const sizeKeys = Object.keys(theme?.size || {});
   // Determine `variant` to use
-  const variant = prop || fallback
+  const variant = prop || fallback;
   // Get base variant styles
-  const baseVariant = variant ? variants?.[variant] : {}
+  const baseVariant = variant ? variants?.[variant] : {};
   // Get any size based variants
-  const sizeVariant = size && variant ? variants?.[variant]?.[size] : {}
+  const sizeVariant = size && variant ? variants?.[variant]?.[size] : {};
 
   return mergeClassNames(
     omit(sizeKeys, baseVariant) as ClassNameRecord,
-    sizeVariant as ClassNameRecord
-  )
-}
+    sizeVariant as ClassNameRecord,
+  );
+};
