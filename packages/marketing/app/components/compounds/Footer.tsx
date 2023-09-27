@@ -3,6 +3,7 @@
 import React, { forwardRef } from "react";
 import clsx from "clsx";
 import Image from "next/image";
+import { addBasePath } from "@/app/utils";
 
 type Props = React.HTMLAttributes<HTMLDivElement>;
 
@@ -23,7 +24,7 @@ const Footer = forwardRef<HTMLHeadingElement, Props>(
       >
         <div className="absolute left-1/2 top-[51px] transform -translate-y-full -translate-x-1/2 z-10 mix-blend-color-burn">
           <Image
-            src="/images/footer_bg.png"
+            src={addBasePath("images/footer_bg.png")}
             width={227}
             height={256}
             alt=""

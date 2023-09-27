@@ -100,3 +100,7 @@ export function getClassNameForToken({ types, empty }: any) {
   }
   return [...types, empty ? "inline-block" : "token"].join(" ");
 }
+
+export function addBasePath(path: string) {
+  return `${process.env.NODE_ENV === "production" ? "/recast/" : "/"}${path}`;
+}
