@@ -80,16 +80,18 @@ const Header = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
               </Type>
             </Stack>
 
-            <motion.div
-              key={Object.keys(buttonProps).length || 0}
-              variants={variants}
-              animate={"show"}
-              initial="hide"
-            >
-              <DemoButton className="w-fit" {...buttonProps}>
-                Get started!
-              </DemoButton>
-            </motion.div>
+            <div className="h-16">
+              <motion.div
+                key={Object.keys(buttonProps).length || 0}
+                variants={variants}
+                animate={"show"}
+                initial="hide"
+              >
+                <DemoButton className="w-fit" {...buttonProps}>
+                  Get started!
+                </DemoButton>
+              </motion.div>
+            </div>
           </Stack>
 
           <div className="relative hidden sm:flex">

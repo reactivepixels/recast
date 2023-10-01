@@ -1,4 +1,4 @@
-const newlineRe = /\r\n|\r|\n/;
+const newlineRegex = /\r\n|\r|\n/;
 
 // Empty lines need to contain a single empty token, denoted with { empty: true }
 function normalizeEmptyLines(line: any) {
@@ -68,7 +68,7 @@ export function normalizeTokens(tokens: any) {
       }
 
       // Split by newlines
-      const splitByNewlines = content.split(newlineRe);
+      const splitByNewlines = content.split(newlineRegex);
       const newlineCount = splitByNewlines.length;
 
       currentLine.push({ types, content: splitByNewlines[0] });

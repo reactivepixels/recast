@@ -6,9 +6,12 @@ export const Heading = RecastHeadingPrimitive.recast("Heading", {
     size: "xl",
   },
   base: {
-    root: "font-sans",
+    root: "font-sans w-fit",
   },
   size: {
+    xs: {
+      root: "text-base", // 24px
+    },
     sm: {
       root: "text-2xl", // 24px
     },
