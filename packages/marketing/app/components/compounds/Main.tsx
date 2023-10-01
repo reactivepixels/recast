@@ -11,7 +11,7 @@ const Main = forwardRef<HTMLHeadingElement, Props>(
       <main
         className={clsx(
           className,
-          "flex flex-col items-center justify-between p-24 flex-grow"
+          "flex flex-col items-center justify-between py-16 lg:py-24 flex-grow"
         )}
         ref={ref}
         {...props}

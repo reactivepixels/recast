@@ -13,7 +13,7 @@ const WhatIsRecast = forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <SectionWrapper className={className} ref={ref} {...props}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Stack>
           <Stack size="none">
             <Heading size="xs" variant="primary">
@@ -46,7 +46,7 @@ const WhatIsRecast = forwardRef<
             theme variations as props.
           </Type>
         </Stack>
-        <div className="mix-blend-darken hidden lg:block">
+        <div className="mix-blend-darken hidden md:block">
           <Image
             src={addBasePath("images/abstract_machine.png")}
             width={566}
