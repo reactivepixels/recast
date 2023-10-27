@@ -10,6 +10,7 @@ import { AriaButtonOptions, useButton } from "react-aria";
 import { useMergedRef } from "../utils/useMergedRef";
 
 const DEFAULT_THEME_KEY = "button";
+
 type BaseTheme = RecastThemeProp<"root"> &
   RecastThemeProp<"startEl"> &
   RecastThemeProp<"endEl">;

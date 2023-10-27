@@ -18,8 +18,6 @@ import type {
 } from "../core/types";
 
 export const createRecastComponent = <P, BaseTheme>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // Component: any,
   Component: React.ComponentType<P>,
   key: string,
 ) => {
