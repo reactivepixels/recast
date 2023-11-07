@@ -59,6 +59,7 @@
   "dependencies": {
     "clsx": "^2.0.0",
     "react-aria": "^3.28.0",
-    "rimraf": "^5.0.1"
+    "rimraf": "^5.0.1",
+    "tailwind-merge": "^2.0.0"
   }
 }
