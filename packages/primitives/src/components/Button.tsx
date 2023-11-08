@@ -1,65 +1,36 @@
-import React, { ElementType, PropsWithChildren, forwardRef } from "react";
-import clsx from "clsx";
+import React, { ButtonHTMLAttributes, forwardRef } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { RecastThemeProp } from "@rpxl/recast/core";
+import { cn } from "@/utils";
 import {
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast/client";
-import { RecastThemeProp } from "@rpxl/recast/core";
-import { AriaButtonOptions, useButton } from "react-aria";
-import { useMergedRef } from "../utils/useMergedRef";
 
 const DEFAULT_THEME_KEY = "button";
 
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"startEl"> &
-  RecastThemeProp<"endEl">;
+type BaseTheme = RecastThemeProp<"root">;
 
-type Props = PropsWithChildren<
-  RecastThemeProps &
-    AriaButtonOptions<"button"> & {
-      /**
-       * Element placed before the label.
-       */
-      startEl?: React.ReactNode;
-      /**
-       * Element placed after the label.
-       */
-      endEl?: React.ReactNode;
-      /**
-       * Element type override. Can be useful if using button styles
-       * within an anchor tag or a pseudo button `div`.
-       * */
-      as?: ElementType;
-      /**
-       * Additional css classes to merge
-       */
-      className?: string;
-    }
->;
+export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
+  RecastThemeProps & {
+    asChild?: boolean;
+  };
 
-const ButtonPrimitive = forwardRef<HTMLElement, Props>(
+const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   (
     {
       themekey = DEFAULT_THEME_KEY,
-      as: Tag = "button",
-      startEl,
-      endEl,
+      className,
       size,
       variant,
       modifier,
-      children,
-      className,
+      asChild = false,
       ...props
     },
     ref,
   ) => {
-    const elementRef = useMergedRef([ref]);
-
-    const { buttonProps } = useButton(
-      { ...(props as AriaButtonOptions<typeof Tag>), elementType: Tag },
-      elementRef,
-    );
+    const Comp = asChild ? Slot : "button";
 
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -69,21 +40,12 @@ const ButtonPrimitive = forwardRef<HTMLElement, Props>(
     });
 
     return (
-      <Tag
-        className={clsx(classes?.root, className)}
-        ref={elementRef}
-        {...buttonProps}
-      >
-        {startEl && <div className={classes?.startEl}>{startEl}</div>}
-        {children}
-        {endEl && <div className={classes?.endEl}>{endEl}</div>}
-      </Tag>
+      <Comp className={cn(classes?.root, className)} ref={ref} {...props} />
     );
   },
 );
 
-if (process.env["NODE_ENV"] !== "production")
-  ButtonPrimitive.displayName = "ButtonPrimitive";
+ButtonPrimitive.displayName = "ButtonPrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
   ButtonPrimitive,

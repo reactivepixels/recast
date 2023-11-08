@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "baseUrl": "./src",
     "rootDir": "./src",
@@ -6,8 +7,8 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "jsx": "preserve",
-    "types": ["node", "react"],
-    "lib": ["ESNext", "dom", "dom.iterable"],
+    "types": ["Node", "react"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": true,
@@ -21,7 +22,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": false,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]
