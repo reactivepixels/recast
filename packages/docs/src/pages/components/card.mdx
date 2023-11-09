@@ -1,0 +1,77 @@
+import { Tabs } from "nextra/components";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+# Card
+
+Displays a card with header, content, and footer.
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
+      <div className="flex min-h-[350px] w-full justify-center items-center p-10">
+        <Card className="w-[350px]">
+            <CardHeader>
+                <CardTitle>Create project</CardTitle>
+                <CardDescription>Deploy your new project in one-click.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Avatar size="sm">
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+                <Button variant="outline">Cancel</Button>
+                <Button>Deploy</Button>
+            </CardFooter>
+        </Card>
+      </div>
+    </div>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { Button } from "@/components/ui/button"
+    import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+    import {
+        Card,
+        CardContent,
+        CardDescription,
+        CardFooter,
+        CardHeader,
+        CardTitle,
+    } from "@/components/ui/card"
+
+    export function CardWithForm() {
+        return (
+            <Card className="w-[350px]">
+                <CardHeader>
+                    <CardTitle>Create project</CardTitle>
+                    <CardDescription>Deploy your new project in one-click.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Avatar size="sm">
+                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                        <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                    <Button variant="outline">Cancel</Button>
+                    <Button>Deploy</Button>
+                </CardFooter>
+            </Card>
+        )
+    }
+
+    ```
+
+  </Tabs.Tab>
+</Tabs>

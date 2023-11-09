@@ -23,6 +23,6 @@
     "noImplicitReturns": false,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"],
+  "include": ["src", "../primitives/src/utils/cn.ts"],
   "exclude": ["node_modules"]
 }

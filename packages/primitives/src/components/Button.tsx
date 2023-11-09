@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { RecastThemeProp } from "@rpxl/recast/core";
 import { cn } from "@/utils";
+import { RecastThemeProp } from "@rpxl/recast/core";
 import {
   useRecastClasses,
   createRecastComponent,

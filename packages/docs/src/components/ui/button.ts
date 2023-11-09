@@ -1,13 +1,26 @@
 "use client";
 
-import { RecastButtonPrimitive } from "@rpxl/recast-primitives";
+import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
-export const ButtonNewYork = RecastButtonPrimitive.recast("ButtonNewYork", {
-  themekey: "buttonNewYork",
+export const Button = ButtonPrimitive.recast("Button", {
   defaults: { variant: "default", size: "default" },
   base: {
     root: [
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      "inline-flex",
+      "items-center",
+      "justify-center",
+      "whitespace-nowrap",
+      "rounded-md",
+      "text-sm",
+      "font-medium",
+      "ring-offset-background",
+      "transition-colors",
+      "focus-visible:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-ring",
+      "focus-visible:ring-offset-2",
+      "disabled:pointer-events-none",
+      "disabled:opacity-50",
     ],
   },
   size: {

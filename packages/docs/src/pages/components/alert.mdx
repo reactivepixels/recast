@@ -1,0 +1,47 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { RocketIcon } from "@radix-ui/react-icons";
+import { Tabs } from "nextra/components";
+
+# Alert
+
+Displays a callout for user attention.
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
+      <div className="flex min-h-[350px] w-full justify-center items-center p-10">
+        <Alert>
+            <RocketIcon className="h-4 w-4" />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+                You can add components to your app using the cli.
+            </AlertDescription>
+        </Alert>
+      </div>
+    </div>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { RocketIcon } from "@radix-ui/react-icons"
+    
+    import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    } from "@/components/ui/alert"
+    
+    export function AlertDemo() {
+        return (
+            <Alert>
+                <RocketIcon className="h-4 w-4" />
+                <AlertTitle>Heads up!</AlertTitle>
+                <AlertDescription>
+                    You can add components to your app using the cli.
+                </AlertDescription>
+            </Alert>
+        )
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>
