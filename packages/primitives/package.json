@@ -3,21 +3,25 @@
   "license": "MIT",
   "version": "1.0.11",
   "type": "module",
+  "sideEffects": false,
   "engines": {
     "node": ">=18"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.modern.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     "./accordion": {
-      "types": "./dist/components/accordion/index.d.ts",
-      "import": "./dist/components/accordion/index.esm.js",
-      "require": "./dist/components/accordion/index.cjs",
-      "default": "./dist/components/accordion/index.modern.js"
+      "types": "./dist/accordion.d.ts",
+      "import": "./dist/accordion.esm.js",
+      "require": "./dist/accordion.cjs",
+      "default": "./dist/accordion.modern.js"
     },
     "./alert": {
-      "types": "./dist/components/alert/index.d.ts",
-      "import": "./dist/components/alert/index.esm.js",
-      "require": "./dist/components/alert/index.cjs",
-      "default": "./dist/components/alert/index.modern.js"
+      "types": "./dist/alert.d.ts",
+      "import": "./dist/alert.esm.js",
+      "require": "./dist/alert.cjs",
+      "default": "./dist/alert.modern.js"
     },
     ".": {
       "types": "./dist/index.d.ts",
