@@ -1,6 +1,6 @@
 "use client";
 
-import { AccordionContentPrimitive } from "@rpxl/recast-primitives/accordion";
+import { AccordionContentPrimitive } from "@rpxl/recast-primitives";
 
 export const AccordionContent = AccordionContentPrimitive.recast(
   "AccordionContent",

@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertPrimitive } from "@rpxl/recast-primitives/alert";
+import { AlertPrimitive } from "@rpxl/recast-primitives";
 
 export const Alert = AlertPrimitive.recast("Alert", {
   defaults: { variant: "default" },

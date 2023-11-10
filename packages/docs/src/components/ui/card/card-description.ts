@@ -1,6 +1,6 @@
 "use client";
 
-import { CardDescriptionPrimitive } from "@rpxl/recast-primitives/card";
+import { CardDescriptionPrimitive } from "@rpxl/recast-primitives";
 
 export const CardDescription = CardDescriptionPrimitive.recast(
   "CardDescription",

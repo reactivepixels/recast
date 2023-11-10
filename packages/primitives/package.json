@@ -9,17 +9,17 @@
   },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "types": "./dist/cjs/index.d.ts",
   "exports": {
-    "./accordion": {
-      "types": "./dist/esm/components/accordion/index.d.ts",
-      "import": "./dist/esm/components/accordion/index.js",
-      "require": "./dist/cjs/components/accordion/index.js"
-    },
     ".": {
-      "types": "./dist/esm/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "files": [

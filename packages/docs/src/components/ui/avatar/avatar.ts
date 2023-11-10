@@ -1,6 +1,6 @@
 "use client";
 
-import { AvatarPrimitive } from "@rpxl/recast-primitives/avatar";
+import { AvatarPrimitive } from "@rpxl/recast-primitives";
 
 export const Avatar = AvatarPrimitive.recast("Avatar", {
   defaults: { size: "md" },

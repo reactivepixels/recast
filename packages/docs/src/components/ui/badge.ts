@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgePrimitive } from "@rpxl/recast-primitives/badge";
+import { BadgePrimitive } from "@rpxl/recast-primitives";
 
 export const Badge = BadgePrimitive.recast("Badge", {
   defaults: { variant: "default" },

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckboxPrimitive } from "@rpxl/recast-primitives/checkbox";
+import { CheckboxPrimitive } from "@rpxl/recast-primitives";
 
 export const Checkbox = CheckboxPrimitive.recast("Checkbox", {
   base: {

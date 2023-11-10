@@ -1,6 +1,6 @@
 "use client";
 
-import { CardFooterPrimitive } from "@rpxl/recast-primitives/card";
+import { CardFooterPrimitive } from "@rpxl/recast-primitives";
 
 export const CardFooter = CardFooterPrimitive.recast("CardFooter", {
   base: {
