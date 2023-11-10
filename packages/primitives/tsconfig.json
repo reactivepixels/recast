@@ -8,7 +8,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "jsx": "preserve",
+    "jsx": "react",
     "types": ["node", "react"],
     "lib": ["esnext", "dom", "dom.iterable"],
     "allowJs": true,
