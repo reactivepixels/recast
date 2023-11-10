@@ -1,35 +1,36 @@
-import React, { ElementType, forwardRef } from "react";
+import React, { forwardRef } from "react";
+import { Slot } from "@radix-ui/react-slot";
 import {
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast/client";
-import clsx from "clsx";
 import { RecastThemeProp } from "@rpxl/recast/core";
+import { cn } from "../../utils/cn";
 
 const DEFAULT_THEME_KEY = "stack";
 type BaseTheme = RecastThemeProp<"root">;
 
 type Props = React.HTMLAttributes<HTMLHeadingElement> &
   RecastThemeProps & {
-    /** HTML element override. */
-    as?: ElementType;
+    asChild?: boolean;
   };
 
 const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
   (
     {
-      as: Tag = "div",
       themekey = DEFAULT_THEME_KEY,
       children,
       className,
       size,
       variant,
       modifier,
+      asChild,
       ...props
     },
     ref,
   ) => {
+    const Comp = asChild ? Slot : "div";
     const classes = useRecastClasses<BaseTheme>({
       themekey,
       size,
@@ -38,15 +39,14 @@ const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
     });
 
     return (
-      <Tag className={clsx(classes?.root, className)} ref={ref} {...props}>
+      <Comp className={cn(classes?.root, className)} ref={ref} {...props}>
         {children}
-      </Tag>
+      </Comp>
     );
   },
 );
 
-if (process.env["NODE_ENV"] !== "production")
-  StackPrimitive.displayName = "StackPrimitive";
+StackPrimitive.displayName = "StackPrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
   StackPrimitive,
