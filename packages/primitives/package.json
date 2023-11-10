@@ -7,27 +7,39 @@
   "engines": {
     "node": ">=18"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.modern.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     "./accordion": {
-      "types": "./dist/accordion.d.ts",
-      "import": "./dist/accordion.esm.js",
+      "types": "./dist/entry/accordion.d.ts",
       "require": "./dist/accordion.cjs",
-      "default": "./dist/accordion.modern.js"
+      "default": "./dist/accordion.modern.mjs"
     },
     "./alert": {
-      "types": "./dist/alert.d.ts",
-      "import": "./dist/alert.esm.js",
+      "types": "./dist/entry/alert.d.ts",
       "require": "./dist/alert.cjs",
-      "default": "./dist/alert.modern.js"
+      "default": "./dist/alert.modern.mjs"
+    },
+    "./alert-dialog": {
+      "types": "./dist/entry/alert-dialog.d.ts",
+      "require": "./dist/alert-dialog.cjs",
+      "default": "./dist/alert-dialog.modern.mjs"
+    },
+    "./avatar": {
+      "types": "./dist/entry/avatar.d.ts",
+      "require": "./dist/avatar.cjs",
+      "default": "./dist/avatar.modern.mjs"
+    },
+    "./card": {
+      "types": "./dist/entry/card.d.ts",
+      "require": "./dist/card.cjs",
+      "default": "./dist/card.modern.mjs"
     },
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.esm.js",
       "require": "./dist/index.cjs",
-      "default": "./dist/index.modern.js"
+      "default": "./dist/index.modern.mjs"
     }
   },
   "files": [
@@ -48,8 +60,8 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "microbundle src/{index,alert,accordion}.ts --jsx React.createElement",
-    "dev": "microbundle watch src/index.ts --globals --jsx React.createElement"
+    "build": "microbundle {src/index,src/entry/*}.ts --jsx React.createElement",
+    "dev": "microbundle watch {src/index,src/entry/*}.ts --globals --jsx React.createElement"
   },
   "devDependencies": {
     "@rpxl/recast": "*",
@@ -80,7 +92,6 @@
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-slot": "^1.0.2",
     "clsx": "^2.0.0",
-    "react-aria": "^3.29.1",
     "rimraf": "^5.0.5",
     "tailwind-merge": "^2.0.0"
   }

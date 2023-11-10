@@ -1,8 +1,8 @@
 "use client";
 
-import { RecastAccordionTriggerPrimitive } from "@rpxl/recast-primitives";
+import { AccordionTriggerPrimitive } from "@rpxl/recast-primitives/accordion";
 
-export const AccordionTrigger = RecastAccordionTriggerPrimitive.recast(
+export const AccordionTrigger = AccordionTriggerPrimitive.recast(
   "AccordionTrigger",
   {
     base: {

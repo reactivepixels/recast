@@ -1,12 +1,9 @@
 "use client";
 
-import { RecastAccordionItemPrimitive } from "@rpxl/recast-primitives";
+import { AccordionItemPrimitive } from "@rpxl/recast-primitives/accordion";
 
-export const AccordionItem = RecastAccordionItemPrimitive.recast(
-  "AccordionItem",
-  {
-    base: {
-      root: "border-b",
-    },
-  }
-);
+export const AccordionItem = AccordionItemPrimitive.recast("AccordionItem", {
+  base: {
+    root: "border-b",
+  },
+});

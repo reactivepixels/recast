@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
-import { cn } from "@/utils";
+import { cn } from "@/utils/cn";
 import { RecastThemeProp } from "@rpxl/recast/core";
 import {
   useRecastClasses,
@@ -12,7 +12,7 @@ const DEFAULT_THEME_KEY = "accordion";
 
 type BaseTheme = RecastThemeProp<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Root
 > &
   RecastThemeProps;
@@ -55,5 +55,3 @@ export default createRecastComponent<Props, BaseTheme>(
   AccordionPrimitive,
   DEFAULT_THEME_KEY,
 );
-
-export { AccordionPrimitive };

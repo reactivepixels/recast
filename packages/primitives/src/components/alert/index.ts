@@ -1,3 +1,3 @@
-export { default as RecastAlertPrimitive } from "./alert";
-export { default as RecastAlertDescriptionPrimitive } from "./alert-description";
-export { default as RecastAlertTitlePrimitive } from "./alert-title";
+export { default as AlertPrimitive } from "./alert";
+export { default as AlertDescriptionPrimitive } from "./alert-description";
+export { default as AlertTitlePrimitive } from "./alert-title";

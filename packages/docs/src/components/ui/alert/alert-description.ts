@@ -1,8 +1,8 @@
 "use client";
 
-import { RecastAlertDescriptionPrimitive } from "@rpxl/recast-primitives";
+import { AlertDescriptionPrimitive } from "@rpxl/recast-primitives/alert";
 
-export const AlertDescription = RecastAlertDescriptionPrimitive.recast(
+export const AlertDescription = AlertDescriptionPrimitive.recast(
   "AlertDescription",
   {
     base: {

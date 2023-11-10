@@ -1,6 +1,6 @@
 "use client";
 
-import { CardHeaderPrimitive } from "@rpxl/recast-primitives";
+import { CardHeaderPrimitive } from "@rpxl/recast-primitives/card";
 
 export const CardHeader = CardHeaderPrimitive.recast("CardHeader", {
   base: {

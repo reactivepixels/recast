@@ -1,4 +1,4 @@
-export { default as RecastAccordionPrimitive } from "./accordion";
-export { default as RecastAccordionContentPrimitive } from "./accordion-content";
-export { default as RecastAccordionItemPrimitive } from "./accordion-item";
-export { default as RecastAccordionTriggerPrimitive } from "./accordion-trigger";
+export { default as AccordionPrimitive } from "./accordion";
+export { default as AccordionContentPrimitive } from "./accordion-content";
+export { default as AccordionItemPrimitive } from "./accordion-item";
+export { default as AccordionTriggerPrimitive } from "./accordion-trigger";

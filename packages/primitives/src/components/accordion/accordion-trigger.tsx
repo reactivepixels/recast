@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { cn } from "@/utils";
+import { cn } from "@/utils/cn";
 import { RecastThemeProp } from "@rpxl/recast/core";
 import {
   useRecastClasses,
@@ -15,7 +15,7 @@ type BaseTheme = RecastThemeProp<"root"> &
   RecastThemeProp<"trigger"> &
   RecastThemeProp<"icon">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Trigger
 > &
   RecastThemeProps & {
@@ -67,5 +67,3 @@ export default createRecastComponent<Props, BaseTheme>(
   AccordionTriggerPrimitive,
   DEFAULT_THEME_KEY,
 );
-
-export { AccordionTriggerPrimitive };

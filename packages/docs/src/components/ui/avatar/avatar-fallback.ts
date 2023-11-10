@@ -1,6 +1,6 @@
 "use client";
 
-import { AvatarFallbackPrimitive } from "@rpxl/recast-primitives";
+import { AvatarFallbackPrimitive } from "@rpxl/recast-primitives/avatar";
 
 export const AvatarFallback = AvatarFallbackPrimitive.recast("AvatarFallback", {
   base: {

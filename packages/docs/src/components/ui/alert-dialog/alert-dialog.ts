@@ -1,3 +1,3 @@
 "use client";
 
-export { RecastAlertDialogPrimitive as AlertDialog } from "@rpxl/recast-primitives";
+export { AlertDialogPrimitive as AlertDialog } from "@rpxl/recast-primitives/alert-dialog";

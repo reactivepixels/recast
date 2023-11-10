@@ -1,10 +1,12 @@
 "use client";
 
-import { RecastAlertDialogDescriptionPrimitive } from "@rpxl/recast-primitives";
+import { AlertDialogDescriptionPrimitive } from "@rpxl/recast-primitives/alert-dialog";
 
-export const AlertDialogDescription =
-  RecastAlertDialogDescriptionPrimitive.recast("AlertDialogDescription", {
+export const AlertDialogDescription = AlertDialogDescriptionPrimitive.recast(
+  "AlertDialogDescription",
+  {
     base: {
       root: "text-sm text-muted-foreground",
     },
-  });
+  }
+);

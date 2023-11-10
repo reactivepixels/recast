@@ -1,8 +1,8 @@
 "use client";
 
-import { RecastAlertDialogCancelPrimitive } from "@rpxl/recast-primitives";
+import { AlertDialogCancelPrimitive } from "@rpxl/recast-primitives/alert-dialog";
 
-export const AlertDialogCancel = RecastAlertDialogCancelPrimitive.recast(
+export const AlertDialogCancel = AlertDialogCancelPrimitive.recast(
   "AlertDialogCancel",
   {
     base: {

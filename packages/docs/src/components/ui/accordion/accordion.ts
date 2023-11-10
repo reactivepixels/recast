@@ -1,7 +1,5 @@
 "use client";
 
-import { RecastAccordionPrimitive } from "@rpxl/recast-primitives/accordion";
-import { RecastAlertPrimitive } from "@rpxl/recast-primitives/alert";
-import { RecastAlertPrimitive as YO } from "@rpxl/recast-primitives";
+import { AccordionPrimitive } from "@rpxl/recast-primitives/accordion";
 
-export const Accordion = RecastAccordionPrimitive.recast("Accordion", {});
+export const Accordion = AccordionPrimitive.recast("Accordion", {});
