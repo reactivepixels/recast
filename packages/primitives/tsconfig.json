@@ -1,14 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "baseUrl": "./src",
     "rootDir": "./src",
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "baseUrl": "./src",
+    "outDir": "./dist",
+    "declaration": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "jsx": "preserve",
-    "types": ["Node", "react"],
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["node", "react"],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": true,
@@ -18,7 +20,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noImplicitReturns": false,
@@ -27,6 +28,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["src", "src/utils/cn.ts"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

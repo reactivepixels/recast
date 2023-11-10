@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import * as RadixAlertDialogPrimitive from "@radix-ui/react-alert-dialog";
-import { cn } from "@/utils/cn";
+import { cn } from "../../utils/cn";
 import { RecastThemeProp } from "@rpxl/recast/core";
 import {
   useRecastClasses,

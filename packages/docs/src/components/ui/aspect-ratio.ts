@@ -1,1 +1,1 @@
-export { RecastAspectRatioPrimitive as AspectRatio } from "@rpxl/recast-primitives";
+export { AspectRatioPrimitive as AspectRatio } from "@rpxl/recast-primitives/aspect-ratio";

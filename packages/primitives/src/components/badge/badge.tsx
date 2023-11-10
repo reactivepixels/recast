@@ -1,6 +1,6 @@
-import React, { ButtonHTMLAttributes, forwardRef } from "react";
+import React, { HTMLAttributes, forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "@/utils/cn";
+import { cn } from "../../utils/cn";
 import { RecastThemeProp } from "@rpxl/recast/core";
 import {
   useRecastClasses,
@@ -8,16 +8,16 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast/client";
 
-const DEFAULT_THEME_KEY = "button";
+const DEFAULT_THEME_KEY = "badge";
 
 type BaseTheme = RecastThemeProp<"root">;
 
-export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
+export type Props = HTMLAttributes<HTMLDivElement> &
   RecastThemeProps & {
     asChild?: boolean;
   };
 
-const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
+const BadgePrimitive = forwardRef<HTMLDivElement, Props>(
   (
     {
       themekey = DEFAULT_THEME_KEY,
@@ -25,12 +25,12 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
       size,
       variant,
       modifier,
-      asChild = false,
+      asChild,
       ...props
     },
     ref,
   ) => {
-    const Comp = asChild ? Slot : "button";
+    const Comp = asChild ? Slot : "div";
 
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -45,9 +45,9 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   },
 );
 
-ButtonPrimitive.displayName = "ButtonPrimitive";
+BadgePrimitive.displayName = "BadgePrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
-  ButtonPrimitive,
+  BadgePrimitive,
   DEFAULT_THEME_KEY,
 );

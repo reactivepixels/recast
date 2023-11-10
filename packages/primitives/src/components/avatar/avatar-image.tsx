@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import * as RadixAvatarPrimitive from "@radix-ui/react-avatar";
-import { cn } from "@/utils/cn";
+import { cn } from "../../utils/cn";
 import { RecastThemeProp } from "@rpxl/recast/core";
 import {
   useRecastClasses,

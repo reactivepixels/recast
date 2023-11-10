@@ -1,6 +1,6 @@
 "use client";
 
-import { ButtonPrimitive } from "@rpxl/recast-primitives";
+import { ButtonPrimitive } from "@rpxl/recast-primitives/button";
 
 export const Button = ButtonPrimitive.recast("Button", {
   defaults: { variant: "default", size: "default" },
