@@ -1,13 +1,13 @@
 import React, { forwardRef } from "react";
-import { cn } from "../../utils/cn";
+import { cn } from "../../utils/cn.js";
 import * as RadixCheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { RecastThemeProp } from "@rpxl/recast/core";
 import {
+  RecastThemeProp,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
+} from "@rpxl/recast";
 
 const DEFAULT_THEME_KEY = "card";
 

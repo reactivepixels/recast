@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { debounce } from "../../core/utils/debounce";
+import { debounce } from "../../core/utils/debounce.js";
 
 export const useDebounce = <A = unknown, R = void>(
   fn: (args: A) => R,

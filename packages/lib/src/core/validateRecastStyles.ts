@@ -1,4 +1,4 @@
-import { Modifier, RecastStyles, Size, Variant } from "./types";
+import { Modifier, RecastStyles, Size, Variant } from "./types.js";
 
 /**
  * Utility to validate a components recast styles object shape

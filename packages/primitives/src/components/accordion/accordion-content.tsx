@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
-import { cn } from "../../utils/cn";
-import { RecastThemeProp } from "@rpxl/recast/core";
+import { cn } from "../../utils/cn.js";
 import {
+  RecastThemeProp,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
+} from "@rpxl/recast";
 
 const DEFAULT_THEME_KEY = "accordionContent";
 

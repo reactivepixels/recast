@@ -1,1 +1,1 @@
-export { default as ButtonPrimitive } from "./button";
+export { default as ButtonPrimitive } from "./button.js";

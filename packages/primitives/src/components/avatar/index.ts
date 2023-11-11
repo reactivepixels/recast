@@ -1,3 +1,3 @@
-export { default as AvatarPrimitive } from "./avatar";
-export { default as AvatarFallbackPrimitive } from "./avatar-fallback";
-export { default as AvatarImagePrimitive } from "./avatar-image";
+export { default as AvatarPrimitive } from "./avatar.js";
+export { default as AvatarFallbackPrimitive } from "./avatar-fallback.js";
+export { default as AvatarImagePrimitive } from "./avatar-image.js";

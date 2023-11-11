@@ -1,4 +1,4 @@
-import { RecastClientOptions } from "./types";
+import { RecastClientOptions } from "./types.js";
 
 // Set the default values for any Recast client options
 export const DEFAULT_RECAST_CLIENT_OPTIONS: Required<RecastClientOptions> = {

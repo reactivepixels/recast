@@ -1,8 +1,8 @@
 import React, { forwardRef } from "react";
-import { setTheme } from "../core/recastThemeInstance";
-import { omit } from "../core/utils/omit";
-import { validateRecastStyles } from "../core/validateRecastStyles";
-import type { ComponentProps, RecastServerOptions } from "../server/types";
+import { setTheme } from "../core/recastThemeInstance.js";
+import { omit } from "../core/utils/omit.js";
+import { validateRecastStyles } from "../core/validateRecastStyles.js";
+import type { ComponentProps, RecastServerOptions } from "../server/types.js";
 import type {
   MaybeSize,
   MaybeVariant,
@@ -10,7 +10,7 @@ import type {
   RecastStyles,
   Size,
   Variant,
-} from "../core/types";
+} from "../core/types.js";
 
 export const createRecastComponent = <P, BaseTheme>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

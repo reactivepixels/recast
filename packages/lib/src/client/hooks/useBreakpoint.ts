@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { debounce } from "../../core/utils/debounce";
-import { Viewports } from "../types";
+import { debounce } from "../../core/utils/debounce.js";
+import { Viewports } from "../types.js";
 
 export const useBreakpoint = (
   viewports: Viewports,

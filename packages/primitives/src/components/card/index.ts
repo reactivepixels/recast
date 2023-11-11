@@ -1,6 +1,6 @@
-export { default as CardPrimitive } from "./card";
-export { default as CardContentPrimitive } from "./card-content";
-export { default as CardDescriptionPrimitive } from "./card-description";
-export { default as CardHeaderPrimitive } from "./card-header";
-export { default as CardFooterPrimitive } from "./card-footer";
-export { default as CardTitlePrimitive } from "./card-title";
+export { default as CardPrimitive } from "./card.js";
+export { default as CardContentPrimitive } from "./card-content.js";
+export { default as CardDescriptionPrimitive } from "./card-description.js";
+export { default as CardHeaderPrimitive } from "./card-header.js";
+export { default as CardFooterPrimitive } from "./card-footer.js";
+export { default as CardTitlePrimitive } from "./card-title.js";

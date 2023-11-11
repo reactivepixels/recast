@@ -1,12 +1,12 @@
 import React, { forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
+import { cn } from "../../utils/cn.js";
 import {
+  RecastThemeProp,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
-import { RecastThemeProp } from "@rpxl/recast/core";
-import { cn } from "../../utils/cn";
+} from "@rpxl/recast";
 
 const DEFAULT_THEME_KEY = "stack";
 type BaseTheme = RecastThemeProp<"root">;

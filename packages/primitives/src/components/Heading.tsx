@@ -1,11 +1,11 @@
 import React, { ElementType, forwardRef } from "react";
+import clsx from "clsx";
 import {
+  RecastThemeProp,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
-import clsx from "clsx";
-import { RecastThemeProp } from "@rpxl/recast/core";
+} from "@rpxl/recast";
 
 const DEFAULT_THEME_KEY = "heading";
 type BaseTheme = RecastThemeProp<"root">;

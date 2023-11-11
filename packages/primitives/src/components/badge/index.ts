@@ -1,1 +1,1 @@
-export { default as BadgePrimitive } from "./badge";
+export { default as BadgePrimitive } from "./badge.js";

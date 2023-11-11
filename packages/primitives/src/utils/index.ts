@@ -1,2 +1,2 @@
-export * from "./cn";
-export * from "./useMergedRef";
+export * from "./cn.js";
+export * from "./useMergedRef.js";

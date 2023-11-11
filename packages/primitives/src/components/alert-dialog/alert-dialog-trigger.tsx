@@ -1,12 +1,12 @@
 import React, { forwardRef } from "react";
 import * as RadixAlertDialogPrimitive from "@radix-ui/react-alert-dialog";
-import { cn } from "../../utils/cn";
-import { RecastThemeProp } from "@rpxl/recast/core";
+import { cn } from "../../utils/cn.js";
 import {
+  RecastThemeProp,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
+} from "@rpxl/recast";
 
 const DEFAULT_THEME_KEY = "alertDialogTrigger";
 

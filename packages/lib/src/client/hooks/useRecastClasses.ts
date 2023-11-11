@@ -1,14 +1,14 @@
 import { useCallback, useMemo } from "react";
-import { RecastClientOptions } from "../types";
-import { isObject } from "../../core/utils/isObject";
-import { useBreakpoint } from "./useBreakpoint";
-import { getTheme } from "../../core/recastThemeInstance";
-import { Styles } from "../../core/types";
-import { getSizeClasses } from "../../core/utils/getSizeClasses";
-import { getVariantClasses } from "../../core/utils/getVariantClasses";
-import { getModifierClasses } from "../../core/utils/getModifierClasses";
-import { mergeClassNames } from "../../core/utils/mergeClassNames";
-import { DEFAULT_RECAST_CLIENT_OPTIONS } from "../constants";
+import { RecastClientOptions } from "../types.js";
+import { isObject } from "../../core/utils/isObject.js";
+import { useBreakpoint } from "./useBreakpoint.js";
+import { getTheme } from "../../core/recastThemeInstance.js";
+import { Styles } from "../../core/types.js";
+import { getSizeClasses } from "../../core/utils/getSizeClasses.js";
+import { getVariantClasses } from "../../core/utils/getVariantClasses.js";
+import { getModifierClasses } from "../../core/utils/getModifierClasses.js";
+import { mergeClassNames } from "../../core/utils/mergeClassNames.js";
+import { DEFAULT_RECAST_CLIENT_OPTIONS } from "../constants.js";
 
 type RecastPropUnion =
   | string

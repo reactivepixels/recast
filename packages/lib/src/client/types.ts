@@ -1,4 +1,4 @@
-import { Nullish } from "../core/types";
+import { Nullish } from "../core/types.js";
 
 export type Viewports = Record<string, number>;
 

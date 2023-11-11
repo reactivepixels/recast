@@ -7,57 +7,57 @@
   "engines": {
     "node": ">=18"
   },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
   "exports": {
-    "./core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.esm.js",
-      "require": "./dist/core.cjs",
-      "default": "./dist/core.modern.js"
+    "./dist/cjs/core/types": {
+      "import": {
+        "types": "./dist/esm/core/types.d.ts"
+      },
+      "require": {
+        "types": "./dist/cjs/core/types.d.ts"
+      }
     },
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "import": "./dist/client.esm.js",
-      "require": "./dist/client.cjs",
-      "default": "./dist/client.modern.js"
+    "./dist/cjs/client/types": {
+      "import": {
+        "types": "./dist/esm/client/types.d.ts"
+      },
+      "require": {
+        "types": "./dist/cjs/client/types.d.ts"
+      }
+    },
+    "./dist/cjs/server/types": {
+      "import": {
+        "types": "./dist/esm/server/types.d.ts"
+      },
+      "require": {
+        "types": "./dist/cjs/server/types.d.ts"
+      }
     },
     "./server": {
-      "types": "./dist/server.d.ts",
-      "import": "./dist/server.esm.js",
-      "require": "./dist/server.cjs",
-      "default": "./dist/server.modern.js"
+      "import": {
+        "types": "./dist/esm/server/index.d.ts",
+        "default": "./dist/esm/server/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/server/index.d.ts",
+        "default": "./dist/cjs/server/index.js"
+      }
     },
-    "./dist/core": {
-      "types": "./dist/core.d.ts",
-      "import": "./dist/core.esm.js",
-      "require": "./dist/core.cjs",
-      "default": "./dist/core.modern.js"
-    },
-    "./dist/client": {
-      "types": "./dist/client.d.ts",
-      "import": "./dist/client.esm.js",
-      "require": "./dist/client.cjs",
-      "default": "./dist/client.modern.js"
-    },
-    "./dist/server": {
-      "types": "./dist/server.d.ts",
-      "import": "./dist/server.esm.js",
-      "require": "./dist/server.cjs",
-      "default": "./dist/server.modern.js"
-    },
-    "./dist/core/types": {
-      "types": "./dist/core/types.d.ts"
-    },
-    "./dist/client/types": {
-      "types": "./dist/client/types.d.ts"
-    },
-    "./dist/server/types": {
-      "types": "./dist/server/types.d.ts"
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "files": [
     "dist",
-    "core",
-    "client",
     "server"
   ],
   "peerDependencies": {
@@ -74,8 +74,9 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "microbundle src/{core,client,server}.ts --jsx React.createElement",
-    "dev": "microbundle watch src/{core,client,server}.ts --jsx React.createElement",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc --outDir dist/esm",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs",
     "test": "jest",
     "test:watch": "jest --watch"
   },
