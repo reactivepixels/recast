@@ -1,13 +1,13 @@
 import React, { ElementType, forwardRef } from "react";
 import clsx from "clsx";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root">;
+type BaseTheme = RecastBaseTheme<"root">;
 
 type Props = React.HTMLAttributes<HTMLHeadingElement> &
   RecastThemeProps & {

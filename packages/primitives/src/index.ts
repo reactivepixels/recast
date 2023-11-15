@@ -22,6 +22,8 @@ export * from "./components/slider/index.js";
 export * from "./components/stack/index.js";
 export * from "./components/switch/index.js";
 export * from "./components/textarea/index.js";
+export * from "./components/toggle/index.js";
+export * from "./components/toggle-group/index.js";
 export { default as RecastHeadingPrimitive } from "./components/heading.js";
 export { default as RecastIconPrimitive } from "./components/icon.js";
 export { default as RecastTypePrimitive } from "./components/type.js";

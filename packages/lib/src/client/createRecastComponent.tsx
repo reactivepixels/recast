@@ -24,8 +24,8 @@ export const createRecastComponent = <P, BaseTheme>(
   /**
    * Returns an enhanced primitive component that is decorated with dynamic style props.
    *
-   * @param displayName - Display name for component
    * @param styles - A styles object that conforms to the components `BaseTheme` API
+   * @param options - Recast breakpoint options
    */
   function WrappedComponent<
     S extends Size<BaseTheme, S>,

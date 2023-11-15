@@ -1,16 +1,14 @@
 import React, { forwardRef } from "react";
 import clsx from "clsx";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 import Link from "next/link";
 
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"startEl"> &
-  RecastThemeProp<"endEl">;
+type BaseTheme = RecastBaseTheme<"root" | "startEl" | "endEl">;
 
 type Props = RecastThemeProps &
   React.ComponentPropsWithRef<typeof Link> & {

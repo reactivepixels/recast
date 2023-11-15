@@ -1,13 +1,13 @@
 import React, { TextareaHTMLAttributes, forwardRef } from "react";
 import { cn } from "../../utils/cn.js";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root">;
+type BaseTheme = RecastBaseTheme<"root">;
 
 type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & RecastThemeProps;
 

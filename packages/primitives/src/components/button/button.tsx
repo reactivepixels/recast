@@ -2,13 +2,13 @@ import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "../../utils/cn.js";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root">;
+type BaseTheme = RecastBaseTheme<"root">;
 
 export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
   RecastThemeProps & {
@@ -21,6 +21,8 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
+
+    console.log(modifier);
 
     const classes = useRecastClasses<BaseTheme>({
       themekey,

@@ -2,13 +2,13 @@ import React, { forwardRef } from "react";
 import * as RadixProgressPrimitive from "@radix-ui/react-progress";
 import { cn } from "../../utils/cn.js";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root" | "indicator">;
+type BaseTheme = RecastBaseTheme<"root" | "indicator">;
 
 export type Props = React.ComponentPropsWithoutRef<
   typeof RadixProgressPrimitive.Root

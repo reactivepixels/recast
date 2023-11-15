@@ -53,5 +53,8 @@ export const Button = ButtonPrimitive.recast({
     block: {
       root: "w-full",
     },
+    floating: {
+      root: "w-full",
+    },
   },
 });

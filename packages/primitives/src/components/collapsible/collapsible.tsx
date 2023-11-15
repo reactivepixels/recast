@@ -2,13 +2,13 @@ import React, { forwardRef } from "react";
 import { cn } from "../../utils/cn.js";
 import * as RadixCollapsiblePrimitive from "@radix-ui/react-collapsible";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root">;
+type BaseTheme = RecastBaseTheme<"root">;
 
 export type Props = React.ComponentPropsWithoutRef<
   typeof RadixCollapsiblePrimitive.Root

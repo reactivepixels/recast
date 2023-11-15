@@ -3,15 +3,13 @@ import { cn } from "../../utils/cn.js";
 import { CheckIcon } from "@radix-ui/react-icons";
 import * as RadixRadioGroupPrimitive from "@radix-ui/react-radio-group";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"indicator"> &
-  RecastThemeProp<"icon">;
+type BaseTheme = RecastBaseTheme<"root" | "indicator" | "icon">;
 
 export type Props = React.ComponentPropsWithoutRef<
   typeof RadixRadioGroupPrimitive.Item

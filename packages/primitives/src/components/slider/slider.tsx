@@ -2,16 +2,13 @@ import React, { forwardRef } from "react";
 import { cn } from "../../utils/cn.js";
 import * as RadixSliderPrimitive from "@radix-ui/react-slider";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"track"> &
-  RecastThemeProp<"range"> &
-  RecastThemeProp<"thumb">;
+type BaseTheme = RecastBaseTheme<"root" | "track" | "range" | "thumb">;
 
 export type Props = React.ComponentPropsWithoutRef<
   typeof RadixSliderPrimitive.Root

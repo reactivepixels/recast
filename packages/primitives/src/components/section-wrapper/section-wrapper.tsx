@@ -2,13 +2,13 @@ import React, { forwardRef } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "../../utils/cn.js";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root" | "inner">;
+type BaseTheme = RecastBaseTheme<"root" | "inner">;
 
 type Props = React.HTMLAttributes<HTMLElement> &
   RecastThemeProps & {

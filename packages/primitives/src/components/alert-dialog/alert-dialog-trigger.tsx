@@ -2,13 +2,13 @@ import React, { forwardRef } from "react";
 import * as RadixAlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 import { cn } from "../../utils/cn.js";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root">;
+type BaseTheme = RecastBaseTheme<"root">;
 
 export type Props = React.ComponentPropsWithoutRef<
   typeof RadixAlertDialogPrimitive.Trigger

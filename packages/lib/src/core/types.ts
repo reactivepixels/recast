@@ -13,7 +13,7 @@ export type Styles = {
   >;
 };
 
-export type RecastThemeProp<P extends string> = Partial<
+export type RecastBaseTheme<P extends string> = Partial<
   Record<P, string | string[]>
 >;
 

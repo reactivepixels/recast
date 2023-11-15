@@ -2,17 +2,15 @@ import React, { forwardRef } from "react";
 import { cn } from "../../utils/cn.js";
 import * as RadixScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"viewport"> &
-  RecastThemeProp<"thumb"> &
-  RecastThemeProp<"corner"> &
-  RecastThemeProp<"scrollbar">;
+type BaseTheme = RecastBaseTheme<
+  "root" | "viewport" | "thumb" | "corner" | "scrollbar"
+>;
 
 export type Props = React.ComponentPropsWithoutRef<
   typeof RadixScrollAreaPrimitive.Root

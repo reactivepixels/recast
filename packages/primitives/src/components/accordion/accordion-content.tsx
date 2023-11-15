@@ -2,13 +2,13 @@ import * as React from "react";
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
 import { cn } from "../../utils/cn.js";
 import {
-  RecastThemeProp,
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
 
-type BaseTheme = RecastThemeProp<"root" | "content">;
+type BaseTheme = RecastBaseTheme<"root" | "content">;
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Content
