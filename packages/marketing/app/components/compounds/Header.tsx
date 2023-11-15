@@ -52,13 +52,12 @@ const Header = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
 
     return (
       <SectionWrapper
-        as="header"
         className={clsx(
           className,
-          "bg-dark",
           "bg-[url('/images/distance_nebulae_bg.jpg')]",
           "bg-[calc(50%_+_150px)_0]",
           "bg-no-repeat",
+          "bg-dark",
           "py-24",
           "pt-48"
         )}

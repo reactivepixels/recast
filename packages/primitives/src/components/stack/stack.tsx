@@ -8,7 +8,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "stack";
 type BaseTheme = RecastThemeProp<"root">;
 
 type Props = React.HTMLAttributes<HTMLHeadingElement> &
@@ -19,7 +18,7 @@ type Props = React.HTMLAttributes<HTMLHeadingElement> &
 const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
   (
     {
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       children,
       className,
       size,
@@ -48,7 +47,4 @@ const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
 
 StackPrimitive.displayName = "StackPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  StackPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(StackPrimitive);

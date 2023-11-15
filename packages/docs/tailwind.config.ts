@@ -2,8 +2,8 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  important: "body", // override nextra default theme reset
-  darkMode: ["class"],
+  important: "#docs",
+  darkMode: ["class", 'html[class~="dark"]'],
   content: ["src/**/*.{ts,tsx,md,mdx}"],
   theme: {
     container: {

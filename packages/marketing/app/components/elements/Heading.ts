@@ -1,6 +1,6 @@
 import { RecastHeadingPrimitive } from "@rpxl/recast-primitives";
 
-export const Heading = RecastHeadingPrimitive.recast("Heading", {
+export const Heading = RecastHeadingPrimitive.recast({
   defaults: {
     variant: "gradient",
     size: "xl",

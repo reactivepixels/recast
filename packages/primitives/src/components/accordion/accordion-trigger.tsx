@@ -9,8 +9,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "accordionTrigger";
-
 type BaseTheme = RecastThemeProp<"root"> &
   RecastThemeProp<"trigger"> &
   RecastThemeProp<"icon">;
@@ -28,7 +26,7 @@ const AccordionTriggerPrimitive = React.forwardRef<
 >(
   (
     {
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       className,
       size,
       variant,
@@ -65,5 +63,4 @@ AccordionTriggerPrimitive.displayName = "AccordionTriggerPrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
   AccordionTriggerPrimitive,
-  DEFAULT_THEME_KEY,
 );

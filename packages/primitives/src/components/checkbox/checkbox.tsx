@@ -9,8 +9,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "card";
-
 type BaseTheme = RecastThemeProp<"root"> &
   RecastThemeProp<"indicator"> &
   RecastThemeProp<"icon">;
@@ -28,7 +26,7 @@ const CheckboxPrimitive = forwardRef<
 >(
   (
     {
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       className,
       size,
       variant,
@@ -63,7 +61,4 @@ const CheckboxPrimitive = forwardRef<
 
 CheckboxPrimitive.displayName = "CheckboxPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  CheckboxPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(CheckboxPrimitive);

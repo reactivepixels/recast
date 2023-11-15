@@ -1,28 +1,20 @@
 import { useCallback, useMemo } from "react";
-import { RecastClientOptions } from "../types.js";
+import { RecastThemeProps } from "../types.js";
 import { isObject } from "../../core/utils/isObject.js";
 import { useBreakpoint } from "./useBreakpoint.js";
 import { getTheme } from "../../core/recastThemeInstance.js";
-import { Styles } from "../../core/types.js";
 import { getSizeClasses } from "../../core/utils/getSizeClasses.js";
 import { getVariantClasses } from "../../core/utils/getVariantClasses.js";
 import { getModifierClasses } from "../../core/utils/getModifierClasses.js";
 import { mergeClassNames } from "../../core/utils/mergeClassNames.js";
 import { DEFAULT_RECAST_CLIENT_OPTIONS } from "../constants.js";
+import { Styles } from "../../core/types.js";
 
 type RecastPropUnion =
   | string
   | string[]
   | Record<string, string | string[]>
   | undefined;
-
-type Props = {
-  themekey?: string;
-  size?: string | Record<string, string>;
-  variant?: string | Record<string, string>;
-  modifier?: string | string[] | Record<string, string | string[]>;
-  options?: RecastClientOptions;
-};
 
 type State<K> = Record<keyof K, string> | undefined;
 
@@ -32,7 +24,7 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   variant,
   modifier,
   options,
-}: Props) => {
+}: RecastThemeProps) => {
   const { viewports = {}, delay = 0 } = {
     ...DEFAULT_RECAST_CLIENT_OPTIONS,
     ...options,

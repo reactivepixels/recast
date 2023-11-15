@@ -2,7 +2,7 @@
 
 import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
-export const Button = ButtonPrimitive.recast("Button", {
+export const ButtonDemo = ButtonPrimitive.recast({
   defaults: { variant: "default", size: "default" },
   base: {
     root: [
@@ -31,7 +31,7 @@ export const Button = ButtonPrimitive.recast("Button", {
   },
   variant: {
     default: {
-      root: "bg-primary text-primary-foreground hover:bg-primary/90",
+      root: "bg-green-500 text-primary-foreground hover:bg-primary/90",
     },
     destructive: {
       root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",

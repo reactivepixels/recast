@@ -8,8 +8,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "badge";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = HTMLAttributes<HTMLDivElement> &
@@ -19,15 +17,7 @@ export type Props = HTMLAttributes<HTMLDivElement> &
 
 const BadgePrimitive = forwardRef<HTMLDivElement, Props>(
   (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      asChild,
-      ...props
-    },
+    { themekey, className, size, variant, modifier, asChild, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "div";
@@ -47,7 +37,4 @@ const BadgePrimitive = forwardRef<HTMLDivElement, Props>(
 
 BadgePrimitive.displayName = "BadgePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  BadgePrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(BadgePrimitive);

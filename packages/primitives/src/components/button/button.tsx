@@ -8,8 +8,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "button";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
@@ -19,15 +17,7 @@ export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      asChild = false,
-      ...props
-    },
+    { themekey, className, size, variant, modifier, asChild = false, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
@@ -47,7 +37,4 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
 
 ButtonPrimitive.displayName = "ButtonPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  ButtonPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(ButtonPrimitive);

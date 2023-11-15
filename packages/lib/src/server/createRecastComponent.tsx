@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { setTheme } from "../core/recastThemeInstance.js";
+import { generateRandomId } from "../core/utils/generateRandomId.js";
 import { omit } from "../core/utils/omit.js";
 import { validateRecastStyles } from "../core/validateRecastStyles.js";
 import type { ComponentProps, RecastServerOptions } from "../server/types.js";
@@ -13,10 +14,7 @@ import type {
 } from "../core/types.js";
 
 export const createRecastComponent = <P, BaseTheme>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Component: any,
-  // Component: React.ComponentType<P>,
-  key: string,
+  Component: React.ComponentType<P>,
 ) => {
   /**
    * Returns an enhanced primitive component that is decorated with dynamic style props.
@@ -25,16 +23,12 @@ export const createRecastComponent = <P, BaseTheme>(
    * @param styles - A styles object that conforms to the components `BaseTheme` API
    */
   function WrappedComponent<
-    D extends string,
     S extends Size<BaseTheme, S>,
     V extends Variant<BaseTheme, V, S>,
     M extends Modifier<BaseTheme, M, S, V>,
-  >(
-    displayName: D,
-    styles: RecastStyles<BaseTheme, S, V, M>,
-    options?: RecastServerOptions,
-  ) {
-    setTheme(styles?.themekey || key, styles);
+  >(styles: RecastStyles<BaseTheme, S, V, M>, options?: RecastServerOptions) {
+    const themeKey = generateRandomId(12);
+    setTheme(themeKey, styles);
 
     type Props = Omit<
       Extract<ComponentProps<P, S, V, M>, P>,
@@ -60,7 +54,7 @@ export const createRecastComponent = <P, BaseTheme>(
           <Component
             options={options}
             modifier={modifierProps.length ? modifierProps : undefined}
-            themekey={styles?.themekey}
+            themekey={themeKey}
             ref={ref}
             {...(omit(modifierKeys as string[], props) as P)}
           />
@@ -69,7 +63,7 @@ export const createRecastComponent = <P, BaseTheme>(
     );
 
     if (process.env["NODE_ENV"] !== "production")
-      ComponentWithThemedProps.displayName = displayName;
+      ComponentWithThemedProps.displayName = Component.displayName;
 
     return ComponentWithThemedProps;
   }

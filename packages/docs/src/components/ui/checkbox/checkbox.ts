@@ -2,7 +2,7 @@
 
 import { CheckboxPrimitive } from "@rpxl/recast-primitives";
 
-export const Checkbox = CheckboxPrimitive.recast("Checkbox", {
+export const Checkbox = CheckboxPrimitive.recast({
   base: {
     root: [
       "peer",

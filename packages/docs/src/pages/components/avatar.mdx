@@ -1,5 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 # Avatar
 
@@ -7,23 +8,20 @@ An image element with a fallback for representing the user.
 
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
-    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
-        <div className="flex min-h-[350px] w-full justify-center items-center p-10"> 
-            <Avatar size="sm">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar size="md">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar size="lg">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-        </div>
-    </div>
-
+    <ComponentPreview>
+        <Avatar size="sm">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <Avatar size="md">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <Avatar size="lg">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+    </ComponentPreview>
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx

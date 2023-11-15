@@ -69,4 +69,4 @@ export type ModifierProps<M, B> = {
 export type ComponentProps<P, S, V, M, B> = SizeProps<S, B> &
   VariantProps<V, B> &
   ModifierProps<M, B> &
-  Omit<P, "size" | "variant" | "modifier">;
+  Omit<P, "size" | "variant" | "modifier" | "themekey">;

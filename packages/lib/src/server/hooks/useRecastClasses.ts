@@ -1,18 +1,10 @@
-import type { Styles } from "../../core/types.js";
-import type { RecastServerOptions } from "../../server/types.js";
+import type { RecastThemeProps } from "../../server/types.js";
 import { getTheme } from "../../core/recastThemeInstance.js";
 import { getModifierClasses } from "../../core/utils/getModifierClasses.js";
 import { getSizeClasses } from "../../core/utils/getSizeClasses.js";
 import { getVariantClasses } from "../../core/utils/getVariantClasses.js";
 import { mergeClassNames } from "../../core/utils/mergeClassNames.js";
-
-type Props = {
-  themekey?: string;
-  size?: string;
-  variant?: string;
-  modifier?: string | string[];
-  options?: RecastServerOptions;
-};
+import { Styles } from "../../core/types.js";
 
 type State<K> = Record<keyof K, string> | undefined;
 
@@ -21,7 +13,7 @@ export const useRecastClasses = <K extends Record<string, string | string[]>>({
   size,
   variant,
   modifier,
-}: Props) => {
+}: RecastThemeProps) => {
   const theme = themekey ? getTheme()?.[themekey] : ({} as Styles);
 
   const sizes = getSizeClasses({

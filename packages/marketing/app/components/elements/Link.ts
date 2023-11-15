@@ -1,6 +1,6 @@
 import { RecastLinkPrimitive } from "../primitives";
 
-export const Link = RecastLinkPrimitive.recast("Link", {
+export const Link = RecastLinkPrimitive.recast({
   defaults: { variant: "light" },
   base: {
     root: [

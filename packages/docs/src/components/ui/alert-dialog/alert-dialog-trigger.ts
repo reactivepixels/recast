@@ -2,7 +2,4 @@
 
 import { AlertDialogTriggerPrimitive } from "@rpxl/recast-primitives";
 
-export const AlertDialogTrigger = AlertDialogTriggerPrimitive.recast(
-  "AlertDialogTrigger",
-  {}
-);
+export const AlertDialogTrigger = AlertDialogTriggerPrimitive.recast({});

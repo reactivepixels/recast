@@ -2,7 +2,7 @@
 
 import { BadgePrimitive } from "@rpxl/recast-primitives";
 
-export const Badge = BadgePrimitive.recast("Badge", {
+export const Badge = BadgePrimitive.recast({
   defaults: { variant: "default" },
   base: {
     root: [
@@ -29,7 +29,7 @@ export const Badge = BadgePrimitive.recast("Badge", {
       root: "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
     },
     outline: {
-      root: "text-foreground",
+      root: "border-border text-foreground",
     },
     secondary: {
       root: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",

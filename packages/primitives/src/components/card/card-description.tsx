@@ -7,24 +7,12 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "cardDescription";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = HTMLAttributes<HTMLParagraphElement> & RecastThemeProps;
 
 const CardDescriptionPrimitive = forwardRef<HTMLParagraphElement, Props>(
-  (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ themekey, className, size, variant, modifier, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
       size,
@@ -40,5 +28,4 @@ CardDescriptionPrimitive.displayName = "CardDescriptionPrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
   CardDescriptionPrimitive,
-  DEFAULT_THEME_KEY,
 );

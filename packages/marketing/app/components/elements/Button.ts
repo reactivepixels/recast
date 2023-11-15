@@ -1,6 +1,6 @@
-import { RecastButtonPrimitive } from "@rpxl/recast-primitives";
+import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
-export const Button = RecastButtonPrimitive.recast("Button", {
+export const Button = ButtonPrimitive.recast({
   defaults: { variant: "primary", size: "md" },
   base: {
     root: [

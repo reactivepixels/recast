@@ -8,8 +8,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "cardTitle";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = HTMLAttributes<HTMLHeadingElement> &
@@ -19,15 +17,7 @@ export type Props = HTMLAttributes<HTMLHeadingElement> &
 
 const CardTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
   (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      asChild,
-      ...props
-    },
+    { themekey, className, size, variant, modifier, asChild, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "h3";
@@ -47,7 +37,4 @@ const CardTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
 
 CardTitlePrimitive.displayName = "CardTitlePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  CardTitlePrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(CardTitlePrimitive);

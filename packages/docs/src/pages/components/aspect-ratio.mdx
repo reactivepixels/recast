@@ -1,6 +1,7 @@
+import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
 import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Tabs } from "nextra/components";
 
 # Aspect Ratio
 
@@ -8,19 +9,16 @@ Displays content within a desired ratio.
 
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
-    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
-        <div className="flex min-h-[350px] w-full justify-center items-center p-10">
-            <AspectRatio ratio={16 / 9} className="bg-muted">
-                <Image
-                    src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
-                    alt="Photo by Drew Beamer"
-                    fill
-                    className="rounded-md object-cover"
-                />
-            </AspectRatio>
-        </div>
-    </div>
-
+    <ComponentPreview>
+        <AspectRatio ratio={16 / 9} className="bg-muted">
+            <Image
+                src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80"
+                alt="Photo by Drew Beamer"
+                fill
+                className="rounded-md object-cover"
+            />
+        </AspectRatio>
+    </ComponentPreview>
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx

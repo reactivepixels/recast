@@ -8,8 +8,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "alertTitle";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = React.HTMLAttributes<HTMLHeadingElement> &
@@ -19,15 +17,7 @@ export type Props = React.HTMLAttributes<HTMLHeadingElement> &
 
 const AlertTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
   (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      asChild,
-      ...props
-    },
+    { themekey, className, size, variant, modifier, asChild, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "h5";
@@ -47,7 +37,4 @@ const AlertTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
 
 AlertTitlePrimitive.displayName = "AlertPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  AlertTitlePrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(AlertTitlePrimitive);

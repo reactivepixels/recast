@@ -7,24 +7,12 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "alert";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
 
 const AlertPrimitive = forwardRef<HTMLDivElement, Props>(
-  (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      ...props
-    },
-    ref,
-  ) => {
+  ({ themekey, className, size, variant, modifier, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
       size,
@@ -40,7 +28,4 @@ const AlertPrimitive = forwardRef<HTMLDivElement, Props>(
 
 AlertPrimitive.displayName = "AlertPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  AlertPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(AlertPrimitive);

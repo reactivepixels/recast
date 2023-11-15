@@ -7,7 +7,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "heading";
 type BaseTheme = RecastThemeProp<"root">;
 
 type Props = React.HTMLAttributes<HTMLHeadingElement> &
@@ -25,7 +24,7 @@ const HeadingPrimitive = forwardRef<HTMLHeadingElement, Props>(
   (
     {
       as: Tag = "h1",
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       children,
       className,
       size,
@@ -53,7 +52,4 @@ const HeadingPrimitive = forwardRef<HTMLHeadingElement, Props>(
 if (process.env["NODE_ENV"] !== "production")
   HeadingPrimitive.displayName = "HeadingPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  HeadingPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(HeadingPrimitive);

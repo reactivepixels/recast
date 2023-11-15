@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
+import { Button } from "@/components/ui/button";
+import { ButtonDemo } from "@/components/ui/button-demo";
 
 # Button
 
@@ -7,11 +9,15 @@ Displays a button or a component that looks like a button.
 
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
-    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
-      <div className="flex min-h-[350px] w-full justify-center items-center p-10">
-        <Button>Hello</Button>
-      </div>
-    </div>
+    <ComponentPreview>
+      <Button>Hello</Button>
+      <Button variant="destructive">Hello</Button>
+      <Button variant="outline">Hello</Button>
+      <Button variant="secondary">Hello</Button>
+
+      <ButtonDemo>Hello 2</ButtonDemo>
+    </ComponentPreview>
+
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx

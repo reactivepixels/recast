@@ -7,7 +7,7 @@
     "build": "next build",
     "export": "next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "tsc && next lint"
   },
   "dependencies": {
     "@rpxl/recast": "*",

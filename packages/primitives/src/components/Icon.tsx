@@ -7,7 +7,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "icon";
 type BaseTheme = RecastThemeProp<"root">;
 
 type Props = React.SVGAttributes<SVGSVGElement> &
@@ -18,15 +17,7 @@ type Props = React.SVGAttributes<SVGSVGElement> &
 
 const IconPrimitive = forwardRef<SVGSVGElement, Props>(
   (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      children,
-      className,
-      size,
-      variant,
-      modifier,
-      ...props
-    },
+    { themekey, children, className, size, variant, modifier, ...props },
     ref,
   ) => {
     const classes = useRecastClasses<BaseTheme>({
@@ -47,7 +38,4 @@ const IconPrimitive = forwardRef<SVGSVGElement, Props>(
 if (process.env["NODE_ENV"] !== "production")
   IconPrimitive.displayName = "IconPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  IconPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(IconPrimitive);

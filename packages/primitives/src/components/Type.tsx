@@ -7,7 +7,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "type";
 type BaseTheme = RecastThemeProp<"root">;
 
 type Props = React.HTMLAttributes<HTMLElement> &
@@ -20,7 +19,7 @@ const TypePrimitive = forwardRef<HTMLElement, Props>(
   (
     {
       as: Tag = "p",
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       children,
       className,
       size,
@@ -48,7 +47,4 @@ const TypePrimitive = forwardRef<HTMLElement, Props>(
 if (process.env["NODE_ENV"] !== "production")
   TypePrimitive.displayName = "TypePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  TypePrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(TypePrimitive);

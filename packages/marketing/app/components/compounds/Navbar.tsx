@@ -29,7 +29,7 @@ const Navbar = forwardRef<HTMLDivElement, Props>(
         ref={ref}
         {...props}
       >
-        <SectionWrapper as="nav" className="py-4">
+        <SectionWrapper className="py-4">
           <div className="flex justify-between items-center">
             <Link href="/" variant="unstyled">
               <RecastLogo />

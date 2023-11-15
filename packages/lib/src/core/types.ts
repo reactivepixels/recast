@@ -1,6 +1,5 @@
 /** Loosley typed component styles object shape */
 export type Styles = {
-  themekey?: string;
   defaults?: Record<"size" | "variant", string>;
   base?: Record<string, Record<string, string | string[]>>;
   size?: Record<string, Record<string, string | string[]>>;
@@ -44,7 +43,6 @@ export type Theme<B, S, V, M> = {
 
 // Create Recast Component
 export type RecastStyles<BaseTheme, S, V, M> = {
-  themekey?: string;
   defaults?: Defaults<S, V>;
   base?: BaseTheme;
   size?: Size<BaseTheme, S>;

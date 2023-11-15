@@ -8,8 +8,7 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "sectionWrapper";
-type BaseTheme = RecastThemeProp<"root"> & RecastThemeProp<"inner">;
+type BaseTheme = RecastThemeProp<"root" | "inner">;
 
 type Props = React.HTMLAttributes<HTMLElement> &
   RecastThemeProps & {
@@ -19,7 +18,7 @@ type Props = React.HTMLAttributes<HTMLElement> &
 const SectionWrapperPrimitive = forwardRef<HTMLElement, Props>(
   (
     {
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       children,
       className,
       size,
@@ -48,7 +47,4 @@ const SectionWrapperPrimitive = forwardRef<HTMLElement, Props>(
 
 SectionWrapperPrimitive.displayName = "SectionWrapperPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  SectionWrapperPrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(SectionWrapperPrimitive);

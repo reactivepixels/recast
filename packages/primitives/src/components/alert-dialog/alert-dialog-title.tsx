@@ -8,8 +8,6 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "alertDialogTitle";
-
 type BaseTheme = RecastThemeProp<"root">;
 
 export type Props = React.ComponentPropsWithoutRef<
@@ -20,38 +18,25 @@ export type Props = React.ComponentPropsWithoutRef<
 const AlertDialogTitlePrimitive = forwardRef<
   React.ElementRef<typeof RadixAlertDialogPrimitive.Title>,
   Props
->(
-  (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      ...props
-    },
-    ref,
-  ) => {
-    const classes = useRecastClasses<BaseTheme>({
-      themekey,
-      size,
-      variant,
-      modifier,
-    });
+>(({ themekey, className, size, variant, modifier, ...props }, ref) => {
+  const classes = useRecastClasses<BaseTheme>({
+    themekey,
+    size,
+    variant,
+    modifier,
+  });
 
-    return (
-      <RadixAlertDialogPrimitive.Title
-        ref={ref}
-        className={cn(classes?.root, className)}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <RadixAlertDialogPrimitive.Title
+      ref={ref}
+      className={cn(classes?.root, className)}
+      {...props}
+    />
+  );
+});
 
 AlertDialogTitlePrimitive.displayName = "AlertDialogTitlePrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
   AlertDialogTitlePrimitive,
-  DEFAULT_THEME_KEY,
 );

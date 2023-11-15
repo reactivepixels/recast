@@ -8,9 +8,7 @@ import {
   RecastThemeProps,
 } from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "accordionContent";
-
-type BaseTheme = RecastThemeProp<"root"> & RecastThemeProp<"content">;
+type BaseTheme = RecastThemeProp<"root" | "content">;
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Content
@@ -22,15 +20,7 @@ const AccordionContentPrimitive = React.forwardRef<
   Props
 >(
   (
-    {
-      themekey = DEFAULT_THEME_KEY,
-      className,
-      size,
-      variant,
-      modifier,
-      children,
-      ...props
-    },
+    { themekey, className, size, variant, modifier, children, ...props },
     ref,
   ) => {
     const classes = useRecastClasses<BaseTheme>({
@@ -56,5 +46,4 @@ AccordionContentPrimitive.displayName = "AccordionContentPrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(
   AccordionContentPrimitive,
-  DEFAULT_THEME_KEY,
 );

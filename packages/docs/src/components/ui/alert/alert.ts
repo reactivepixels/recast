@@ -2,7 +2,7 @@
 
 import { AlertPrimitive } from "@rpxl/recast-primitives";
 
-export const Alert = AlertPrimitive.recast("Alert", {
+export const Alert = AlertPrimitive.recast({
   defaults: { variant: "default" },
   base: {
     root: [
@@ -23,7 +23,7 @@ export const Alert = AlertPrimitive.recast("Alert", {
   },
   variant: {
     default: {
-      root: "bg-background text-foreground",
+      root: "bg-background text-foreground border-border",
     },
     destructive: {
       root: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",

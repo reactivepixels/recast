@@ -1,4 +1,5 @@
 import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import {
   Accordion,
@@ -13,33 +14,31 @@ A vertically stacked set of interactive headings that each reveal a section of c
 
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
-    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
-      <div className="flex min-h-[350px] w-full justify-center items-center p-10">
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger icon={PaperPlaneIcon}>
-              Is it accessible?
-            </AccordionTrigger>
-            <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>Is it styled?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It comes with default styles that matches the other
-              components&apos; aesthetic.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger>Is it animated?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It's animated by default, but you can disable it if you prefer.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-    </div>
+    <ComponentPreview>
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="item-1">
+          <AccordionTrigger icon={PaperPlaneIcon}>
+            Is it accessible?
+          </AccordionTrigger>
+          <AccordionContent>
+            Yes. It adheres to the WAI-ARIA design pattern.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger>Is it styled?</AccordionTrigger>
+          <AccordionContent>
+            Yes. It comes with default styles that matches the other
+            components&apos; aesthetic.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-3">
+          <AccordionTrigger>Is it animated?</AccordionTrigger>
+          <AccordionContent>
+            Yes. It's animated by default, but you can disable it if you prefer.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </ComponentPreview>
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx
@@ -51,31 +50,31 @@ A vertically stacked set of interactive headings that each reveal a section of c
     } from "@/components/ui/accordion"
     
     export function AccordionDemo() {
-        return (
-            <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                    <AccordionTrigger icon={PaperPlaneIcon}>
-                      Is it accessible?
-                    </AccordionTrigger>
-                    <AccordionContent>
-                    Yes. It adheres to the WAI-ARIA design pattern.
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                    <AccordionTrigger>Is it styled?</AccordionTrigger>
-                    <AccordionContent>
-                    Yes. It comes with default styles that matches the other
-                    components&apos; aesthetic.
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-3">
-                    <AccordionTrigger>Is it animated?</AccordionTrigger>
-                    <AccordionContent>
-                    Yes. It's animated by default, but you can disable it if you prefer.
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
-        )
+      return (
+        <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+                <AccordionTrigger icon={PaperPlaneIcon}>
+                  Is it accessible?
+                </AccordionTrigger>
+                <AccordionContent>
+                Yes. It adheres to the WAI-ARIA design pattern.
+                </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+                <AccordionTrigger>Is it styled?</AccordionTrigger>
+                <AccordionContent>
+                Yes. It comes with default styles that matches the other
+                components&apos; aesthetic.
+                </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+                <AccordionTrigger>Is it animated?</AccordionTrigger>
+                <AccordionContent>
+                Yes. It's animated by default, but you can disable it if you prefer.
+                </AccordionContent>
+            </AccordionItem>
+        </Accordion>
+      )
     }
     ```
 

@@ -1,4 +1,5 @@
 import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
 import { Checkbox } from "@/components/ui/checkbox";
 
 # Checkbox
@@ -7,19 +8,17 @@ A control that allows the user to toggle between checked and not checked.
 
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
-    <div className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border">
-      <div className="flex min-h-[350px] w-full justify-center items-center p-10">
-        <div className="flex items-center space-x-2">
-            <Checkbox id="terms" />
-            <label
-                htmlFor="terms"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-                Accept terms and conditions
-            </label>
-        </div>
+    <ComponentPreview>
+      <div className="flex items-center space-x-2">
+        <Checkbox id="terms" />
+        <label
+            htmlFor="terms"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+            Accept terms and conditions
+        </label>
       </div>
-    </div>
+    </ComponentPreview>
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx    

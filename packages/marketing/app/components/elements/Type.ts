@@ -1,6 +1,6 @@
 import { RecastTypePrimitive } from "@rpxl/recast-primitives";
 
-export const Type = RecastTypePrimitive.recast("Type", {
+export const Type = RecastTypePrimitive.recast({
   defaults: {
     size: "md",
     variant: "light",
