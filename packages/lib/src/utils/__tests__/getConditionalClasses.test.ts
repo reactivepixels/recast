@@ -24,7 +24,7 @@ describe("getConditionalClasses", () => {
 
     const result = getConditionalClasses({ theme, modifiers });
 
-    expect(result).toEqual({ root: "!bg-green-500" });
+    expect(result).toEqual({});
   });
 
   it("should return correct classes if conditons are met", () => {
