@@ -18,12 +18,11 @@ export type Props = React.ComponentPropsWithoutRef<
 const ProgressPrimitive = forwardRef<
   React.ElementRef<typeof RadixProgressPrimitive.Root>,
   Props
->(({ themekey, className, size, variant, modifier, value, ...props }, ref) => {
+>(({ themekey, className, variants, modifiers, value, ...props }, ref) => {
   const classes = useRecastClasses<BaseTheme>({
     themekey,
-    size,
-    variant,
-    modifier,
+    variants,
+    modifiers,
   });
 
   return (

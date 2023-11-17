@@ -16,17 +16,13 @@ export type Props = React.HTMLAttributes<HTMLHeadingElement> &
   };
 
 const AlertTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
-  (
-    { themekey, className, size, variant, modifier, asChild, ...props },
-    ref,
-  ) => {
+  ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "h5";
 
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

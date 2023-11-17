@@ -17,24 +17,14 @@ type Props = React.HTMLAttributes<HTMLHeadingElement> &
 
 const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
   (
-    {
-      themekey,
-      children,
-      className,
-      size,
-      variant,
-      modifier,
-      asChild,
-      ...props
-    },
+    { themekey, children, className, variants, modifiers, asChild, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "div";
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

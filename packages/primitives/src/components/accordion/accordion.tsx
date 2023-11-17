@@ -18,12 +18,11 @@ type Props = React.ComponentPropsWithoutRef<
 const AccordionPrimitive = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Root>,
   Props
->(({ themekey, className, size, variant, modifier, ...props }, ref) => {
+>(({ themekey, className, variants, modifiers, ...props }, ref) => {
   const classes = useRecastClasses<BaseTheme>({
     themekey,
-    size,
-    variant,
-    modifier,
+    variants,
+    modifiers,
   });
 
   return (

@@ -18,29 +18,23 @@ type Props = React.ComponentPropsWithoutRef<
 const AccordionContentPrimitive = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Content>,
   Props
->(
-  (
-    { themekey, className, size, variant, modifier, children, ...props },
-    ref,
-  ) => {
-    const classes = useRecastClasses<BaseTheme>({
-      themekey,
-      size,
-      variant,
-      modifier,
-    });
+>(({ themekey, className, variants, modifiers, children, ...props }, ref) => {
+  const classes = useRecastClasses<BaseTheme>({
+    themekey,
+    variants,
+    modifiers,
+  });
 
-    return (
-      <RadixAccordionPrimitive.Content
-        ref={ref}
-        className={cn(classes?.root, className)}
-        {...props}
-      >
-        <div className={cn(classes?.content, className)}>{children}</div>
-      </RadixAccordionPrimitive.Content>
-    );
-  },
-);
+  return (
+    <RadixAccordionPrimitive.Content
+      ref={ref}
+      className={cn(classes?.root, className)}
+      {...props}
+    >
+      <div className={cn(classes?.content, className)}>{children}</div>
+    </RadixAccordionPrimitive.Content>
+  );
+});
 
 AccordionContentPrimitive.displayName = "AccordionContentPrimitive";
 

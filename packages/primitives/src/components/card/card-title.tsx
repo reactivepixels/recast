@@ -16,17 +16,13 @@ export type Props = HTMLAttributes<HTMLHeadingElement> &
   };
 
 const CardTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
-  (
-    { themekey, className, size, variant, modifier, asChild, ...props },
-    ref,
-  ) => {
+  ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "h3";
 
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

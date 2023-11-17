@@ -12,12 +12,11 @@ type BaseTheme = RecastBaseTheme<"root">;
 export type Props = HTMLAttributes<HTMLParagraphElement> & RecastThemeProps;
 
 const CardDescriptionPrimitive = forwardRef<HTMLParagraphElement, Props>(
-  ({ themekey, className, size, variant, modifier, ...props }, ref) => {
+  ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return <p className={cn(classes?.root, className)} ref={ref} {...props} />;

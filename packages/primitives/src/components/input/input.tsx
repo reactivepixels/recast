@@ -13,12 +13,11 @@ export type Props = React.InputHTMLAttributes<HTMLInputElement> &
   RecastThemeProps;
 
 const InputPrimitive = forwardRef<HTMLInputElement, Props>(
-  ({ themekey, className, size, variant, modifier, ...props }, ref) => {
+  ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

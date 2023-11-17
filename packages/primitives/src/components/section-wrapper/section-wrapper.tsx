@@ -17,24 +17,14 @@ type Props = React.HTMLAttributes<HTMLElement> &
 
 const SectionWrapperPrimitive = forwardRef<HTMLElement, Props>(
   (
-    {
-      themekey,
-      children,
-      className,
-      size,
-      variant,
-      modifier,
-      asChild,
-      ...props
-    },
+    { themekey, children, className, variants, modifiers, asChild, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "section";
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

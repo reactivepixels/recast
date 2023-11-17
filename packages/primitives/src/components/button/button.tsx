@@ -17,18 +17,15 @@ export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   (
-    { themekey, className, size, variant, modifier, asChild = false, ...props },
+    { themekey, className, variants, modifiers, asChild = false, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
 
-    console.log(modifier);
-
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

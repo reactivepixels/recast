@@ -23,9 +23,8 @@ const SeparatorPrimitive = forwardRef<
     {
       themekey,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       decorative = true,
       orientation = "horizontal",
       ...props
@@ -34,9 +33,8 @@ const SeparatorPrimitive = forwardRef<
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

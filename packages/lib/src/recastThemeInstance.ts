@@ -12,7 +12,11 @@ const RecastThemeInstance = (() => {
     theme = { ...theme, [key]: { ...styles } };
   };
 
-  const get = () => {
+  const get = (key?: string) => {
+    if (key) {
+      return theme[key];
+    }
+
     return theme;
   };
 

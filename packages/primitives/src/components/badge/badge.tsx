@@ -16,17 +16,13 @@ export type Props = HTMLAttributes<HTMLDivElement> &
   };
 
 const BadgePrimitive = forwardRef<HTMLDivElement, Props>(
-  (
-    { themekey, className, size, variant, modifier, asChild, ...props },
-    ref,
-  ) => {
+  ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "div";
 
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

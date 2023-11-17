@@ -26,9 +26,8 @@ const AccordionTriggerPrimitive = React.forwardRef<
     {
       themekey,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       children,
       icon: Icon = ChevronDownIcon,
       ...props
@@ -37,9 +36,8 @@ const AccordionTriggerPrimitive = React.forwardRef<
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

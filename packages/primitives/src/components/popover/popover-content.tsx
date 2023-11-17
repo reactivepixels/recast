@@ -23,9 +23,8 @@ const PopoverContentPrimitive = forwardRef<
     {
       themekey,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       align = "center",
       sideOffset = 4,
       ...props
@@ -34,9 +33,8 @@ const PopoverContentPrimitive = forwardRef<
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

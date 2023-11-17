@@ -31,9 +31,8 @@ const ScrollAreaPrimitive = forwardRef<
     {
       themekey,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       children,
       orientation = "vertical",
       ...props
@@ -42,9 +41,8 @@ const ScrollAreaPrimitive = forwardRef<
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

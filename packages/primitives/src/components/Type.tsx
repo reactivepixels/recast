@@ -22,18 +22,16 @@ const TypePrimitive = forwardRef<HTMLElement, Props>(
       themekey,
       children,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       ...props
     },
     ref,
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

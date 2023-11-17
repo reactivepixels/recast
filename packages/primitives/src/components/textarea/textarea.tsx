@@ -12,12 +12,11 @@ type BaseTheme = RecastBaseTheme<"root">;
 type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & RecastThemeProps;
 
 const TextareaPrimitive = forwardRef<HTMLTextAreaElement, Props>(
-  ({ themekey, className, size, variant, modifier, ...props }, ref) => {
+  ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

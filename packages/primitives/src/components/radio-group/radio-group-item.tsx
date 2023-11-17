@@ -26,9 +26,8 @@ const RadioGroupItemPrimitive = forwardRef<
     {
       themekey,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       icon: Icon = CheckIcon,
       ...props
     },
@@ -36,9 +35,8 @@ const RadioGroupItemPrimitive = forwardRef<
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

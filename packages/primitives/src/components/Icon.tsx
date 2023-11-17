@@ -16,15 +16,11 @@ type Props = React.SVGAttributes<SVGSVGElement> &
   };
 
 const IconPrimitive = forwardRef<SVGSVGElement, Props>(
-  (
-    { themekey, children, className, size, variant, modifier, ...props },
-    ref,
-  ) => {
+  ({ themekey, children, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

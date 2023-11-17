@@ -18,12 +18,11 @@ export type Props = React.ComponentPropsWithoutRef<
 const AvatarPrimitive = forwardRef<
   React.ElementRef<typeof RadixAvatarPrimitive.Root>,
   Props
->(({ themekey, className, size, variant, modifier, ...props }, ref) => {
+>(({ themekey, className, variants, modifiers, ...props }, ref) => {
   const classes = useRecastClasses<BaseTheme>({
     themekey,
-    size,
-    variant,
-    modifier,
+    variants,
+    modifiers,
   });
 
   return (

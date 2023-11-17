@@ -11,39 +11,11 @@
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
-    "./dist/cjs/core/types": {
-      "import": {
-        "types": "./dist/esm/core/types.d.ts"
-      },
-      "require": {
-        "types": "./dist/cjs/core/types.d.ts"
-      }
+    "./dist/cjs/types": {
+      "types": "./dist/cjs/types.d.ts"
     },
-    "./dist/cjs/client/types": {
-      "import": {
-        "types": "./dist/esm/client/types.d.ts"
-      },
-      "require": {
-        "types": "./dist/cjs/client/types.d.ts"
-      }
-    },
-    "./dist/cjs/server/types": {
-      "import": {
-        "types": "./dist/esm/server/types.d.ts"
-      },
-      "require": {
-        "types": "./dist/cjs/server/types.d.ts"
-      }
-    },
-    "./server": {
-      "import": {
-        "types": "./dist/esm/server/index.d.ts",
-        "default": "./dist/esm/server/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/server/index.d.ts",
-        "default": "./dist/cjs/server/index.js"
-      }
+    "./dist/esm/types": {
+      "types": "./dist/esm/types.d.ts"
     },
     ".": {
       "import": {
@@ -58,7 +30,8 @@
   },
   "files": [
     "dist",
-    "server"
+    "server",
+    "!**/__tests__/**"
   ],
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
@@ -78,9 +51,11 @@
     "build:esm": "tsc --outDir dist/esm",
     "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
+    "@testing-library/react": "^14.1.0",
     "@types/jest": "^29.5.8",
     "@types/node": "^20.9.0",
     "@types/react": "^18.2.37",
@@ -102,6 +77,5 @@
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.1",
     "typescript": "5.2.2"
-  },
-  "dependencies": {}
+  }
 }
