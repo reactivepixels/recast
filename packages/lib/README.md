@@ -7,6 +7,8 @@
 [![Version](https://badge.fury.io/js/@rpxl%2Frecast.svg)](https://badge.fury.io/js/@rpxl%2Frecast)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+<!-- ![npm bundle size](https://img.shields.io/bundlephobia/min/@rpxl/recast) -->
+
 ## TL;DR
 
 Recast is a fundamentally different approach to building React components to maximise reusability.

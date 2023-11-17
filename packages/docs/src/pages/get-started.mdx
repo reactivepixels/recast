@@ -29,12 +29,11 @@ type BaseTheme = RecastBaseTheme<"root">;
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & RecastThemeProps;
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
-  ({ themekey, size, variant, modifier, ...props }, ref) => {
+  ({ themekey, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return <button className={classes?.root} ref={ref} {...props} />;
@@ -57,7 +56,7 @@ Lorem ipsum...
 import ButtonPrimitive from "../primitives/button.tsx";
 
 export const Button = ButtonPrimitive.recast({
-  defaults: { variant: "primary", size: "md" },
+  defaults: { variants: { intent: "primary", size: "md" } },
   base: {
     root: [
       "inline-flex",
@@ -70,26 +69,28 @@ export const Button = ButtonPrimitive.recast({
       "transition-colors",
     ],
   },
-  size: {
-    sm: { root: "h-9 rounded-md px-3" },
-    md: { root: "h-10 px-4 py-2" },
-    lg: { root: "h-11 rounded-md px-8" },
+  variants: {
+    size: {
+      sm: { root: "h-9 rounded-md px-3" },
+      md: { root: "h-10 px-4 py-2" },
+      lg: { root: "h-11 rounded-md px-8" },
+    },
+    intent: {
+      primary: {
+        root: "bg-primary text-primary-foreground hover:bg-primary/90",
+      },
+      secondary: {
+        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      },
+      destructive: {
+        root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+      },
+      outline: {
+        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+      },
+    },
   },
-  variant: {
-    primary: {
-      root: "bg-primary text-primary-foreground hover:bg-primary/90",
-    },
-    secondary: {
-      root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-    },
-    destructive: {
-      root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    },
-    outline: {
-      root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-    },
-  },
-  modifier: {
+  modifiers: {
     block: {
       root: "w-full",
     },
@@ -97,7 +98,7 @@ export const Button = ButtonPrimitive.recast({
 });
 ```
 
-> **Note**: example above is using [Tailwind CSS](https://tailwindcss.com/) for styles but any css classes referencing a stylesheet or css modules could be used here instead. Please see [examples]() fro more.
+> **Note**: example above is using [Tailwind CSS](https://tailwindcss.com/) for styles but any css classes referencing a stylesheet or css modules could be used here instead. Please see [examples]() for more.
 
 ## 4. Usage Examples
 
