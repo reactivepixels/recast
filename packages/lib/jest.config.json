@@ -1,4 +1,6 @@
 {
+  "testEnvironment": "jsdom",
+  "testMatch": ["**/__tests__/**/*.test.ts?(x)"],
   "moduleNameMapper": {
     "^(\\.{1,2}/.*)\\.js$": "$1"
   },
