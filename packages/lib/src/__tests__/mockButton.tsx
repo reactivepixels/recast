@@ -2,7 +2,7 @@ import ButtonPrimitive from "./mockButtonPrimitive.js";
 
 export const MockButton = ButtonPrimitive.recast({
   base: {
-    root: [],
+    root: ["bg-primary"],
   },
   variants: {
     intent: {
