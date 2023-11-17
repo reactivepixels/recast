@@ -2,41 +2,45 @@ import { RecastTypePrimitive } from "@rpxl/recast-primitives";
 
 export const Type = RecastTypePrimitive.recast({
   defaults: {
-    size: "md",
-    variant: "light",
+    variants: {
+      size: "md",
+      variant: "light",
+    },
   },
   base: {
     root: "font-mono",
   },
-  size: {
-    sm: {
-      root: "text-sm",
+  variants: {
+    size: {
+      sm: {
+        root: "text-sm",
+      },
+      md: {
+        root: "text-base",
+      },
+      lg: {
+        root: "text-lg",
+      },
     },
-    md: {
-      root: "text-base",
-    },
-    lg: {
-      root: "text-lg",
+    variant: {
+      light: {
+        root: "text-dark",
+      },
+      dark: {
+        root: "text-white",
+      },
+      primary: {
+        root: "text-primary",
+      },
+      secondary: {
+        root: "text-secondary",
+      },
+      inherit: {
+        root: "text-inherit",
+      },
     },
   },
-  variant: {
-    light: {
-      root: "text-dark",
-    },
-    dark: {
-      root: "text-white",
-    },
-    primary: {
-      root: "text-primary",
-    },
-    secondary: {
-      root: "text-secondary",
-    },
-    inherit: {
-      root: "text-inherit",
-    },
-  },
-  modifier: {
+  modifiers: {
     bold: {
       root: "font-bold",
     },

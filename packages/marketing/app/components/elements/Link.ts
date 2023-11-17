@@ -1,7 +1,7 @@
 import { RecastLinkPrimitive } from "../primitives";
 
 export const Link = RecastLinkPrimitive.recast({
-  defaults: { variant: "light" },
+  defaults: { variants: { variant: "light" } },
   base: {
     root: [
       "flex",
@@ -13,22 +13,24 @@ export const Link = RecastLinkPrimitive.recast({
       "gap-2",
     ],
   },
-  variant: {
-    primary: {
-      root: "text-primary transition-opacity opacity-80 hover:opacity-100",
+  variants: {
+    variant: {
+      primary: {
+        root: "text-primary transition-opacity opacity-80 hover:opacity-100",
+      },
+      secondary: {
+        root: "text-secondary transition-opacity opacity-80 hover:opacity-100",
+      },
+      dark: {
+        root: "text-white transition-opacity opacity-80 hover:opacity-100",
+      },
+      light: {
+        root: "text-ink transition-opacity opacity-80 hover:opacity-100",
+      },
+      unstyled: {},
     },
-    secondary: {
-      root: "text-secondary transition-opacity opacity-80 hover:opacity-100",
-    },
-    dark: {
-      root: "text-white transition-opacity opacity-80 hover:opacity-100",
-    },
-    light: {
-      root: "text-ink transition-opacity opacity-80 hover:opacity-100",
-    },
-    unstyled: {},
   },
-  modifier: {
+  modifiers: {
     underline: {
       root: "underline",
     },

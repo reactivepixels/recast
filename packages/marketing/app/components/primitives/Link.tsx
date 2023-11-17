@@ -28,9 +28,8 @@ const LinkPrimitive = forwardRef<React.ComponentRef<typeof Link>, Props>(
       themekey,
       startEl,
       endEl,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       children,
       className,
       ...props
@@ -39,9 +38,8 @@ const LinkPrimitive = forwardRef<React.ComponentRef<typeof Link>, Props>(
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (

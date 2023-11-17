@@ -1,7 +1,7 @@
 import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
 export const DemoButton = ButtonPrimitive.recast({
-  defaults: { variant: "primary", size: "medium" },
+  defaults: { variants: { variant: "primary", size: "medium" } },
   base: {
     root: [
       "flex",
@@ -15,38 +15,41 @@ export const DemoButton = ButtonPrimitive.recast({
       "transition-opacity",
     ],
   },
-  size: {
-    small: {
-      root: "px-4 py-2 text-xs",
+
+  variants: {
+    variant: {
+      primary: {
+        root: "bg-primary text-white",
+      },
+      secondary: {
+        root: "bg-secondary text-white",
+      },
+      rainbow: {
+        root: "bg-gradient-to-r from-sky-400 via-rose-400 to-lime-400 text-white",
+      },
+      outline: {
+        root: "bg-transparent text-white border border-white",
+      },
     },
-    medium: {
-      root: "px-8 py-2 text-md",
-    },
-    large: {
-      root: "px-12 py-4 text-lg",
-    },
-    mini: {
-      root: "px-4 py-2 text-xs",
-    },
-    humongous: {
-      root: "px-12 py-4 text-lg",
+    size: {
+      small: {
+        root: "px-4 py-2 text-xs",
+      },
+      medium: {
+        root: "px-8 py-2 text-md",
+      },
+      large: {
+        root: "px-12 py-4 text-lg",
+      },
+      mini: {
+        root: "px-4 py-2 text-xs",
+      },
+      humongous: {
+        root: "px-12 py-4 text-lg",
+      },
     },
   },
-  variant: {
-    primary: {
-      root: "bg-primary text-white",
-    },
-    secondary: {
-      root: "bg-secondary text-white",
-    },
-    rainbow: {
-      root: "bg-gradient-to-r from-sky-400 via-rose-400 to-lime-400 text-white",
-    },
-    outline: {
-      root: "bg-transparent text-white border border-white",
-    },
-  },
-  modifier: {
+  modifiers: {
     block: {
       root: "w-full",
     },
