@@ -16,7 +16,7 @@
     "dev:docs": "npm run dev -w packages/docs",
     "dev:marketing": "npm run dev -w packages/marketing",
     "export:marketing": "npm run export -w packages/marketing",
-    "test:ci": "npm run test:ci -w packages/lib",
+    "test:ci": "npm run test:coverage -w packages/lib",
     "release": "npm run build:all && npx changeset publish"
   },
   "dependencies": {
