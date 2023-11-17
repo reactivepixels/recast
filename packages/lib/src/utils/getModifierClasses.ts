@@ -8,16 +8,12 @@ type Props = {
   modifiers?: RecastThemeProps["modifiers"];
 };
 
-export const getModifierClasses = ({ theme, modifiers }: Props) => {
+export const getModifierClasses = ({ theme = {}, modifiers = [] }: Props) => {
   if (!theme.modifiers) return {};
 
-  if (modifiers) {
-    const modifierClasses = modifiers.reduce((acc, curr) => {
-      return mergeClassNames(acc, theme.modifiers?.[curr]);
-    }, {});
+  const modifierClasses = modifiers.reduce((acc, curr) => {
+    return mergeClassNames(acc, theme.modifiers?.[curr]);
+  }, {});
 
-    return modifierClasses;
-  }
-
-  return {};
+  return modifierClasses;
 };

@@ -6,6 +6,13 @@ type ValidateConditionProps = {
   defaults?: string[];
 };
 
+/**
+ * Validates if the given modifiers match the condition.
+ * @param condition - The condition to match against.
+ * @param modifiers - The modifiers to validate.
+ * @param defaults - The default values to validate.
+ * @returns A boolean indicating whether all specified conditional modifier keys match.
+ */
 export const validateConditionalModifiers = ({
   condition,
   modifiers,

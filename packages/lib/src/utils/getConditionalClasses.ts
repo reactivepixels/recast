@@ -13,9 +13,9 @@ type Props = {
 };
 
 export const getConditionalClasses = ({
-  theme,
-  variants,
-  modifiers,
+  theme = {},
+  variants = {},
+  modifiers = [],
 }: Props) => {
   // If no conditions to check then get out of here
   if (!theme.conditionals) return {};

@@ -52,7 +52,7 @@
     "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:ci": "jest --coverage"
   },
   "devDependencies": {
     "@testing-library/react": "^14.1.0",

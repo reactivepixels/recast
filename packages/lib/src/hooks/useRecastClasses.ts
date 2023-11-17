@@ -9,11 +9,17 @@ import { getConditionalClasses } from "../utils/getConditionalClasses.js";
 
 type RecastClasses<K> = Record<keyof K, string> | undefined;
 
+/**
+ * Returns an object containing the CSS classes generated from the provided theme, variants, and modifiers.
+ * @template K - The type of the base styles object.
+ * @param {RecastThemeProps} props - An object containing the theme key, variants, and modifiers.
+ * @returns {RecastClasses<K>} - An object containing the generated CSS classes.
+ */
 export const useRecastClasses = <K extends RecastBaseStyles>({
   themekey,
   variants,
   modifiers,
-}: RecastThemeProps) => {
+}: RecastThemeProps): RecastClasses<K> => {
   const theme = getTheme(themekey);
 
   const variantClasses = getVariantClasses({

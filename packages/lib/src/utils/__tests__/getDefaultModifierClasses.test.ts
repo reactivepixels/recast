@@ -57,4 +57,10 @@ describe("getDefaultModifierClasses", () => {
     const classes = getDefaultModifierClasses({ theme, modifiers });
     expect(classes).toEqual({});
   });
+
+  it("should handle undefined modifiers array", () => {
+    modifiers = undefined;
+    const classes = getDefaultModifierClasses({ theme, modifiers });
+    expect(classes).toEqual({ root: "modifier1-classes modifier2-classes" });
+  });
 });

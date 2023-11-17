@@ -8,13 +8,16 @@ type Props = {
   modifiers?: RecastThemeProps["modifiers"];
 };
 
-export const getDefaultModifierClasses = ({ theme, modifiers }: Props) => {
+export const getDefaultModifierClasses = ({
+  theme = {},
+  modifiers = [],
+}: Props) => {
   if (!theme.modifiers) return {};
 
   if (theme.defaults?.modifiers) {
     const defaultModifierClasses = theme.defaults.modifiers.reduce(
       (acc, curr) => {
-        if (!modifiers?.includes(curr)) {
+        if (!modifiers.includes(curr)) {
           return mergeClassNames(acc, theme.modifiers?.[curr]);
         }
 

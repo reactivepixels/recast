@@ -8,11 +8,14 @@ type Props = {
   variants?: RecastThemeProps["variants"];
 };
 
-export const getDefaultVariantClasses = ({ theme, variants }: Props) => {
+export const getDefaultVariantClasses = ({
+  theme = {},
+  variants = {},
+}: Props) => {
   if (!theme.variants) return {};
 
   if (theme.defaults?.variants) {
-    const defaultVariantKeys = Object.keys(theme.defaults?.variants || {});
+    const defaultVariantKeys = Object.keys(theme.defaults.variants);
 
     const defaultVariantClasses = defaultVariantKeys.reduce((acc, curr) => {
       if (!variants?.[curr]) {
@@ -21,8 +24,6 @@ export const getDefaultVariantClasses = ({ theme, variants }: Props) => {
             acc,
             theme.variants?.[curr][theme.defaults.variants[curr]],
           );
-
-          return acc;
         }
       }
 

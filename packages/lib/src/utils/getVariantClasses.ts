@@ -8,18 +8,14 @@ type Props = {
   variants?: RecastThemeProps["variants"];
 };
 
-export const getVariantClasses = ({ theme, variants }: Props) => {
+export const getVariantClasses = ({ theme = {}, variants = {} }: Props) => {
   if (!theme.variants) return {};
 
-  if (variants) {
-    const variantKeys = Object.keys(variants || {});
+  const variantKeys = Object.keys(variants);
 
-    const variantClasses = variantKeys.reduce((acc, curr) => {
-      return mergeClassNames(acc, theme.variants?.[curr][variants[curr]]);
-    }, {});
+  const variantClasses = variantKeys.reduce((acc, curr) => {
+    return mergeClassNames(acc, theme.variants?.[curr][variants[curr]]);
+  }, {});
 
-    return variantClasses;
-  }
-
-  return {};
+  return variantClasses;
 };

@@ -6,12 +6,18 @@ type ValidateConditionProps = {
   defaults?: Record<string, string>;
 };
 
+/**
+ * Validates conditional variants for a given condition object.
+ * @param condition - The condition object containing variant keys and their possible values.
+ * @param variants - The variants object containing variant keys.
+ * @param defaults - The default variant keys.
+ * @returns A boolean indicating whether all specified conditional variant keys match.
+ */
 export const validateConditionalVariants = ({
   condition,
   variants,
   defaults,
 }: ValidateConditionProps) => {
-  // Get all conditional variant keys
   const conditionalVariantKeys = Object.keys(condition.variants || {});
 
   // Always return true if variant conditions are empty
