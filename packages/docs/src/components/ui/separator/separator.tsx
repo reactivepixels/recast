@@ -5,16 +5,18 @@ import { forwardRef } from "react";
 
 const BaseSeparator = SeparatorPrimitive.recast({
   // This matches the default for the primitives built in `orientation` prop
-  defaults: { variant: "horizontal" },
+  defaults: { variants: { variant: "horizontal" } },
   base: {
     root: "shrink-0 bg-border",
   },
-  variant: {
-    vertical: {
-      root: "h-full w-[1px]",
-    },
-    horizontal: {
-      root: "h-[1px] w-full",
+  variants: {
+    variant: {
+      vertical: {
+        root: "h-full w-[1px]",
+      },
+      horizontal: {
+        root: "h-[1px] w-full",
+      },
     },
   },
 });

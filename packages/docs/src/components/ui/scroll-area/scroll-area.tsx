@@ -5,19 +5,21 @@ import { forwardRef } from "react";
 
 const BaseScrollArea = ScrollAreaPrimitive.recast({
   // This matches the default for the primitives built in `orientation` prop
-  defaults: { variant: "vertical" },
+  defaults: { variants: { variant: "vertical" } },
   base: {
     root: "relative overflow-hidden",
     viewport: "h-full w-full rounded-[inherit]",
     thumb: "relative flex-1 rounded-full bg-border",
     scrollbar: "flex touch-none select-none transition-colors",
   },
-  variant: {
-    vertical: {
-      scrollbar: "h-full w-2.5 border-l border-l-transparent p-[1px]",
-    },
-    horizontal: {
-      scrollbar: "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+  variants: {
+    variant: {
+      vertical: {
+        scrollbar: "h-full w-2.5 border-l border-l-transparent p-[1px]",
+      },
+      horizontal: {
+        scrollbar: "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      },
     },
   },
 });

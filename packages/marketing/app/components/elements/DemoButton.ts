@@ -15,7 +15,6 @@ export const DemoButton = ButtonPrimitive.recast({
       "transition-opacity",
     ],
   },
-
   variants: {
     variant: {
       primary: {

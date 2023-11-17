@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
@@ -24,7 +24,7 @@ export function CollapsibleDemo() {
           @peduarte starred 3 repositories
         </h4>
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" size="sm">
+          <Button intent="ghost" size="sm">
             <CaretSortIcon className="h-4 w-4" />
             <span className="sr-only">Toggle</span>
           </Button>

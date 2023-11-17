@@ -5,20 +5,7 @@ import { ButtonPrimitive } from "@rpxl/recast-primitives";
 export const Button = ButtonPrimitive.recast({
   defaults: {
     variants: { intent: "outline", size: "default" },
-    // modifiers: ["block"],
   },
-  // conditionals: [
-  //   {
-  //     variants: {
-  //       intent: ["default", "outline"],
-  //       size: ["lg", "sm"],
-  //     },
-  //     modifiers: ["floating", "block"],
-  //     classes: {
-  //       root: "!bg-green-500",
-  //     },
-  //   },
-  // ],
   base: {
     root: [
       "inline-flex",

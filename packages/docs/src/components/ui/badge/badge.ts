@@ -3,7 +3,7 @@
 import { BadgePrimitive } from "@rpxl/recast-primitives";
 
 export const Badge = BadgePrimitive.recast({
-  defaults: { variant: "default" },
+  defaults: { variants: { variant: "default" } },
   base: {
     root: [
       "inline-flex",
@@ -21,18 +21,20 @@ export const Badge = BadgePrimitive.recast({
       "focus:ring-offset-2",
     ],
   },
-  variant: {
-    default: {
-      root: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
-    },
-    destructive: {
-      root: "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-    },
-    outline: {
-      root: "border-border text-foreground",
-    },
-    secondary: {
-      root: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+  variants: {
+    variant: {
+      default: {
+        root: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
+      },
+      destructive: {
+        root: "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
+      },
+      outline: {
+        root: "border-border text-foreground",
+      },
+      secondary: {
+        root: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      },
     },
   },
 });
