@@ -1,0 +1,41 @@
+import React, { forwardRef } from "react";
+import * as RadixAlertDialogPrimitive from "@radix-ui/react-alert-dialog";
+import { cn } from "../../utils/cn.js";
+import {
+  RecastBaseTheme,
+  useRecastClasses,
+  createRecastComponent,
+  RecastThemeProps,
+} from "@rpxl/recast";
+
+type BaseTheme = RecastBaseTheme<"root">;
+
+export type Props = React.ComponentPropsWithoutRef<
+  typeof RadixAlertDialogPrimitive.Cancel
+> &
+  RecastThemeProps;
+
+const AlertDialogCancelPrimitive = forwardRef<
+  React.ElementRef<typeof RadixAlertDialogPrimitive.Cancel>,
+  Props
+>(({ themekey, className, variants, modifiers, ...props }, ref) => {
+  const classes = useRecastClasses<BaseTheme>({
+    themekey,
+    variants,
+    modifiers,
+  });
+
+  return (
+    <RadixAlertDialogPrimitive.Cancel
+      ref={ref}
+      className={cn(classes?.root, className)}
+      {...props}
+    />
+  );
+});
+
+AlertDialogCancelPrimitive.displayName = "AlertDialogCancelPrimitive";
+
+export default createRecastComponent<Props, BaseTheme>(
+  AlertDialogCancelPrimitive,
+);

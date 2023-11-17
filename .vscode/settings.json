@@ -1,9 +1,12 @@
 {
+  "eslint.runtime": "node",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   "css.lint.unknownAtRules": "ignore",
-  // Tailwind intellisense for JavaScript theme object
-  // https://github.com/paolotiu/tailwind-regex-list#plain-javascript-object
+  // Tailwind intellisense for Recast theme object
   "tailwindCSS.experimental.classRegex": [
-    ["recast([^)]*)", ":*?[\"'`]([^\"'`]*).*?,"]
+    ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

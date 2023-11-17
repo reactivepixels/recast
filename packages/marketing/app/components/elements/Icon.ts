@@ -1,6 +1,6 @@
 import { RecastIconPrimitive } from "@rpxl/recast-primitives";
 
-export const Icon = RecastIconPrimitive.recast("Icon", {
+export const Icon = RecastIconPrimitive.recast({
   defaults: { size: "md" },
   base: {
     root: "text-inherit",

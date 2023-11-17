@@ -1,7 +1,0 @@
-{
-  "internal": true,
-  "main": "../dist/server.cjs",
-  "module": "../dist/server.module.js",
-  "unpkg": "../dist/server.umd.js",
-  "types": "../dist/server.d.ts"
-}

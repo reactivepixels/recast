@@ -1,6 +1,6 @@
-import { RecastStackPrimitive } from "@rpxl/recast-primitives";
+import { StackPrimitive } from "@rpxl/recast-primitives";
 
-export const Stack = RecastStackPrimitive.recast("Stack", {
+export const Stack = StackPrimitive.recast({
   defaults: { size: "md" },
   base: {
     root: "flex flex-col",

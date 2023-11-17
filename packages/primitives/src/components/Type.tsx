@@ -1,14 +1,13 @@
 import React, { ElementType, forwardRef } from "react";
+import clsx from "clsx";
 import {
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
-import clsx from "clsx";
-import { RecastThemeProp } from "@rpxl/recast/core";
+} from "@rpxl/recast";
 
-const DEFAULT_THEME_KEY = "type";
-type BaseTheme = RecastThemeProp<"root">;
+type BaseTheme = RecastBaseTheme<"root">;
 
 type Props = React.HTMLAttributes<HTMLElement> &
   RecastThemeProps & {
@@ -20,21 +19,19 @@ const TypePrimitive = forwardRef<HTMLElement, Props>(
   (
     {
       as: Tag = "p",
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       children,
       className,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
       ...props
     },
     ref,
   ) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
-      size,
-      variant,
-      modifier,
+      variants,
+      modifiers,
     });
 
     return (
@@ -48,7 +45,4 @@ const TypePrimitive = forwardRef<HTMLElement, Props>(
 if (process.env["NODE_ENV"] !== "production")
   TypePrimitive.displayName = "TypePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  TypePrimitive,
-  DEFAULT_THEME_KEY,
-);
+export default createRecastComponent<Props, BaseTheme>(TypePrimitive);

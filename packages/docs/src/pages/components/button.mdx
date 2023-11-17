@@ -1,0 +1,26 @@
+import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
+import { ButtonDemo } from "@/components/demos/button";
+
+# Button
+
+Displays a button or a component that looks like a button.
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <ComponentPreview>
+      <ButtonDemo />
+    </ComponentPreview>
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { Button } from "@/components/ui/button"
+    
+    export function ButtonDemo() {
+      return <Button>Button</Button>
+    }
+    ```
+
+  </Tabs.Tab>
+</Tabs>

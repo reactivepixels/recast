@@ -1,6 +1,6 @@
-import { RecastButtonPrimitive } from "@rpxl/recast-primitives";
+import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
-export const DemoButton = RecastButtonPrimitive.recast("DemoButton", {
+export const DemoButton = ButtonPrimitive.recast({
   defaults: { variant: "primary", size: "medium" },
   base: {
     root: [
@@ -43,7 +43,7 @@ export const DemoButton = RecastButtonPrimitive.recast("DemoButton", {
       root: "bg-gradient-to-r from-sky-400 via-rose-400 to-lime-400 text-white",
     },
     outline: {
-      root: "bg-transparent text-white border border-px border-white",
+      root: "bg-transparent text-white border border-white",
     },
   },
   modifier: {

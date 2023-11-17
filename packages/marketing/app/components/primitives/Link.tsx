@@ -1,17 +1,14 @@
 import React, { forwardRef } from "react";
 import clsx from "clsx";
 import {
+  RecastBaseTheme,
   useRecastClasses,
   createRecastComponent,
   RecastThemeProps,
-} from "@rpxl/recast/client";
-import { RecastThemeProp } from "@rpxl/recast/core";
+} from "@rpxl/recast";
 import Link from "next/link";
 
-const DEFAULT_THEME_KEY = "link";
-type BaseTheme = RecastThemeProp<"root"> &
-  RecastThemeProp<"startEl"> &
-  RecastThemeProp<"endEl">;
+type BaseTheme = RecastBaseTheme<"root" | "startEl" | "endEl">;
 
 type Props = RecastThemeProps &
   React.ComponentPropsWithRef<typeof Link> & {
@@ -28,7 +25,7 @@ type Props = RecastThemeProps &
 const LinkPrimitive = forwardRef<React.ComponentRef<typeof Link>, Props>(
   (
     {
-      themekey = DEFAULT_THEME_KEY,
+      themekey,
       startEl,
       endEl,
       size,
@@ -60,7 +57,4 @@ const LinkPrimitive = forwardRef<React.ComponentRef<typeof Link>, Props>(
 if (process.env["NODE_ENV"] !== "production")
   LinkPrimitive.displayName = "LinkPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  LinkPrimitive,
-  DEFAULT_THEME_KEY
-);
+export default createRecastComponent<Props, BaseTheme>(LinkPrimitive);

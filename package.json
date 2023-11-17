@@ -16,9 +16,12 @@
     "dev:docs": "npm run dev -w packages/docs",
     "dev:marketing": "npm run dev -w packages/marketing",
     "export:marketing": "npm run export -w packages/marketing",
+    "test:ci": "npm run test:coverage -w packages/lib",
     "release": "npm run build:all && npx changeset publish"
   },
   "dependencies": {
-    "@changesets/cli": "^2.26.2"
+    "@changesets/cli": "^2.26.2",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "cmdk": "^0.2.0"
   }
 }

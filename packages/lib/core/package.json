@@ -1,7 +1,0 @@
-{
-  "internal": true,
-  "main": "../dist/core.cjs",
-  "module": "../dist/core.module.js",
-  "unpkg": "../dist/core.umd.js",
-  "types": "../dist/core.d.ts"
-}

@@ -1,0 +1,48 @@
+import { RocketIcon } from "@radix-ui/react-icons";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
+# Introduction
+
+## Background
+
+Creating component libraries is a challenging and time-consuming task. Even the seemingly straightforward process of developing a
+sensible button component can lead to a daunting proliferation of props, primarily driven by the need for theming.
+Consider the numerous instances where theme-related props and styles are embedded in a component - such
+as `variant: "primary" | "secondary" | "tertiary"` or `size: "sm" | "md" | "lg"`. This tight coupling of component props
+with theme requirements not only results in an ever-expanding list of props but also presents a significant hurdle
+to reusing components across projects without duplicating code purely for the purposes of theming.
+
+Imagine being able to liberate your component primitives from theme dependencies, allowing them to be written once and used across projects 🤯 🌈 🦄.
+
+## What is Recast?
+
+Recast is not just a collection of utilities; it is an approach/pattern to building **truly** reusable component primitives by abstracting the theme layer from the internal workings of a component and adhering to a set of core principles.
+
+The key to Recast lies in its utilisation of three intrinsic component properties: `size{:js}`, `variant{:js}`, and `modifier{:js}`, collectively known as **SVM**.
+
+- **Size:** Used to specify component size variants e.g., `sm`, `md`, `lg`
+- **Variant:** Distinct variations of a component e.g., `primary`, `secondary`, `tertiary`
+- **Modifier**: Indiscrete variations of a component that can be "mixed-in" and combined. e.g. `block`, `floating`, `outline`
+
+> Variants & Modifiers can be configured to respect size e.g. different styles can be applied for a `small`, `medium` & `large` _modifiers_ and _variants_ if required.
+
+The specific values that an Recast "primitive" can receive are not specified within the component, instead these are defined by wrapping the component with a styles definition that will form the theme API.
+
+<Alert className="my-6">
+  <RocketIcon className="h-4 w-4" />
+  <AlertTitle>Read enough?</AlertTitle>
+  <AlertDescription>
+    Click here to see how to build a Recast component.
+  </AlertDescription>
+</Alert>
+
+## How is this different to other component libraries?
+
+There are also an ever-growing number of component libraries out there attempting to standardize theming by offering well-documented theme APIs,
+as exemplified by systems like MUI, Chakra, and ANT. However, these frameworks necessitate the adoption of predefined design system props and values,
+constraining users to a specific set of theming conventions as theming props are still tightly coupled to the components.
+
+In contrast ths SVM approach eliminates the need for adherence to predefined theming props, values, or naming conventions.
+With Recast, you have the autonomy to engineer your design system according to your unique requirements, allowing you to tailor your
+design system to precisely fit your project's needs without compromise.

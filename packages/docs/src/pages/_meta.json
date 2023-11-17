@@ -1,0 +1,11 @@
+{
+  "-- Getting Started": {
+    "type": "separator",
+    "title": "Getting Started"
+  },
+  "index": "Introduction",
+  "get-started": "Get Started",
+  "anatomy": "Anatomy of a Recast Component",
+
+  "components": "Components"
+}

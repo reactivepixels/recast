@@ -2,6 +2,8 @@
 
 > Build components once. Use everywhere.
 
+[![codecov](https://codecov.io/gh/reactivepixels/recast/graph/badge.svg?token=F21FH8HJ7D)](https://codecov.io/gh/reactivepixels/recast)
+
 ## TL;DR
 
 Recast is a fundamentally different approach to building React components to maximise reusability.
