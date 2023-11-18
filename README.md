@@ -6,6 +6,7 @@
 ![build](https://github.com/reactivepixels/recast/actions/workflows/.github/workflows/ci.yml/badge.svg)
 [![Version](https://badge.fury.io/js/@rpxl%2Frecast.svg)](https://badge.fury.io/js/@rpxl%2Frecast)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/@rpxl/recast)](https://bundlephobia.com/package/@rpxl/recast@2.0.0)
 
 ## TL;DR
 
@@ -29,7 +30,7 @@ Recast is brought to you courtesy of TypeScript. Types are what make all this po
 
 ### Tiny
 
-At only 1.9kb gzipped and zero dependencies, Recast packs a big punch for such a small utility library.
+At only a 1.2 kb gzipped and zero dependencies, Recast packs a big punch for such a small utility library.
 
 ### No more prop bloat
 
