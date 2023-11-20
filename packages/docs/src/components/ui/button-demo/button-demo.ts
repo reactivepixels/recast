@@ -2,8 +2,7 @@
 
 import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
-export const ButtonDemo = ButtonPrimitive.recast({
-  defaults: { variants: { variant: "default", size: "default" } },
+export const Button = ButtonPrimitive.recast({
   base: {
     root: [
       "inline-flex",
@@ -25,35 +24,35 @@ export const ButtonDemo = ButtonPrimitive.recast({
   },
   variants: {
     variant: {
-      default: {
-        root: "bg-green-500 text-primary-foreground hover:bg-primary/90",
-      },
-      destructive: {
-        root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-      },
-      outline: {
-        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+      primary: {
+        root: "bg-primary text-primary-foreground hover:bg-primary/90",
       },
       secondary: {
         root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
       },
-      ghost: {
-        root: "hover:bg-accent hover:text-accent-foreground",
-      },
-      link: {
-        root: "text-primary underline-offset-4 hover:underline",
+      outline: {
+        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
       },
     },
     size: {
-      default: { root: "h-10 px-4 py-2" },
       sm: { root: "h-9 rounded-md px-3" },
+      md: { root: "h-10 px-4 py-2" },
       lg: { root: "h-11 rounded-md px-8" },
-      icon: { root: "h-10 w-10" },
     },
   },
   modifiers: {
     block: {
-      root: "w-full",
+      root: ["w-full"],
+    },
+    floating: {
+      root: "shadow-lg",
     },
   },
+  conditionals: [
+    {
+      variants: { size: "lg" },
+      modifiers: ["floating"],
+      classes: { root: "bg-green-500 text-white" },
+    },
+  ],
 });

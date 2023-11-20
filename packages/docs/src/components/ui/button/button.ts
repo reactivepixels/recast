@@ -4,7 +4,7 @@ import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
 export const Button = ButtonPrimitive.recast({
   defaults: {
-    variants: { intent: "outline", size: "default" },
+    variants: { variant: "default", size: "default" },
   },
   base: {
     root: [
@@ -26,18 +26,18 @@ export const Button = ButtonPrimitive.recast({
     ],
   },
   variants: {
-    intent: {
+    variant: {
       default: {
-        root: "bg-primary text-primary-foreground hover:bg-primary/90",
+        root: "bg-pr text-primary-foreground hover:bg-primary/90",
       },
-      destructive: {
-        root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+      secondary: {
+        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
       },
       outline: {
         root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
       },
-      secondary: {
-        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      destructive: {
+        root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       ghost: {
         root: "hover:bg-accent hover:text-accent-foreground",

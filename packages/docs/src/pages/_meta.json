@@ -3,9 +3,27 @@
     "type": "separator",
     "title": "Getting Started"
   },
-  "index": "Introduction",
-  "get-started": "Get Started",
-  "anatomy": "Anatomy of a Recast Component",
+  "index": "Overview",
+  "quick-start": "Quick Start",
+  "in-depth": "In-Depth Guide",
+  "api-reference": "API Reference",
+  "-- Advanced": {
+    "type": "separator",
+    "title": "Advanced"
+  },
+  "server-components": "Server Components",
+  "tailwind-css": "Tailwind CSS",
+  "advanced-use-cases": "Advanced Use Cases",
+  "-- More": {
+    "type": "separator",
+    "title": "More"
+  },
+  "acknowledgements": "Acknowledgements",
+  "faqs": "FAQs",
 
-  "components": "Components"
+  "-- Components": {
+    "type": "separator",
+    "title": "Components"
+  },
+  "components": "shadcn/ui"
 }

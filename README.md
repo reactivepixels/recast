@@ -17,21 +17,3 @@ Recast is a fundamentally different approach to building React components to max
 Recast is not just a collection of utilities; it is an approach/pattern to building **truly** reusable component primitives by abstracting the theme layer from the internal workings of a component.
 
 The specific values that an Recast "primitive" can receive are not specified within the component, instead these are defined by wrapping the component with a styles definition that will form the theme API.
-
-## Features
-
-### Tailwind friendly
-
-Recast works seamlessly with CSS frameworks like Tailwind CSS, or use any flavour of css you like.
-
-### TypeScript at its core
-
-Recast is brought to you courtesy of TypeScript. Types are what make all this possible.
-
-### Tiny
-
-At only a 1.2 kb gzipped and zero dependencies, Recast packs a big punch for such a small utility library.
-
-### No more prop bloat
-
-Define your own component theme API. Include only the props you need and nothing more. Kitchen sink not included!

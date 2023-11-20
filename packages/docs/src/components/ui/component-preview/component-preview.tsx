@@ -9,17 +9,17 @@ const ComponentPreview = forwardRef<HTMLDivElement, Props>(
       <div
         className={clsx(
           "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative rounded-md border border-border",
-          className
+          className,
         )}
         ref={ref}
         {...props}
       >
-        <div className="flex min-h-[350px] w-full justify-center items-center p-10">
+        <div className="flex min-h-[250px] w-full justify-center items-center p-10">
           {children}
         </div>
       </div>
     );
-  }
+  },
 );
 
 ComponentPreview.displayName = "ComponentPreview";

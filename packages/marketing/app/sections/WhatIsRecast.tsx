@@ -22,20 +22,10 @@ const WhatIsRecast = forwardRef<
             <Heading size="lg">What is Recast?</Heading>
           </Stack>
           <Type>
-            <span className="text-secondary">Recast</span> is a collection of
-            utilities that enable you to build truly reusable component
-            primitives.
-          </Type>
-
-          <Type>
-            By following the{" "}
-            <span className="text-primary">&ldquo;SVM&rdquo;</span> methodology
-            - Recast enables you to achieve all your component theming
-            requirements through a combination of three intrinsic component
-            properties: <span className="text-secondary">`size`</span>,{" "}
-            <span className="text-secondary">`variant`</span> and{" "}
-            <span className="text-secondary">`modifier`</span> a.k.a.{" "}
-            <span className="text-primary">SVM</span>.
+            Recast is not just a collection of utilities; it is an
+            approach/pattern to building **truly** reusable component primitives
+            by abstracting the theme layer from the internal workings of a
+            component.
           </Type>
 
           <Type>

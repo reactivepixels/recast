@@ -1,0 +1,222 @@
+import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
+import { Button } from "@/components/ui/button";
+
+# Get started with Recast
+
+The following guide is intended as a very brief overview of how to get up and
+running quickly with Recast. For a more indepth breakdown of how Recast works,
+jump to the [In-Depth Guide](/in-depth).
+
+## 1. Installation
+
+Install the library into your React project via npm.
+
+```bash copy
+npm install @rpxl/recast
+```
+
+## 2. Create a Component
+
+The below example is a very basic button component that uses the Recast library
+utilties to generate a set of classes based on the props passed to the
+component. The `createRecastComponent` function is used to export a reusable
+component primitive that can be wrapped with your desired theme layer;
+completely decoupled from the component primitive.
+
+```tsx copy showLineNumbers filename="components/primitives/button.tsx"
+import React, { ButtonHTMLAttributes, forwardRef } from "react";
+import {
+  RecastBaseTheme,
+  useRecastClasses,
+  createRecastComponent,
+  RecastThemeProps,
+} from "@rpxl/recast";
+
+type BaseTheme = RecastBaseTheme<"root">;
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & RecastThemeProps;
+
+const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
+  ({ themekey, variants, modifiers, ...props }, ref) => {
+    const classes = useRecastClasses<BaseTheme>({
+      themekey,
+      variants,
+      modifiers,
+    });
+
+    return <button className={classes?.root} ref={ref} {...props} />;
+  },
+);
+
+ButtonPrimitive.displayName = "ButtonPrimitive";
+
+export default createRecastComponent<Props, BaseTheme>(ButtonPrimitive);
+```
+
+## 3. Add a Theme
+
+Here we import the component primitive we created in the previous step and wrap
+it with a theme layer. The theme layer is responsible for definining the theme
+props that can be applied to a component.
+
+```tsx copy showLineNumbers filename="components/ui/button.ts"
+"use client";
+
+import { ButtonPrimitive } from "@rpxl/recast-primitives";
+
+export const Button = ButtonPrimitive.recast({
+  defaults: {
+    variants: { variant: "default", size: "default" },
+  },
+  base: {
+    root: [
+      "inline-flex",
+      "items-center",
+      "justify-center",
+      "whitespace-nowrap",
+      "rounded-md",
+      "text-sm",
+      "font-medium",
+      "ring-offset-background",
+      "transition-colors",
+      "focus-visible:outline-none",
+      "focus-visible:ring-2",
+      "focus-visible:ring-ring",
+      "focus-visible:ring-offset-2",
+      "disabled:pointer-events-none",
+      "disabled:opacity-50",
+    ],
+  },
+  variants: {
+    variant: {
+      default: {
+        root: "bg-primary text-primary-foreground hover:bg-primary/90",
+      },
+      secondary: {
+        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      },
+      outline: {
+        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+      },
+      destructive: {
+        root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+      },
+      ghost: {
+        root: "hover:bg-accent hover:text-accent-foreground",
+      },
+      link: {
+        root: "text-primary underline-offset-4 hover:underline",
+      },
+    },
+    size: {
+      default: { root: "h-10 px-4 py-2" },
+      sm: { root: "h-9 rounded-md px-3" },
+      lg: { root: "h-11 rounded-md px-8" },
+      icon: { root: "h-10 w-10" },
+    },
+  },
+  modifiers: {
+    block: {
+      root: ["w-full"],
+    },
+    floating: {
+      root: "shadow-lg",
+    },
+  },
+});
+```
+
+> **Note**: example above is using [Tailwind CSS](https://tailwindcss.com/) for
+> styles but any css classes referencing a stylesheet or css modules could be
+> used here instead. Please see [examples]() for more.
+
+## 4. Usage Examples
+
+Here are a few instances demonstrating the versatile usage of the button
+component. By adjusting the theme definition, an endless array of variations can
+be effortlessly achieved, all without the need to directly modify the component
+primitive. 🦄
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <ComponentPreview>
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-2">
+          <Button size="sm">default</Button>
+          <Button size="sm" variant="secondary">secondary</Button>
+          <Button size="sm" variant="outline">outline</Button>
+          <Button size="sm" variant="destructive">destructive</Button>
+          <Button size="sm" variant="ghost">ghost</Button>
+          <Button size="sm" variant="link">link</Button>
+        </div>
+        <div className="flex gap-2">
+          <Button>default</Button>
+          <Button variant="secondary">secondary</Button>
+          <Button variant="outline">outline</Button>
+          <Button variant="destructive">destructive</Button>
+          <Button variant="ghost">ghost</Button>
+          <Button variant="link">link</Button>
+        </div>
+        <div className="flex gap-2">
+          <Button size="lg">default</Button>
+          <Button size="lg" variant="secondary">secondary</Button>
+          <Button size="lg" variant="outline">outline</Button>
+          <Button size="lg" variant="destructive">destructive</Button>
+          <Button size="lg" variant="ghost">ghost</Button>
+          <Button size="lg" variant="link">link</Button>
+        </div>
+        <div className="flex gap-2">
+          <Button size="lg" variant="destructive" block>block</Button>
+          <Button size="lg" variant="outline" floating>floating</Button>
+          <Button size="lg" variant="secondary" block floating>block floating</Button>
+        </div>
+      </div>
+    </ComponentPreview>
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { Button } from "@/components/ui/button"
+    
+    export function ButtonDemo() {
+      return (
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Button size="sm">default</Button>
+            <Button size="sm" variant="secondary">secondary</Button>
+            <Button size="sm" variant="outline">outline</Button>
+            <Button size="sm" variant="destructive">destructive</Button>
+            <Button size="sm" variant="ghost">ghost</Button>
+            <Button size="sm" variant="link">link</Button>
+          </div>
+          <div className="flex gap-2">
+            <Button>default</Button>
+            <Button variant="secondary">secondary</Button>
+            <Button variant="outline">outline</Button>
+            <Button variant="destructive">destructive</Button>
+            <Button variant="ghost">ghost</Button>
+            <Button variant="link">link</Button>
+          </div>
+          <div className="flex gap-2">
+            <Button size="lg">default</Button>
+            <Button size="lg" variant="secondary">secondary</Button>
+            <Button size="lg" variant="outline">outline</Button>
+            <Button size="lg" variant="destructive">destructive</Button>
+            <Button size="lg" variant="ghost">ghost</Button>
+            <Button size="lg" variant="link">link</Button>
+          </div>
+          <div className="flex gap-2">
+            <Button size="lg" variant="destructive" block>block</Button>
+            <Button size="lg" variant="outline" floating>floating</Button>
+            <Button size="lg" variant="secondary" block floating>block floating</Button>
+          </div>
+        </div>
+      )
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+> All the examples above have been adapted from the wonderful
+> [shadcn/ui](https://ui.shadcn.com/) library built upon
+> [Radix UI](https://www.radix-ui.com/).
