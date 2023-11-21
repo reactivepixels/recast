@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const { readFileSync } = require("fs");
+const isProduction = process.env.NODE_ENV === "production";
 
 const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
@@ -13,6 +14,10 @@ const withNextra = require("nextra")({
 });
 
 module.exports = withNextra({
+  output: "export",
+  // server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized)
+  images: { unoptimized: isProduction },
+  basePath: isProduction ? "/recast" : "",
   reactStrictMode: true,
   images: {
     remotePatterns: [
