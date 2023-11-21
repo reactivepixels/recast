@@ -15,9 +15,9 @@ const Masthead = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
           "bg-no-repeat",
           "overflow-hidden",
           "rounded-lg",
-          "px-8",
-          "md:px-16",
-          "py-12",
+          "sm:px-8",
+          "py-6",
+          "sm:py-12",
           "lg:py-24",
           className,
         )}
