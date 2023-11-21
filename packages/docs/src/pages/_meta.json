@@ -13,10 +13,5 @@
   },
   "server-components": "Server Components",
   "tailwind-css": "Tailwind CSS",
-  "advanced-use-cases": "Advanced Use Cases",
-  "-- Components": {
-    "type": "separator",
-    "title": "Components"
-  },
-  "components": "shadcn/ui"
+  "advanced-use-cases": "Advanced Use Cases"
 }

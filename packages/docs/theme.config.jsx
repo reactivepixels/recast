@@ -4,9 +4,6 @@ const themeConfig = {
       titleTemplate: "%s – Recast",
     };
   },
-  sidebar: {
-    defaultMenuCollapseLevel: 1,
-  },
   footer: {
     text: (
       <span>

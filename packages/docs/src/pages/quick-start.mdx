@@ -62,11 +62,11 @@ props that can be applied to a component.
 ```tsx copy showLineNumbers filename="components/ui/button.ts"
 "use client";
 
-import { ButtonPrimitive } from "@rpxl/recast-primitives";
+import { ButtonPrimitive } from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   defaults: {
-    variants: { variant: "default", size: "default" },
+    variants: { variant: "primary", size: "md" },
   },
   base: {
     root: [
@@ -89,7 +89,7 @@ export const Button = ButtonPrimitive.recast({
   },
   variants: {
     variant: {
-      default: {
+      primary: {
         root: "bg-primary text-primary-foreground hover:bg-primary/90",
       },
       secondary: {
@@ -109,10 +109,9 @@ export const Button = ButtonPrimitive.recast({
       },
     },
     size: {
-      default: { root: "h-10 px-4 py-2" },
       sm: { root: "h-9 rounded-md px-3" },
+      md: { root: "h-10 px-4 py-2" },
       lg: { root: "h-11 rounded-md px-8" },
-      icon: { root: "h-10 w-10" },
     },
   },
   modifiers: {
@@ -128,13 +127,12 @@ export const Button = ButtonPrimitive.recast({
 
 > **Note**: example above is using [Tailwind CSS](https://tailwindcss.com/) for
 > styles but any css classes referencing a stylesheet or css modules could be
-> used here instead. Please see [examples]() for more.
+> used here instead.
 
 ## 4. Usage Examples
 
-Here are a few instances demonstrating the versatile usage of the button
-component. By adjusting the theme definition, an endless array of variations can
-be effortlessly achieved, all without the need to directly modify the component
+By adjusting the theme definition, an endless array of variations can be
+effortlessly achieved, all without the need to directly modify the component
 primitive. 🦄
 
 <Tabs items={["Preview", "Code"]}>
@@ -142,7 +140,7 @@ primitive. 🦄
     <ComponentPreview>
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
-          <Button size="sm">default</Button>
+          <Button size="sm">primary</Button>
           <Button size="sm" variant="secondary">secondary</Button>
           <Button size="sm" variant="outline">outline</Button>
           <Button size="sm" variant="destructive">destructive</Button>
@@ -150,7 +148,7 @@ primitive. 🦄
           <Button size="sm" variant="link">link</Button>
         </div>
         <div className="flex gap-2">
-          <Button>default</Button>
+          <Button>primary</Button>
           <Button variant="secondary">secondary</Button>
           <Button variant="outline">outline</Button>
           <Button variant="destructive">destructive</Button>
@@ -158,7 +156,7 @@ primitive. 🦄
           <Button variant="link">link</Button>
         </div>
         <div className="flex gap-2">
-          <Button size="lg">default</Button>
+          <Button size="lg">primary</Button>
           <Button size="lg" variant="secondary">secondary</Button>
           <Button size="lg" variant="outline">outline</Button>
           <Button size="lg" variant="destructive">destructive</Button>
@@ -182,7 +180,7 @@ primitive. 🦄
       return (
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
-            <Button size="sm">default</Button>
+            <Button size="sm">primary</Button>
             <Button size="sm" variant="secondary">secondary</Button>
             <Button size="sm" variant="outline">outline</Button>
             <Button size="sm" variant="destructive">destructive</Button>
@@ -190,7 +188,7 @@ primitive. 🦄
             <Button size="sm" variant="link">link</Button>
           </div>
           <div className="flex gap-2">
-            <Button>default</Button>
+            <Button>primary</Button>
             <Button variant="secondary">secondary</Button>
             <Button variant="outline">outline</Button>
             <Button variant="destructive">destructive</Button>
@@ -198,7 +196,7 @@ primitive. 🦄
             <Button variant="link">link</Button>
           </div>
           <div className="flex gap-2">
-            <Button size="lg">default</Button>
+            <Button size="lg">primary</Button>
             <Button size="lg" variant="secondary">secondary</Button>
             <Button size="lg" variant="outline">outline</Button>
             <Button size="lg" variant="destructive">destructive</Button>
