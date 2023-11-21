@@ -28,7 +28,7 @@ export const Button = ButtonPrimitive.recast({
   variants: {
     variant: {
       default: {
-        root: "bg-pr text-primary-foreground hover:bg-primary/90",
+        root: "bg-primary text-primary-foreground hover:bg-primary/90",
       },
       secondary: {
         root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",

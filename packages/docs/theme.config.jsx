@@ -4,12 +4,15 @@ const themeConfig = {
       titleTemplate: "%s – Recast",
     };
   },
+  sidebar: {
+    defaultMenuCollapseLevel: 1,
+  },
   footer: {
     text: (
       <span>
-        MIT {new Date().getFullYear()} ©{" "}
-        <a href="/" target="_blank">
-          Recast
+        {new Date().getFullYear()} ©{" "}
+        <a href="https://github.com/reactivepixels" target="_blank">
+          ReactivePixels
         </a>
         .
       </span>
@@ -63,6 +66,8 @@ const themeConfig = {
   project: {
     link: "https://github.com/reactivepixels/recast",
   },
+  docsRepositoryBase:
+    "https://github.com/reactivepixels/recast/tree/main/packages/docs",
 };
 
 export default themeConfig;

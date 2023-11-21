@@ -14,13 +14,6 @@
   "server-components": "Server Components",
   "tailwind-css": "Tailwind CSS",
   "advanced-use-cases": "Advanced Use Cases",
-  "-- More": {
-    "type": "separator",
-    "title": "More"
-  },
-  "acknowledgements": "Acknowledgements",
-  "faqs": "FAQs",
-
   "-- Components": {
     "type": "separator",
     "title": "Components"
