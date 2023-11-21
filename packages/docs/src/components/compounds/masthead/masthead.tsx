@@ -10,7 +10,7 @@ const Masthead = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
     return (
       <SectionWrapper
         className={cn(
-          "bg-[url('/images/distance_nebulae_bg.jpg')]",
+          "bg-[url('https://raw.githubusercontent.com/reactivepixels/recast/main/packages/docs/public/images/distance_nebulae_bg.jpg')]",
           "bg-[calc(50%_+_150px)_0]",
           "bg-no-repeat",
           "overflow-hidden",
