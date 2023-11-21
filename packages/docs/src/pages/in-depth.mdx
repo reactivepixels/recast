@@ -206,7 +206,7 @@ base styles to. For example, our button component primitive only has a `root`
 handle, so therefore all our styles will be defined on the `root` key.
 
 ```tsx copy showLineNumbers {4-22} filename="components/ui/button.ts"
-import { ButtonPrimitive } from "@/components/primitives/button";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   base: {
@@ -250,7 +250,7 @@ will start to form your button theme API.
 ```tsx copy showLineNumbers {7-24} filename="components/ui/button.ts"
 "use client";
 
-import { ButtonPrimitive } from "@/components/primitives/button";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   /* ... */
