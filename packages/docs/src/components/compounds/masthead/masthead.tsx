@@ -15,14 +15,17 @@ const Masthead = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
           "bg-no-repeat",
           "overflow-hidden",
           "rounded-lg",
-          "py-24",
+          "px-8",
+          "md:px-16",
+          "py-12",
+          "lg:py-24",
           className,
         )}
         ref={ref}
         {...props}
       >
         <Stack size="lg">
-          <h1 className="text-5xl font-sans w-fit text-transparent bg-gradient-to-r from-[#6644D5] via-t-[#F34D7E] to-[#F34D7E] bg-clip-text">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans w-fit text-transparent bg-gradient-to-r from-[#6644D5] via-t-[#F34D7E] to-[#F34D7E] bg-clip-text">
             Build components <span className="text-white">once</span>.<br /> Use{" "}
             <span className="text-white">everywhere</span>.
           </h1>
