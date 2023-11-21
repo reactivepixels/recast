@@ -15,11 +15,11 @@ const withNextra = require("nextra")({
 
 module.exports = withNextra({
   output: "export",
-  // server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized)
-  images: { unoptimized: isProduction },
   basePath: isProduction ? "/recast" : "",
   reactStrictMode: true,
   images: {
+    // server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized)
+    unoptimized: isProduction,
     remotePatterns: [
       {
         protocol: "https",

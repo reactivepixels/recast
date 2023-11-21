@@ -24,7 +24,7 @@ export function CollapsibleDemo() {
           @peduarte starred 3 repositories
         </h4>
         <CollapsibleTrigger asChild>
-          <Button intent="ghost" size="sm">
+          <Button variant="ghost" size="sm">
             <CaretSortIcon className="h-4 w-4" />
             <span className="sr-only">Toggle</span>
           </Button>
