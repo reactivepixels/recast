@@ -6,11 +6,11 @@ const isProduction = process.env.NODE_ENV === "production";
 const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.jsx",
-  mdxOptions: {
-    rehypePrettyCodeOptions: {
-      theme: JSON.parse(readFileSync("./public/syntax/editor.json", "utf8")),
-    },
-  },
+  // mdxOptions: {
+  //   rehypePrettyCodeOptions: {
+  //     theme: JSON.parse(readFileSync("./public/syntax/editor.json", "utf8")),
+  //   },
+  // },
 });
 
 module.exports = withNextra({
