@@ -23,7 +23,7 @@ const withNextra = require("nextra")({
 });
 
 module.exports = withNextra({
-  output: "export",
+  output: isProduction ? "export" : null,
   basePath: isProduction ? "/recast" : "",
   reactStrictMode: true,
   images: {
@@ -33,6 +33,10 @@ module.exports = withNextra({
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
       },
     ],
   },

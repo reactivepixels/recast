@@ -10,10 +10,11 @@ export const Button = ButtonPrimitive.recast({
       "justify-center",
       "whitespace-nowrap",
       "rounded-md",
-      "text-sm",
       "font-medium",
       "ring-offset-background",
       "transition-colors",
+      "focus:ring-blue-300",
+      "dark:focus:ring-blue-800",
       "focus-visible:outline-none",
       "focus-visible:ring-2",
       "focus-visible:ring-ring",
@@ -25,24 +26,27 @@ export const Button = ButtonPrimitive.recast({
   variants: {
     variant: {
       primary: {
-        root: "bg-primary text-primary-foreground hover:bg-primary/90",
+        root: "text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl",
       },
       secondary: {
-        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        root: "text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l",
       },
       outline: {
-        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        root: "text-gray-900 bg-white hover:bg-gray-50 hover:border-gray-400 border border-gray-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600",
       },
     },
     size: {
-      sm: { root: "h-9 rounded-md px-3" },
-      md: { root: "h-10 px-4 py-2" },
-      lg: { root: "h-11 rounded-md px-8" },
+      sm: { root: "px-3 py-2 text-sm" },
+      md: { root: "px-5 py-2.5 text-md" },
+      lg: { root: "px-8 py-3.5 text-lg" },
     },
   },
   modifiers: {
+    pill: {
+      root: "rounded-full px-8",
+    },
     block: {
-      root: ["w-full"],
+      root: "w-full",
     },
     floating: {
       root: "shadow-lg",
@@ -52,7 +56,7 @@ export const Button = ButtonPrimitive.recast({
     {
       variants: { size: "lg" },
       modifiers: ["floating"],
-      classes: { root: "bg-green-500 text-white" },
+      classes: { root: "border-4 border-blue-500 text-white" },
     },
   ],
 });

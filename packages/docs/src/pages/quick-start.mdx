@@ -60,9 +60,7 @@ it with a theme layer. The theme layer is responsible for definining the theme
 props that can be applied to a component.
 
 ```tsx copy showLineNumbers filename="components/ui/button.ts"
-"use client";
-
-import ButtonPrimitive from "@/components/primitives/button";
+import { ButtonPrimitive } from "@rpxl/recast-primitives";
 
 export const Button = ButtonPrimitive.recast({
   defaults: {
@@ -75,51 +73,42 @@ export const Button = ButtonPrimitive.recast({
       "justify-center",
       "whitespace-nowrap",
       "rounded-md",
-      "text-sm",
       "font-medium",
       "ring-offset-background",
       "transition-colors",
+      "focus:ring-blue-300",
+      "dark:focus:ring-blue-800",
       "focus-visible:outline-none",
       "focus-visible:ring-2",
       "focus-visible:ring-ring",
       "focus-visible:ring-offset-2",
       "disabled:pointer-events-none",
       "disabled:opacity-50",
+      "w-full",
+      "lg:w-auto",
     ],
   },
   variants: {
     variant: {
       primary: {
-        root: "bg-primary text-primary-foreground hover:bg-primary/90",
+        root: "text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl",
       },
       secondary: {
-        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        root: "text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l",
       },
       outline: {
-        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      },
-      destructive: {
-        root: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-      },
-      ghost: {
-        root: "hover:bg-accent hover:text-accent-foreground",
-      },
-      link: {
-        root: "text-primary underline-offset-4 hover:underline",
+        root: "text-gray-900 bg-white border border-gray-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600",
       },
     },
     size: {
-      sm: { root: "h-9 rounded-md px-3" },
-      md: { root: "h-10 px-4 py-2" },
-      lg: { root: "h-11 rounded-md px-8" },
+      sm: { root: "px-3 py-2 text-sm" },
+      md: { root: "px-5 py-2.5 text-md" },
+      lg: { root: "px-8 py-3.5 text-lg" },
     },
   },
   modifiers: {
-    block: {
-      root: ["w-full"],
-    },
-    floating: {
-      root: "shadow-lg",
+    pill: {
+      root: "rounded-full px-8",
     },
   },
 });
@@ -138,35 +127,53 @@ primitive.
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
     <ComponentPreview>
-      <div className="flex flex-col gap-2">
-        <div className="flex gap-2">
-          <Button size="sm">primary</Button>
-          <Button size="sm" variant="secondary">secondary</Button>
-          <Button size="sm" variant="outline">outline</Button>
-          <Button size="sm" variant="destructive">destructive</Button>
-          <Button size="sm" variant="ghost">ghost</Button>
-          <Button size="sm" variant="link">link</Button>
+      <div className="flex flex-col gap-16 w-full">
+        <div className="flex flex-col gap-4">
+          <h4 className="font-bold text-lg w-24 lg:text-end">Primary</h4>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+            <Button size="sm" variant="primary">Small</Button>
+            <Button size="md" variant="primary">Medium</Button>
+            <Button size="lg" variant="primary">Large</Button>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+            <Button size="sm" variant="primary" pill>Primary</Button>
+            <Button size="md" variant="primary" pill>Secondary</Button>
+            <Button size="lg" variant="primary" pill>Tertiary</Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button>primary</Button>
-          <Button variant="secondary">secondary</Button>
-          <Button variant="outline">outline</Button>
-          <Button variant="destructive">destructive</Button>
-          <Button variant="ghost">ghost</Button>
-          <Button variant="link">link</Button>
+
+        <div className="flex flex-col gap-4">
+          <h4 className="font-bold text-lg w-24 lg:text-end">Secondary</h4>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+            <Button size="sm" variant="secondary">Small</Button>
+            <Button size="md" variant="secondary">Medium</Button>
+            <Button size="lg" variant="secondary">Large</Button>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+            <Button size="sm" variant="secondary" pill>Primary</Button>
+            <Button size="md" variant="secondary" pill>Secondary</Button>
+            <Button size="lg" variant="secondary" pill>Tertiary</Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button size="lg">primary</Button>
-          <Button size="lg" variant="secondary">secondary</Button>
-          <Button size="lg" variant="outline">outline</Button>
-          <Button size="lg" variant="destructive">destructive</Button>
-          <Button size="lg" variant="ghost">ghost</Button>
-          <Button size="lg" variant="link">link</Button>
-        </div>
-        <div className="flex gap-2">
-          <Button size="lg" variant="destructive" block>block</Button>
-          <Button size="lg" variant="outline" floating>floating</Button>
-          <Button size="lg" variant="secondary" block floating>block floating</Button>
+
+        <div className="flex flex-col gap-4">
+          <h4 className="font-bold text-lg w-24 lg:text-end">Outline</h4>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+            <Button size="sm" variant="outline">Small</Button>
+            <Button size="md" variant="outline">Medium</Button>
+            <Button size="lg" variant="outline">Large</Button>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+            <Button size="sm" variant="outline" pill>Primary</Button>
+            <Button size="md" variant="outline" pill>Secondary</Button>
+            <Button size="lg" variant="outline" pill>Tertiary</Button>
+          </div>
         </div>
       </div>
     </ComponentPreview>
@@ -178,43 +185,58 @@ primitive.
     
     export function ButtonDemo() {
       return (
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-2">
-            <Button size="sm">primary</Button>
-            <Button size="sm" variant="secondary">secondary</Button>
-            <Button size="sm" variant="outline">outline</Button>
-            <Button size="sm" variant="destructive">destructive</Button>
-            <Button size="sm" variant="ghost">ghost</Button>
-            <Button size="sm" variant="link">link</Button>
+        <div className="flex flex-col gap-16 w-full">
+          <div className="flex flex-col gap-4">
+            <h4 className="font-bold text-lg w-24 lg:text-end">Primary</h4>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+              <Button size="sm" variant="primary">Small</Button>
+              <Button size="md" variant="primary">Medium</Button>
+              <Button size="lg" variant="primary">Large</Button>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+              <Button size="sm" variant="primary" pill>Primary</Button>
+              <Button size="md" variant="primary" pill>Secondary</Button>
+              <Button size="lg" variant="primary" pill>Tertiary</Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button>primary</Button>
-            <Button variant="secondary">secondary</Button>
-            <Button variant="outline">outline</Button>
-            <Button variant="destructive">destructive</Button>
-            <Button variant="ghost">ghost</Button>
-            <Button variant="link">link</Button>
+
+          <div className="flex flex-col gap-4">
+            <h4 className="font-bold text-lg w-24 lg:text-end">Secondary</h4>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+              <Button size="sm" variant="secondary">Small</Button>
+              <Button size="md" variant="secondary">Medium</Button>
+              <Button size="lg" variant="secondary">Large</Button>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+              <Button size="sm" variant="secondary" pill>Primary</Button>
+              <Button size="md" variant="secondary" pill>Secondary</Button>
+              <Button size="lg" variant="secondary" pill>Tertiary</Button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <Button size="lg">primary</Button>
-            <Button size="lg" variant="secondary">secondary</Button>
-            <Button size="lg" variant="outline">outline</Button>
-            <Button size="lg" variant="destructive">destructive</Button>
-            <Button size="lg" variant="ghost">ghost</Button>
-            <Button size="lg" variant="link">link</Button>
-          </div>
-          <div className="flex gap-2">
-            <Button size="lg" variant="destructive" block>block</Button>
-            <Button size="lg" variant="outline" floating>floating</Button>
-            <Button size="lg" variant="secondary" block floating>block floating</Button>
+
+          <div className="flex flex-col gap-4">
+            <h4 className="font-bold text-lg w-24 lg:text-end">Outline</h4>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+              <Button size="sm" variant="outline">Small</Button>
+              <Button size="md" variant="outline">Medium</Button>
+              <Button size="lg" variant="outline">Large</Button>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+              <Button size="sm" variant="outline" pill>Primary</Button>
+              <Button size="md" variant="outline" pill>Secondary</Button>
+              <Button size="lg" variant="outline" pill>Tertiary</Button>
+            </div>
           </div>
         </div>
       )
     }
     ```
+
   </Tabs.Tab>
 </Tabs>
-
-> All the examples above have been adapted from the wonderful
-> [shadcn/ui](https://ui.shadcn.com/) library built upon
-> [Radix UI](https://www.radix-ui.com/).

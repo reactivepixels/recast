@@ -175,9 +175,7 @@ maximizing reuse. The following guide will detail the creation of a theme layer
 for a component primitive and elucidate the individual properties at our
 disposal to fulfill any design requirements.
 
-> All examples below use [Tailwind CSS](https://tailwindcss.com/) and borrow
-> from the beautiful [shadcn/ui](https://ui.shadcn.com/) library built upon
-> [Radix UI](https://www.radix-ui.com/).
+> All examples below use [Tailwind CSS](https://tailwindcss.com/).
 
 ### Create a Themed Component
 
@@ -247,7 +245,7 @@ large, and the "intent" would define the intention of the button e.g. success,
 danger etc. With Recast it is possible to define any number of variants which
 will start to form your button theme API.
 
-```tsx copy showLineNumbers {7-24} filename="components/ui/button.ts"
+```tsx copy showLineNumbers {7-22} filename="components/ui/button.ts"
 "use client";
 
 import ButtonPrimitive from "@/components/primitives/button";
@@ -256,20 +254,18 @@ export const Button = ButtonPrimitive.recast({
   /* ... */
   variants: {
     size: {
-      sm: { root: "h-9 rounded-md px-3" },
-      md: { root: "h-10 px-4 py-2" },
-      lg: { root: "h-11 rounded-md px-8" },
+      sm: { root: "px-3 py-2 text-sm" },
+      md: { root: "px-5 py-2.5 text-md" },
+      lg: { root: "px-8 py-3.5 text-lg" },
     },
-    variant: {
-      primary: {
-        root: "bg-primary text-primary-foreground hover:bg-primary/90",
-      },
-      secondary: {
-        root: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-      },
-      outline: {
-        root: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      },
+    primary: {
+      root: "text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl",
+    },
+    secondary: {
+      root: "text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l",
+    },
+    outline: {
+      root: "text-gray-900 bg-white border border-gray-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600",
     },
   },
   /* ... */
@@ -309,7 +305,7 @@ combined with other modifiers and all variants. Some common examples for a
 button might include "floating" for an elevated button presentation and "block"
 for a full-width button.
 
-```tsx copy showLineNumbers {7-14} filename="components/ui/button.ts"
+```tsx copy showLineNumbers {7-17} filename="components/ui/button.ts"
 "use client";
 
 import { ButtonPrimitive } from "@/components/primitives/button.tsx";
@@ -323,6 +319,9 @@ export const Button = ButtonPrimitive.recast({
     floating: {
       root: "shadow-lg",
     },
+    pill: {
+      root: "rounded-full px-8",
+    },
   },
   /* ... */
 });
@@ -335,14 +334,14 @@ export const Button = ButtonPrimitive.recast({
     
     export function ButtonDemo() {
       return (
-        <Button variant="primary" size="md" floating block>Primary</Button>
+        <Button variant="outline" size="md" floating block>Primary</Button>
       )
     }
     ```
   </Tabs.Tab>
   <Tabs.Tab>
     <ComponentPreview>
-      <Button variant="primary" size="md" floating block>Primary</Button>
+      <Button variant="outline" size="md" floating block>Primary</Button>
     </ComponentPreview>
   </Tabs.Tab>
 </Tabs>
@@ -391,14 +390,14 @@ export const Button = ButtonPrimitive.recast({
     
     export function ButtonDemo() {
       return (
-        <Button variant="primary" size="lg" floating>Primary</Button>
+        <Button variant="secondary" size="lg" floating>Primary</Button>
       )
     }
     ```
   </Tabs.Tab>
   <Tabs.Tab>
     <ComponentPreview>
-      <Button variant="primary" size="lg" floating>Primary</Button>
+      <Button variant="secondary" size="lg" floating>Primary</Button>
     </ComponentPreview>
   </Tabs.Tab>
 </Tabs>
@@ -456,9 +455,7 @@ export const Button = ButtonPrimitive.recast({
 
 <Callout type="info" emoji="🎉">
   Congratulations! You should now be armed with the essentials to go off and
-  start building your own component library using Recast. If you are interested
-  in simply using Recast to theme an exisiting component library, check out the
-  Recast implementation of [shadcn/ui]().
+  start building your own component library using Recast.
 </Callout>
 
 </Steps>
