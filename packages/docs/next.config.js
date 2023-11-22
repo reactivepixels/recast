@@ -8,6 +8,15 @@ const withNextra = require("nextra")({
   themeConfig: "./theme.config.jsx",
   // mdxOptions: {
   //   rehypePrettyCodeOptions: {
+  //     themes: {
+  //       light: "github-light",
+  //       dark: "github-dark",
+  //       dim: "github-dimmed",
+  //     },
+  //   },
+  // },
+  // mdxOptions: {
+  //   rehypePrettyCodeOptions: {
   //     theme: JSON.parse(readFileSync("./public/syntax/editor.json", "utf8")),
   //   },
   // },
