@@ -185,7 +185,7 @@ empty object for ther arguments. This is all that is required to start using the
 component in your project.
 
 ```tsx copy showLineNumbers filename="components/ui/button.ts"
-import { ButtonPrimitive } from "@rpxl/recast-primitives";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({});
 ```
@@ -308,7 +308,7 @@ for a full-width button.
 ```tsx copy showLineNumbers {7-17} filename="components/ui/button.ts"
 "use client";
 
-import { ButtonPrimitive } from "@/components/primitives/button.tsx";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   /* ... */
@@ -362,7 +362,7 @@ if the button `size === "lg"` and the `floating` modifier is enabled.
 ```tsx copy showLineNumbers {7-13} filename="components/ui/button.ts"
 "use client";
 
-import { ButtonPrimitive } from "@/components/primitives/button.tsx";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   /* ... */
@@ -408,7 +408,7 @@ modifiers to meet a condition.
 ```tsx copy showLineNumbers {13,19} filename="components/ui/button.ts"
 "use client";
 
-import { ButtonPrimitive } from "@/components/primitives/button.tsx";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   /* ... */
@@ -442,7 +442,7 @@ the `size` to `md` by default.
 ```tsx copy showLineNumbers {13,19} filename="components/ui/button.ts"
 "use client";
 
-import { ButtonPrimitive } from "@/components/primitives/button.tsx";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   /* ... */

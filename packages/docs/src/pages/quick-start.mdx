@@ -60,7 +60,7 @@ it with a theme layer. The theme layer is responsible for definining the theme
 props that can be applied to a component.
 
 ```tsx copy showLineNumbers filename="components/ui/button.ts"
-import { ButtonPrimitive } from "@rpxl/recast-primitives";
+import ButtonPrimitive from "@/components/primitives/button";
 
 export const Button = ButtonPrimitive.recast({
   defaults: {
