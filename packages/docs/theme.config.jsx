@@ -31,7 +31,10 @@ const themeConfig = {
       />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta property="og:title" content="Recast" />
-      <meta property="og:description" content="Recast documentation site" />
+      <meta
+        property="og:description"
+        content="React library for building truly reusable components."
+      />
       <meta
         property="og:image"
         content="https://raw.githubusercontent.com/reactivepixels/recast/main/packages/docs/public/share.png"
