@@ -183,7 +183,7 @@ disposal to fulfill any design requirements.
 
 Once you have a component primitive, you can create a themed component by
 importing the primitive and calling the `recast{:tsx}` method and passing an
-empty object for ther arguments. This is all that is required to start using the
+empty object for the arguments. This is all that is required to start using the
 component in your project.
 
 ```tsx copy showLineNumbers filename="components/ui/button.ts"
@@ -349,10 +349,10 @@ export const Button = ButtonPrimitive.recast({
 </Tabs>
 
 <Callout type="info" emoji="ℹ️">
-  As a general rule of thumb, a theme variation should only be defined as a
+  As a general rule of thumb, a component variation should only be defined as a
   modifier if it can be combined with other variants and modifiers. For
   instance, representing button sizes as modifiers would not be advisable, as
-  combining "sm," "md," and "lg" might not yield a deterministic result.
+  combining "sm," "md," and "lg" will not yield a deterministic result.
 </Callout>
 
 ### Add Conditional Styles
@@ -461,4 +461,3 @@ export const Button = ButtonPrimitive.recast({
 </Callout>
 
 </Steps>
-1
