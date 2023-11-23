@@ -17,3 +17,13 @@ Recast is a fundamentally different approach to building React components to max
 Recast is not just a collection of utilities; it is an approach/pattern to building **truly** reusable component primitives by abstracting the theme layer from the internal workings of a component.
 
 The specific values that an Recast "primitive" can receive are not specified within the component, instead these are defined by wrapping the component with a styles definition that will form the theme API.
+
+## Who is Recast for?
+
+Recast is for any individual/team who wants to build a truly reusable component
+library that can be used across projects without duplicating code purely for the
+purposes of theming.
+
+## Documentation
+
+For full documentation, visit [here](https://reactivepixels.github.io/recast).
