@@ -31,8 +31,6 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
     return <button ref={ref} {...props} />;
   },
 );
-
-ButtonPrimitive.displayName = "ButtonPrimitive";
 ```
 
 <Steps>
@@ -159,8 +157,6 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
     );
   },
 );
-
-ButtonPrimitive.displayName = "ButtonPrimitive";
 
 export default createRecastComponent<Props, BaseTheme>(ButtonPrimitive);
 ```
@@ -301,11 +297,11 @@ export const Button = ButtonPrimitive.recast({
 
 ### Add Modifiers
 
-Modifiers are a powerful feature of Recast that essentially function as boolean
-properties. Modifiers are variations of a component that can be "mixed-in" and
-combined with other modifiers and all variants. Some common examples for a
-button might include "floating" for an elevated button presentation and "block"
-for a full-width button.
+Modifiers are a powerful feature of Recast that work like boolean properties.
+Modifiers are variations of a component that can be "mixed-in" and combined with
+other modifiers and all variants. Some common examples for a button might
+include "floating" for an elevated button presentation and "block" for a
+full-width button.
 
 ```tsx copy showLineNumbers {7-17} filename="components/ui/button.ts"
 "use client";
