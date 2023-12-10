@@ -1,5 +1,5 @@
 import { Styles } from "../../types";
-import { useRecastClasses } from "../useRecastClasses";
+import { getRecastClasses } from "../getRecastClasses";
 
 let mockTheme: undefined | Styles;
 
@@ -17,7 +17,7 @@ describe("useRecastClasses", () => {
   it("should return an empty object when no theme is provided", () => {
     mockTheme = undefined;
 
-    const classes = useRecastClasses({
+    const classes = getRecastClasses({
       themekey: "nonexistent",
       variants: {},
       modifiers: [],
@@ -33,7 +33,7 @@ describe("useRecastClasses", () => {
 
     mockTheme = theme;
 
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey: "test",
       variants: {},
       modifiers: [],
@@ -64,7 +64,7 @@ describe("useRecastClasses", () => {
 
     mockTheme = theme;
 
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey: "test",
       variants: { size: "small" },
       modifiers: [],
@@ -92,7 +92,7 @@ describe("useRecastClasses", () => {
 
     mockTheme = theme;
 
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey: "test",
       variants: {},
       modifiers: ["bold"],
@@ -133,7 +133,7 @@ describe("useRecastClasses", () => {
 
     mockTheme = theme;
 
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey: "test",
       variants: { size: "small" },
       modifiers: ["bold"],

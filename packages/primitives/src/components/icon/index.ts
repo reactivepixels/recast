@@ -1,1 +1,1 @@
-export { default as RecastIconPrimitive } from "./icon.js";
+export { default as IconPrimitive } from "./icon.js";

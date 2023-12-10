@@ -1,1 +1,1 @@
-export { default as RecastTypePrimitive } from "./type.js";
+export { default as TypePrimitive } from "./type.js";

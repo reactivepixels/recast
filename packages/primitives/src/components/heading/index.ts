@@ -1,1 +1,1 @@
-export { default as RecastHeadingPrimitive } from "./heading.js";
+export { default as HeadingPrimitive } from "./heading.js";
