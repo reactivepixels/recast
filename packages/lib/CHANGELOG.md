@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 2.0.2
+
+### Patch Changes
+
+- fc6423b: Update deps
+
 ## 2.0.1
 
 ### Patch Changes
