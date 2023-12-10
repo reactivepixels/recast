@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 2.0.1
+
+### Patch Changes
+
+- 70513e3: Refactored use recastClasses hook
+
 ## 2.0.0
 
 ### Major Changes
