@@ -1,4 +1,4 @@
-export { default as AccordionPrimitive } from "./accordion.js";
-export { default as AccordionContentPrimitive } from "./accordion-content.js";
-export { default as AccordionItemPrimitive } from "./accordion-item.js";
-export { default as AccordionTriggerPrimitive } from "./accordion-trigger.js";
+export * from "./accordion.js";
+export * from "./accordion-content.js";
+export * from "./accordion-item.js";
+export * from "./accordion-trigger.js";

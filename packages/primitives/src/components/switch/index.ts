@@ -1,1 +1,1 @@
-export { default as SwitchPrimitive } from "./switch.js";
+export * from "./switch.js";

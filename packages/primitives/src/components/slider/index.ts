@@ -1,1 +1,1 @@
-export { default as SliderPrimitive } from "./slider.js";
+export * from "./slider.js";

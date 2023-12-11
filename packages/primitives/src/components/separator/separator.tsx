@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixSeparatorPrimitive.Root
 > &
   RecastThemeProps;
 
-const SeparatorPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixSeparatorPrimitive.Root>,
   Props
 >(
@@ -49,6 +49,8 @@ const SeparatorPrimitive = forwardRef<
   },
 );
 
-SeparatorPrimitive.displayName = "SeparatorPrimitive";
+Component.displayName = "SeparatorPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(SeparatorPrimitive);
+export const SeparatorPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

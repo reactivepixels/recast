@@ -11,14 +11,14 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root" | "indicator" | "icon">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixCheckboxPrimitive.Root
 > &
   RecastThemeProps & {
     icon: React.ComponentType;
   };
 
-const CheckboxPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixCheckboxPrimitive.Root>,
   Props
 >(
@@ -55,6 +55,8 @@ const CheckboxPrimitive = forwardRef<
   },
 );
 
-CheckboxPrimitive.displayName = "CheckboxPrimitive";
+Component.displayName = "CheckboxPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(CheckboxPrimitive);
+export const CheckboxPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

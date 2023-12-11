@@ -11,14 +11,14 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root" | "indicator" | "icon">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixRadioGroupPrimitive.Item
 > &
   RecastThemeProps & {
     icon: React.ComponentType;
   };
 
-const RadioGroupItemPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixRadioGroupPrimitive.Item>,
   Props
 >(
@@ -55,6 +55,8 @@ const RadioGroupItemPrimitive = forwardRef<
   },
 );
 
-RadioGroupItemPrimitive.displayName = "RadioGroupItemPrimitive";
+Component.displayName = "RadioGroupItemPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(RadioGroupItemPrimitive);
+export const RadioGroupItemPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

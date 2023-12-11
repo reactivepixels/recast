@@ -1,1 +1,1 @@
-export { default as ScrollAreaPrimitive } from "./scroll-area.js";
+export * from "./scroll-area.js";

@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = HTMLAttributes<HTMLHeadingElement> &
+type Props = HTMLAttributes<HTMLHeadingElement> &
   RecastThemeProps & {
     asChild?: boolean;
   };
 
-const CardTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
+const Component = forwardRef<HTMLHeadingElement, Props>(
   ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "h3";
 
@@ -31,6 +31,8 @@ const CardTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
   },
 );
 
-CardTitlePrimitive.displayName = "CardTitlePrimitive";
+Component.displayName = "CardTitlePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(CardTitlePrimitive);
+export const CardTitlePrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

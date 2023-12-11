@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = HTMLAttributes<HTMLDivElement> &
+type Props = HTMLAttributes<HTMLDivElement> &
   RecastThemeProps & {
     asChild?: boolean;
   };
 
-const BadgePrimitive = forwardRef<HTMLDivElement, Props>(
+const Component = forwardRef<HTMLDivElement, Props>(
   ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "div";
 
@@ -31,6 +31,8 @@ const BadgePrimitive = forwardRef<HTMLDivElement, Props>(
   },
 );
 
-BadgePrimitive.displayName = "BadgePrimitive";
+Component.displayName = "BadgePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(BadgePrimitive);
+export const BadgePrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

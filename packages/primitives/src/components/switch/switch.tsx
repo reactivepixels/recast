@@ -10,12 +10,10 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root" | "thumb">;
 
-export type Props = React.ComponentPropsWithoutRef<
-  typeof RadixSwitchPrimitive.Root
-> &
+type Props = React.ComponentPropsWithoutRef<typeof RadixSwitchPrimitive.Root> &
   RecastThemeProps;
 
-const SwitchPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixSwitchPrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -36,6 +34,8 @@ const SwitchPrimitive = forwardRef<
   );
 });
 
-SwitchPrimitive.displayName = "SwitchPrimitive";
+Component.displayName = "SwitchPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(SwitchPrimitive);
+export const SwitchPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

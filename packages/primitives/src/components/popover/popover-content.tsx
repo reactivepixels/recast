@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixPopoverPrimitive.Content
 > &
   RecastThemeProps;
 
-const PopoverContentPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixPopoverPrimitive.Content>,
   Props
 >(
@@ -51,6 +51,8 @@ const PopoverContentPrimitive = forwardRef<
   },
 );
 
-PopoverContentPrimitive.displayName = "PopoverContentPrimitive";
+Component.displayName = "PopoverContentPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(PopoverContentPrimitive);
+export const PopoverContentPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

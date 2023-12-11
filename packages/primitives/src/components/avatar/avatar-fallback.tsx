@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixAvatarPrimitive.Fallback
 > &
   RecastThemeProps;
 
-const AvatarFallbackPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixAvatarPrimitive.Fallback>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +34,8 @@ const AvatarFallbackPrimitive = forwardRef<
   );
 });
 
-AvatarFallbackPrimitive.displayName = "AvatarFallbackPrimitive";
+Component.displayName = "AvatarFallbackPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(AvatarFallbackPrimitive);
+export const AvatarFallbackPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixRadioGroupPrimitive.Root
 > &
   RecastThemeProps;
 
-const RadioGroupPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixRadioGroupPrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +34,8 @@ const RadioGroupPrimitive = forwardRef<
   );
 });
 
-RadioGroupPrimitive.displayName = "RadioGroupPrimitive";
+Component.displayName = "RadioGroupPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(RadioGroupPrimitive);
+export const RadioGroupPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

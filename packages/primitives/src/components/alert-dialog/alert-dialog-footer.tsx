@@ -9,9 +9,9 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
+type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
 
-const AlertDialogFooterPrimitive = forwardRef<HTMLDivElement, Props>(
+const Component = forwardRef<HTMLDivElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -25,8 +25,9 @@ const AlertDialogFooterPrimitive = forwardRef<HTMLDivElement, Props>(
   },
 );
 
-AlertDialogFooterPrimitive.displayName = "AlertDialogFooterPrimitive";
+Component.displayName = "AlertDialogFooterPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  AlertDialogFooterPrimitive,
-);
+export const AlertDialogFooterPrimitive = createRecastComponent<
+  Props,
+  BaseTheme
+>(Component);

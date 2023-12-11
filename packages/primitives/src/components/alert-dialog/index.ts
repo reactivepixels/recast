@@ -1,9 +1,9 @@
-export { default as AlertDialogPrimitive } from "./alert-dialog.js";
-export { default as AlertDialogActionPrimitive } from "./alert-dialog-action.js";
-export { default as AlertDialogCancelPrimitive } from "./alert-dialog-cancel.js";
-export { default as AlertDialogContentPrimitive } from "./alert-dialog-content.js";
-export { default as AlertDialogDescriptionPrimitive } from "./alert-dialog-description.js";
-export { default as AlertDialogFooterPrimitive } from "./alert-dialog-footer.js";
-export { default as AlertDialogHeaderPrimitive } from "./alert-dialog-header.js";
-export { default as AlertDialogTitlePrimitive } from "./alert-dialog-title.js";
-export { default as AlertDialogTriggerPrimitive } from "./alert-dialog-trigger.js";
+export * from "./alert-dialog.js";
+export * from "./alert-dialog-action.js";
+export * from "./alert-dialog-cancel.js";
+export * from "./alert-dialog-content.js";
+export * from "./alert-dialog-description.js";
+export * from "./alert-dialog-footer.js";
+export * from "./alert-dialog-header.js";
+export * from "./alert-dialog-title.js";
+export * from "./alert-dialog-trigger.js";

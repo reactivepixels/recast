@@ -15,7 +15,7 @@ type Props = React.HTMLAttributes<HTMLElement> &
     asChild?: boolean;
   };
 
-const SectionWrapperPrimitive = forwardRef<HTMLElement, Props>(
+const Component = forwardRef<HTMLElement, Props>(
   (
     { themekey, children, className, variants, modifiers, asChild, ...props },
     ref,
@@ -35,6 +35,8 @@ const SectionWrapperPrimitive = forwardRef<HTMLElement, Props>(
   },
 );
 
-SectionWrapperPrimitive.displayName = "SectionWrapperPrimitive";
+Component.displayName = "SectionWrapperPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(SectionWrapperPrimitive);
+export const SectionWrapperPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

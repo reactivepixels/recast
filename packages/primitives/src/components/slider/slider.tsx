@@ -10,12 +10,10 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root" | "track" | "range" | "thumb">;
 
-export type Props = React.ComponentPropsWithoutRef<
-  typeof RadixSliderPrimitive.Root
-> &
+type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
   RecastThemeProps;
 
-const SliderPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixSliderPrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -39,6 +37,8 @@ const SliderPrimitive = forwardRef<
   );
 });
 
-SliderPrimitive.displayName = "SliderPrimitive";
+Component.displayName = "SliderPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(SliderPrimitive);
+export const SliderPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

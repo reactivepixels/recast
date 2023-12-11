@@ -1,1 +1,1 @@
-export { default as AspectRatioPrimitive } from "./aspect-ratio.js";
+export * from "./aspect-ratio.js";

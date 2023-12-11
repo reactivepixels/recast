@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.HTMLAttributes<HTMLHeadingElement> &
+type Props = React.HTMLAttributes<HTMLHeadingElement> &
   RecastThemeProps & {
     asChild?: boolean;
   };
 
-const AlertTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
+const Component = forwardRef<HTMLHeadingElement, Props>(
   ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "h5";
 
@@ -31,6 +31,8 @@ const AlertTitlePrimitive = forwardRef<HTMLHeadingElement, Props>(
   },
 );
 
-AlertTitlePrimitive.displayName = "AlertPrimitive";
+Component.displayName = "AlertTitlePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(AlertTitlePrimitive);
+export const AlertTitlePrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

@@ -15,7 +15,7 @@ type Props = React.ComponentPropsWithoutRef<
 > &
   RecastThemeProps;
 
-const AccordionItemPrimitive = React.forwardRef<
+const Component = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Item>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +34,8 @@ const AccordionItemPrimitive = React.forwardRef<
   );
 });
 
-AccordionItemPrimitive.displayName = "AccordionItemPrimitive";
+Component.displayName = "AccordionItemPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(AccordionItemPrimitive);
+export const AccordionItemPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

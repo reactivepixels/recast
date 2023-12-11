@@ -15,7 +15,7 @@ type Props = React.HTMLAttributes<HTMLElement> &
     as?: ElementType;
   };
 
-const TypePrimitive = forwardRef<HTMLElement, Props>(
+const Component = forwardRef<HTMLElement, Props>(
   (
     {
       as: Tag = "p",
@@ -42,7 +42,6 @@ const TypePrimitive = forwardRef<HTMLElement, Props>(
   },
 );
 
-if (process.env["NODE_ENV"] !== "production")
-  TypePrimitive.displayName = "TypePrimitive";
+Component.displayName = "TypePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(TypePrimitive);
+export const TypePrimitive = createRecastComponent<Props, BaseTheme>(Component);

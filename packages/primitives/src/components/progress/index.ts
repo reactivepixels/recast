@@ -1,1 +1,1 @@
-export { default as ProgressPrimitive } from "./progress.js";
+export * from "./progress.js";

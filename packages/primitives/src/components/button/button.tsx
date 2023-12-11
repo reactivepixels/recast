@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
+type Props = ButtonHTMLAttributes<HTMLButtonElement> &
   RecastThemeProps & {
     asChild?: boolean;
   };
 
-const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
+const Component = forwardRef<HTMLButtonElement, Props>(
   (
     { themekey, className, variants, modifiers, asChild = false, ...props },
     ref,
@@ -34,6 +34,8 @@ const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   },
 );
 
-ButtonPrimitive.displayName = "ButtonPrimitive";
+Component.displayName = "ButtonPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(ButtonPrimitive);
+export const ButtonPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

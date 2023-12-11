@@ -1,1 +1,1 @@
-export { default as TypePrimitive } from "./type.js";
+export * from "./type.js";

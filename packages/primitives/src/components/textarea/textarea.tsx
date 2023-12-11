@@ -11,7 +11,7 @@ type BaseTheme = RecastBaseTheme<"root">;
 
 type Props = TextareaHTMLAttributes<HTMLTextAreaElement> & RecastThemeProps;
 
-const TextareaPrimitive = forwardRef<HTMLTextAreaElement, Props>(
+const Component = forwardRef<HTMLTextAreaElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -25,6 +25,8 @@ const TextareaPrimitive = forwardRef<HTMLTextAreaElement, Props>(
   },
 );
 
-TextareaPrimitive.displayName = "TextareaPrimitive";
+Component.displayName = "TextareaPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(TextareaPrimitive);
+export const TextareaPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

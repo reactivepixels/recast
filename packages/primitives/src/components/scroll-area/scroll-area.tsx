@@ -12,7 +12,7 @@ type BaseTheme = RecastBaseTheme<
   "root" | "viewport" | "thumb" | "corner" | "scrollbar"
 >;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixScrollAreaPrimitive.Root
 > &
   RecastThemeProps &
@@ -23,7 +23,7 @@ export type Props = React.ComponentPropsWithoutRef<
     "orientation"
   >;
 
-const ScrollAreaPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixScrollAreaPrimitive.Root>,
   Props
 >(
@@ -68,6 +68,8 @@ const ScrollAreaPrimitive = forwardRef<
   },
 );
 
-ScrollAreaPrimitive.displayName = "ScrollAreaPrimitive";
+Component.displayName = "ScrollAreaPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(ScrollAreaPrimitive);
+export const ScrollAreaPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

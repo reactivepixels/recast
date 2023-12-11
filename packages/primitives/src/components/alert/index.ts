@@ -1,3 +1,3 @@
-export { default as AlertPrimitive } from "./alert.js";
-export { default as AlertDescriptionPrimitive } from "./alert-description.js";
-export { default as AlertTitlePrimitive } from "./alert-title.js";
+export * from "./alert.js";
+export * from "./alert-description.js";
+export * from "./alert-title.js";

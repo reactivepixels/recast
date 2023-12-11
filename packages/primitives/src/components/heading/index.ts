@@ -1,1 +1,1 @@
-export { default as HeadingPrimitive } from "./heading.js";
+export * from "./heading.js";

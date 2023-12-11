@@ -9,9 +9,9 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = HTMLAttributes<HTMLDivElement> & RecastThemeProps;
+type Props = HTMLAttributes<HTMLDivElement> & RecastThemeProps;
 
-const SkeletonPrimitive = forwardRef<HTMLDivElement, Props>(
+const Component = forwardRef<HTMLDivElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -25,6 +25,8 @@ const SkeletonPrimitive = forwardRef<HTMLDivElement, Props>(
   },
 );
 
-SkeletonPrimitive.displayName = "SkeletonPrimitive";
+Component.displayName = "SkeletonPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(SkeletonPrimitive);
+export const SkeletonPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

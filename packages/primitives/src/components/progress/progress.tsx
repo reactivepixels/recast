@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root" | "indicator">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixProgressPrimitive.Root
 > &
   RecastThemeProps;
 
-const ProgressPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixProgressPrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, value, ...props }, ref) => {
@@ -39,6 +39,8 @@ const ProgressPrimitive = forwardRef<
   );
 });
 
-ProgressPrimitive.displayName = "ProgressPrimitive";
+Component.displayName = "ProgressPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(ProgressPrimitive);
+export const ProgressPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

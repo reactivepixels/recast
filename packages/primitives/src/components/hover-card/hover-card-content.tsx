@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixHoverCardPrimitive.Content
 > &
   RecastThemeProps;
 
-const HoverCardContentPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixHoverCardPrimitive.Content>,
   Props
 >(
@@ -49,8 +49,9 @@ const HoverCardContentPrimitive = forwardRef<
   },
 );
 
-HoverCardContentPrimitive.displayName = "HoverCardContentPrimitive";
+Component.displayName = "HoverCardContentPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  HoverCardContentPrimitive,
-);
+export const HoverCardContentPrimitive = createRecastComponent<
+  Props,
+  BaseTheme
+>(Component);

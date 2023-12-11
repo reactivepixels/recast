@@ -1,1 +1,1 @@
-export { default as TogglePrimitive } from "./toggle.js";
+export * from "./toggle.js";

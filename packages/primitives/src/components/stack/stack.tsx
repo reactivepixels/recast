@@ -15,7 +15,7 @@ type Props = React.HTMLAttributes<HTMLHeadingElement> &
     asChild?: boolean;
   };
 
-const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
+const Component = forwardRef<HTMLHeadingElement, Props>(
   (
     { themekey, children, className, variants, modifiers, asChild, ...props },
     ref,
@@ -35,6 +35,8 @@ const StackPrimitive = forwardRef<HTMLHeadingElement, Props>(
   },
 );
 
-StackPrimitive.displayName = "StackPrimitive";
+Component.displayName = "StackPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(StackPrimitive);
+export const StackPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

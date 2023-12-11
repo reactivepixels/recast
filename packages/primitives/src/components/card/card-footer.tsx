@@ -9,9 +9,9 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = HTMLAttributes<HTMLDivElement> & RecastThemeProps;
+type Props = HTMLAttributes<HTMLDivElement> & RecastThemeProps;
 
-const CardFooterPrimitive = forwardRef<HTMLDivElement, Props>(
+const Component = forwardRef<HTMLDivElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -25,6 +25,8 @@ const CardFooterPrimitive = forwardRef<HTMLDivElement, Props>(
   },
 );
 
-CardFooterPrimitive.displayName = "CardFooterPrimitive";
+Component.displayName = "CardFooterPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(CardFooterPrimitive);
+export const CardFooterPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

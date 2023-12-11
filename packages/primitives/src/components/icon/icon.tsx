@@ -15,7 +15,7 @@ type Props = React.SVGAttributes<SVGSVGElement> &
     as?: ElementType;
   };
 
-const IconPrimitive = forwardRef<SVGSVGElement, Props>(
+const Component = forwardRef<SVGSVGElement, Props>(
   ({ themekey, children, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -31,7 +31,6 @@ const IconPrimitive = forwardRef<SVGSVGElement, Props>(
   },
 );
 
-if (process.env["NODE_ENV"] !== "production")
-  IconPrimitive.displayName = "IconPrimitive";
+Component.displayName = "IconPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(IconPrimitive);
+export const IconPrimitive = createRecastComponent<Props, BaseTheme>(Component);

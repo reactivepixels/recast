@@ -1,1 +1,1 @@
-export { default as SkeletonPrimitive } from "./skeleton.js";
+export * from "./skeleton.js";

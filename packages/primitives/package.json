@@ -7,16 +7,24 @@
   "engines": {
     "node": ">=18"
   },
-  "source": "src/index.ts",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "unpkg": "./dist/index.umd.js",
   "exports": {
-    "types": "./dist/index.d.ts",
-    "require": "./dist/index.js",
-    "default": "./dist/index.modern.mjs"
+    "./dist/cjs/components/button/button": {
+      "types": "./dist/cjs/components/button/button.d.ts"
+    },
+    "./dist/esm/components/button/button": {
+      "types": "./dist/esm/components/button/button.d.ts"
+    },
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
   },
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -34,7 +42,9 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "microbundle --jsx React.createElement"
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc --outDir dist/esm",
+    "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs"
   },
   "devDependencies": {
     "@types/node": "^20.10.4",
@@ -50,7 +60,6 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
-    "microbundle": "^0.15.1",
     "prettier": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,1 +1,1 @@
-export { default as SectionWrapperPrimitive } from "./section-wrapper.js";
+export * from "./section-wrapper.js";

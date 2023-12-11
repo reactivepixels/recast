@@ -1,1 +1,1 @@
-export { default as InputPrimitive } from "./input.js";
+export * from "./input.js";

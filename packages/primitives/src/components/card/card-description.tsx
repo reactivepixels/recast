@@ -9,9 +9,9 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = HTMLAttributes<HTMLParagraphElement> & RecastThemeProps;
+type Props = HTMLAttributes<HTMLParagraphElement> & RecastThemeProps;
 
-const CardDescriptionPrimitive = forwardRef<HTMLParagraphElement, Props>(
+const Component = forwardRef<HTMLParagraphElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -23,8 +23,8 @@ const CardDescriptionPrimitive = forwardRef<HTMLParagraphElement, Props>(
   },
 );
 
-CardDescriptionPrimitive.displayName = "CardDescriptionPrimitive";
+Component.displayName = "CardDescriptionPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  CardDescriptionPrimitive,
+export const CardDescriptionPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
 );

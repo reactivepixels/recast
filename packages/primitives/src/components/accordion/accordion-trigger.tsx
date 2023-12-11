@@ -18,7 +18,7 @@ type Props = React.ComponentPropsWithoutRef<
     icon: React.ComponentType;
   };
 
-const AccordionTriggerPrimitive = React.forwardRef<
+const Component = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Trigger>,
   Props
 >(
@@ -55,8 +55,9 @@ const AccordionTriggerPrimitive = React.forwardRef<
   },
 );
 
-AccordionTriggerPrimitive.displayName = "AccordionTriggerPrimitive";
+Component.displayName = "AccordionTriggerPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  AccordionTriggerPrimitive,
-);
+export const AccordionTriggerPrimitive = createRecastComponent<
+  Props,
+  BaseTheme
+>(Component);

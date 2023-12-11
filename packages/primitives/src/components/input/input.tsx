@@ -9,10 +9,9 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.InputHTMLAttributes<HTMLInputElement> &
-  RecastThemeProps;
+type Props = React.InputHTMLAttributes<HTMLInputElement> & RecastThemeProps;
 
-const InputPrimitive = forwardRef<HTMLInputElement, Props>(
+const Component = forwardRef<HTMLInputElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -26,6 +25,8 @@ const InputPrimitive = forwardRef<HTMLInputElement, Props>(
   },
 );
 
-InputPrimitive.displayName = "InputPrimitive";
+Component.displayName = "InputPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(InputPrimitive);
+export const InputPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

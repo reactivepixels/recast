@@ -1,1 +1,1 @@
-export { default as StackPrimitive } from "./stack.js";
+export * from "./stack.js";

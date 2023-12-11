@@ -9,9 +9,9 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
+type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
 
-const AlertPrimitive = forwardRef<HTMLDivElement, Props>(
+const Component = forwardRef<HTMLDivElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
     const classes = useRecastClasses<BaseTheme>({
       themekey,
@@ -25,6 +25,8 @@ const AlertPrimitive = forwardRef<HTMLDivElement, Props>(
   },
 );
 
-AlertPrimitive.displayName = "AlertPrimitive";
+Component.displayName = "AlertPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(AlertPrimitive);
+export const AlertPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

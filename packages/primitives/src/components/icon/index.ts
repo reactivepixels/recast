@@ -1,1 +1,1 @@
-export { default as IconPrimitive } from "./icon.js";
+export * from "./icon.js";

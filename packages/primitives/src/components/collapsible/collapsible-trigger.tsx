@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixCollapsiblePrimitive.CollapsibleTrigger
 > &
   RecastThemeProps;
 
-const CollapsiblePrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixCollapsiblePrimitive.CollapsibleTrigger>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +34,9 @@ const CollapsiblePrimitive = forwardRef<
   );
 });
 
-CollapsiblePrimitive.displayName = "CollapsiblePrimitive";
+Component.displayName = "CollapsibleTriggerPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(CollapsiblePrimitive);
+export const CollapsibleTriggerPrimitive = createRecastComponent<
+  Props,
+  BaseTheme
+>(Component);

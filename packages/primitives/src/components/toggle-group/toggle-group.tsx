@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root" | "thumb">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixToggleGroupPrimitive.Root
 > &
   RecastThemeProps;
 
-const ToggleGroupPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixToggleGroupPrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +34,8 @@ const ToggleGroupPrimitive = forwardRef<
   );
 });
 
-ToggleGroupPrimitive.displayName = "ToggleGroupPrimitive";
+Component.displayName = "ToggleGroupPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(ToggleGroupPrimitive);
+export const ToggleGroupPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

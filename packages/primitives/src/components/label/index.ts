@@ -1,1 +1,1 @@
-export { default as LabelPrimitive } from "./label.js";
+export * from "./label.js";

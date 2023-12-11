@@ -1,3 +1,3 @@
 import * as RadixHoverCardPrimitive from "@radix-ui/react-hover-card";
 
-export default RadixHoverCardPrimitive.Root;
+export const HoverCardPrimitive = RadixHoverCardPrimitive.Root;

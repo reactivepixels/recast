@@ -10,12 +10,12 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
+type Props = React.ComponentPropsWithoutRef<
   typeof RadixAlertDialogPrimitive.Trigger
 > &
   RecastThemeProps;
 
-const AlertDialogTriggerPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixAlertDialogPrimitive.Trigger>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,8 +34,9 @@ const AlertDialogTriggerPrimitive = forwardRef<
   );
 });
 
-AlertDialogTriggerPrimitive.displayName = "AlertDialogOverlayPrimitive";
+Component.displayName = "AlertDialogOverlayPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(
-  AlertDialogTriggerPrimitive,
-);
+export const AlertDialogOverlayPrimitive = createRecastComponent<
+  Props,
+  BaseTheme
+>(Component);

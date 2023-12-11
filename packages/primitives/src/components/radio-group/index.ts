@@ -1,2 +1,2 @@
-export { default as RadioGroupPrimitive } from "./radio-group.js";
-export { default as RadioGroupItemPrimitive } from "./radio-group-item.js";
+export * from "./radio-group.js";
+export * from "./radio-group-item.js";

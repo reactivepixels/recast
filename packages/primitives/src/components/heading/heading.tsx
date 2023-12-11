@@ -20,7 +20,7 @@ type Props = React.HTMLAttributes<HTMLHeadingElement> &
     >;
   };
 
-const HeadingPrimitive = forwardRef<HTMLHeadingElement, Props>(
+const Component = forwardRef<HTMLHeadingElement, Props>(
   (
     {
       as: Tag = "h1",
@@ -47,7 +47,8 @@ const HeadingPrimitive = forwardRef<HTMLHeadingElement, Props>(
   },
 );
 
-if (process.env["NODE_ENV"] !== "production")
-  HeadingPrimitive.displayName = "HeadingPrimitive";
+Component.displayName = "HeadingPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(HeadingPrimitive);
+export const HeadingPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

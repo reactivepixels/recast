@@ -10,12 +10,10 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
-  typeof RadixLabelPrimitive.Root
-> &
+type Props = React.ComponentPropsWithoutRef<typeof RadixLabelPrimitive.Root> &
   RecastThemeProps;
 
-const LabelPrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixLabelPrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +32,8 @@ const LabelPrimitive = forwardRef<
   );
 });
 
-LabelPrimitive.displayName = "LabelPrimitive";
+Component.displayName = "LabelPrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(LabelPrimitive);
+export const LabelPrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);

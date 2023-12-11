@@ -10,12 +10,10 @@ import {
 
 type BaseTheme = RecastBaseTheme<"root">;
 
-export type Props = React.ComponentPropsWithoutRef<
-  typeof RadixAvatarPrimitive.Image
-> &
+type Props = React.ComponentPropsWithoutRef<typeof RadixAvatarPrimitive.Image> &
   RecastThemeProps;
 
-const AvatarImagePrimitive = forwardRef<
+const Component = forwardRef<
   React.ElementRef<typeof RadixAvatarPrimitive.Image>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
@@ -34,6 +32,8 @@ const AvatarImagePrimitive = forwardRef<
   );
 });
 
-AvatarImagePrimitive.displayName = "AvatarImagePrimitive";
+Component.displayName = "AvatarImagePrimitive";
 
-export default createRecastComponent<Props, BaseTheme>(AvatarImagePrimitive);
+export const AvatarImagePrimitive = createRecastComponent<Props, BaseTheme>(
+  Component,
+);
