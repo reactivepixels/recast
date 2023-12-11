@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.3
+
+### Patch Changes
+
+- 04e64cb: Update primitives peer deps
+
 ## 2.0.2
 
 ### Patch Changes
