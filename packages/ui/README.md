@@ -1,1 +1,0 @@
-# Eternus Global Theme

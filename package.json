@@ -5,8 +5,7 @@
   "workspaces": [
     "packages/docs",
     "packages/lib",
-    "packages/primitives",
-    "packages/ui"
+    "packages/primitives"
   ],
   "scripts": {
     "build:docs": "npm run build -w packages/docs",
