@@ -26,7 +26,6 @@
     "dist"
   ],
   "peerDependencies": {
-    "@rpxl/recast": "*",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
@@ -45,7 +44,6 @@
     "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs"
   },
   "devDependencies": {
-    "@rpxl/recast": "*",
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
@@ -86,6 +84,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
+    "@rpxl/recast": "^2.0.2",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "tailwind-merge": "^2.1.0"

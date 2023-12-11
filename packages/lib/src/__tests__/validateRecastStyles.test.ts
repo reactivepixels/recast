@@ -1,4 +1,4 @@
-import { validateRecastStyles } from "../validateRecastStyles";
+import { validateRecastStyles } from "../validateRecastStyles.js";
 
 describe("validateRecastStyles", () => {
   it("should return the styles object when valid variants and modifiers are passed", () => {
