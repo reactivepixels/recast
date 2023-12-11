@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.10
+
+### Patch Changes
+
+- 1da662a: Fix AlertDialogTriggerPrimitive export
+
 ## 2.0.9
 
 ### Patch Changes
