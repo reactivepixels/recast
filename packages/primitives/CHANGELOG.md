@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.7
+
+### Patch Changes
+
+- f51c31c: Add microbundle build config for primitives
+
 ## 2.0.6
 
 ### Patch Changes
