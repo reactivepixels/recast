@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.6
+
+### Patch Changes
+
+- 81893fd: Fix type mappings
+
 ## 2.0.5
 
 ### Patch Changes
