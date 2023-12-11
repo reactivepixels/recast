@@ -7,16 +7,7 @@
   "engines": {
     "node": ">=18"
   },
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/cjs/index.d.ts",
   "exports": {
-    "./dist/cjs/index": {
-      "types": "./dist/cjs/index.d.ts"
-    },
-    "./dist/esm/index": {
-      "types": "./dist/esm/index.d.ts"
-    },
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
