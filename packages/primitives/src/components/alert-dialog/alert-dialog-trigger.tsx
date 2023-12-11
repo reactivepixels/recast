@@ -34,9 +34,9 @@ const Component = forwardRef<
   );
 });
 
-Component.displayName = "AlertDialogOverlayPrimitive";
+Component.displayName = "AlertDialogTriggerPrimitive";
 
-export const AlertDialogOverlayPrimitive = createRecastComponent<
+export const AlertDialogTriggerPrimitive = createRecastComponent<
   Props,
   BaseTheme
 >(Component);
