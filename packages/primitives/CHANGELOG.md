@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.9
+
+### Patch Changes
+
+- 2e272d8: Fix primitve exports
+
 ## 2.0.8
 
 ### Patch Changes
