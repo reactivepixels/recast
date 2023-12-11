@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.4
+
+### Patch Changes
+
+- 5496f05: Add declarationMap to library
+
 ## 2.0.3
 
 ### Patch Changes
