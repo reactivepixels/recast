@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.8
+
+### Patch Changes
+
+- 38bad95: Fix primitive component exports
+
 ## 2.0.7
 
 ### Patch Changes
