@@ -1,5 +1,11 @@
 # @rpxl/recast-primitives
 
+## 2.0.11
+
+### Patch Changes
+
+- 5fe69e6: Add asChild property to Type component
+
 ## 2.0.10
 
 ### Patch Changes
