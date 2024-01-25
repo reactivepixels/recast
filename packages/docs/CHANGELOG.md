@@ -1,5 +1,14 @@
 # docs
 
+## 0.1.3
+
+### Patch Changes
+
+- be33bfb: Update dependencies
+- Updated dependencies [be33bfb]
+  - @rpxl/recast-primitives@2.0.12
+  - @rpxl/recast@2.0.3
+
 ## 0.1.2
 
 ### Patch Changes
