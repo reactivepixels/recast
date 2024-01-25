@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 2.0.3
+
+### Patch Changes
+
+- be33bfb: Update dependencies
+
 ## 2.0.2
 
 ### Patch Changes

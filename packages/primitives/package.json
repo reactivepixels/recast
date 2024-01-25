@@ -1,7 +1,7 @@
 {
   "name": "@rpxl/recast-primitives",
   "license": "MIT",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "type": "module",
   "sideEffects": false,
   "engines": {
@@ -84,7 +84,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
-    "@rpxl/recast": "^2.0.2",
+    "@rpxl/recast": "^2.0.3",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
     "tailwind-merge": "^2.2.1"
