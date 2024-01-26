@@ -1,0 +1,53 @@
+import { Masthead } from "@/components/compounds/masthead";
+
+# Introduction
+
+<Masthead className="mt-8" />
+
+## Why Recast?
+
+Creating component libraries is a challenging and time-consuming task. Even the
+seemingly straightforward process of developing a sensible button component can
+lead to a daunting proliferation of props, primarily driven by the need for
+theming. Consider the numerous instances where theme-related props and styles
+are embedded in a component - such as **variant**: "primary" | "secondary" |
+"tertiary" or **size**: "sm" | "md" | "lg". This tight coupling of component
+props with theme requirements not only results in an ever-expanding list of
+props but also presents a significant hurdle to reusing components across
+projects without duplicating code purely for the purposes of theming.
+
+Imagine being able to liberate your component primitives from theme
+dependencies, allowing them to be written once and used across projects.
+
+## What is Recast?
+
+Recast is not just a collection of small utilities; it is an approach/pattern to
+building **truly** reusable component primitives by abstracting the theme layer
+from the internal workings of a component.
+
+The specific theme props and values that a component can receive are not
+specified within the component, instead these are defined by wrapping the
+component with a theme definition that will form the components theme API and
+control the visual styling.
+
+## Who is Recast for?
+
+Recast is for any individual/team who wants to build a truly reusable component
+library that can be used across projects without duplicating code purely for the
+purposes of theming.
+
+## How is This Approach Different?
+
+There are an ever-growing number of component libraries out there attempting to
+standardize theming by offering well-documented theme APIs, as exemplified by
+systems like [MUI](https://mui.com/), [Chakra](https://chakra-ui.com/), and
+[Ant Design](https://ant.design/). However, these frameworks necessitate the
+adoption of predefined theme props and values, constraining users to a specific
+set of theming conventions as theming props are still tightly coupled to the
+components.
+
+In contrast the Recast approach eliminates the need for adherence to predefined
+theming props, values, or naming conventions. With Recast, you have the autonomy
+to engineer your design system according to your unique requirements, allowing
+you to tailor your design system to precisely fit your project's needs without
+compromise.

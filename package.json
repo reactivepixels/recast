@@ -4,16 +4,20 @@
   "license": "MIT",
   "workspaces": [
     "packages/docs",
+    "packages/theme",
     "packages/lib",
     "packages/primitives"
   ],
   "scripts": {
     "build:docs": "npm run build -w packages/docs",
+    "build:theme": "npm run build -w packages/theme",
     "build:recast": "npm run build -w packages/lib",
     "build:recast-primitives": "npm run build -w packages/primitives",
     "build:all": "npm run build:recast && npm run build:recast-primitives",
     "export:docs": "npm run export -w packages/docs",
+    "export:theme": "npm run export -w packages/theme",
     "dev:docs": "npm run dev -w packages/docs",
+    "dev:theme": "npm run dev -w packages/theme",
     "test:ci": "npm run test:coverage -w packages/lib",
     "release": "npm run build:all && npx changeset publish"
   },

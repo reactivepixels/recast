@@ -1,0 +1,44 @@
+import Image from "next/image";
+import { Steps } from "nextra/components";
+
+# VS Code Setup
+
+To get [Tailwind CSS](https://tailwindcss.com/) intellisense working for Recast
+inside of [VS Code](https://code.visualstudio.com/), please follow the steps
+below:
+
+<Steps>
+### Install Tailwind CSS IntelliSense fo VS Code
+
+If you haven't already you will need to install the
+[Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+VSCode extension.
+
+### Add the Recast Regex
+
+Add the following regex to your `.vscode/settings.json` file at the root of your
+project:
+
+```json copy
+{
+  "tailwindCSS.experimental.classRegex": [
+    ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
+}
+```
+
+### Voilà!
+
+You should now have Tailwind CSS intellisense working inside of your Recast
+components.
+
+<div className="overflow-hidden rounded-lg mt-8">
+  <Image
+    src="https://raw.githubusercontent.com/reactivepixels/recast/main/packages/docs/public/images/tailwind-css-vscode-intellisense.png"
+    alt="Tailwind CSS VS Code Intellisense"
+    width={891}
+    height={546}
+  />
+</div>
+
+</Steps>
