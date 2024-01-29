@@ -22,6 +22,8 @@
     "release": "npm run build:all && npx changeset publish"
   },
   "dependencies": {
-    "@changesets/cli": "^2.27.1"
+    "@changesets/cli": "^2.27.1",
+    "framer-motion": "^11.0.3",
+    "usehooks-ts": "^2.10.0"
   }
 }

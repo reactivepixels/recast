@@ -1,12 +1,14 @@
-import React, { forwardRef } from "react";
-import { cn } from "../../utils/cn.js";
 import * as RadixSwitchPrimitive from "@radix-ui/react-switch";
+
+import React, { forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  useRecastClasses,
 } from "@rpxl/recast";
+
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root" | "thumb">;
 

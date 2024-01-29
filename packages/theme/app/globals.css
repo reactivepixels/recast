@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 234 50% 4%;
+  --foreground: 0 0% 98%;
+  --primary: 227, 95%, 64%;
+  --primary-hue: 227;
+  --primary-saturation: 95%;
+  --primary-lightness: 64%;
+  /* hot pink */
+  /* --primary: 324, 91%, 57%; */
+}
+
+body {
+  @apply font-sans;
+  color: hsla(var(--primary-hue), var(--primary-saturation), 95%, 0.8);
+  background: hsl(var(--background));
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: hsla(var(--primary-hue), var(--primary-saturation), 95%, 1);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
