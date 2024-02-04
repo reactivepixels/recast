@@ -50,7 +50,6 @@ const Blueprint = forwardRef<HTMLDivElement, Props>(
                 className="absolute -right-4 w-px bg-neutral-500 transform -translate-y-1/2 top-1/2 before:bg-neutral-500 before:top-0 before:left-1/2 before:transform before:-translate-x-1/2 before:h-px before:w-1.5 before:flex before:absolute after:bg-neutral-500 after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:h-px after:w-1.5 after:flex after:absolute"
               />
             </div>
-
             <div className="flex" ref={componentRef}>
               {children}
             </div>
