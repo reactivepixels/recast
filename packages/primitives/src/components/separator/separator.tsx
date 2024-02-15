@@ -1,12 +1,14 @@
-import React, { forwardRef } from "react";
-import { cn } from "../../utils/cn.js";
 import * as RadixSeparatorPrimitive from "@radix-ui/react-separator";
+
+import React, { forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root">;
 
@@ -31,7 +33,7 @@ const Component = forwardRef<
     },
     ref,
   ) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

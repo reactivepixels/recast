@@ -1,12 +1,14 @@
-import React, { forwardRef } from "react";
-import { cn } from "../../utils/cn.js";
 import * as RadixTogglePrimitive from "@radix-ui/react-toggle";
+
+import React, { forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root" | "thumb">;
 
@@ -17,7 +19,7 @@ const Component = forwardRef<
   React.ElementRef<typeof RadixTogglePrimitive.Root>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
-  const classes = useRecastClasses<BaseTheme>({
+  const classes = getRecastClasses<BaseTheme>({
     themekey,
     variants,
     modifiers,

@@ -1,12 +1,13 @@
 import React, { forwardRef } from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cn } from "../../utils/cn.js";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root">;
 
@@ -19,7 +20,7 @@ const Component = forwardRef<HTMLParagraphElement, Props>(
   ({ asChild, themekey, className, variants, modifiers, ...props }, ref) => {
     const Comp = asChild ? Slot : "p";
 
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,
