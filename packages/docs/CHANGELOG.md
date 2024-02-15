@@ -1,5 +1,17 @@
 # docs
 
+## 0.2.0
+
+### Minor Changes
+
+- b72972d: Refactor useRecastClasses hook into context free utility
+
+### Patch Changes
+
+- Updated dependencies [b72972d]
+  - @rpxl/recast@3.0.0
+  - @rpxl/recast-primitives@2.1.0
+
 ## 0.1.3
 
 ### Patch Changes
