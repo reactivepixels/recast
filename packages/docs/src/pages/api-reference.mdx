@@ -64,7 +64,7 @@ Methods available to Recast primitive utilities. See the
 [in-depth guide](/in-depth#primitives) for detailed information on how to use
 the following methods.
 
-### useRecastClasses()
+### getRecastClasses()
 
 Returns an object to apply resolved classes to your component.
 
@@ -79,7 +79,7 @@ type RecastThemeProps = {
   modifiers?: string[];
 };
 
-function useRecastClasses<BaseTheme>({
+function getRecastClasses<BaseTheme>({
   themekey,
   variants,
   modifiers,
