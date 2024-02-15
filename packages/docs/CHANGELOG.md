@@ -1,5 +1,11 @@
 # docs
 
+## 0.3.0
+
+### Minor Changes
+
+- 2ff0e26: Update getRecastClasses API documentation
+
 ## 0.2.0
 
 ### Minor Changes
