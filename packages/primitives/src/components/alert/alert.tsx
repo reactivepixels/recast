@@ -1,11 +1,12 @@
 import React, { forwardRef } from "react";
-import { cn } from "../../utils/cn.js";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root">;
 
@@ -13,7 +14,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
 
 const Component = forwardRef<HTMLDivElement, Props>(
   ({ themekey, className, variants, modifiers, ...props }, ref) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

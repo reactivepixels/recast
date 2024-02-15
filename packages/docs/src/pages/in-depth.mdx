@@ -42,7 +42,7 @@ Import the minimal set of utilities from Recast to create a component primitive.
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
+  getRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
@@ -59,7 +59,7 @@ styles can be applied to a component via the theme layer.
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
+  getRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
@@ -79,7 +79,7 @@ type BaseTheme = RecastBaseTheme<"root">;
 A Recast component primitive receives three additional props from the theme
 layer: `themekey{:tsx}`, `variants{:tsx}`, `modifiers{:tsx}`. These props will
 enable the component to derive the correct classes via the
-`useRecastClasses{:tsx}` utility to then be applied to your component. The
+`getRecastClasses{:tsx}` utility to then be applied to your component. The
 component doesn't need to know anything about the theme layer other than how it
 should be applied, as defined by the `BaseTheme{:tsx}`.
 
@@ -87,7 +87,7 @@ should be applied, as defined by the `BaseTheme{:tsx}`.
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
+  getRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
@@ -96,7 +96,7 @@ type BaseTheme = RecastBaseTheme<"root">;
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   ({ themekey, variants, modifiers, className, ...props }, ref) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,
@@ -133,7 +133,7 @@ compoent that is ready to accept and handle your external component theme layer.
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
+  getRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
@@ -142,7 +142,7 @@ type BaseTheme = RecastBaseTheme<"root">;
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   ({ themekey, variants, modifiers, className, ...props }, ref) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

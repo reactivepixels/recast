@@ -28,7 +28,7 @@ completely decoupled from the component primitive.
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
+  getRecastClasses,
   createRecastComponent,
   RecastThemeProps,
 } from "@rpxl/recast";
@@ -38,7 +38,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & RecastThemeProps;
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   ({ themekey, variants, modifiers, ...props }, ref) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

@@ -1,9 +1,9 @@
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "../index.js";
 
 type BaseTheme = RecastBaseTheme<"root">;
@@ -15,7 +15,7 @@ export type Props = ButtonHTMLAttributes<HTMLButtonElement> &
 
 const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
   ({ themekey, variants, modifiers, ...props }, ref) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

@@ -1,11 +1,12 @@
 import React, { ElementType, forwardRef } from "react";
-import clsx from "clsx";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import clsx from "clsx";
 
 type BaseTheme = RecastBaseTheme<"root">;
 
@@ -17,7 +18,7 @@ type Props = React.SVGAttributes<SVGSVGElement> &
 
 const Component = forwardRef<SVGSVGElement, Props>(
   ({ themekey, children, className, variants, modifiers, ...props }, ref) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

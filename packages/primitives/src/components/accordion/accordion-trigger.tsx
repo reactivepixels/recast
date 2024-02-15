@@ -1,13 +1,15 @@
-import * as React from "react";
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { cn } from "../../utils/cn.js";
+import * as React from "react";
+
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root" | "trigger" | "icon">;
 
@@ -34,7 +36,7 @@ const Component = React.forwardRef<
     },
     ref,
   ) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,

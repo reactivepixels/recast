@@ -1,12 +1,14 @@
-import React, { forwardRef } from "react";
 import * as RadixAvatarPrimitive from "@radix-ui/react-avatar";
-import { cn } from "../../utils/cn.js";
+
+import React, { forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root">;
 
@@ -17,7 +19,7 @@ const Component = forwardRef<
   React.ElementRef<typeof RadixAvatarPrimitive.Image>,
   Props
 >(({ themekey, className, variants, modifiers, ...props }, ref) => {
-  const classes = useRecastClasses<BaseTheme>({
+  const classes = getRecastClasses<BaseTheme>({
     themekey,
     variants,
     modifiers,

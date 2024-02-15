@@ -13,7 +13,7 @@ type BaseTheme = {
   root: string | string[];
 };
 
-describe("useRecastClasses", () => {
+describe("getRecastClasses", () => {
   it("should return an empty object when no theme is provided", () => {
     mockTheme = undefined;
 

@@ -1,13 +1,15 @@
-import React, { forwardRef } from "react";
-import { cn } from "../../utils/cn.js";
 import * as RadixCheckboxPrimitive from "@radix-ui/react-checkbox";
-import { CheckIcon } from "@radix-ui/react-icons";
+
+import React, { forwardRef } from "react";
 import {
   RecastBaseTheme,
-  useRecastClasses,
-  createRecastComponent,
   RecastThemeProps,
+  createRecastComponent,
+  getRecastClasses,
 } from "@rpxl/recast";
+
+import { CheckIcon } from "@radix-ui/react-icons";
+import { cn } from "../../utils/cn.js";
 
 type BaseTheme = RecastBaseTheme<"root" | "indicator" | "icon">;
 
@@ -33,7 +35,7 @@ const Component = forwardRef<
     },
     ref,
   ) => {
-    const classes = useRecastClasses<BaseTheme>({
+    const classes = getRecastClasses<BaseTheme>({
       themekey,
       variants,
       modifiers,
