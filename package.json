@@ -8,6 +8,7 @@
     "packages/primitives"
   ],
   "scripts": {
+    "build:all": "pnpm run recast:build && pnpm run primitives:build",
     "docs:build": "pnpm --filter @rpxl/docs run build",
     "docs:dev": "pnpm --filter @rpxl/docs run dev",
     "docs:export": "pnpm --filter @rpxl/docs run export",
@@ -16,7 +17,7 @@
     "recast:build": "pnpm --filter @rpxl/recast run build",
     "recast:dev": "pnpm --filter @rpxl/recast run dev",
     "release": "pnpm run build:all && npx changeset publish",
-    "test:ci": "pnpm run test:coverage -w packages/lib"
+    "test:ci": "pnpm --filter @rpxl/recast run test:coverage"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1"
