@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build Recast
-        run: npm run build:recast
+        run: pnpm run recast:build
       - name: Build Recast primitives
         run: pnpm run primitives:build
       - name: Build with Next.js
