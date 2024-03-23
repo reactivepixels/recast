@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 3.1.1
+
+### Patch Changes
+
+- a4b311e: Fix CI script
+
 ## 3.1.0
 
 ### Minor Changes

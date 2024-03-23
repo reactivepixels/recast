@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 2.2.1
+
+### Patch Changes
+
+- a4b311e: Fix CI script
+- Updated dependencies [a4b311e]
+  - @rpxl/recast@3.1.1
+
 ## 2.2.0
 
 ### Minor Changes
