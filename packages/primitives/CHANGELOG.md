@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 2.2.2
+
+### Patch Changes
+
+- 7cea577: Regenerate pnpm lockfile
+- Updated dependencies [7cea577]
+  - @rpxl/recast@3.1.2
+
 ## 2.2.1
 
 ### Patch Changes
