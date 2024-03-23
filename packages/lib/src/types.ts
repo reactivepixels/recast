@@ -4,11 +4,14 @@ export type RecastBaseTheme<B extends string> = Partial<
 >;
 
 export type RecastStyles<BaseTheme, V, M> = {
-  defaults?: Defaults<V, M>;
+  defaults?: {
+    variants?: Omit<{ [K in keyof V]?: keyof V[K] }, MaybeVariants<V>>;
+    modifiers?: (keyof M)[];
+  };
   base?: BaseTheme;
-  variants?: Variants<BaseTheme, V>;
-  modifiers?: Modifiers<BaseTheme, M>;
-  conditionals?: Conditionals<BaseTheme, V, M>;
+  variants?: { [K in keyof V]: Record<keyof V[K], BaseTheme> };
+  modifiers?: { [K in keyof M]: BaseTheme };
+  conditionals?: Conditional<BaseTheme, V, M>[];
 };
 
 export type Nullish = null | undefined;
@@ -16,7 +19,7 @@ export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
 
 export type Defaults<V, M> = {
   variants?: Omit<{ [K in keyof V]?: keyof V[K] }, MaybeVariants<V>>;
-  modifiers?: Array<keyof M>;
+  modifiers?: (keyof M)[];
 };
 
 export type Variants<BaseTheme, V> = {
@@ -29,8 +32,8 @@ export type ExtractVariantProps<V> = V extends object
     }
   : never;
 
-export type Modifiers<BaseTheme, M> = Record<keyof M, BaseTheme>;
-export type ExtractModifierProps<M> = Partial<Record<keyof M, boolean>>;
+export type Modifiers<BaseTheme, M> = { [K in keyof M]: BaseTheme };
+export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
 
 export type Conditional<BaseTheme, V, M> = {
   variants?: V extends object
@@ -40,7 +43,7 @@ export type Conditional<BaseTheme, V, M> = {
           : never;
       }
     : never;
-  modifiers?: keyof M | Array<keyof M>;
+  modifiers?: keyof M | (keyof M)[];
   classes: Partial<Record<keyof BaseTheme, string | string[]>>;
 };
 

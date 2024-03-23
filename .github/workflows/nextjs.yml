@@ -29,21 +29,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v3
         with:
-          node-version: "18"
-          cache: npm
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
       - name: Build Recast
         run: npm run build:recast
       - name: Build Recast primitives
-        run: npm run build:recast-primitives
+        run: pnpm run primitives:build
       - name: Build with Next.js
-        run: npm run build:docs
+        run: pnpm run docs:build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:

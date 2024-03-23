@@ -8,14 +8,15 @@
     "packages/primitives"
   ],
   "scripts": {
-    "build:docs": "npm run build -w packages/docs",
-    "build:recast": "npm run build -w packages/lib",
-    "build:recast-primitives": "npm run build -w packages/primitives",
-    "build:all": "npm run build:recast && npm run build:recast-primitives",
-    "export:docs": "npm run export -w packages/docs",
-    "dev:docs": "npm run dev -w packages/docs",
-    "test:ci": "npm run test:coverage -w packages/lib",
-    "release": "npm run build:all && npx changeset publish"
+    "docs:build": "pnpm --filter @rpxl/docs run build",
+    "docs:dev": "pnpm --filter @rpxl/docs run dev",
+    "docs:export": "pnpm --filter @rpxl/docs run export",
+    "primitives:build": "pnpm --filter @rpxl/recast-primitives run build",
+    "primitives:dev": "pnpm --filter @rpxl/recast-primitives run dev",
+    "recast:build": "pnpm --filter @rpxl/recast run build",
+    "recast:dev": "pnpm --filter @rpxl/recast run dev",
+    "release": "npm run build:all && npx changeset publish",
+    "test:ci": "npm run test:coverage -w packages/lib"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1"
