@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "types": ["node", "react", "jest"],
+    "types": ["node", "react"],
     "useDefineForClassFields": true
   },
   "include": ["src"],
