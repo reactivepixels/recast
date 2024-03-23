@@ -1,5 +1,14 @@
 # docs
 
+## 0.4.1
+
+### Patch Changes
+
+- a4b311e: Fix CI script
+- Updated dependencies [a4b311e]
+  - @rpxl/recast@3.1.1
+  - @rpxl/recast-primitives@2.2.1
+
 ## 0.4.0
 
 ### Minor Changes
