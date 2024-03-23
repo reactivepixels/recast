@@ -1,5 +1,17 @@
 # docs
 
+## 0.4.0
+
+### Minor Changes
+
+- 8d0e436: Change package manager to pnpm
+
+### Patch Changes
+
+- Updated dependencies [8d0e436]
+  - @rpxl/recast-primitives@2.2.0
+  - @rpxl/recast@3.1.0
+
 ## 0.3.0
 
 ### Minor Changes

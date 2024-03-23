@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 3.1.0
+
+### Minor Changes
+
+- 8d0e436: Change package manager to pnpm
+
 ## 3.0.0
 
 ### Major Changes
