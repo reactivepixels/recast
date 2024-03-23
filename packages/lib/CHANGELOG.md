@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 3.1.2
+
+### Patch Changes
+
+- 7cea577: Regenerate pnpm lockfile
+
 ## 3.1.1
 
 ### Patch Changes
