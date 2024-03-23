@@ -49,7 +49,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "dev": "tsc --outDir dist/esm --watch",
-    "build": "npm run build:esm && npm run build:cjs",
+    "build": "pnpm run build:esm && pnpm run build:cjs",
     "build:esm": "tsc --outDir dist/esm",
     "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs",
     "test": "jest",
