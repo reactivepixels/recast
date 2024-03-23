@@ -15,8 +15,8 @@
     "primitives:dev": "pnpm --filter @rpxl/recast-primitives run dev",
     "recast:build": "pnpm --filter @rpxl/recast run build",
     "recast:dev": "pnpm --filter @rpxl/recast run dev",
-    "release": "npm run build:all && npx changeset publish",
-    "test:ci": "npm run test:coverage -w packages/lib"
+    "release": "pnpm run build:all && npx changeset publish",
+    "test:ci": "pnpm run test:coverage -w packages/lib"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.1"
