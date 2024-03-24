@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 3.1.5
+
+### Patch Changes
+
+- be65cff: Fix npm pack configuration
+
 ## 3.1.4
 
 ### Patch Changes
