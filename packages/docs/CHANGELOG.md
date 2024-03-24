@@ -1,5 +1,14 @@
 # docs
 
+## 0.4.5
+
+### Patch Changes
+
+- be65cff: Fix npm pack configuration
+- Updated dependencies [be65cff]
+  - @rpxl/recast@3.1.5
+  - @rpxl/recast-primitives@2.2.5
+
 ## 0.4.4
 
 ### Patch Changes
