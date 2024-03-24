@@ -31,7 +31,6 @@
   "files": [
     "dist",
     "server",
-    "../../README.md",
     "!**/__tests__/**"
   ],
   "peerDependencies": {
