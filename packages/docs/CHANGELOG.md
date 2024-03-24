@@ -1,5 +1,14 @@
 # docs
 
+## 0.4.4
+
+### Patch Changes
+
+- 405c426: Fix package.json versions
+- Updated dependencies [405c426]
+  - @rpxl/recast-primitives@2.2.4
+  - @rpxl/recast@3.1.4
+
 ## 0.4.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 3.1.4
+
+### Patch Changes
+
+- 405c426: Fix package.json versions
+
 ## 3.1.3
 
 ### Patch Changes
