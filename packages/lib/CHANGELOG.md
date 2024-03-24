@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 3.1.3
+
+### Patch Changes
+
+- 0a7a99c: Fix pnpm lockfile issue
+
 ## 3.1.2
 
 ### Patch Changes
