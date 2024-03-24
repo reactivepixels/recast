@@ -1,5 +1,14 @@
 # docs
 
+## 0.4.3
+
+### Patch Changes
+
+- 0a7a99c: Fix pnpm lockfile issue
+- Updated dependencies [0a7a99c]
+  - @rpxl/recast@3.1.3
+  - @rpxl/recast-primitives@2.2.3
+
 ## 0.4.2
 
 ### Patch Changes
