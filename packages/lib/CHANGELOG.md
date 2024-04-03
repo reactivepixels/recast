@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.0.1
+
+### Patch Changes
+
+- df65d7c: Fix recast gerneric component prop types
+
 ## 4.0.0
 
 ### Major Changes

@@ -1,5 +1,13 @@
 # docs
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [df65d7c]
+  - @rpxl/recast-primitives@3.0.1
+  - @rpxl/recast@4.0.1
+
 ## 1.0.0
 
 ### Major Changes
