@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 3.0.1
+
+### Patch Changes
+
+- df65d7c: Fix recast gerneric component prop types
+- Updated dependencies [df65d7c]
+  - @rpxl/recast@4.0.1
+
 ## 3.0.0
 
 ### Major Changes
