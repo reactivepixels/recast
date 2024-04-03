@@ -20,15 +20,12 @@ export const normalizeValue = (classes?: string | string[]) => {
  * @param {string|string[]} value - The second value to merge. It can be a single value or an array of values.
  * @returns {string} The merged and normalized values.
  */
-export const mergeValues = (
-  objValue?: string | string[],
-  value?: string | string[],
-) => {
-  if (!!objValue && !!value) {
+export const mergeStringClassNames = (objValue?: string | string[], value?: string | string[]) => {
+  if (objValue && value) {
     return `${normalizeValue(objValue)} ${normalizeValue(value)}`;
-  } else if (!!objValue) {
+  } else if (objValue) {
     return normalizeValue(objValue);
-  } else if (!!value) {
+  } else if (value) {
     return normalizeValue(value);
   } else {
     return "";
@@ -44,10 +41,7 @@ export const mergeValues = (
  * @param {ClassNameRecord} source - The source object containing class names.
  * @returns {ClassNameRecord} The merged class names object.
  */
-export const mergeClassNames = (
-  target: ClassNameRecord = {},
-  source: ClassNameRecord = {},
-) => {
+export const mergeObjectClassNames = (target: ClassNameRecord = {}, source: ClassNameRecord = {}) => {
   /**
    * Normalizes the class names in an object by removing leading and trailing whitespace.
    *
@@ -55,24 +49,18 @@ export const mergeClassNames = (
    * @returns {ClassNameRecord} The object with normalized class names.
    */
   const normalizeTarget = (x: ClassNameRecord): ClassNameRecord => {
-    const keys = Object.keys(x);
-
-    if (keys?.length) {
-      return keys.reduce((acc, curr) => {
-        return { ...acc, [curr]: normalizeValue(x[curr]) };
-      }, {} as ClassNameRecord);
-    }
-
-    return x;
+    return Object.keys(x).reduce((acc, curr) => {
+      return { ...acc, [curr]: normalizeValue(x[curr]) };
+    }, {} as ClassNameRecord);
   };
 
-  return Object.keys(source).reduce((acc, curr) => {
-    if (acc[curr] && source[curr]) {
-      return { ...acc, [curr]: mergeValues(acc[curr], source[curr]) };
-    } else if (acc[curr]) {
-      return { ...acc, [curr]: normalizeValue(acc[curr]) };
-    } else if (source[curr]) {
-      return { ...acc, [curr]: normalizeValue(source[curr]) };
+  return Object.entries(source).reduce((acc, [key, value]) => {
+    if (acc[key] && value) {
+      return { ...acc, [key]: mergeStringClassNames(acc[key], value) };
+    } else if (acc[key]) {
+      return { ...acc, [key]: normalizeValue(acc[key]) };
+    } else if (value) {
+      return { ...acc, [key]: normalizeValue(value) };
     }
     return acc;
   }, normalizeTarget(target));

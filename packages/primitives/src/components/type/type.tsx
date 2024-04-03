@@ -1,37 +1,18 @@
-import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "../../utils/cn.js";
+import React, { forwardRef } from "react";
 
-type BaseTheme = RecastBaseTheme<"root">;
-
-type Props = React.HTMLAttributes<HTMLParagraphElement> &
-  RecastThemeProps & {
-    asChild?: boolean;
-  };
+type Props = React.HTMLAttributes<HTMLParagraphElement> & {
+  asChild?: boolean;
+};
 
 const Component = forwardRef<HTMLParagraphElement, Props>(
-  ({ asChild, themekey, className, variants, modifiers, ...props }, ref) => {
+  ({ asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "p";
 
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
-    return (
-      <Comp className={cn(classes?.root, className)} ref={ref} {...props} />
-    );
+    return <Comp ref={ref} {...props} />;
   },
 );
 
 Component.displayName = "TypePrimitive";
 
-export const TypePrimitive = createRecastComponent<Props, BaseTheme>(Component);
+export const TypePrimitive = Component;

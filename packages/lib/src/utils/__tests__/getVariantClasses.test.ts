@@ -1,7 +1,7 @@
 import { getVariantClasses } from "../getVariantClasses.js";
 
 describe("getVariantClasses", () => {
-  const theme = {
+  const styles = {
     variants: {
       color: {
         red: { root: "text-red-500" },
@@ -15,26 +15,26 @@ describe("getVariantClasses", () => {
   };
 
   it("should return an empty object if theme variants are not defined", () => {
-    const props = { theme: {}, variants: {} };
+    const props = { styles: {}, variants: {} };
     const variantClasses = getVariantClasses(props);
-    expect(variantClasses).toEqual({});
+    expect(variantClasses).toEqual({ className: "", rcx: {} });
   });
 
   it("should return an empty object if variants are not defined", () => {
-    const props = { theme, variants: undefined };
+    const props = { styles, variants: undefined };
     const variantClasses = getVariantClasses(props);
-    expect(variantClasses).toEqual({});
+    expect(variantClasses).toEqual({ className: "", rcx: {} });
   });
 
   it("should return an object with variant classes", () => {
-    const props = { theme, variants: { color: "red", size: "small" } };
+    const props = { styles, variants: { color: "red", size: "small" } };
     const variantClasses = getVariantClasses(props);
-    expect(variantClasses).toEqual({ root: "text-red-500 text-sm" });
+    expect(variantClasses).toEqual({ className: "", rcx: { root: "text-red-500 text-sm" } });
   });
 
   it("should merge variant classes if multiple variants are defined", () => {
-    const props = { theme, variants: { color: "blue", size: "large" } };
+    const props = { styles, variants: { color: "blue", size: "large" } };
     const variantClasses = getVariantClasses(props);
-    expect(variantClasses).toEqual({ root: "text-blue-500 text-lg" });
+    expect(variantClasses).toEqual({ className: "", rcx: { root: "text-blue-500 text-lg" } });
   });
 });

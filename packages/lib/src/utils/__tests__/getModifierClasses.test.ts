@@ -1,12 +1,13 @@
+import { RelaxedModifierProps, RelaxedStyles } from "types.js";
+
 import { getModifierClasses } from "../getModifierClasses.js";
-import { Styles, RecastThemeProps } from "../../types.js";
 
 describe("getModifierClasses", () => {
-  let theme: Styles;
-  let modifiers: RecastThemeProps["modifiers"];
+  let styles: RelaxedStyles;
+  let modifiers: RelaxedModifierProps | undefined;
 
   beforeEach(() => {
-    theme = {
+    styles = {
       modifiers: {
         modifier1: { root: "modifier1-classes" },
         modifier2: { root: "modifier2-classes" },
@@ -16,26 +17,29 @@ describe("getModifierClasses", () => {
   });
 
   it("returns an object", () => {
-    const classes = getModifierClasses({ theme, modifiers });
+    const classes = getModifierClasses({ styles, modifiers });
     expect(typeof classes).toBe("object");
   });
 
   it("should correctly generates classes based on theme and modifiers", () => {
-    const classes = getModifierClasses({ theme, modifiers });
+    const classes = getModifierClasses({ styles, modifiers });
     expect(classes).toEqual({
-      root: "modifier1-classes modifier2-classes",
+      className: "",
+      rcx: {
+        root: "modifier1-classes modifier2-classes",
+      },
     });
   });
 
   it("should handle undefined modifiers array", () => {
     modifiers = undefined;
-    const classes = getModifierClasses({ theme, modifiers });
-    expect(classes).toEqual({});
+    const classes = getModifierClasses({ styles, modifiers });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined theme modifiers object", () => {
-    theme.modifiers = undefined;
-    const classes = getModifierClasses({ theme, modifiers });
-    expect(classes).toEqual({});
+    styles.modifiers = undefined;
+    const classes = getModifierClasses({ styles, modifiers });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 });

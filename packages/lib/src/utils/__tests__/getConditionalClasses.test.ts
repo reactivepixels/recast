@@ -1,47 +1,47 @@
-import { getConditionalClasses } from "../getConditionalClasses";
+import { getConditionalClasses } from "../getConditionalClasses.js";
 
 describe("getConditionalClasses", () => {
   it("should return an empty object if there are no conditions", () => {
-    const theme = { conditionals: undefined };
+    const styles = { conditionals: undefined };
 
-    const result = getConditionalClasses({ theme });
+    const result = getConditionalClasses({ styles });
 
-    expect(result).toEqual({});
+    expect(result).toEqual({ className: "", rcx: {} });
   });
 
   it("should return empty object if conditons are not met", () => {
     const modifiers = ["floating"];
-    const theme = {
+    const styles = {
       conditionals: [
         {
           modifiers: "block", // Modifier conditions match defaults above as a string
-          classes: {
+          className: {
             root: "!bg-green-500",
           },
         },
       ],
     };
 
-    const result = getConditionalClasses({ theme, modifiers });
+    const result = getConditionalClasses({ styles, modifiers });
 
-    expect(result).toEqual({});
+    expect(result).toEqual({ className: "", rcx: {} });
   });
 
   it("should return correct classes if conditons are met", () => {
     const modifiers = ["block"];
-    const theme = {
+    const styles = {
       conditionals: [
         {
           modifiers: "block", // Modifier conditions match defaults above as a string
-          classes: {
+          className: {
             root: "!bg-green-500",
           },
         },
       ],
     };
 
-    const result = getConditionalClasses({ theme, modifiers });
+    const result = getConditionalClasses({ styles, modifiers });
 
-    expect(result).toEqual({ root: "!bg-green-500" });
+    expect(result).toEqual({ className: "", rcx: { root: "!bg-green-500" } });
   });
 });

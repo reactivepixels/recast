@@ -1,12 +1,13 @@
+import { RelaxedStyles, RelaxedVariantProps } from "types.js";
+
 import { getDefaultVariantClasses } from "../getDefaultVariantClasses.js";
-import { Styles, RecastThemeProps } from "../../types.js";
 
 describe("getDefaultVariantClasses", () => {
-  let theme: Styles;
-  let variants: RecastThemeProps["variants"];
+  let styles: RelaxedStyles;
+  let variants: RelaxedVariantProps | undefined;
 
   beforeEach(() => {
-    theme = {
+    styles = {
       defaults: {
         variants: {
           variant1: "variant1Value1",
@@ -28,48 +29,53 @@ describe("getDefaultVariantClasses", () => {
   });
 
   it("returns an object", () => {
-    const classes = getDefaultVariantClasses({ theme, variants });
+    const classes = getDefaultVariantClasses({ styles, variants });
     expect(typeof classes).toBe("object");
   });
 
   it("should correctly apply default variants", () => {
-    const classes = getDefaultVariantClasses({ theme, variants });
+    const classes = getDefaultVariantClasses({ styles, variants });
     expect(classes).toEqual({
-      root: "variant1Value1-classes variant2Value1-classes",
+      className: "",
+      rcx: { root: "variant1Value1-classes variant2Value1-classes" },
     });
   });
 
   it("should correctly apply default variants when some are already specified", () => {
     variants = { variant1: "variant1Value2" };
-    const classes = getDefaultVariantClasses({ theme, variants });
+    const classes = getDefaultVariantClasses({ styles, variants });
     expect(classes).toEqual({
-      root: "variant2Value1-classes",
+      className: "",
+      rcx: { root: "variant2Value1-classes" },
     });
   });
 
   it("should not apply a default variant if already specified", () => {
     variants = { variant1: "variant1Value1", variant2: "variant2Value1" };
-    const classes = getDefaultVariantClasses({ theme, variants });
-    expect(classes).toEqual({});
+    const classes = getDefaultVariantClasses({ styles, variants });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined theme variants object", () => {
-    theme.variants = undefined;
-    const classes = getDefaultVariantClasses({ theme, variants });
-    expect(classes).toEqual({});
+    styles.variants = undefined;
+    const classes = getDefaultVariantClasses({ styles, variants });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined default variants object", () => {
-    theme.defaults = undefined;
-    const classes = getDefaultVariantClasses({ theme, variants });
-    expect(classes).toEqual({});
+    styles.defaults = undefined;
+    const classes = getDefaultVariantClasses({ styles, variants });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined variants object", () => {
     variants = undefined;
-    const classes = getDefaultVariantClasses({ theme, variants });
+    const classes = getDefaultVariantClasses({ styles, variants });
     expect(classes).toEqual({
-      root: "variant1Value1-classes variant2Value1-classes",
+      className: "",
+      rcx: {
+        root: "variant1Value1-classes variant2Value1-classes",
+      },
     });
   });
 });

@@ -1,33 +1,18 @@
 import { StackPrimitive } from "@rpxl/recast-primitives";
+import { recast } from "@rpxl/recast";
 
-export const Stack = StackPrimitive.recast({
+export const Stack = recast(StackPrimitive, {
   defaults: { variants: { size: "md" } },
-  base: {
-    root: "flex flex-col",
-  },
+  base: "flex flex-col",
   variants: {
     size: {
-      none: {
-        root: "gap-0",
-      },
-      xs: {
-        root: "gap-1",
-      },
-      sm: {
-        root: "gap-2",
-      },
-      md: {
-        root: "gap-4",
-      },
-      lg: {
-        root: "gap-8",
-      },
-      xl: {
-        root: "gap-16",
-      },
-      xxl: {
-        root: "gap-24",
-      },
+      none: "gap-0",
+      xs: "gap-1",
+      sm: "gap-2",
+      md: "gap-2",
+      lg: "gap-8",
+      xl: "gap-16",
+      xxl: "gap-24",
     },
   },
 });

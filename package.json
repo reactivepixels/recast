@@ -2,11 +2,6 @@
   "name": "@rpxl/recast-monorepo",
   "version": "0.1.0",
   "license": "MIT",
-  "workspaces": [
-    "packages/docs",
-    "packages/lib",
-    "packages/primitives"
-  ],
   "scripts": {
     "build:all": "pnpm run recast:build && pnpm run primitives:build",
     "docs:build": "pnpm --filter @rpxl/docs run build",

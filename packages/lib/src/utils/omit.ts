@@ -1,9 +1,6 @@
 export const omit = (
   keysToOmit: string[] = [],
-  originalObject: Record<
-    string,
-    string | string[] | Record<string, string | string[]>
-  > = {},
+  originalObject: Record<string, string | string[] | Record<string, string | string[]>> = {},
 ) => {
   const clonedObject = { ...originalObject };
 

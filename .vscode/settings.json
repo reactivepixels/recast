@@ -4,9 +4,9 @@
     "source.fixAll.eslint": "explicit"
   },
   "css.lint.unknownAtRules": "ignore",
-  // Tailwind intellisense for Recast theme object
   "tailwindCSS.experimental.classRegex": [
     ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.printWidth": 80
 }

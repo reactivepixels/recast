@@ -1,8 +1,8 @@
-import { RecastConditionalProps, RecastThemeProps } from "../types.js";
+import { RelaxedCondiiton, RelaxedModifierProps } from "../types.js";
 
 type ValidateConditionProps = {
-  modifiers?: RecastThemeProps["modifiers"];
-  condition: RecastConditionalProps;
+  modifiers?: RelaxedModifierProps;
+  condition: RelaxedCondiiton;
   defaults?: string[];
 };
 
@@ -13,11 +13,7 @@ type ValidateConditionProps = {
  * @param defaults - The default values to validate.
  * @returns A boolean indicating whether all specified conditional modifier keys match.
  */
-export const validateConditionalModifiers = ({
-  condition,
-  modifiers,
-  defaults,
-}: ValidateConditionProps) => {
+export const validateConditionalModifiers = ({ condition, modifiers, defaults }: ValidateConditionProps) => {
   // Always return true if modifier conditions are empty
   if (!condition.modifiers?.length) {
     return true;

@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { Steps } from "nextra/components";
 
-# VS Code Setup
+# Recast Tailwind Support
+
+## VS Code Setup
 
 To get [Tailwind CSS](https://tailwindcss.com/) intellisense working for Recast
 inside of [VS Code](https://code.visualstudio.com/), please follow the steps
@@ -32,7 +34,7 @@ project:
 You should now have Tailwind CSS intellisense working inside of your Recast
 components.
 
-<div className="overflow-hidden rounded-lg mt-8">
+<div className="mt-8 overflow-hidden rounded-lg">
   <Image
     src="https://raw.githubusercontent.com/reactivepixels/recast/main/packages/docs/public/images/tailwind-css-vscode-intellisense.png"
     alt="Tailwind CSS VS Code Intellisense"
@@ -42,3 +44,18 @@ components.
 </div>
 
 </Steps>
+
+## Prettier Tailwind Sort Plugin
+
+Recast will also work with other Tailwind CSS utilities including:
+[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss).
+Inside your `.prettierrc` file you can add the following configuration:
+
+```tsx copy
+{
+  "tailwindFunctions": ["recast"]
+}
+```
+
+More information is available here:
+[Prettier Plugin Tailwind CSS](https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-function-calls)
