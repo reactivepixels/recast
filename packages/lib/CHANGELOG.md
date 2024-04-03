@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.0.0
+
+### Major Changes
+
+- c329ff5: Complete Recast API rewrite
+
 ## 3.1.5
 
 ### Patch Changes
