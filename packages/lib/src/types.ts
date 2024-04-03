@@ -17,7 +17,6 @@ export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string 
 /*
  * Strongly typed Recast generic types
  */
-
 export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
 export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
 export type ExtractVariantProps<V> = V extends object
@@ -26,25 +25,34 @@ export type ExtractVariantProps<V> = V extends object
     }
   : never;
 
-export type RecastProps<T> =
-  Leaves<T> extends Nullish
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      any // TODO: Could be improved if we can do a check for `Nullish` type on `RecastStyles` generic type
-    : {
-        rcx?: Leaves<T>;
-      };
+export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
 
 export type RecastStyles<V, M, P> = {
-  /** Default values for variants and modifiers */
+  /**
+   * Default values for variants and modifiers. Defaults will only be applied
+   * if the variant or modifier is not provided.
+   * {@link https://reactivepixels.github.io/recast/theming#set-some-defaults | See docs}.
+   *
+   * @example
+   * ```ts
+   * defaults: {
+   *  variants: { variant: "primary", size: "md" },
+   * }
+   * ```
+   */
   defaults?: {
-    /** Variants stuff */
     variants?: Omit<{ [K in keyof V]?: keyof V[K] }, MaybeVariants<V>>;
-    /** Modifier stuff */
     modifiers?: (keyof M)[];
   };
+
   /**
-   * Base style properties
-   * These will be applied.
+   * Base styles for component. These will always be applied.
+   * {@link https://reactivepixels.github.io/recast/theming#add-base-styles | See docs}.
+   *
+   * @example
+   * ```ts
+   * { base: "bg-blue-500 rounded-md" }
+   * ```
    */
   base?: keyof NonNullable<Leaves<P>> extends Nullish
     ? string | string[]
@@ -55,7 +63,21 @@ export type RecastStyles<V, M, P> = {
             [K in keyof NonNullable<Leaves<P>>]: string | string[];
           };
 
-  /** Yadda yadda */
+  /**
+   * Variants can be used to create distinct variations for a component.
+   * {@link https://reactivepixels.github.io/recast/theming#add-variants | See docs}.
+   *
+   * @example
+   * ```ts
+   * variants: {
+   *  size: {
+   *    sm: "text-sm",
+   *    md: "text-md",
+   *    lg: "text-lg"
+   *  }
+   * }
+   * ```
+   */
   variants?: {
     [K in keyof V]: Record<
       keyof V[K],
@@ -70,6 +92,20 @@ export type RecastStyles<V, M, P> = {
     >;
   };
 
+  /**
+   * Modifiers are variations of a component that can be "mixed-in"
+   * and combined with other modifiers and all variants.
+   * {@link https://reactivepixels.github.io/recast/theming#add-modifiers | See docs}.
+   *
+   * @example
+   * ```ts
+   * modifiers: {
+   *  block: "w-full",
+   *  floating: "shadow-lg",
+   *  pill: "rounded-full px-8",
+   * }
+   * ```
+   */
   modifiers?: {
     [K in keyof M]: keyof NonNullable<Leaves<P>> extends Nullish
       ? string | string[]
@@ -81,6 +117,21 @@ export type RecastStyles<V, M, P> = {
             };
   };
 
+  /**
+   * Conditonals are a way to define conditional styles that will only be applied if certain rules are met.
+   * {@link https://reactivepixels.github.io/recast/theming#add-conditional-styles | See docs}.
+   *
+   * @example
+   * ```ts
+   * conditionals: [
+   *  {
+   *    variants: { size: "lg" },
+   *    modifiers: ["floating"],
+   *    className: "border-4 border-blue-500 text-white",
+   *  },
+   * ]
+   * ```
+   */
   conditionals?: {
     variants?: V extends object
       ? {
