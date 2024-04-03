@@ -88,7 +88,7 @@ export type RecastStyles<V, M, P> = {
         }
       : never;
     modifiers?: keyof M | (keyof M)[];
-    classNames: keyof NonNullable<Leaves<P>> extends Nullish
+    className: keyof NonNullable<Leaves<P>> extends Nullish
       ? string | string[]
       :
           | string
@@ -116,11 +116,11 @@ export type RelaxedBase = string | string[] | Record<string, string | string[]>;
 export type RelaxedCondiiton = {
   variants?: Record<string, string | string[]>;
   modifiers?: string | string[];
-  classNames: string | string[] | Record<string, string | string[]>;
+  className: string | string[] | Record<string, string | string[]>;
 };
 
 export type RelaxedRecastStyleProps = {
-  classNames: string;
+  className: string;
   rcx: ClassNameRecord;
 };
 

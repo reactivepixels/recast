@@ -9,8 +9,8 @@ export const getBaseClasses = ({ styles = {} }: Props) => {
   if (!styles.base) return RECAST_STYLE_PROPS;
 
   if (typeof styles.base === "string" || Array.isArray(styles.base)) {
-    return { classNames: styles.base, rcx: {} };
+    return { className: styles.base, rcx: {} };
   }
 
-  return { classNames: "", rcx: styles.base };
+  return { className: "", rcx: styles.base };
 };

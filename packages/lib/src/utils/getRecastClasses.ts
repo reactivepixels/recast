@@ -36,10 +36,10 @@ export function getRecastClasses({ styles, variants, modifiers }: RecastThemePro
     conditionalClasses,
   ].reduce((acc, curr) => {
     return {
-      classNames: mergeStringClassNames(acc.classNames, curr.classNames),
+      className: mergeStringClassNames(acc.className, curr.className),
       rcx: mergeObjectClassNames(acc.rcx, curr.rcx),
     };
   }, RECAST_STYLE_PROPS);
 
-  return { classNames: result.classNames, rcx: result.rcx } as RelaxedRecastStyleProps;
+  return { className: result.className, rcx: result.rcx } as RelaxedRecastStyleProps;
 }

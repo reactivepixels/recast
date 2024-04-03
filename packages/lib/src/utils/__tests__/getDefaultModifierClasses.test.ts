@@ -28,7 +28,7 @@ describe("getDefaultModifierClasses", () => {
   it("should correctly apply default modifiers", () => {
     const classes = getDefaultModifierClasses({ styles, modifiers });
     expect(classes).toEqual({
-      classNames: "",
+      className: "",
       rcx: {
         root: "modifier1-classes modifier2-classes",
       },
@@ -39,7 +39,7 @@ describe("getDefaultModifierClasses", () => {
     styles.defaults = { modifiers: ["modifier1"] };
     const classes = getDefaultModifierClasses({ styles, modifiers });
     expect(classes).toEqual({
-      classNames: "",
+      className: "",
       rcx: {
         root: "modifier1-classes",
       },
@@ -50,24 +50,24 @@ describe("getDefaultModifierClasses", () => {
     styles.defaults = { modifiers: ["modifier2"] };
     modifiers = ["modifier2"];
     const classes = getDefaultModifierClasses({ styles, modifiers });
-    expect(classes).toEqual({ classNames: "", rcx: {} }); // No default modifier applied
+    expect(classes).toEqual({ className: "", rcx: {} }); // No default modifier applied
   });
 
   it("should handle undefined theme modifiers object", () => {
     styles.modifiers = undefined;
     const classes = getDefaultModifierClasses({ styles, modifiers });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined default modifiers object", () => {
     styles.defaults = undefined;
     const classes = getDefaultModifierClasses({ styles, modifiers });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined modifiers array", () => {
     modifiers = undefined;
     const classes = getDefaultModifierClasses({ styles, modifiers });
-    expect(classes).toEqual({ classNames: "", rcx: { root: "modifier1-classes modifier2-classes" } });
+    expect(classes).toEqual({ className: "", rcx: { root: "modifier1-classes modifier2-classes" } });
   });
 });

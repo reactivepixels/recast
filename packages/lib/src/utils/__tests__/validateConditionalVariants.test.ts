@@ -7,7 +7,7 @@ describe("validateConditionalVariants", () => {
 
     const condition = {
       // Variant conditons are missing
-      classNames: {
+      className: {
         root: "!bg-green-500",
       },
     };
@@ -27,7 +27,7 @@ describe("validateConditionalVariants", () => {
 
     const condition = {
       variants: {}, // This is all that matters
-      classNames: {
+      className: {
         root: "!bg-green-500",
       },
     };
@@ -47,7 +47,7 @@ describe("validateConditionalVariants", () => {
 
     const condition = {
       variants: { intent: "default" }, // Variant conditions match above as a string
-      classNames: {
+      className: {
         root: "!bg-green-500",
       },
     };
@@ -67,7 +67,7 @@ describe("validateConditionalVariants", () => {
 
     const condition = {
       variants: { intent: "default" }, // Variant conditions match above as a string
-      classNames: {
+      className: {
         root: "!bg-green-500",
       },
     };
@@ -87,7 +87,7 @@ describe("validateConditionalVariants", () => {
 
     const condition = {
       variants: { intent: ["default", "outline"] }, // Variant conditions match defaults above
-      classNames: {
+      className: {
         root: "!bg-green-500",
       },
     };
@@ -107,7 +107,7 @@ describe("validateConditionalVariants", () => {
 
     const condition = {
       variants: { intent: ["default", "outline"] }, // Variant conditions match above
-      classNames: {
+      className: {
         root: "!bg-green-500",
       },
     };

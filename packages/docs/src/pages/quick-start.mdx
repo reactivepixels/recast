@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 # Get started with Recast
 
 The following guide is intended as a very brief overview of how to get up and
-running quickly with Recast. For a more indepth breakdown of how Recast works,
-jump to the [In-Depth Guide](/in-depth).
+running quickly with Recast.
 
 ## 1. Installation
 
@@ -21,7 +20,7 @@ pnpm install @rpxl/recast
 The below example is a very basic button component primitive that we will use
 later on to define a theme layer with. This component is not tied to Recast in
 any way, with the one exception being complex structure components that we will
-discuss in the [In-Depth Guide](/in-depth).
+discuss in the [Advanced Usage](/advanced-usage) section.
 
 ```tsx copy showLineNumbers filename="components/primitives/button.tsx"
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
@@ -33,6 +32,10 @@ export const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
 );
 ```
 
+> **Note**: the above example is just a React component, there is no reason this
+> could not be used independently of Recast. Recast is simply syntactic sugar
+> that can be used to cleanly define a theme layer for the component.
+
 ## 2. Add a Theme
 
 Here we import the component primitive we created in the previous step and wrap
@@ -43,7 +46,7 @@ props that can be applied to a component.
 import { recast } from "@rpxl/recast";
 import { ButtonPrimitive } from "@/components/primitives/button";
 
-export const Button = ButtonPrimitive.recast({
+export const Button = recast(ButtonPrimitive, {
   defaults: {
     variants: { variant: "primary", size: "md" },
   },
@@ -74,7 +77,7 @@ export const Button = ButtonPrimitive.recast({
       ],
       outline: [
         "text-gray-900",
-        "bg-white border",
+        "border bg-white",
         "border-gray-300",
         "dark:bg-gray-800",
         "dark:text-white",
@@ -85,7 +88,7 @@ export const Button = ButtonPrimitive.recast({
     },
     size: {
       sm: "px-3 py-2 text-sm",
-      md: "px-5 py-2.5 text-md",
+      md: "text-md px-5 py-2.5",
       lg: "px-8 py-3.5 text-lg",
     },
   },

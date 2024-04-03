@@ -24,7 +24,7 @@ describe("getModifierClasses", () => {
   it("should correctly generates classes based on theme and modifiers", () => {
     const classes = getModifierClasses({ styles, modifiers });
     expect(classes).toEqual({
-      classNames: "",
+      className: "",
       rcx: {
         root: "modifier1-classes modifier2-classes",
       },
@@ -34,12 +34,12 @@ describe("getModifierClasses", () => {
   it("should handle undefined modifiers array", () => {
     modifiers = undefined;
     const classes = getModifierClasses({ styles, modifiers });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined theme modifiers object", () => {
     styles.modifiers = undefined;
     const classes = getModifierClasses({ styles, modifiers });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 });

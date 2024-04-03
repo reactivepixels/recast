@@ -1,0 +1,287 @@
+import { Steps } from "nextra/components";
+import { Tabs } from "nextra/components";
+import { Button } from "@/components/ui/button-demo";
+import { ComponentPreview } from "@/components/ui/component-preview";
+import { Callout } from "nextra/components";
+
+# Theming with Recast
+
+The theme layer is where the visual presentation of the component is defined. It
+ensures that our styles are entirely decoupled from the component primitive,
+maximizing reuse. The following guide will detail the creation of a theme layer
+for a component primitive and elucidate the individual properties at our
+disposal to fulfill any design requirements.
+
+> All examples below use [Tailwind CSS](https://tailwindcss.com/). If you are
+> using Tailwind CSS, check out our section on
+> [setting up Tailwind CSS with Recast](/tailwind-css).
+
+### Create a Themed Component
+
+Once you have a component primitive, you can create a themed component by
+importing the primitive and calling the `recast{:tsx}` method and passing any
+React component. This is all that is required to start using a Recast component
+in your project.
+
+```tsx copy showLineNumbers filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {});
+```
+
+Of course this is a very basic example and will only render a button with no
+styling. Let's build from this foundation and step through the process of
+creating a beautifully themed button.
+
+<Steps>
+### Add Base Styles
+
+The `base` property is where you define the base styles for your component. Base
+styles will **always** be applied to your component. Depending on your component
+primitives theme API you will have access to one or more handles to apply your
+base styles to (see [Advanced Usage](/advanced-usage)). For example, our button
+component primitive only has one element, so therefore all our styles will be
+defined directly to the `base` key.
+
+```tsx copy showLineNumbers {5-21} filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {
+  base: [
+    "inline-flex",
+    "items-center",
+    "justify-center",
+    "whitespace-nowrap",
+    "rounded-md",
+    "text-sm",
+    "font-medium",
+    "ring-offset-background",
+    "transition-colors",
+    "focus-visible:outline-none",
+    "focus-visible:ring-2",
+    "focus-visible:ring-ring",
+    "focus-visible:ring-offset-2",
+    "disabled:pointer-events-none",
+    "disabled:opacity-50",
+  ],
+  /* ... */
+});
+```
+
+<Callout type="info" emoji="ℹ️">
+  **Note** that the classes can be defined as a string or an array of strings.
+  This is completely optional but intended to improve readability and
+  maintainability of long class lists.
+</Callout>
+
+### Add Variants
+
+The best way to describe variants is to think of them as distinct variations of
+a component. Some common examples for a button component might be: "size" and
+"intent". The "size" would define the size of the button e.g. small, medium,
+large, and the "intent" would define the intention of the button e.g. success,
+danger etc. With Recast it is possible to define any number of variants which
+will start to form your button theme API.
+
+```tsx copy showLineNumbers {6-17} filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {
+  /* ... */
+  variants: {
+    size: {
+      sm: "px-3 py-2 text-sm",
+      md: "text-md px-5 py-2.5",
+      lg: "px-8 py-3.5 text-lg",
+    },
+    primary:
+      "bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl",
+    secondary:
+      "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l",
+    outline: "border border-gray-300 bg-white text-gray-900 ",
+  },
+  /* ... */
+});
+```
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <ComponentPreview>
+      <Button variant="primary" size="md">Primary</Button>
+    </ComponentPreview>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx /variant="primary"/ /size="md"/ 
+    import { Button } from "@/components/ui/button"
+    
+    export function ButtonDemo() {
+      return (
+        <Button variant="primary" size="md">Primary</Button>
+      )
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+<Callout type="info" emoji="ℹ️">
+  It's important to note that any variants defined in your theme API will
+  benefit from autocompletion and type checking, leveraging the power of
+  TypeScript, assuming your editor supports these features.
+</Callout>
+
+### Add Modifiers
+
+Modifiers are a powerful feature of Recast that work like boolean properties.
+Modifiers are variations of a component that can be "mixed-in" and combined with
+other modifiers and all variants. Some common examples for a button might
+include "floating" for an elevated button presentation and "block" for a
+full-width button.
+
+```tsx copy showLineNumbers {6-10} filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {
+  /* ... */
+  modifiers: {
+    block: "w-full",
+    floating: "shadow-lg",
+    pill: "rounded-full px-8",
+  },
+  /* ... */
+});
+```
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <ComponentPreview>
+      <Button variant="outline" size="md" floating block>Primary</Button>
+    </ComponentPreview>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx  /floating/ /block/
+    import { Button } from "@/components/ui/button"
+    
+    export function ButtonDemo() {
+      return (
+        <Button variant="outline" size="md" floating block>Primary</Button>
+      )
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+<Callout type="info" emoji="ℹ️">
+  As a general rule of thumb, a component variation should only be defined as a
+  modifier if it can be combined with other variants and modifiers. For
+  instance, representing button sizes as modifiers would not be advisable, as
+  combining "sm," "md," and "lg" will not yield a deterministic result.
+</Callout>
+
+### Add Conditional Styles
+
+Conditonals are a way to define conditional styles that will only be applied if
+certain rules are met. For example, you may want to apply a certain style only
+if the button `size === "lg"` and the `floating` modifier is enabled.
+
+```tsx copy showLineNumbers {6-12} filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {
+  /* ... */
+  conditionals: [
+    {
+      variants: { size: "lg" },
+      modifiers: ["floating"],
+      className: "border-4 border-blue-500 text-white",
+    },
+  ],
+  /* ... */
+});
+```
+
+<Callout type="info" emoji="ℹ️">
+  The `conditionals` property will take an array of conditions to validate
+  independently. This means that you can define multiple conditions that will be
+  applied in array order.
+</Callout>
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <ComponentPreview>
+      <Button variant="secondary" size="lg" floating>Primary</Button>
+    </ComponentPreview>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx  /size="lg"/ /floating/
+    import { Button } from "@/components/ui/button"
+    
+    export function ButtonDemo() {
+      return (
+        <Button variant="secondary" size="lg" floating>Primary</Button>
+      )
+    }
+    ```
+  </Tabs.Tab>
+
+</Tabs>
+
+To take this one step further you can match combinations of variant values and
+modifiers to meet a condition.
+
+```tsx copy showLineNumbers {12,18} filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {
+  /* ... */
+  conditionals: [
+    {
+      /**
+       * The following `variants` condition requires that the `size` is set to `lg`
+       * and the `variant` is set to `primary` or `secondary`.
+       */
+      variants: { size: "lg", variant: ["primary", "secondary"] },
+
+      /**
+       * The following `modifiers` condition requires
+       * that the `floating` and `block` modifiers are enabled.
+       */
+      modifiers: ["floating", "block"],
+      className: "border-4 border-blue-500 text-white",
+    },
+  ],
+  /* ... */
+});
+```
+
+### Set Some Defaults
+
+Finally, we can set some default values for our component. This is useful to
+reduce the amount of props that need to be passed to the component for common
+component configuration. For example, we can set the `variant` to `primary` and
+the `size` to `md` by default.
+
+```tsx copy showLineNumbers {6-8} filename="components/ui/button.ts"
+import { recast } from "rpxl/recast";
+import ButtonPrimitive from "@/components/primitives/button";
+
+export const Button = recast(ButtonPrimitive, {
+  /* ... */
+  defaults: {
+    variants: { variant: "primary", size: "md" },
+  },
+  /* ... */
+});
+```
+
+<Callout type="info" emoji="🎉">
+  Congratulations! You should now be armed with the essentials to go off and
+  start building your own component library using Recast.
+</Callout>
+
+</Steps>

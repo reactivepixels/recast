@@ -19,9 +19,9 @@ export const getVariantClasses = ({ styles = {}, variants = {} }: Props) => {
     }
 
     if (typeof variantStyles === "string" || Array.isArray(variantStyles)) {
-      return { classNames: mergeStringClassNames(acc.classNames, variantStyles), rcx: acc.rcx };
+      return { className: mergeStringClassNames(acc.className, variantStyles), rcx: acc.rcx };
     }
 
-    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, variantStyles) };
+    return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, variantStyles) };
   }, RECAST_STYLE_PROPS);
 };

@@ -64,6 +64,6 @@ export const Button = recast(ButtonPrimitive, {
     },
   },
   modifiers: {
-    pill: "rounded-full px-8",
+    pill: "!rounded-full px-8",
   },
 });

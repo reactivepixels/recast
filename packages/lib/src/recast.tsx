@@ -48,15 +48,15 @@ export function recast<
       // to avoid passing them to the underlying component
       const propsWithoutModifiersAndVariants = omit([...modifierKeys, ...variantKeys, "className"] as string[], props);
 
-      const { classNames, rcx } = getRecastClasses({
+      const { className, rcx } = getRecastClasses({
         styles,
         variants: variantProps,
         modifiers: modifierProps,
       } as RecastClasses);
 
       const mergedClassNames = mergeFn
-        ? mergeFn(classNames, props.className)
-        : classNames.concat(" ", props.className || "");
+        ? mergeFn(className, props.className)
+        : className.concat(" ", props.className || "");
 
       return (
         <Component ref={ref} className={mergedClassNames} rcx={rcx} {...(propsWithoutModifiersAndVariants as P)} />

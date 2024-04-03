@@ -6,7 +6,7 @@ describe("getConditionalClasses", () => {
 
     const result = getConditionalClasses({ styles });
 
-    expect(result).toEqual({ classNames: "", rcx: {} });
+    expect(result).toEqual({ className: "", rcx: {} });
   });
 
   it("should return empty object if conditons are not met", () => {
@@ -15,7 +15,7 @@ describe("getConditionalClasses", () => {
       conditionals: [
         {
           modifiers: "block", // Modifier conditions match defaults above as a string
-          classNames: {
+          className: {
             root: "!bg-green-500",
           },
         },
@@ -24,7 +24,7 @@ describe("getConditionalClasses", () => {
 
     const result = getConditionalClasses({ styles, modifiers });
 
-    expect(result).toEqual({ classNames: "", rcx: {} });
+    expect(result).toEqual({ className: "", rcx: {} });
   });
 
   it("should return correct classes if conditons are met", () => {
@@ -33,7 +33,7 @@ describe("getConditionalClasses", () => {
       conditionals: [
         {
           modifiers: "block", // Modifier conditions match defaults above as a string
-          classNames: {
+          className: {
             root: "!bg-green-500",
           },
         },
@@ -42,6 +42,6 @@ describe("getConditionalClasses", () => {
 
     const result = getConditionalClasses({ styles, modifiers });
 
-    expect(result).toEqual({ classNames: "", rcx: { root: "!bg-green-500" } });
+    expect(result).toEqual({ className: "", rcx: { root: "!bg-green-500" } });
   });
 });

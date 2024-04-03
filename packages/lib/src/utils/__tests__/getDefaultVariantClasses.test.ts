@@ -36,7 +36,7 @@ describe("getDefaultVariantClasses", () => {
   it("should correctly apply default variants", () => {
     const classes = getDefaultVariantClasses({ styles, variants });
     expect(classes).toEqual({
-      classNames: "",
+      className: "",
       rcx: { root: "variant1Value1-classes variant2Value1-classes" },
     });
   });
@@ -45,7 +45,7 @@ describe("getDefaultVariantClasses", () => {
     variants = { variant1: "variant1Value2" };
     const classes = getDefaultVariantClasses({ styles, variants });
     expect(classes).toEqual({
-      classNames: "",
+      className: "",
       rcx: { root: "variant2Value1-classes" },
     });
   });
@@ -53,26 +53,26 @@ describe("getDefaultVariantClasses", () => {
   it("should not apply a default variant if already specified", () => {
     variants = { variant1: "variant1Value1", variant2: "variant2Value1" };
     const classes = getDefaultVariantClasses({ styles, variants });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined theme variants object", () => {
     styles.variants = undefined;
     const classes = getDefaultVariantClasses({ styles, variants });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined default variants object", () => {
     styles.defaults = undefined;
     const classes = getDefaultVariantClasses({ styles, variants });
-    expect(classes).toEqual({ classNames: "", rcx: {} });
+    expect(classes).toEqual({ className: "", rcx: {} });
   });
 
   it("should handle undefined variants object", () => {
     variants = undefined;
     const classes = getDefaultVariantClasses({ styles, variants });
     expect(classes).toEqual({
-      classNames: "",
+      className: "",
       rcx: {
         root: "variant1Value1-classes variant2Value1-classes",
       },

@@ -19,9 +19,9 @@ export const getModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
     }
 
     if (typeof modifierStyles === "string" || Array.isArray(modifierStyles)) {
-      return { classNames: mergeStringClassNames(acc.classNames, modifierStyles), rcx: acc.rcx };
+      return { className: mergeStringClassNames(acc.className, modifierStyles), rcx: acc.rcx };
     }
 
-    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, modifierStyles) };
+    return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, modifierStyles) };
   }, RECAST_STYLE_PROPS);
 };

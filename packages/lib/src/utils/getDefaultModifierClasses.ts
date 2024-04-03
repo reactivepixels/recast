@@ -21,9 +21,9 @@ export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props
     }
 
     if (typeof defaultModifierStyles === "string" || Array.isArray(defaultModifierStyles)) {
-      return { classNames: mergeStringClassNames(acc.classNames, defaultModifierStyles), rcx: acc.rcx };
+      return { className: mergeStringClassNames(acc.className, defaultModifierStyles), rcx: acc.rcx };
     }
 
-    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, defaultModifierStyles) };
+    return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, defaultModifierStyles) };
   }, RECAST_STYLE_PROPS);
 };

@@ -23,9 +23,9 @@ export const getDefaultVariantClasses = ({ styles = {}, variants = {} }: Props) 
     }
 
     if (typeof defaultVariantStyles === "string" || Array.isArray(defaultVariantStyles)) {
-      return { classNames: mergeStringClassNames(acc.classNames, defaultVariantStyles), rcx: acc.rcx };
+      return { className: mergeStringClassNames(acc.className, defaultVariantStyles), rcx: acc.rcx };
     }
 
-    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, defaultVariantStyles) };
+    return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, defaultVariantStyles) };
   }, RECAST_STYLE_PROPS);
 };

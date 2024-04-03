@@ -67,7 +67,7 @@ export const Button = recast(ButtonPrimitive, {
     {
       variants: { size: "lg" },
       modifiers: ["floating"],
-      classNames: "border-4 border-blue-500 text-white",
+      className: "border-4 border-blue-500 text-white",
     },
   ],
 });

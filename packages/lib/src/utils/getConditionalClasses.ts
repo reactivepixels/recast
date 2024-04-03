@@ -30,12 +30,11 @@ export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = 
 
     // Only merge conditional classes if all conditions are met
     if (hasConditionalVariants && hasConditionalModifiers) {
-      // return mergeObjectClassNames(acc, condition.classNames);
-      if (typeof condition.classNames === "string" || Array.isArray(condition.classNames)) {
-        return { classNames: mergeStringClassNames(acc.classNames, condition.classNames), rcx: acc.rcx };
+      if (typeof condition.className === "string" || Array.isArray(condition.className)) {
+        return { className: mergeStringClassNames(acc.className, condition.className), rcx: acc.rcx };
       }
 
-      return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, condition.classNames) };
+      return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, condition.className) };
     }
 
     return acc;

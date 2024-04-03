@@ -5,11 +5,7 @@
   },
   "index": "Overview",
   "quick-start": "Quick Start",
-  "in-depth": "In-Depth Guide",
-  "-- Advanced": {
-    "type": "separator",
-    "title": "Advanced"
-  },
-  "tailwind-css": "Tailwind CSS",
-  "advanced-use-cases": "Advanced Use Cases"
+  "theming": "Theming",
+  "advanced-usage": "Advanced Usage",
+  "tailwind-css": "Tailwind CSS"
 }
