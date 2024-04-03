@@ -1,5 +1,16 @@
 # @rpxl/recast-primitives
 
+## 3.0.0
+
+### Major Changes
+
+- c329ff5: Complete Recast API rewrite
+
+### Patch Changes
+
+- Updated dependencies [c329ff5]
+  - @rpxl/recast@4.0.0
+
 ## 2.2.5
 
 ### Patch Changes
