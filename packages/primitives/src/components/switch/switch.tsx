@@ -1,43 +1,29 @@
-import * as RadixSwitchPrimitive from "@radix-ui/react-switch";
-
-import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
 import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<"root" | "thumb">;
+import * as RadixSwitchPrimitive from "@radix-ui/react-switch";
+import { RecastWithClassNameProps } from "@rpxl/recast";
+import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<typeof RadixSwitchPrimitive.Root> &
-  RecastThemeProps;
+  RecastWithClassNameProps<{
+    root: string;
+    thumb: string;
+  }>;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixSwitchPrimitive.Root>,
   Props
->(({ themekey, className, variants, modifiers, ...props }, ref) => {
-  const classes = getRecastClasses<BaseTheme>({
-    themekey,
-    variants,
-    modifiers,
-  });
-
+>(({ className, rcx, ...props }, ref) => {
   return (
     <RadixSwitchPrimitive.Root
       ref={ref}
-      className={cn(classes?.root, className)}
+      className={cn(rcx?.root, className)}
       {...props}
     >
-      <RadixSwitchPrimitive.Thumb className={classes?.thumb} />
+      <RadixSwitchPrimitive.Thumb className={rcx?.thumb} />
     </RadixSwitchPrimitive.Root>
   );
 });
 
 Component.displayName = "SwitchPrimitive";
 
-export const SwitchPrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const SwitchPrimitive = Component;

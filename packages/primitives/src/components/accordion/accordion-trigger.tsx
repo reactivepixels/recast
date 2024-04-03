@@ -1,56 +1,36 @@
-import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
-import * as React from "react";
-
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
-import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<"root" | "trigger" | "icon">;
+import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { RecastWithClassNameProps } from "@rpxl/recast";
+import * as React from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Trigger
-> &
-  RecastThemeProps & {
-    icon: React.ComponentType;
-  };
+> & {
+  icon: React.ComponentType;
+} & RecastWithClassNameProps<{
+    root: string;
+    trigger: string;
+    icon: string;
+  }>;
 
 const Component = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Trigger>,
   Props
 >(
   (
-    {
-      themekey,
-      className,
-      variants,
-      modifiers,
-      children,
-      icon: Icon = ChevronDownIcon,
-      ...props
-    },
+    { className, children, icon: Icon = ChevronDownIcon, rcx, ...props },
     ref,
   ) => {
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
     return (
-      <RadixAccordionPrimitive.Header className={cn(classes?.root, className)}>
+      <RadixAccordionPrimitive.Header className={cn(rcx?.root, className)}>
         <RadixAccordionPrimitive.Trigger
           ref={ref}
-          className={cn(classes?.trigger, className)}
+          className={rcx?.trigger}
           {...props}
         >
           {children}
-          <Icon className={cn(classes?.icon, className)} />
+          <Icon className={rcx?.icon} />
         </RadixAccordionPrimitive.Trigger>
       </RadixAccordionPrimitive.Header>
     );
@@ -59,7 +39,4 @@ const Component = React.forwardRef<
 
 Component.displayName = "AccordionTriggerPrimitive";
 
-export const AccordionTriggerPrimitive = createRecastComponent<
-  Props,
-  BaseTheme
->(Component);
+export const AccordionTriggerPrimitive = Component;

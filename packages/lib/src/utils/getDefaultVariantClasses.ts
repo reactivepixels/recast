@@ -1,37 +1,31 @@
-import { mergeClassNames } from "./mergeClassNames.js";
-import { RecastThemeProps, Styles } from "../types.js";
+import { RelaxedStyles, RelaxedVariantProps } from "../types.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
+
+import { RECAST_STYLE_PROPS } from "../constants.js";
 
 type Props = {
-  // Entire component theme
-  theme: Styles;
-  // Component variant props
-  variants?: RecastThemeProps["variants"];
+  styles: RelaxedStyles;
+  variants?: RelaxedVariantProps;
 };
 
-export const getDefaultVariantClasses = ({
-  theme = {},
-  variants = {},
-}: Props) => {
-  if (!theme.variants) return {};
+export const getDefaultVariantClasses = ({ styles = {}, variants = {} }: Props) => {
+  const defaultVariants = styles.defaults?.variants;
 
-  if (theme.defaults?.variants) {
-    const defaultVariantKeys = Object.keys(theme.defaults.variants);
+  if (!defaultVariants) return RECAST_STYLE_PROPS;
 
-    const defaultVariantClasses = defaultVariantKeys.reduce((acc, curr) => {
-      if (!variants?.[curr]) {
-        if (theme.defaults?.variants?.[curr]) {
-          return mergeClassNames(
-            acc,
-            theme.variants?.[curr][theme.defaults.variants[curr]],
-          );
-        }
-      }
+  return Object.keys(defaultVariants).reduce((acc, variant) => {
+    const defaultVariantStyles = styles.variants?.[variant]?.[defaultVariants[variant]];
 
+    // Don't continue if no default variant styles are
+    // found or a variant has been set
+    if (!defaultVariantStyles || variants[variant]) {
       return acc;
-    }, {});
+    }
 
-    return defaultVariantClasses;
-  }
+    if (typeof defaultVariantStyles === "string" || Array.isArray(defaultVariantStyles)) {
+      return { classNames: mergeStringClassNames(acc.classNames, defaultVariantStyles), rcx: acc.rcx };
+    }
 
-  return {};
+    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, defaultVariantStyles) };
+  }, RECAST_STYLE_PROPS);
 };

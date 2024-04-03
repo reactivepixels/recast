@@ -12,17 +12,17 @@ as the latter can be inferred simply by the orientation prop.
 
 ```tsx copy showLineNumbers filename="components/ui/scroll-area.tsx"
 "use client";
-
+import { recast } from "@rpxl/recast";
 import { ScrollAreaPrimitive } from "@/components/primitives/scroll-area.tsx";
 import { forwardRef } from "react";
 
-const BaseScrollArea = ScrollAreaPrimitive.recast({
+const BaseScrollArea = recast(ScrollAreaPrimitive, {
   // This matches the default for the primitives built in `orientation` prop
   defaults: { variants: { variant: "vertical" } },
   base: {
     root: "relative overflow-hidden",
     viewport: "h-full w-full rounded-[inherit]",
-    thumb: "relative flex-1 rounded-full bg-border",
+    thumb: "bg-border relative flex-1 rounded-full",
     scrollbar: "flex touch-none select-none transition-colors",
   },
   variants: {

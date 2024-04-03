@@ -1,9 +1,7 @@
 import { omit } from "../omit.js";
 
 describe("omit", () => {
-  let originalObject:
-    | Record<string, string | string[] | Record<string, string | string[]>>
-    | undefined;
+  let originalObject: Record<string, string | string[] | Record<string, string | string[]>> | undefined;
 
   beforeEach(() => {
     originalObject = {

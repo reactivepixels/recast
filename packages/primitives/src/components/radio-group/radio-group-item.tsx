@@ -1,64 +1,36 @@
-import * as RadixRadioGroupPrimitive from "@radix-ui/react-radio-group";
-
-import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
-import { CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<"root" | "indicator" | "icon">;
+import { CheckIcon } from "@radix-ui/react-icons";
+import * as RadixRadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { RecastWithClassNameProps } from "@rpxl/recast";
+import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixRadioGroupPrimitive.Item
-> &
-  RecastThemeProps & {
-    icon: React.ComponentType;
-  };
+> & {
+  icon: React.ComponentType;
+} & RecastWithClassNameProps<{
+    root: string;
+    indicator: string;
+    icon: string;
+  }>;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixRadioGroupPrimitive.Item>,
   Props
->(
-  (
-    {
-      themekey,
-      className,
-      variants,
-      modifiers,
-      icon: Icon = CheckIcon,
-      ...props
-    },
-    ref,
-  ) => {
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
-    return (
-      <RadixRadioGroupPrimitive.Item
-        className={cn(classes?.root, className)}
-        ref={ref}
-        {...props}
-      >
-        <RadixRadioGroupPrimitive.Indicator
-          className={cn(classes?.indicator, className)}
-        >
-          <Icon className={cn(classes?.icon, className)} />
-        </RadixRadioGroupPrimitive.Indicator>
-      </RadixRadioGroupPrimitive.Item>
-    );
-  },
-);
+>(({ className, icon: Icon = CheckIcon, rcx, ...props }, ref) => {
+  return (
+    <RadixRadioGroupPrimitive.Item
+      className={cn(rcx?.root, className)}
+      ref={ref}
+      {...props}
+    >
+      <RadixRadioGroupPrimitive.Indicator className={rcx?.indicator}>
+        <Icon className={rcx?.icon} />
+      </RadixRadioGroupPrimitive.Indicator>
+    </RadixRadioGroupPrimitive.Item>
+  );
+});
 
 Component.displayName = "RadioGroupItemPrimitive";
 
-export const RadioGroupItemPrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const RadioGroupItemPrimitive = Component;

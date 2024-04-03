@@ -1,33 +1,29 @@
-import { mergeClassNames } from "./mergeClassNames.js";
-import { RecastThemeProps, Styles } from "../types.js";
+import { RelaxedModifierProps, RelaxedStyles } from "../types.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
+
+import { RECAST_STYLE_PROPS } from "../constants.js";
 
 type Props = {
-  // Entire component theme
-  theme: Styles;
-  // Component variant props
-  modifiers?: RecastThemeProps["modifiers"];
+  styles: RelaxedStyles;
+  modifiers?: RelaxedModifierProps;
 };
 
-export const getDefaultModifierClasses = ({
-  theme = {},
-  modifiers = [],
-}: Props) => {
-  if (!theme.modifiers) return {};
+export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
+  const defaultModifiers = styles.defaults?.modifiers;
 
-  if (theme.defaults?.modifiers) {
-    const defaultModifierClasses = theme.defaults.modifiers.reduce(
-      (acc, curr) => {
-        if (!modifiers.includes(curr)) {
-          return mergeClassNames(acc, theme.modifiers?.[curr]);
-        }
+  if (!defaultModifiers) return RECAST_STYLE_PROPS;
 
-        return acc;
-      },
-      {},
-    );
+  return defaultModifiers.reduce((acc, modifier) => {
+    const defaultModifierStyles = styles.modifiers?.[modifier];
 
-    return defaultModifierClasses;
-  }
+    if (!defaultModifierStyles || modifiers.includes(modifier)) {
+      return acc;
+    }
 
-  return {};
+    if (typeof defaultModifierStyles === "string" || Array.isArray(defaultModifierStyles)) {
+      return { classNames: mergeStringClassNames(acc.classNames, defaultModifierStyles), rcx: acc.rcx };
+    }
+
+    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, defaultModifierStyles) };
+  }, RECAST_STYLE_PROPS);
 };

@@ -1,40 +1,28 @@
-import * as RadixProgressPrimitive from "@radix-ui/react-progress";
-
-import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
 import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<"root" | "indicator">;
+import * as RadixProgressPrimitive from "@radix-ui/react-progress";
+import { RecastWithClassNameProps } from "@rpxl/recast";
+import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixProgressPrimitive.Root
 > &
-  RecastThemeProps;
+  RecastWithClassNameProps<{
+    root: string;
+    indicator: string;
+  }>;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixProgressPrimitive.Root>,
   Props
->(({ themekey, className, variants, modifiers, value, ...props }, ref) => {
-  const classes = getRecastClasses<BaseTheme>({
-    themekey,
-    variants,
-    modifiers,
-  });
-
+>(({ className, rcx, value, ...props }, ref) => {
   return (
     <RadixProgressPrimitive.Root
-      className={cn(classes?.root, className)}
+      className={cn(rcx?.root, className)}
       ref={ref}
       {...props}
     >
       <RadixProgressPrimitive.Indicator
-        className={cn(classes?.indicator, className)}
+        className={rcx?.indicator}
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </RadixProgressPrimitive.Root>
@@ -43,6 +31,4 @@ const Component = forwardRef<
 
 Component.displayName = "ProgressPrimitive";
 
-export const ProgressPrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const ProgressPrimitive = Component;

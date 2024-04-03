@@ -1,77 +1,49 @@
-import * as RadixScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-
-import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
 import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<
-  "root" | "viewport" | "thumb" | "corner" | "scrollbar"
->;
+import * as RadixScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+import { RecastWithClassNameProps } from "@rpxl/recast";
+import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixScrollAreaPrimitive.Root
 > &
-  RecastThemeProps &
   Pick<
     React.ComponentPropsWithoutRef<
       typeof RadixScrollAreaPrimitive.ScrollAreaScrollbar
     >,
     "orientation"
-  >;
+  > &
+  RecastWithClassNameProps<{
+    root: string;
+    viewport: string;
+    thumb: string;
+    corner: string;
+    scrollbar: string;
+  }>;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixScrollAreaPrimitive.Root>,
   Props
->(
-  (
-    {
-      themekey,
-      className,
-      variants,
-      modifiers,
-      children,
-      orientation = "vertical",
-      ...props
-    },
-    ref,
-  ) => {
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
-    return (
-      <RadixScrollAreaPrimitive.Root
-        ref={ref}
-        className={cn(classes?.root, className)}
-        {...props}
+>(({ className, rcx, children, orientation = "vertical", ...props }, ref) => {
+  return (
+    <RadixScrollAreaPrimitive.Root
+      ref={ref}
+      className={cn(rcx?.root, className)}
+      {...props}
+    >
+      <RadixScrollAreaPrimitive.Viewport className={rcx?.viewport}>
+        {children}
+      </RadixScrollAreaPrimitive.Viewport>
+      <RadixScrollAreaPrimitive.ScrollAreaScrollbar
+        orientation={orientation}
+        className={rcx?.scrollbar}
       >
-        <RadixScrollAreaPrimitive.Viewport className={classes?.viewport}>
-          {children}
-        </RadixScrollAreaPrimitive.Viewport>
-        <RadixScrollAreaPrimitive.ScrollAreaScrollbar
-          orientation={orientation}
-          className={classes?.scrollbar}
-        >
-          <RadixScrollAreaPrimitive.ScrollAreaThumb
-            className={classes?.thumb}
-          />
-        </RadixScrollAreaPrimitive.ScrollAreaScrollbar>
-        <RadixScrollAreaPrimitive.Corner className={classes?.corner} />
-      </RadixScrollAreaPrimitive.Root>
-    );
-  },
-);
+        <RadixScrollAreaPrimitive.ScrollAreaThumb className={rcx?.thumb} />
+      </RadixScrollAreaPrimitive.ScrollAreaScrollbar>
+      <RadixScrollAreaPrimitive.Corner className={rcx?.corner} />
+    </RadixScrollAreaPrimitive.Root>
+  );
+});
 
 Component.displayName = "ScrollAreaPrimitive";
 
-export const ScrollAreaPrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const ScrollAreaPrimitive = Component;

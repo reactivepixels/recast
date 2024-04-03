@@ -1,39 +1,18 @@
-import React, { HTMLAttributes, forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
 import { Slot } from "@radix-ui/react-slot";
-import { cn } from "../../utils/cn.js";
+import React, { HTMLAttributes, forwardRef } from "react";
 
-type BaseTheme = RecastBaseTheme<"root">;
-
-type Props = HTMLAttributes<HTMLHeadingElement> &
-  RecastThemeProps & {
-    asChild?: boolean;
-  };
+type Props = HTMLAttributes<HTMLHeadingElement> & {
+  asChild?: boolean;
+};
 
 const Component = forwardRef<HTMLHeadingElement, Props>(
-  ({ themekey, className, variants, modifiers, asChild, ...props }, ref) => {
+  ({ asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "h3";
 
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
-    return (
-      <Comp className={cn(classes?.root, className)} ref={ref} {...props} />
-    );
+    return <Comp ref={ref} {...props} />;
   },
 );
 
 Component.displayName = "CardTitlePrimitive";
 
-export const CardTitlePrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const CardTitlePrimitive = Component;

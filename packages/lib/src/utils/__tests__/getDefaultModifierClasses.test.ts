@@ -1,12 +1,13 @@
+import { RelaxedModifierProps, RelaxedStyles } from "types.js";
+
 import { getDefaultModifierClasses } from "../getDefaultModifierClasses.js";
-import { Styles, RecastThemeProps } from "../../types.js";
 
 describe("getDefaultModifierClasses", () => {
-  let theme: Styles;
-  let modifiers: RecastThemeProps["modifiers"];
+  let styles: RelaxedStyles;
+  let modifiers: RelaxedModifierProps | undefined;
 
   beforeEach(() => {
-    theme = {
+    styles = {
       defaults: {
         modifiers: ["modifier1", "modifier2"],
       },
@@ -20,47 +21,53 @@ describe("getDefaultModifierClasses", () => {
   });
 
   it("returns an object", () => {
-    const classes = getDefaultModifierClasses({ theme, modifiers });
+    const classes = getDefaultModifierClasses({ styles, modifiers });
     expect(typeof classes).toBe("object");
   });
 
   it("should correctly apply default modifiers", () => {
-    const classes = getDefaultModifierClasses({ theme, modifiers });
+    const classes = getDefaultModifierClasses({ styles, modifiers });
     expect(classes).toEqual({
-      root: "modifier1-classes modifier2-classes",
+      classNames: "",
+      rcx: {
+        root: "modifier1-classes modifier2-classes",
+      },
     });
   });
 
   it("should correctly apply default modifiers", () => {
-    theme.defaults = { modifiers: ["modifier1"] };
-    const classes = getDefaultModifierClasses({ theme, modifiers });
+    styles.defaults = { modifiers: ["modifier1"] };
+    const classes = getDefaultModifierClasses({ styles, modifiers });
     expect(classes).toEqual({
-      root: "modifier1-classes",
+      classNames: "",
+      rcx: {
+        root: "modifier1-classes",
+      },
     });
   });
 
   it("should not apply a default modifier if already specified", () => {
-    theme.defaults = { modifiers: ["modifier2"] };
+    styles.defaults = { modifiers: ["modifier2"] };
     modifiers = ["modifier2"];
-    const classes = getDefaultModifierClasses({ theme, modifiers });
-    expect(classes).toEqual({}); // No default modifier applied
+    const classes = getDefaultModifierClasses({ styles, modifiers });
+    expect(classes).toEqual({ classNames: "", rcx: {} }); // No default modifier applied
   });
 
   it("should handle undefined theme modifiers object", () => {
-    theme.modifiers = undefined;
-    const classes = getDefaultModifierClasses({ theme, modifiers });
-    expect(classes).toEqual({});
+    styles.modifiers = undefined;
+    const classes = getDefaultModifierClasses({ styles, modifiers });
+    expect(classes).toEqual({ classNames: "", rcx: {} });
   });
 
   it("should handle undefined default modifiers object", () => {
-    theme.defaults = undefined;
-    const classes = getDefaultModifierClasses({ theme, modifiers });
-    expect(classes).toEqual({});
+    styles.defaults = undefined;
+    const classes = getDefaultModifierClasses({ styles, modifiers });
+    expect(classes).toEqual({ classNames: "", rcx: {} });
   });
 
   it("should handle undefined modifiers array", () => {
     modifiers = undefined;
-    const classes = getDefaultModifierClasses({ theme, modifiers });
-    expect(classes).toEqual({ root: "modifier1-classes modifier2-classes" });
+    const classes = getDefaultModifierClasses({ styles, modifiers });
+    expect(classes).toEqual({ classNames: "", rcx: { root: "modifier1-classes modifier2-classes" } });
   });
 });

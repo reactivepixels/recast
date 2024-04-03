@@ -7,6 +7,8 @@
   // Tailwind intellisense for Recast theme object
   "tailwindCSS.experimental.classRegex": [
     ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+    // ["recast\\((([^()]*|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.printWidth": 80
 }

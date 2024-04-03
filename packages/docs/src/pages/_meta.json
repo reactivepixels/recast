@@ -6,7 +6,6 @@
   "index": "Overview",
   "quick-start": "Quick Start",
   "in-depth": "In-Depth Guide",
-  "api-reference": "API Reference",
   "-- Advanced": {
     "type": "separator",
     "title": "Advanced"

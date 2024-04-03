@@ -1,45 +1,45 @@
-import { mergeClassNames } from "./mergeClassNames.js";
-import { RecastThemeProps, Styles } from "../types.js";
-import { validateConditionalVariants } from "./validateConditionalVariants.js";
+import { RelaxedModifierProps, RelaxedStyles, RelaxedVariantProps } from "../types.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
+
+import { RECAST_STYLE_PROPS } from "../constants.js";
 import { validateConditionalModifiers } from "./validateConditionalModifiers.js";
+import { validateConditionalVariants } from "./validateConditionalVariants.js";
 
 type Props = {
-  // Entire component theme
-  theme: Styles;
-  // Component variant props
-  variants?: RecastThemeProps["variants"];
-  // Component modifier props
-  modifiers?: RecastThemeProps["modifiers"];
+  styles: RelaxedStyles;
+  variants?: RelaxedVariantProps;
+  modifiers?: RelaxedModifierProps;
 };
 
-export const getConditionalClasses = ({
-  theme = {},
-  variants = {},
-  modifiers = [],
-}: Props) => {
+export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = [] }: Props) => {
   // If no conditions to check then get out of here
-  if (!theme.conditionals) return {};
+  if (!styles.conditionals) return RECAST_STYLE_PROPS;
 
-  const conditionalClasses = theme.conditionals.reduce((acc, curr) => {
+  const conditionalClasses = styles.conditionals.reduce((acc, condition) => {
     const hasConditionalVariants = validateConditionalVariants({
-      condition: curr,
+      condition,
       variants,
-      defaults: theme.defaults?.variants,
+      defaults: styles.defaults?.variants,
     });
 
     const hasConditionalModifiers = validateConditionalModifiers({
-      condition: curr,
+      condition,
       modifiers,
-      defaults: theme.defaults?.modifiers,
+      defaults: styles.defaults?.modifiers,
     });
 
     // Only merge conditional classes if all conditions are met
     if (hasConditionalVariants && hasConditionalModifiers) {
-      return mergeClassNames(acc, curr.classes);
+      // return mergeObjectClassNames(acc, condition.classNames);
+      if (typeof condition.classNames === "string" || Array.isArray(condition.classNames)) {
+        return { classNames: mergeStringClassNames(acc.classNames, condition.classNames), rcx: acc.rcx };
+      }
+
+      return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, condition.classNames) };
     }
 
     return acc;
-  }, {});
+  }, RECAST_STYLE_PROPS);
 
   return conditionalClasses;
 };

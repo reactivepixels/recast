@@ -1,21 +1,27 @@
-import { mergeClassNames } from "./mergeClassNames.js";
-import { RecastThemeProps, Styles } from "../types.js";
+import { RelaxedStyles, RelaxedVariantProps } from "../types.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
+
+import { RECAST_STYLE_PROPS } from "../constants.js";
 
 type Props = {
-  // Entire component theme
-  theme: Styles;
-  // Component variant props
-  variants?: RecastThemeProps["variants"];
+  styles: RelaxedStyles;
+  variants?: RelaxedVariantProps;
 };
 
-export const getVariantClasses = ({ theme = {}, variants = {} }: Props) => {
-  if (!theme.variants) return {};
+export const getVariantClasses = ({ styles = {}, variants = {} }: Props) => {
+  if (!styles.variants) return RECAST_STYLE_PROPS;
 
-  const variantKeys = Object.keys(variants);
+  return Object.keys(variants).reduce((acc, variant) => {
+    const variantStyles = styles.variants?.[variant][variants[variant]];
 
-  const variantClasses = variantKeys.reduce((acc, curr) => {
-    return mergeClassNames(acc, theme.variants?.[curr][variants[curr]]);
-  }, {});
+    if (!variantStyles) {
+      return acc;
+    }
 
-  return variantClasses;
+    if (typeof variantStyles === "string" || Array.isArray(variantStyles)) {
+      return { classNames: mergeStringClassNames(acc.classNames, variantStyles), rcx: acc.rcx };
+    }
+
+    return { classNames: acc.classNames, rcx: mergeObjectClassNames(acc.rcx, variantStyles) };
+  }, RECAST_STYLE_PROPS);
 };

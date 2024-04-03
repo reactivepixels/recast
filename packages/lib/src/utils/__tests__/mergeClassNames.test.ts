@@ -1,16 +1,12 @@
-import {
-  mergeClassNames,
-  mergeValues,
-  normalizeValue,
-} from "../mergeClassNames.js";
+import { mergeObjectClassNames, mergeStringClassNames, normalizeValue } from "../mergeClassNames.js";
 
-describe("mergeClassNames", () => {
+describe("mergeObjectClassNames", () => {
   it("should combine two string values from duplicate key", () => {
     const target = { root: "hello" };
     const source = { root: "world" };
     const expectedResult = { root: "hello world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should combine two arrays with duplicate keys", () => {
@@ -18,7 +14,7 @@ describe("mergeClassNames", () => {
     const source = { root: ["world"] };
     const expectedResult = { root: "hello world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should combine mixed array/string from duplicate key", () => {
@@ -26,7 +22,7 @@ describe("mergeClassNames", () => {
     const source = { root: "world" };
     const expectedResult = { root: "hello world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should combine mixed string/array from duplicate key", () => {
@@ -34,7 +30,7 @@ describe("mergeClassNames", () => {
     const source = { root: ["world"] };
     const expectedResult = { root: "hello world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty target value", () => {
@@ -42,7 +38,7 @@ describe("mergeClassNames", () => {
     const source = { root: ["world"] };
     const expectedResult = { root: "world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty source value", () => {
@@ -50,7 +46,7 @@ describe("mergeClassNames", () => {
     const source = { root: "" };
     const expectedResult = { root: "hello" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty target and source value", () => {
@@ -58,7 +54,7 @@ describe("mergeClassNames", () => {
     const source = { root: "" };
     const expectedResult = { root: "" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an `undefined` target value", () => {
@@ -66,7 +62,7 @@ describe("mergeClassNames", () => {
     const source = { root: ["world"] };
     const expectedResult = { root: "world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an `undefined` source value", () => {
@@ -74,7 +70,7 @@ describe("mergeClassNames", () => {
     const source = undefined;
     const expectedResult = { root: "hello" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty string target value", () => {
@@ -82,7 +78,7 @@ describe("mergeClassNames", () => {
     const source = { root: ["world"] };
     const expectedResult = { root: "world" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty string source value", () => {
@@ -90,7 +86,7 @@ describe("mergeClassNames", () => {
     const source = { root: "" };
     const expectedResult = { root: "hello" };
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an `undefined` target and source value", () => {
@@ -98,17 +94,17 @@ describe("mergeClassNames", () => {
     const source = undefined;
     const expectedResult = {};
 
-    expect(mergeClassNames(target, source)).toEqual(expectedResult);
+    expect(mergeObjectClassNames(target, source)).toEqual(expectedResult);
   });
 });
 
-describe("mergeValues", () => {
+describe("mergeStringClassNames", () => {
   it("should combine two string values", () => {
     const target = "hello";
     const source = "world";
     const expectedResult = "hello world";
 
-    expect(mergeValues(target, source)).toEqual(expectedResult);
+    expect(mergeStringClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty source value correctly", () => {
@@ -116,7 +112,7 @@ describe("mergeValues", () => {
     const source = "";
     const expectedResult = "hello";
 
-    expect(mergeValues(target, source)).toEqual(expectedResult);
+    expect(mergeStringClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle an empty target value correctly", () => {
@@ -124,7 +120,7 @@ describe("mergeValues", () => {
     const source = "world";
     const expectedResult = "world";
 
-    expect(mergeValues(target, source)).toEqual(expectedResult);
+    expect(mergeStringClassNames(target, source)).toEqual(expectedResult);
   });
 
   it("should handle two empty values correctly correctly", () => {
@@ -132,7 +128,7 @@ describe("mergeValues", () => {
     const source = "";
     const expectedResult = "";
 
-    expect(mergeValues(target, source)).toEqual(expectedResult);
+    expect(mergeStringClassNames(target, source)).toEqual(expectedResult);
   });
 });
 

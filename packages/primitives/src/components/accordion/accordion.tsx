@@ -1,43 +1,17 @@
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
 import * as React from "react";
 
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
-import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<"root">;
-
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Root
-> &
-  RecastThemeProps;
+>;
 
 const Component = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Root>,
   Props
->(({ themekey, className, variants, modifiers, ...props }, ref) => {
-  const classes = getRecastClasses<BaseTheme>({
-    themekey,
-    variants,
-    modifiers,
-  });
-
-  return (
-    <RadixAccordionPrimitive.Root
-      ref={ref}
-      className={cn(classes?.root, className)}
-      {...props}
-    />
-  );
+>(({ ...props }, ref) => {
+  return <RadixAccordionPrimitive.Root ref={ref} {...props} />;
 });
 
 Component.displayName = "AccordionPrimitive";
 
-export const AccordionPrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const AccordionPrimitive = Component;

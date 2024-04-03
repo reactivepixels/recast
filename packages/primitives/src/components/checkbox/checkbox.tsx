@@ -1,64 +1,36 @@
-import * as RadixCheckboxPrimitive from "@radix-ui/react-checkbox";
-
-import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
-
-import { CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "../../utils/cn.js";
-
-type BaseTheme = RecastBaseTheme<"root" | "indicator" | "icon">;
+import * as RadixCheckboxPrimitive from "@radix-ui/react-checkbox";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { RecastWithClassNameProps } from "@rpxl/recast";
+import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixCheckboxPrimitive.Root
-> &
-  RecastThemeProps & {
-    icon: React.ComponentType;
-  };
+> & {
+  icon: React.ComponentType;
+} & RecastWithClassNameProps<{
+    root?: string;
+    indicator?: string;
+    icon?: string;
+  }>;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixCheckboxPrimitive.Root>,
   Props
->(
-  (
-    {
-      themekey,
-      className,
-      variants,
-      modifiers,
-      icon: Icon = CheckIcon,
-      ...props
-    },
-    ref,
-  ) => {
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
-    return (
-      <RadixCheckboxPrimitive.Root
-        className={cn(classes?.root, className)}
-        ref={ref}
-        {...props}
-      >
-        <RadixCheckboxPrimitive.Indicator
-          className={cn(classes?.indicator, className)}
-        >
-          <Icon className={cn(classes?.icon, className)} />
-        </RadixCheckboxPrimitive.Indicator>
-      </RadixCheckboxPrimitive.Root>
-    );
-  },
-);
+>(({ className, rcx, icon: Icon = CheckIcon, ...props }, ref) => {
+  return (
+    <RadixCheckboxPrimitive.Root
+      className={cn(rcx?.root, className)}
+      ref={ref}
+      {...props}
+    >
+      <RadixCheckboxPrimitive.Indicator className={rcx?.indicator}>
+        <Icon className={rcx?.indicator} />
+      </RadixCheckboxPrimitive.Indicator>
+    </RadixCheckboxPrimitive.Root>
+  );
+});
 
 Component.displayName = "CheckboxPrimitive";
 
-export const CheckboxPrimitive = createRecastComponent<Props, BaseTheme>(
-  Component,
-);
+export const CheckboxPrimitive = Component;

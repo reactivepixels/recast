@@ -1,8 +1,8 @@
-import { RecastConditionalProps, RecastThemeProps } from "../types.js";
+import { RelaxedCondiiton, RelaxedVariantProps } from "../types.js";
 
 type ValidateConditionProps = {
-  variants?: RecastThemeProps["variants"];
-  condition: RecastConditionalProps;
+  variants?: RelaxedVariantProps;
+  condition: RelaxedCondiiton;
   defaults?: Record<string, string>;
 };
 
@@ -13,11 +13,7 @@ type ValidateConditionProps = {
  * @param defaults - The default variant keys.
  * @returns A boolean indicating whether all specified conditional variant keys match.
  */
-export const validateConditionalVariants = ({
-  condition,
-  variants,
-  defaults,
-}: ValidateConditionProps) => {
+export const validateConditionalVariants = ({ condition, variants, defaults }: ValidateConditionProps) => {
   const conditionalVariantKeys = Object.keys(condition.variants || {});
 
   // Always return true if variant conditions are empty

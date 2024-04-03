@@ -1,4 +1,4 @@
-import { validateConditionalModifiers } from "../validateConditionalModifiers";
+import { validateConditionalModifiers } from "../validateConditionalModifiers.js";
 
 describe("validateConditionalModifiers", () => {
   it("should return `true` if there are no modifier conditions", () => {
@@ -7,7 +7,7 @@ describe("validateConditionalModifiers", () => {
 
     const condition = {
       modifiers: [], // This is all that matters
-      classes: {
+      classNames: {
         root: "!bg-green-500",
       },
     };
@@ -27,7 +27,7 @@ describe("validateConditionalModifiers", () => {
 
     const condition = {
       modifiers: "floating", // Modifier conditions match above as a string
-      classes: {
+      classNames: {
         root: "!bg-green-500",
       },
     };
@@ -47,7 +47,7 @@ describe("validateConditionalModifiers", () => {
 
     const condition = {
       modifiers: "block", // Modifier conditions match defaults above as a string
-      classes: {
+      classNames: {
         root: "!bg-green-500",
       },
     };
@@ -67,7 +67,7 @@ describe("validateConditionalModifiers", () => {
 
     const condition = {
       modifiers: defaults, // Modifier conditions match defaults above
-      classes: {
+      classNames: {
         root: "!bg-green-500",
       },
     };
@@ -87,7 +87,7 @@ describe("validateConditionalModifiers", () => {
 
     const condition = {
       modifiers, // Modifier conditions match above
-      classes: {
+      classNames: {
         root: "!bg-green-500",
       },
     };

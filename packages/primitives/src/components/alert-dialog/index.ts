@@ -5,5 +5,7 @@ export * from "./alert-dialog-content.js";
 export * from "./alert-dialog-description.js";
 export * from "./alert-dialog-footer.js";
 export * from "./alert-dialog-header.js";
+export * from "./alert-dialog-overlay.js";
+export * from "./alert-dialog-portal.js";
 export * from "./alert-dialog-title.js";
 export * from "./alert-dialog-trigger.js";

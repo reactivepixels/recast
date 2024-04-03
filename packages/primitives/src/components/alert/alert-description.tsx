@@ -1,34 +1,11 @@
 import React, { forwardRef } from "react";
-import {
-  RecastBaseTheme,
-  RecastThemeProps,
-  createRecastComponent,
-  getRecastClasses,
-} from "@rpxl/recast";
 
-import { cn } from "../../utils/cn.js";
+type Props = React.HTMLAttributes<HTMLDivElement>;
 
-type BaseTheme = RecastBaseTheme<"root">;
-
-type Props = React.HTMLAttributes<HTMLDivElement> & RecastThemeProps;
-
-const Component = forwardRef<HTMLDivElement, Props>(
-  ({ themekey, className, variants, modifiers, ...props }, ref) => {
-    const classes = getRecastClasses<BaseTheme>({
-      themekey,
-      variants,
-      modifiers,
-    });
-
-    return (
-      <div ref={ref} className={cn(classes?.root, className)} {...props} />
-    );
-  },
-);
+const Component = forwardRef<HTMLDivElement, Props>(({ ...props }, ref) => {
+  return <div ref={ref} {...props} />;
+});
 
 Component.displayName = "AlertDescriptionPrimitive";
 
-export const AlertDescriptionPrimitive = createRecastComponent<
-  Props,
-  BaseTheme
->(Component);
+export const AlertDescriptionPrimitive = Component;
