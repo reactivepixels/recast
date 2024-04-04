@@ -1,5 +1,14 @@
 # docs
 
+## 1.0.2
+
+### Patch Changes
+
+- 63cc987: Remove unused rcx props from Recast components
+- Updated dependencies [63cc987]
+  - @rpxl/recast@4.0.2
+  - @rpxl/recast-primitives@3.0.2
+
 ## 1.0.1
 
 ### Patch Changes
