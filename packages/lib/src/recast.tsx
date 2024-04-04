@@ -59,7 +59,12 @@ export function recast<
         : className.concat(" ", props.className || "");
 
       return (
-        <Component ref={ref} className={mergedClassNames} rcx={rcx} {...(propsWithoutModifiersAndVariants as P)} />
+        <Component
+          ref={ref}
+          className={mergedClassNames}
+          {...(Object.keys(rcx).length > 0 && { rcx })}
+          {...(propsWithoutModifiersAndVariants as P)}
+        />
       );
     },
   );
