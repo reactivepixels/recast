@@ -25,12 +25,12 @@ const Masthead = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
         {...props}
       >
         <Stack size="lg">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans w-fit text-transparent bg-gradient-to-r from-[#6644D5] via-t-[#F34D7E] to-[#F34D7E] bg-clip-text">
+          <h1 className="via-t-[#F34D7E] w-fit bg-gradient-to-r from-[#6644D5] to-[#F34D7E] bg-clip-text font-sans text-3xl font-bold text-transparent md:text-4xl lg:text-5xl">
             Build components <span className="text-white">once</span>.<br /> Use{" "}
             <span className="text-white">everywhere</span>.
           </h1>
 
-          <p className="text-base max-w-lg text-white">
+          <p className="max-w-lg text-base text-white">
             <span className="text-[#F34D7E]">Recast</span> is a fundamentally
             different approach to building React components to maximise
             reusability.
