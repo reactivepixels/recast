@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import recastTailwindPlugin from "./lib/recast-tailwind-plugin";
 
 const config: Config = {
   content: [
@@ -7,13 +8,8 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-    },
+    extend: {},
   },
-  plugins: [],
+  plugins: [recastTailwindPlugin],
 };
 export default config;
