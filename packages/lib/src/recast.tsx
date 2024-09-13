@@ -24,50 +24,57 @@ export function recast<
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
 >(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "rcx">>, mergeFn?: MergeFn) {
-  type Props = Omit<P, "variants" | "modifiers" | "rcx"> &
+  type RecastComponentProps = Omit<P, "variants" | "modifiers" | "rcx"> &
     ExtractModifierProps<typeof styles.modifiers> &
     ExtractVariantProps<typeof styles.variants>;
 
-  const ComponentWithThemedProps = forwardRef<React.ElementRef<typeof Component>, Props & { className?: string }>(
-    ({ ...props }, ref) => {
-      // Get keys of all modifier props and construct a `modifier` array
-      const modifierKeys = Object.keys(styles.modifiers || {}) as [keyof M];
-      const modifierProps = modifierKeys.filter((x) => !!props[x]);
+  type Props = RecastComponentProps & { className?: string };
 
-      // Get keys of all variant props and construct a `variants` object
-      const variantKeys = Object.keys(styles.variants || {}) as [keyof V];
-      const variantProps = variantKeys.reduce(
-        (acc, curr) => ({
-          ...acc,
-          ...(props[curr] ? { [curr]: props[curr] } : {}),
-        }),
-        {} as { [K in keyof V]?: keyof V[K] },
-      );
+  const ComponentWithThemedProps = forwardRef<React.ElementRef<typeof Component>, Props>((props, ref) => {
+    const { className, ...restProps } = props as Props;
 
-      // Remove `modifierKeys` and `variantKeys` from props
-      // to avoid passing them to the underlying component
-      const propsWithoutModifiersAndVariants = omit([...modifierKeys, ...variantKeys, "className"] as string[], props);
+    // Get keys of all modifier props and construct a `modifier` array
+    const modifierKeys = Object.keys(styles.modifiers || {});
+    const modifierProps = modifierKeys.filter((x) => {
+      const key = x as keyof typeof restProps;
+      return key in restProps && restProps[key] !== undefined && restProps[key] !== false;
+    });
 
-      const { className, rcx } = getRecastClasses({
-        styles,
-        variants: variantProps,
-        modifiers: modifierProps,
-      } as RecastClasses);
+    // Get keys of all variant props and construct a `variants` object
+    const variantKeys = Object.keys(styles.variants || {});
+    const variantProps = variantKeys.reduce<{ [key: string]: unknown }>((acc, curr) => {
+      if (curr in restProps && restProps[curr as keyof typeof restProps] !== undefined) {
+        acc[curr] = restProps[curr as keyof typeof restProps];
+      }
+      return acc;
+    }, {});
 
-      const mergedClassNames = mergeFn
-        ? mergeFn(className, props.className)
-        : className.concat(" ", props.className || "");
+    // Remove `modifierKeys` and `variantKeys` from props
+    // to avoid passing them to the underlying component
+    const propsWithoutModifiersAndVariants = omit(
+      [...modifierKeys, ...variantKeys, "className"] as string[],
+      restProps,
+    );
 
-      return (
-        <Component
-          ref={ref}
-          className={mergedClassNames}
-          {...(Object.keys(rcx).length > 0 && { rcx })}
-          {...(propsWithoutModifiersAndVariants as P)}
-        />
-      );
-    },
-  );
+    const { className: recastClassesClassName, rcx } = getRecastClasses({
+      styles,
+      variants: variantProps,
+      modifiers: modifierProps,
+    } as RecastClasses);
+
+    const mergedClassNames = mergeFn
+      ? mergeFn(recastClassesClassName, className)
+      : recastClassesClassName.concat(" ", className || "");
+
+    return (
+      <Component
+        ref={ref}
+        className={mergedClassNames}
+        {...(Object.keys(rcx).length > 0 && { rcx })}
+        {...(propsWithoutModifiersAndVariants as P)}
+      />
+    );
+  });
 
   ComponentWithThemedProps.displayName = Component.displayName;
 

@@ -23,7 +23,7 @@ const withNextra = require("nextra")({
 });
 
 module.exports = withNextra({
-  output: isProduction ? "export" : null,
+  output: isProduction ? "export" : "standalone",
   basePath: isProduction ? "/recast" : "",
   reactStrictMode: true,
   images: {
