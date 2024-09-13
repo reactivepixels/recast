@@ -1,5 +1,13 @@
 # @rpxl/recast-primitives
 
+## 3.0.3
+
+### Patch Changes
+
+- 2c103f7: Update all package dependencies
+- Updated dependencies [2c103f7]
+  - @rpxl/recast@4.0.3
+
 ## 3.0.2
 
 ### Patch Changes
