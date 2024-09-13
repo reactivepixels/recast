@@ -15,6 +15,6 @@
     "test:ci": "pnpm --filter @rpxl/recast run test:coverage"
   },
   "dependencies": {
-    "@changesets/cli": "^2.27.1"
+    "@changesets/cli": "^2.27.8"
   }
 }
