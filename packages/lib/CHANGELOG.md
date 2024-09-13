@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.0.3
+
+### Patch Changes
+
+- 2c103f7: Update all package dependencies
+
 ## 4.0.2
 
 ### Patch Changes
