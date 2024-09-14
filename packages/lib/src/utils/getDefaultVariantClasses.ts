@@ -1,14 +1,15 @@
 import { RelaxedStyles, RelaxedVariantProps } from "../types.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
-
 import { RECAST_STYLE_PROPS } from "../constants.js";
+import { generateResponsiveClasses } from "./generateResponsiveClasses.js";
 
 type Props = {
   styles: RelaxedStyles;
   variants?: RelaxedVariantProps;
+  breakpoints: string[]; // Add this line
 };
 
-export const getDefaultVariantClasses = ({ styles = {}, variants = {} }: Props) => {
+export const getDefaultVariantClasses = ({ styles = {}, variants = {}, breakpoints = [] }: Props) => {
   const defaultVariants = styles.defaults?.variants;
 
   if (!defaultVariants) return RECAST_STYLE_PROPS;
@@ -22,10 +23,11 @@ export const getDefaultVariantClasses = ({ styles = {}, variants = {} }: Props) 
       return acc;
     }
 
-    if (typeof defaultVariantStyles === "string" || Array.isArray(defaultVariantStyles)) {
-      return { className: mergeStringClassNames(acc.className, defaultVariantStyles), rcx: acc.rcx };
-    }
+    const responsiveClasses = generateResponsiveClasses(defaultVariantStyles, breakpoints);
 
-    return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, defaultVariantStyles) };
+    return {
+      className: mergeStringClassNames(acc.className, responsiveClasses.className),
+      rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
+    };
   }, RECAST_STYLE_PROPS);
 };

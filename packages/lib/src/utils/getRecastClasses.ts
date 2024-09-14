@@ -1,6 +1,5 @@
 import { RelaxedModifierProps, RelaxedRecastStyleProps, RelaxedStyles, RelaxedVariantProps } from "../types.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
-
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { getBaseClasses } from "./getBaseClasses.js";
 import { getConditionalClasses } from "./getConditionalClasses.js";
@@ -9,23 +8,25 @@ import { getDefaultVariantClasses } from "./getDefaultVariantClasses.js";
 import { getModifierClasses } from "./getModifierClasses.js";
 import { getVariantClasses } from "./getVariantClasses.js";
 
-type RecastThemeProps = {
+type RecastClasses = {
   styles: RelaxedStyles;
-  variants?: RelaxedVariantProps;
-  modifiers?: RelaxedModifierProps;
+  variants: RelaxedVariantProps;
+  modifiers: RelaxedModifierProps;
 };
 
 /**
  * Returns an object containing the CSS classes
  * generated from the provided styles, variants, and modifiers.
  */
-export function getRecastClasses({ styles, variants, modifiers }: RecastThemeProps) {
-  const baseClasses = getBaseClasses({ styles });
-  const variantClasses = getVariantClasses({ styles, variants });
-  const defaultVariantClasses = getDefaultVariantClasses({ styles, variants });
-  const modifierClasses = getModifierClasses({ styles, modifiers });
-  const defaultModifierClasses = getDefaultModifierClasses({ styles, modifiers });
-  const conditionalClasses = getConditionalClasses({ styles, variants, modifiers });
+export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
+  const breakpoints = styles.breakpoints || [];
+
+  const baseClasses = getBaseClasses({ styles, breakpoints });
+  const variantClasses = getVariantClasses({ styles, variants, breakpoints });
+  const defaultVariantClasses = getDefaultVariantClasses({ styles, variants, breakpoints });
+  const modifierClasses = getModifierClasses({ styles, modifiers, breakpoints });
+  const defaultModifierClasses = getDefaultModifierClasses({ styles, modifiers, breakpoints });
+  const conditionalClasses = getConditionalClasses({ styles, variants, modifiers, breakpoints });
 
   const result = [
     baseClasses,
@@ -41,5 +42,5 @@ export function getRecastClasses({ styles, variants, modifiers }: RecastThemePro
     };
   }, RECAST_STYLE_PROPS);
 
-  return { className: result.className, rcx: result.rcx } as RelaxedRecastStyleProps;
+  return { className: result.className, rcx: result.rcx };
 }

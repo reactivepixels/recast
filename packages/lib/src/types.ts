@@ -21,7 +21,7 @@ export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
 export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
 export type ExtractVariantProps<V> = V extends object
   ? {
-      [K in keyof V]?: K extends string ? keyof V[K] : never;
+      [K in keyof V]?: ResponsiveValue<K extends string ? keyof V[K] : never>;
     }
   : never;
 
@@ -148,18 +148,38 @@ export type RecastStyles<V, M, P> = {
               [K in keyof NonNullable<Leaves<P>>]: string | string[];
             };
   }[];
+
+  /**
+   * Breakpoints to generate responsive classes for.
+   * @example ['sm', 'md', 'lg']
+   */
+  breakpoints?: string[];
 };
 
 /**
  * Loosley typed for usage as arguments to different utility methods
  */
-export type RelaxedStyles = {
-  defaults?: RelaxedDefaults;
-  base?: RelaxedBase;
-  variants?: Record<string, Record<string, string | string[] | Record<string, string | string[]>>>;
-  modifiers?: Record<string, string | string[] | Record<string, string | string[]>>;
-  conditionals?: RelaxedCondiiton[];
-};
+export interface RelaxedStyles {
+  base?: string | string[] | ClassNameRecord;
+  variants?: {
+    [key: string]: {
+      [key: string]: string | string[] | ClassNameRecord;
+    };
+  };
+  modifiers?: {
+    [key: string]: string | string[] | ClassNameRecord;
+  };
+  conditionals?: Array<{
+    variants?: { [key: string]: string };
+    modifiers?: string | string[];
+    className: string | string[] | ClassNameRecord;
+  }>;
+  defaults?: {
+    variants?: { [key: string]: string };
+    modifiers?: string[];
+  };
+  breakpoints?: string[]; // Add this line
+}
 
 export type RelaxedDefaults = { variants?: Record<string, string>; modifiers?: string[] };
 export type RelaxedBase = string | string[] | Record<string, string | string[]>;
@@ -175,5 +195,7 @@ export type RelaxedRecastStyleProps = {
   rcx: ClassNameRecord;
 };
 
-export type RelaxedVariantProps = Record<string, string>;
+export type RelaxedVariantProps = { [key: string]: ResponsiveValue<string> };
 export type RelaxedModifierProps = string[];
+
+export type ResponsiveValue<T> = T | ({ [key: string]: T } & { default: T });

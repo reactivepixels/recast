@@ -1,14 +1,15 @@
 import { RelaxedModifierProps, RelaxedStyles } from "../types.js";
-import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
-
 import { RECAST_STYLE_PROPS } from "../constants.js";
+import { generateResponsiveClasses } from "./generateResponsiveClasses.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
 type Props = {
   styles: RelaxedStyles;
   modifiers?: RelaxedModifierProps;
+  breakpoints: string[];
 };
 
-export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
+export const getDefaultModifierClasses = ({ styles = {}, modifiers = [], breakpoints = [] }: Props) => {
   const defaultModifiers = styles.defaults?.modifiers;
 
   if (!defaultModifiers) return RECAST_STYLE_PROPS;
@@ -20,10 +21,11 @@ export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props
       return acc;
     }
 
-    if (typeof defaultModifierStyles === "string" || Array.isArray(defaultModifierStyles)) {
-      return { className: mergeStringClassNames(acc.className, defaultModifierStyles), rcx: acc.rcx };
-    }
+    const responsiveClasses = generateResponsiveClasses(defaultModifierStyles, breakpoints);
 
-    return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, defaultModifierStyles) };
+    return {
+      className: mergeStringClassNames(acc.className, responsiveClasses.className),
+      rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
+    };
   }, RECAST_STYLE_PROPS);
 };
