@@ -19,15 +19,15 @@ export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string 
  */
 export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
 export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
-export type ExtractVariantProps<V> = V extends object
+export type ExtractVariantProps<V, B extends string = string> = V extends object
   ? {
-      [K in keyof V]?: ResponsiveValue<K extends string ? keyof V[K] : never>;
+      [K in keyof V]?: ResponsiveValue<K extends string ? keyof V[K] : never, B>;
     }
   : never;
 
 export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
 
-export type RecastStyles<V, M, P> = {
+export type RecastStyles<V, M, P, B extends string = string> = {
   /**
    * Default values for variants and modifiers. Defaults will only be applied
    * if the variant or modifier is not provided.
@@ -153,13 +153,13 @@ export type RecastStyles<V, M, P> = {
    * Breakpoints to generate responsive classes for.
    * @example ['sm', 'md', 'lg']
    */
-  breakpoints?: string[];
+  breakpoints: B[];
 };
 
 /**
  * Loosley typed for usage as arguments to different utility methods
  */
-export interface RelaxedStyles {
+export interface RelaxedStyles<B extends string = string> {
   base?: string | string[] | ClassNameRecord;
   variants?: {
     [key: string]: {
@@ -178,7 +178,7 @@ export interface RelaxedStyles {
     variants?: { [key: string]: string };
     modifiers?: string[];
   };
-  breakpoints?: string[]; // Add this line
+  breakpoints?: B[]; // Make breakpoints optional
 }
 
 export type RelaxedDefaults = { variants?: Record<string, string>; modifiers?: string[] };
@@ -195,7 +195,10 @@ export type RelaxedRecastStyleProps = {
   rcx: ClassNameRecord;
 };
 
-export type RelaxedVariantProps = { [key: string]: ResponsiveValue<string> };
+export type RelaxedVariantProps<B extends string = string> = {
+  [key: string]: ResponsiveValue<string, B>;
+};
+
 export type RelaxedModifierProps = string[];
 
-export type ResponsiveValue<T> = T | ({ [key: string]: T } & { default: T });
+export type ResponsiveValue<T, B extends string = string> = T | { [K in B | "default"]?: T };

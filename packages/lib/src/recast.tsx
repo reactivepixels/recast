@@ -17,9 +17,10 @@ export function recast<
   P extends RecastProps<P>,
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
->(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "rcx">>, mergeFn?: MergeFn) {
-  type Props = Omit<P, keyof ExtractVariantProps<V> | keyof ExtractModifierProps<M>> &
-    ExtractVariantProps<V> &
+  B extends string = string,
+>(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "rcx">, B>, mergeFn?: MergeFn) {
+  type Props = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>> &
+    ExtractVariantProps<V, B> &
     ExtractModifierProps<M> & { className?: string };
 
   const ComponentWithThemedProps = forwardRef<React.ElementRef<typeof Component>, Props>((props, ref) => {

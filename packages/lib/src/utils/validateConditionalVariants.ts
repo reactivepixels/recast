@@ -13,7 +13,7 @@ type ValidateConditionProps = {
  * @param defaults - The default variant keys.
  * @returns A boolean indicating whether all specified conditional variant keys match.
  */
-export const validateConditionalVariants = ({ condition, variants }: ValidateConditionProps) => {
+export const validateConditionalVariants = ({ condition, variants, defaults }: ValidateConditionProps) => {
   const conditionalVariantKeys = Object.keys(condition.variants || {});
 
   if (!conditionalVariantKeys.length) {
@@ -22,20 +22,20 @@ export const validateConditionalVariants = ({ condition, variants }: ValidateCon
 
   return conditionalVariantKeys.every((key) => {
     const conditionalVariant = condition.variants?.[key];
-    const variantValue = variants?.[key];
+    const variantValue = variants?.[key] ?? defaults?.[key];
 
     if (typeof variantValue === "object" && variantValue !== null) {
       // Handle responsive variants
       return Object.entries(variantValue).some(([breakpoint, value]) => {
         if (Array.isArray(conditionalVariant)) {
-          return conditionalVariant.includes(value);
+          return value !== undefined && conditionalVariant.includes(value);
         }
         return conditionalVariant === value;
       });
     } else {
       // Handle non-responsive variants
       if (Array.isArray(conditionalVariant)) {
-        return conditionalVariant.includes(variantValue as string);
+        return variantValue !== undefined && conditionalVariant.includes(variantValue);
       }
       return conditionalVariant === variantValue;
     }

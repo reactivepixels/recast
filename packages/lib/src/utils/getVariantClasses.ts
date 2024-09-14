@@ -1,14 +1,14 @@
-import { RelaxedStyles, ResponsiveValue, ClassNameRecord } from "../types.js";
+import { RelaxedStyles, RelaxedVariantProps, ClassNameRecord } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { generateResponsiveClasses } from "./generateResponsiveClasses.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
-type Props = {
-  styles: RelaxedStyles;
-  variants: { [key: string]: ResponsiveValue<string> };
+type Props<B extends string = string> = {
+  styles: RelaxedStyles<B>;
+  variants: RelaxedVariantProps<B>;
 };
 
-export const getVariantClasses = ({ styles = {}, variants = {} }: Props) => {
+export const getVariantClasses = <B extends string = string>({ styles = {}, variants = {} }: Props<B>) => {
   if (!styles.variants) return RECAST_STYLE_PROPS;
 
   return Object.entries(variants).reduce((acc, [variantKey, variantValue]) => {
@@ -23,7 +23,7 @@ export const getVariantClasses = ({ styles = {}, variants = {} }: Props) => {
       }
     } else if (typeof variantValue === "object" && variantValue !== null) {
       const responsiveClasses = Object.entries(variantValue).reduce((innerAcc, [breakpoint, value]) => {
-        const variantStyles = styles.variants?.[variantKey]?.[value];
+        const variantStyles = styles.variants?.[variantKey]?.[value as string];
         if (variantStyles) {
           const breakpointPrefix = breakpoint === "default" ? "" : `${breakpoint}:`;
           const classes = generateResponsiveClasses(variantStyles);
