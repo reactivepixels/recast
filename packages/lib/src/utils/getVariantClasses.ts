@@ -6,7 +6,6 @@ import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.
 type Props = {
   styles: RelaxedStyles;
   variants: { [key: string]: ResponsiveValue<string> };
-  breakpoints: string[];
 };
 
 export const getVariantClasses = ({ styles = {}, variants = {} }: Props) => {

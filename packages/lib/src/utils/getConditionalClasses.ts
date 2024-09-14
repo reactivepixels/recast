@@ -9,7 +9,6 @@ type Props = {
   styles: RelaxedStyles;
   variants?: RelaxedVariantProps;
   modifiers?: RelaxedModifierProps;
-  breakpoints: string[];
 };
 
 export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = [] }: Props) => {

@@ -19,14 +19,12 @@ type RecastClasses = {
  * generated from the provided styles, variants, and modifiers.
  */
 export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
-  const breakpoints = styles.breakpoints || [];
-
   const baseClasses = getBaseClasses({ styles });
-  const variantClasses = getVariantClasses({ styles, variants, breakpoints });
-  const defaultVariantClasses = getDefaultVariantClasses({ styles, variants, breakpoints });
-  const modifierClasses = getModifierClasses({ styles, modifiers, breakpoints });
-  const defaultModifierClasses = getDefaultModifierClasses({ styles, modifiers, breakpoints });
-  const conditionalClasses = getConditionalClasses({ styles, variants, modifiers, breakpoints });
+  const variantClasses = getVariantClasses({ styles, variants });
+  const defaultVariantClasses = getDefaultVariantClasses({ styles, variants });
+  const modifierClasses = getModifierClasses({ styles, modifiers });
+  const defaultModifierClasses = getDefaultModifierClasses({ styles, modifiers });
+  const conditionalClasses = getConditionalClasses({ styles, variants, modifiers });
 
   const result = [
     baseClasses,

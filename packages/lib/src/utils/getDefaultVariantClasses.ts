@@ -6,7 +6,6 @@ import { generateResponsiveClasses } from "./generateResponsiveClasses.js";
 type Props = {
   styles: RelaxedStyles;
   variants?: RelaxedVariantProps;
-  breakpoints: string[]; // Add this line
 };
 
 export const getDefaultVariantClasses = ({ styles = {}, variants = {} }: Props) => {

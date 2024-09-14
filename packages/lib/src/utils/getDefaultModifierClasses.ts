@@ -6,7 +6,6 @@ import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.
 type Props = {
   styles: RelaxedStyles;
   modifiers?: RelaxedModifierProps;
-  breakpoints: string[];
 };
 
 export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
