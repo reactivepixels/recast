@@ -10,10 +10,8 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const Component = forwardRef<HTMLButtonElement, Props>(
-  ({ asChild = false, rcx, ...props }, ref) => {
+  ({ asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
-
-    console.log(rcx);
 
     return <Comp ref={ref} {...props} />;
   }
