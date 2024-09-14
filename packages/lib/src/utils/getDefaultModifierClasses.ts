@@ -9,7 +9,7 @@ type Props = {
   breakpoints: string[];
 };
 
-export const getDefaultModifierClasses = ({ styles = {}, modifiers = [], breakpoints = [] }: Props) => {
+export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
   const defaultModifiers = styles.defaults?.modifiers;
 
   if (!defaultModifiers) return RECAST_STYLE_PROPS;
@@ -21,7 +21,7 @@ export const getDefaultModifierClasses = ({ styles = {}, modifiers = [], breakpo
       return acc;
     }
 
-    const responsiveClasses = generateResponsiveClasses(defaultModifierStyles, breakpoints);
+    const responsiveClasses = generateResponsiveClasses(defaultModifierStyles);
 
     return {
       className: mergeStringClassNames(acc.className, responsiveClasses.className),

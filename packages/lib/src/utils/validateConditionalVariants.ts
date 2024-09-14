@@ -13,37 +13,31 @@ type ValidateConditionProps = {
  * @param defaults - The default variant keys.
  * @returns A boolean indicating whether all specified conditional variant keys match.
  */
-export const validateConditionalVariants = ({ condition, variants, defaults }: ValidateConditionProps) => {
+export const validateConditionalVariants = ({ condition, variants }: ValidateConditionProps) => {
   const conditionalVariantKeys = Object.keys(condition.variants || {});
 
-  // Always return true if variant conditions are empty
   if (!conditionalVariantKeys.length) {
     return true;
   }
 
-  // If component has all specified conditional variant keys
-  // check if each of the variant keys includes one of the specified values
-  const conditionalVariantMatches = conditionalVariantKeys.filter((x) => {
-    const conditionalVariants = condition.variants?.[x];
+  return conditionalVariantKeys.every((key) => {
+    const conditionalVariant = condition.variants?.[key];
+    const variantValue = variants?.[key];
 
-    if (Array.isArray(conditionalVariants)) {
-      // Handle multiple possible variant values if it exists
-      if (variants?.[x]) {
-        return conditionalVariants.find((j) => j === variants[x]);
-      } else {
-        // Check defaults
-        return conditionalVariants.find((j) => j === defaults?.[x]);
-      }
+    if (typeof variantValue === "object" && variantValue !== null) {
+      // Handle responsive variants
+      return Object.entries(variantValue).some(([breakpoint, value]) => {
+        if (Array.isArray(conditionalVariant)) {
+          return conditionalVariant.includes(value);
+        }
+        return conditionalVariant === value;
+      });
     } else {
-      // Handle a single possible value if variant exists
-      if (variants?.[x]) {
-        return conditionalVariants === variants[x];
-      } else {
-        // Check defaults
-        return conditionalVariants === defaults?.[x];
+      // Handle non-responsive variants
+      if (Array.isArray(conditionalVariant)) {
+        return conditionalVariant.includes(variantValue as string);
       }
+      return conditionalVariant === variantValue;
     }
   });
-
-  return conditionalVariantMatches.length === conditionalVariantKeys.length;
 };

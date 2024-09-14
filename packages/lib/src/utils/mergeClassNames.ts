@@ -20,13 +20,16 @@ export const normalizeValue = (classes?: string | string[]) => {
  * @param {string|string[]} value - The second value to merge. It can be a single value or an array of values.
  * @returns {string} The merged and normalized values.
  */
-export const mergeStringClassNames = (objValue?: string | string[], value?: string | string[]) => {
-  if (objValue && value) {
-    return `${normalizeValue(objValue)} ${normalizeValue(value)}`;
-  } else if (objValue) {
-    return normalizeValue(objValue);
-  } else if (value) {
-    return normalizeValue(value);
+export const mergeStringClassNames = (objValue?: string | string[], value?: string | string[]): string => {
+  const normalizedObjValue = normalizeValue(objValue);
+  const normalizedValue = normalizeValue(value);
+
+  if (normalizedObjValue && normalizedValue) {
+    return `${normalizedObjValue} ${normalizedValue}`.trim();
+  } else if (normalizedObjValue) {
+    return normalizedObjValue;
+  } else if (normalizedValue) {
+    return normalizedValue;
   } else {
     return "";
   }

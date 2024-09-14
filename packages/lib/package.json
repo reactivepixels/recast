@@ -47,19 +47,17 @@
     "build": "pnpm run build:esm && pnpm run build:cjs",
     "build:esm": "tsc --outDir dist/esm",
     "build:cjs": "tsc --project ./tsconfig.cjs.json --outDir dist/cjs",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:coverage:watch": "jest --coverage --watch"
+    "test": "vitest"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^14.3.1",
-    "@types/jest": "^29.5.13",
     "@types/node": "^20.16.5",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
+    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
@@ -68,13 +66,12 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.36.1",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^25.0.0",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rimraf": "^5.0.10",
-    "ts-jest": "^29.2.5",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "vitest": "^2.1.1"
   }
 }

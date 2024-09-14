@@ -21,7 +21,7 @@ type RecastClasses = {
 export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
   const breakpoints = styles.breakpoints || [];
 
-  const baseClasses = getBaseClasses({ styles, breakpoints });
+  const baseClasses = getBaseClasses({ styles });
   const variantClasses = getVariantClasses({ styles, variants, breakpoints });
   const defaultVariantClasses = getDefaultVariantClasses({ styles, variants, breakpoints });
   const modifierClasses = getModifierClasses({ styles, modifiers, breakpoints });
@@ -42,5 +42,8 @@ export function getRecastClasses({ styles, variants, modifiers }: RecastClasses)
     };
   }, RECAST_STYLE_PROPS);
 
-  return { className: result.className, rcx: result.rcx };
+  // Ensure className is always a string
+  const className = Array.isArray(result.className) ? result.className.join(" ") : result.className;
+
+  return { className, rcx: result.rcx };
 }

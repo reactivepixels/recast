@@ -12,7 +12,7 @@ type Props = {
   breakpoints: string[];
 };
 
-export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = [], breakpoints = [] }: Props) => {
+export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = [] }: Props) => {
   if (!styles.conditionals) return RECAST_STYLE_PROPS;
 
   return styles.conditionals.reduce((acc, condition) => {
@@ -29,7 +29,7 @@ export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = 
     });
 
     if (hasConditionalVariants && hasConditionalModifiers) {
-      const responsiveClasses = generateResponsiveClasses(condition.className, breakpoints);
+      const responsiveClasses = generateResponsiveClasses(condition.className);
 
       return {
         className: mergeStringClassNames(acc.className, responsiveClasses.className),

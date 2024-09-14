@@ -8,7 +8,7 @@ export default function Page() {
       </Button>
       <Button
         variant={{ default: "primary", md: "secondary" }}
-        size={{ default: "md", lg: "sm", mds: "lg" }}
+        size={{ default: "md", lg: "sm", md: "lg" }}
       >
         Sandbox
       </Button>

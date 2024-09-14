@@ -9,14 +9,14 @@ type Props = {
   breakpoints: string[];
 };
 
-export const getVariantClasses = ({ styles = {}, variants = {}, breakpoints = [] }: Props) => {
+export const getVariantClasses = ({ styles = {}, variants = {} }: Props) => {
   if (!styles.variants) return RECAST_STYLE_PROPS;
 
   return Object.entries(variants).reduce((acc, [variantKey, variantValue]) => {
     if (typeof variantValue === "string") {
       const variantStyles = styles.variants?.[variantKey]?.[variantValue];
       if (variantStyles) {
-        const responsiveClasses = generateResponsiveClasses(variantStyles, breakpoints);
+        const responsiveClasses = generateResponsiveClasses(variantStyles);
         return {
           className: mergeStringClassNames(acc.className, responsiveClasses.className),
           rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
@@ -27,7 +27,7 @@ export const getVariantClasses = ({ styles = {}, variants = {}, breakpoints = []
         const variantStyles = styles.variants?.[variantKey]?.[value];
         if (variantStyles) {
           const breakpointPrefix = breakpoint === "default" ? "" : `${breakpoint}:`;
-          const classes = generateResponsiveClasses(variantStyles, []);
+          const classes = generateResponsiveClasses(variantStyles);
           const prefixedClasses = {
             className: classes.className
               .split(" ")

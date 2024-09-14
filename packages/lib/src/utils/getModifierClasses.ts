@@ -9,7 +9,7 @@ type Props = {
   breakpoints: string[];
 };
 
-export const getModifierClasses = ({ styles = {}, modifiers = [], breakpoints = [] }: Props) => {
+export const getModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
   if (!styles.modifiers) return RECAST_STYLE_PROPS;
 
   return modifiers.reduce((acc, modifier) => {
@@ -19,7 +19,7 @@ export const getModifierClasses = ({ styles = {}, modifiers = [], breakpoints = 
       return acc;
     }
 
-    const responsiveClasses = generateResponsiveClasses(modifierStyles, breakpoints);
+    const responsiveClasses = generateResponsiveClasses(modifierStyles);
 
     return {
       className: mergeStringClassNames(acc.className, responsiveClasses.className),

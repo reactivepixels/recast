@@ -77,6 +77,33 @@ describe("getRecastClasses", () => {
     expect(result.className).toBe("border-4");
   });
 
+  it("should...", () => {
+    const styles: RelaxedStyles = {
+      base: ["flex", "items-center", "justify-center"],
+      variants: {
+        variant: {
+          primary: "bg-blue-500 text-white md:text-white",
+          secondary: ["bg-red-500", "text-white"],
+        },
+        size: {
+          sm: "text-sm",
+          md: "text-md",
+          lg: "text-lg",
+        },
+      },
+    };
+
+    const variants: RelaxedVariantProps = {
+      size: { default: "sm", md: "lg", lg: "sm" },
+      variant: { default: "primary", md: "secondary" },
+    };
+
+    const result = getRecastClasses({ styles, variants, modifiers: [] });
+    expect(result.className).toBe(
+      "flex items-center justify-center text-sm md:text-lg lg:text-sm bg-blue-500 text-white md:text-white md:bg-red-500 md:text-white",
+    );
+  });
+
   it("should combine all types of classes correctly", () => {
     const styles: RelaxedStyles = {
       base: "text-base",
@@ -102,6 +129,7 @@ describe("getRecastClasses", () => {
     const variants: RelaxedVariantProps = { size: { default: "sm", md: "lg" } };
     const modifiers: RelaxedModifierProps = ["disabled"];
     const result = getRecastClasses({ styles, variants, modifiers });
+
     expect(result.className).toBe("text-base text-sm md:text-lg opacity-50 border-4");
   });
 });
