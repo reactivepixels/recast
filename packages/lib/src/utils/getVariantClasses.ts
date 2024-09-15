@@ -24,7 +24,7 @@ export const getVariantClasses = <B extends string = string>({ styles = {}, vari
     } else if (typeof variantValue === "object" && variantValue !== null) {
       const responsiveClasses = Object.entries(variantValue).reduce((innerAcc, [breakpoint, value]) => {
         const variantStyles = styles.variants?.[variantKey]?.[value as string];
-        if (variantStyles) {
+        if (variantStyles && (styles.breakpoints?.includes(breakpoint as B) || breakpoint === "default")) {
           const breakpointPrefix = breakpoint === "default" ? "" : `${breakpoint}:`;
           const classes = generateResponsiveClasses(variantStyles);
           const prefixedClasses = {

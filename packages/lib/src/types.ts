@@ -153,7 +153,7 @@ export type RecastStyles<V, M, P, B extends string = string> = {
    * Breakpoints to generate responsive classes for.
    * @example ['sm', 'md', 'lg']
    */
-  breakpoints: B[];
+  breakpoints?: B[];
 };
 
 /**
@@ -178,7 +178,7 @@ export interface RelaxedStyles<B extends string = string> {
     variants?: { [key: string]: string };
     modifiers?: string[];
   };
-  breakpoints?: B[]; // Make breakpoints optional
+  breakpoints?: B[];
 }
 
 export type RelaxedDefaults = { variants?: Record<string, string>; modifiers?: string[] };
