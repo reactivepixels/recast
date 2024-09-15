@@ -26,7 +26,7 @@ export const validateConditionalVariants = ({ condition, variants, defaults }: V
 
     if (typeof variantValue === "object" && variantValue !== null) {
       // Handle responsive variants
-      return Object.entries(variantValue).some(([breakpoint, value]) => {
+      return Object.entries(variantValue).some(([_breakpoint, value]) => {
         if (Array.isArray(conditionalVariant)) {
           return value !== undefined && conditionalVariant.includes(value);
         }
