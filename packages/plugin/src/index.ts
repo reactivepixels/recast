@@ -177,8 +177,6 @@ export default plugin(function ({ config }) {
     });
   });
 
-  console.log("Generated safelist:", safelist);
-
   // Add the safelist to the Tailwind config
   const existingSafelist = config("safelist") || [];
   const combinedSafelist = existingSafelist.concat(safelist);

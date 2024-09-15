@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
-import recastTailwindPlugin from "./lib/recast-tailwind-plugin";
-
+import recastTailwindPlugin from "@rpxl/recast-tailwind"
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
