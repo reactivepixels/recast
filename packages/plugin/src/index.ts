@@ -1,197 +1,231 @@
 import plugin from "tailwindcss/plugin";
 import fs from "fs";
 import { glob } from "glob";
+import util from "util";
 
-/**
- * Represents the structure of a Recast component.
- * @interface RecastComponent
- */
 interface RecastComponent {
-  /** Base classes for the component */
-  base: string[];
-  /** Variant classes for the component */
-  variants: Record<string, Record<string, string | string[]>>;
-  /** Breakpoint classes for the component */
-  breakpoints: string[];
+  base?: string | string[] | Record<string, string | string[]>;
+  variants?: Record<
+    string,
+    Record<string, string | string[] | Record<string, string | string[]>>
+  >;
 }
 
-/**
- * Represents the possible types for Tailwind's content configuration.
- * @typedef {string | string[] | { files: string | string[] } | ContentConfig[]} ContentConfig
- */
-type ContentConfig =
-  | string
-  | string[]
-  | { files: string | string[] }
-  | ContentConfig[];
+interface RecastUsage {
+  componentName: string;
+  props: Record<string, any>;
+}
 
-/**
- * Parses Recast component definitions from a file's content.
- * @param {string} content - The content of the file to parse.
- * @returns {RecastComponent[]} An array of parsed Recast components.
- */
-function parseRecastComponents(content: string): RecastComponent[] {
-  const regex = /recast\(\w+,\s*({[\s\S]*?})\)/g;
-  const components: RecastComponent[] = [];
+function debugLog(label: string, data: any) {
+  console.log(
+    `DEBUG - ${label}:`,
+    util.inspect(data, { depth: null, colors: true })
+  );
+}
 
-  let match: RegExpExecArray | null;
+export default plugin(function ({ addBase, config }) {
+  console.log("Plugin version: 1.0.1");
+  debugLog("Plugin called with config", config);
 
-  while ((match = regex.exec(content)) !== null) {
-    const componentDef = match[1];
+  const safelist = new Set<string>();
+  const components: Record<string, any> = {};
+  const usages: any[] = [];
 
-    // Convert componentDef string to an object (potentially unsafe, consider alternatives)
-    const componentObj = Function(`return ${componentDef}`)();
+  const contentConfig = config("content");
+  debugLog("Content config", contentConfig);
 
-    components.push({
-      base: componentObj.base || [],
-      variants: componentObj.variants || {},
-      breakpoints: componentObj.breakpoints || [],
-    });
+  try {
+    if (
+      Array.isArray(contentConfig) &&
+      contentConfig.length > 0 &&
+      typeof contentConfig[0] === "object" &&
+      contentConfig[0].raw
+    ) {
+      // Test environment: content is passed directly
+      debugLog("Processing direct content", contentConfig[0].raw);
+      const parsedComponents = parseRecastComponents(contentConfig[0].raw);
+      debugLog("Parsed components", parsedComponents);
+      Object.assign(components, parsedComponents);
+      const parsedUsages = parseRecastUsages(contentConfig[0].raw);
+      debugLog("Parsed usages", parsedUsages);
+      usages.push(...parsedUsages);
+    } else {
+      // Real-world scenario: process file patterns
+      const filePatterns = getFilePatterns(contentConfig);
+      debugLog("File patterns", filePatterns);
+
+      filePatterns.forEach((pattern) => {
+        debugLog("Processing pattern", pattern);
+        const files = glob.sync(pattern);
+        debugLog("Found files", files);
+        files.forEach((file) => {
+          debugLog("Processing file", file);
+          const content = fs.readFileSync(file, "utf8");
+          debugLog("File content", content);
+          const parsedComponents = parseRecastComponents(content);
+          debugLog("Parsed components", parsedComponents);
+          Object.assign(components, parsedComponents);
+          const parsedUsages = parseRecastUsages(content);
+          debugLog("Parsed usages", parsedUsages);
+          usages.push(...parsedUsages);
+        });
+      });
+    }
+  } catch (error) {
+    console.error("Error processing content:", error);
   }
 
+  debugLog("All components", components);
+  debugLog("All usages", usages);
+
+  usages.forEach((usage) => {
+    debugLog("Processing usage", usage);
+    const component = components[usage.componentName];
+    if (!component) {
+      debugLog("Component not found", usage.componentName);
+      return;
+    }
+
+    Object.entries(usage.props).forEach(([propName, propValue]) => {
+      debugLog("Processing prop", { propName, propValue });
+      const variantGroup = component.variants?.[propName];
+      if (!variantGroup) {
+        debugLog("Variant group not found", propName);
+        return;
+      }
+
+      if (typeof propValue === "object" && propValue !== null) {
+        Object.entries(propValue).forEach(([breakpoint, value]) => {
+          debugLog("Processing breakpoint", { breakpoint, value });
+          if (breakpoint !== "default" && typeof value === "string") {
+            const classes = variantGroup[value];
+            if (classes) {
+              debugLog("Adding to safelist", { classes, breakpoint });
+              addToSafelist(safelist, classes, breakpoint);
+            } else {
+              debugLog("Classes not found for variant", { propName, value });
+            }
+          }
+        });
+      } else {
+        debugLog("Prop value is not an object", propValue);
+      }
+    });
+  });
+
+  const finalSafelist = Array.from(safelist).sort();
+  debugLog("Final safelist", finalSafelist);
+
+  config().safelist = finalSafelist;
+});
+
+function parseRecastComponents(content: string): Record<string, any> {
+  debugLog("Parsing Recast components from content", content);
+  const componentRegex =
+    /export\s+const\s+(\w+)\s*=\s*recast\s*\(\s*\w+\s*,\s*({[\s\S]*?})\s*\)/g;
+  const components: Record<string, any> = {};
+  let match;
+  while ((match = componentRegex.exec(content)) !== null) {
+    const [, componentName, componentDef] = match;
+    try {
+      const processedDef = componentDef
+        .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": ')
+        .replace(/'/g, '"')
+        .replace(/,\s*}/g, "}");
+      const componentObj = JSON.parse(processedDef);
+      components[componentName] = componentObj;
+    } catch (e) {
+      console.error(`Error parsing component ${componentName}:`, e);
+    }
+  }
+  debugLog("Parsed Recast components", components);
   return components;
 }
 
-/**
- * Adds a unique item to an array.
- * @param {string[]} arr - The array to add the item to.
- * @param {string} item - The item to add.
- */
-function addUnique(arr: string[], item: string) {
-  if (!arr.includes(item)) {
-    arr.push(item);
+function parseRecastUsages(content: string): any[] {
+  debugLog("Parsing Recast usages from content", content);
+  const usageRegex = /<(\w+)([^>]+)>/g;
+  const usages: any[] = [];
+  let match;
+  while ((match = usageRegex.exec(content)) !== null) {
+    const [, componentName, propsString] = match;
+    const props = parseProps(propsString);
+    usages.push({ componentName, props });
   }
+  debugLog("Parsed Recast usages", usages);
+  return usages;
 }
 
-/**
- * Adds classes to the safelist, handling both string and array inputs.
- * Splits string inputs into individual classes and respects existing responsive prefixes.
- * @param {string[]} safelist - The safelist to add classes to.
- * @param {string | string[]} classes - The classes to add.
- * @param {string} [prefix=''] - Optional prefix to add to each class.
- * @param {string[]} breakpoints - List of valid breakpoints.
- */
-function addClassesToSafelist(
-  safelist: string[],
-  classes: string | string[],
-  prefix: string = "",
-  breakpoints: string[]
-) {
-  /**
-   * Adds a single class to the safelist, respecting existing responsive prefixes.
-   * @param {string} cls - The class to add.
-   */
-  const addClass = (cls: string) => {
-    // Check if the class already has a responsive prefix
-    const existingPrefix = cls.split(":")[0];
-    if (breakpoints.includes(existingPrefix)) {
-      // If the class already has a valid responsive prefix, add it as-is
-      addUnique(safelist, cls);
-    } else {
-      // If no existing prefix or invalid prefix, add the new prefix (if any)
-      const prefixedClass = prefix ? `${prefix}:${cls}` : cls;
-      addUnique(safelist, prefixedClass);
+function parseProps(propsString: string): Record<string, any> {
+  debugLog("Parsing props from string", propsString);
+  const props: Record<string, any> = {};
+  const propsRegex = /(\w+)\s*=\s*({[^}]+}|"[^"]*"|{`[^`]+`}|\w+)/g;
+  let match;
+  while ((match = propsRegex.exec(propsString)) !== null) {
+    const [, key, value] = match;
+    if (key === "ref" || key === "className" || key === "style") {
+      continue; // Skip non-variant props
     }
-  };
-
-  if (typeof classes === "string") {
-    // If classes is a string, split it into individual classes and add each
-    classes.split(/\s+/).forEach(addClass);
-  } else if (Array.isArray(classes)) {
-    // If classes is an array, process each item
-    classes.forEach((cls) => {
-      if (typeof cls === "string") {
-        // If the array item is a string, split and add each class
-        cls.split(/\s+/).forEach(addClass);
+    if (value.startsWith("{") && value.endsWith("}")) {
+      if (value.startsWith("{`") && value.endsWith("`}")) {
+        props[key] = value.slice(2, -2);
+      } else {
+        try {
+          const processedValue = value
+            .replace(/'/g, '"')
+            .replace(/(\w+):/g, '"$1":')
+            .replace(/\s+/g, "")
+            .replace(/{{/g, "{")
+            .replace(/}}/g, "}");
+          props[key] = JSON.parse(processedValue);
+        } catch (e) {
+          console.error(`Error parsing prop ${key}:`, e);
+          props[key] = value;
+        }
       }
-      // Note: Non-string array items are ignored
-    });
+    } else if (value.startsWith('"') && value.endsWith('"')) {
+      props[key] = value.slice(1, -1);
+    } else {
+      props[key] = value;
+    }
   }
-  // Note: If classes is neither a string nor an array, no action is taken
+  debugLog("Parsed props", props);
+  return props;
 }
 
-/**
- * Extracts file patterns from the Tailwind content configuration.
- * @param {ContentConfig} content - The content configuration.
- * @returns {string[]} An array of file patterns.
- */
-function getFilePatterns(content: ContentConfig): string[] {
-  if (typeof content === "string") {
-    return [content];
-  } else if (Array.isArray(content)) {
-    return content.flatMap((item) => getFilePatterns(item));
-  } else if (typeof content === "object" && content !== null) {
-    return getFilePatterns(content.files || []);
+function getFilePatterns(contentConfig: any): string[] {
+  debugLog("Getting file patterns from content config", contentConfig);
+  if (typeof contentConfig === "string") {
+    return [contentConfig];
+  } else if (Array.isArray(contentConfig)) {
+    return contentConfig.flatMap(getFilePatterns);
+  } else if (typeof contentConfig === "object" && contentConfig !== null) {
+    return getFilePatterns(contentConfig.files || []);
   }
   return [];
 }
 
-/**
- * Tailwind plugin for processing Recast components and generating a safelist.
- */
-export default plugin(function ({ addBase, config }) {
-  const safelist: string[] = [];
+function addToSafelist(
+  safelist: Set<string>,
+  classes: string | string[] | Record<string, string | string[]>,
+  prefix: string = ""
+) {
+  debugLog("addToSafelist called with", { classes, prefix });
+  if (!prefix) return;
 
-  // Read content configuration from Tailwind config
-  const contentConfig = config("content") as ContentConfig;
-
-  const options = {
-    ignore: ["**/node_modules/**", "**/build/**", "**/dist/**"],
-  };
-
-  const filePatterns = getFilePatterns(contentConfig);
-
-  // Process each file matching the patterns
-  filePatterns.forEach((pattern) => {
-    const matchingFiles = glob.sync(pattern, options);
-
-    matchingFiles.forEach((file: string) => {
-      const content = fs.readFileSync(file, "utf8");
-      const recastComponents = parseRecastComponents(content);
-
-      // Generate safelist entries for each component
-      recastComponents.forEach((component) => {
-        const { base, variants, breakpoints } = component;
-
-        // Add base classes
-        addClassesToSafelist(safelist, base, "", breakpoints);
-
-        // Add variant classes
-        Object.values(variants).forEach((variantGroup) => {
-          Object.values(variantGroup).forEach((classes) => {
-            addClassesToSafelist(safelist, classes, "", breakpoints);
-          });
-        });
-
-        // Add responsive classes
-        breakpoints.forEach((breakpoint) => {
-          addClassesToSafelist(safelist, base, breakpoint, breakpoints);
-
-          Object.values(variants).forEach((variantGroup) => {
-            Object.values(variantGroup).forEach((classes) => {
-              addClassesToSafelist(safelist, classes, breakpoint, breakpoints);
-            });
-          });
-        });
-      });
+  if (typeof classes === "string") {
+    classes.split(/\s+/).forEach((cls) => {
+      safelist.add(`${prefix}:${cls}`);
     });
-  });
-
-  // Extract breakpoints from Tailwind config
-  const screens = config('theme.screens', {});
-  const breakpoints = Object.keys(screens);
-
-  // Inject breakpoints into CSS
-  addBase({
-    ':root': {
-      '--recast-breakpoints': JSON.stringify(breakpoints),
-    },
-  });
-
-  // Add the safelist to the Tailwind config
-  const existingSafelist = config("safelist") || [];
-  const combinedSafelist = existingSafelist.concat(safelist);
-  config().safelist = combinedSafelist.filter(
-    (item: string, index: number) => combinedSafelist.indexOf(item) === index
-  );
-});
+  } else if (Array.isArray(classes)) {
+    classes.forEach((cls) => {
+      safelist.add(`${prefix}:${cls}`);
+    });
+  } else if (typeof classes === "object" && classes !== null) {
+    Object.entries(classes).forEach(([breakpoint, breakpointClasses]) => {
+      if (breakpoint !== "default") {
+        addToSafelist(safelist, breakpointClasses, breakpoint);
+      }
+    });
+  }
+}

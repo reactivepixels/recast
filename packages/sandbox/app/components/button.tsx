@@ -26,14 +26,14 @@ export const Button = recast(Component, {
   base: ["flex", "items-center", "justify-center"],
   variants: {
     variant: {
-      primary: "bg-blue-500 text-white md:text-white",
+      primary: "bg-blue-500 text-white",
       secondary: ["bg-red-500", "text-white"],
+      tertiary: ["bg-green-500", "text-white"],
     },
     size: {
       sm: "text-sm",
       md: "text-md",
-      lg: "text-lg",
+      lg: "text-2xl",
     },
   },
-  breakpoints: ["sm", "md", "lg"],
 });

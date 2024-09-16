@@ -19,15 +19,15 @@ export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string 
  */
 export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
 export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
-export type ExtractVariantProps<V, B extends string = string> = V extends object
+export type ExtractVariantProps<V> = V extends object
   ? {
-      [K in keyof V]?: ResponsiveValue<K extends string ? keyof V[K] : never, B>;
+      [K in keyof V]?: ResponsiveValue<keyof V[K]>;
     }
   : never;
 
 export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
 
-export type RecastStyles<V, M, P, B extends string = string> = {
+export type RecastStyles<V, M, P> = {
   /**
    * Default values for variants and modifiers. Defaults will only be applied
    * if the variant or modifier is not provided.
@@ -148,12 +148,6 @@ export type RecastStyles<V, M, P, B extends string = string> = {
               [K in keyof NonNullable<Leaves<P>>]: string | string[];
             };
   }[];
-
-  /**
-   * Breakpoints to generate responsive classes for.
-   * @example ['sm', 'md', 'lg']
-   */
-  breakpoints?: B[];
 };
 
 /**
@@ -195,10 +189,15 @@ export type RelaxedRecastStyleProps = {
   rcx: ClassNameRecord;
 };
 
-export type RelaxedVariantProps<B extends string = string> = {
-  [key: string]: ResponsiveValue<string, B>;
+export type RelaxedVariantProps = {
+  [key: string]: ResponsiveValue<string>;
 };
 
 export type RelaxedModifierProps = string[];
 
-export type ResponsiveValue<T, B extends string = string> = T | { [K in B | "default"]?: T };
+export interface RecastBreakpoints {}
+
+// Use the keys of RecastBreakpoints as breakpoint types
+export type Breakpoint = keyof RecastBreakpoints;
+
+export type ResponsiveValue<T> = T | (Record<"default", T> & Partial<Record<Exclude<Breakpoint, "default">, T>>);
