@@ -7,8 +7,11 @@ import path from "path";
 let html = String.raw;
 let css = String.raw;
 
-function run(input, config, pluginToUse = plugin) {
+function run(config, pluginToUse = plugin) {
   let { currentTestName } = expect.getState();
+  let input = css`
+    @tailwind utilities;
+  `;
 
   return postcss(
     tailwindcss({
@@ -40,30 +43,33 @@ describe("Recast Tailwind Plugin", () => {
         },
       ],
       corePlugins: { preflight: false },
+      theme: {
+        screens: {
+          md: "768px",
+        },
+      },
     };
 
-    let input = css`
-      @tailwind utilities;
-    `;
+    const result = await run(config);
 
-    console.log("Starting test run");
-    const result = await run(input, config);
-    console.log("Test run completed");
+    // Test for base classes
+    expect(result.css).toContain(".bg-blue-500");
+    expect(result.css).toContain(".text-white");
+    expect(result.css).toContain(".text-sm");
+    expect(result.css).toContain(".text-base");
+    expect(result.css).toContain(".text-lg");
 
-    console.log = originalConsoleLog;
+    // Test for responsive variant
+    expect(result.css).toContain("@media (min-width: 768px)");
+    expect(result.css).toContain(".md\\:text-lg");
 
-    console.log("Captured debug logs:");
-    logs.forEach((log) => console.log(log));
-
-    console.log("Generated CSS:");
-    console.log(result.css);
-
-    // Your existing assertions...
-    expect(result.css).toContain("text-sm");
-    expect(result.css).toContain("md:text-lg");
-
-    // New assertions to check if the safelist is generated correctly
-    expect(logs.some((log) => log.includes("Adding to safelist"))).toBe(true);
+    // Test for safelist generation
     expect(logs.some((log) => log.includes("md:text-lg"))).toBe(true);
+
+    // Test complete safelist
+    const safelistLog = logs.find((log) => log.includes("Final safelist"));
+    expect(safelistLog).toBeDefined();
+    expect(safelistLog).toContain("md:text-lg");
+    expect(safelistLog).not.toContain("text-sm");
   });
 });

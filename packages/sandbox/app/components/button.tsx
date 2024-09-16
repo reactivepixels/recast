@@ -23,7 +23,7 @@ export const Button = recast(Component, {
   defaults: {
     variants: { variant: "primary", size: "md" },
   },
-  base: ["flex", "items-center", "justify-center"],
+  base: ["flex", "items-center", "justify-center", "p-8"],
   variants: {
     variant: {
       primary: "bg-blue-500 text-white",

@@ -6,11 +6,13 @@ export default function Page() {
       <Button size="lg" variant="secondary">
         Sandbox
       </Button>
-      {/* <Button
+      <Button
         variant={{ default: "primary", md: "secondary", lg: "tertiary" }}
         size={{ default: "sm", md: "md", "2xl": "lg" }}
-      /> */}
-      <Button size={{ default: "sm", md: "lg" }} />
+      >
+        Yo
+      </Button>
+      <Button size={{ default: "sm", md: "lg" }}>Kevin</Button>
     </div>
   );
 }
