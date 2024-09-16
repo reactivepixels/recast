@@ -1,11 +1,7 @@
 // src/utils/index.ts
-import util from "util";
-function debugLog(label, data) {
-  console.log(
-    `DEBUG - ${label}:`,
-    util.inspect(data, { depth: null, colors: true })
-  );
-}
+import { Parser } from "acorn";
+import jsx from "acorn-jsx";
+var JSXParser = Parser.extend(jsx());
 function parseRecastComponents(content) {
   const componentRegex = /(?:export\s+(?:const|default)|const)\s+(\w+)\s*=\s*recast\s*\(\s*\w+\s*,\s*({[\s\S]*?})\s*\)/g;
   const components = {};
@@ -32,39 +28,83 @@ function parseRecastComponents(content) {
 function parseRecastUsages(content) {
   const usageRegex = /<(\w+)([^>]*)>/g;
   return Array.from(content.matchAll(usageRegex)).map(
-    ([, componentName, propsString]) => ({
-      componentName,
-      props: parseProps(propsString)
-    })
+    ([, componentName, propsString]) => {
+      const cleanedPropsString = propsString.replace(/\s*\/$/, "").trim();
+      const props = parseJSXExpression(cleanedPropsString);
+      return { componentName, props };
+    }
   );
 }
-function parseProps(propsString) {
-  const props = {};
-  const propsRegex = /(\w+)\s*=\s*({[^}]+}|"[^"]*"|{`[^`]+`}|\w+|{true}|{false})/g;
-  for (const [, key, value] of propsString.matchAll(propsRegex)) {
-    if (["ref", "className", "style"].includes(key))
-      continue;
-    if (value.startsWith("{") && value.endsWith("}")) {
-      if (value === "{true}") {
-        props[key] = true;
-      } else if (value === "{false}") {
-        props[key] = false;
-      } else {
-        try {
-          const processedValue = value.replace(/'/g, '"').replace(/(\w+):/g, '"$1":').replace(/\s+/g, "").replace(/{{/g, "{").replace(/}}/g, "}");
-          props[key] = JSON.parse(processedValue);
-        } catch (e) {
-          console.error(`Error parsing prop ${key}:`, e);
-          props[key] = value;
-        }
+function parseJSXExpression(str) {
+  try {
+    const wrappedStr = `<dummy ${str} />`;
+    const ast = JSXParser.parse(wrappedStr, { ecmaVersion: 2020 });
+    const jsxOpeningElement = ast.body[0].expression.openingElement;
+    const props = {};
+    for (const attr of jsxOpeningElement.attributes) {
+      if (attr.type === "JSXAttribute") {
+        const key = attr.name.name;
+        const value = parseJSXAttributeValue(attr.value);
+        props[key] = value;
       }
-    } else if (value.startsWith('"') && value.endsWith('"')) {
-      props[key] = value.slice(1, -1);
-    } else {
-      props[key] = value;
+    }
+    return props;
+  } catch (error) {
+    return {};
+  }
+}
+function parseJSXAttributeValue(value) {
+  if (!value)
+    return true;
+  if (value.type === "Literal")
+    return value.value;
+  if (value.type === "JSXExpressionContainer") {
+    return parseJSXExpressionValue(value.expression);
+  }
+  return null;
+}
+function parseJSXExpressionValue(expression) {
+  if (expression.type === "ObjectExpression") {
+    const obj = {};
+    for (const prop of expression.properties) {
+      obj[prop.key.name] = parseJSXExpressionValue(prop.value);
+    }
+    return obj;
+  }
+  if (expression.type === "ArrayExpression") {
+    return expression.elements.map(parseJSXExpressionValue);
+  }
+  if (expression.type === "Literal")
+    return expression.value;
+  if (expression.type === "Identifier")
+    return expression.name;
+  return null;
+}
+function parseProps(propsString) {
+  try {
+    const wrappedJSX = `<dummy ${propsString} />`;
+    const ast = JSXParser.parse(wrappedJSX, {
+      ecmaVersion: 2020,
+      sourceType: "module"
+    });
+    const jsxElement = ast.body[0].expression;
+    const attributes = jsxElement.openingElement.attributes;
+    return parseJSXAttributes(attributes);
+  } catch (error) {
+    console.error("Error parsing props:", error);
+    return {};
+  }
+}
+function parseJSXAttributes(attributes) {
+  const result = {};
+  for (const attr of attributes) {
+    if (attr.type === "JSXAttribute") {
+      const key = attr.name.name;
+      const value = parseJSXAttributeValue(attr.value);
+      result[key] = value;
     }
   }
-  return props;
+  return result;
 }
 function getFilePatterns(contentConfig) {
   if (typeof contentConfig === "string")
@@ -77,24 +117,26 @@ function getFilePatterns(contentConfig) {
   return [];
 }
 function addToSafelist(safelist, classes, prefix = "") {
-  if (!prefix)
-    return;
-  const addClassWithPrefix = (cls) => safelist.add(`${prefix}:${cls}`);
+  const addClassWithPrefix = (cls) => {
+    const safelistItem = prefix ? `${prefix}:${cls}` : cls;
+    safelist.add(safelistItem);
+  };
   if (typeof classes === "string") {
     classes.split(/\s+/).forEach(addClassWithPrefix);
   } else if (Array.isArray(classes)) {
     classes.forEach(addClassWithPrefix);
   } else if (typeof classes === "object" && classes !== null) {
-    Object.entries(classes).forEach(([breakpoint, breakpointClasses]) => {
-      if (breakpoint !== "default") {
-        addToSafelist(safelist, breakpointClasses, breakpoint);
+    Object.values(classes).forEach((value) => {
+      if (typeof value === "string") {
+        addClassWithPrefix(value);
+      } else if (Array.isArray(value)) {
+        value.forEach(addClassWithPrefix);
       }
     });
   }
 }
 export {
   addToSafelist,
-  debugLog,
   getFilePatterns,
   parseProps,
   parseRecastComponents,

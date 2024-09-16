@@ -1,9 +1,10 @@
 // src/index.ts
 import plugin from "tailwindcss/plugin";
-import fs from "fs";
-import { glob } from "glob";
 
 // src/utils/index.ts
+import { Parser } from "acorn";
+import jsx from "acorn-jsx";
+var JSXParser = Parser.extend(jsx());
 function parseRecastComponents(content) {
   const componentRegex = /(?:export\s+(?:const|default)|const)\s+(\w+)\s*=\s*recast\s*\(\s*\w+\s*,\s*({[\s\S]*?})\s*\)/g;
   const components = {};
@@ -30,39 +31,57 @@ function parseRecastComponents(content) {
 function parseRecastUsages(content) {
   const usageRegex = /<(\w+)([^>]*)>/g;
   return Array.from(content.matchAll(usageRegex)).map(
-    ([, componentName, propsString]) => ({
-      componentName,
-      props: parseProps(propsString)
-    })
+    ([, componentName, propsString]) => {
+      const cleanedPropsString = propsString.replace(/\s*\/$/, "").trim();
+      const props = parseJSXExpression(cleanedPropsString);
+      return { componentName, props };
+    }
   );
 }
-function parseProps(propsString) {
-  const props = {};
-  const propsRegex = /(\w+)\s*=\s*({[^}]+}|"[^"]*"|{`[^`]+`}|\w+|{true}|{false})/g;
-  for (const [, key, value] of propsString.matchAll(propsRegex)) {
-    if (["ref", "className", "style"].includes(key))
-      continue;
-    if (value.startsWith("{") && value.endsWith("}")) {
-      if (value === "{true}") {
-        props[key] = true;
-      } else if (value === "{false}") {
-        props[key] = false;
-      } else {
-        try {
-          const processedValue = value.replace(/'/g, '"').replace(/(\w+):/g, '"$1":').replace(/\s+/g, "").replace(/{{/g, "{").replace(/}}/g, "}");
-          props[key] = JSON.parse(processedValue);
-        } catch (e) {
-          console.error(`Error parsing prop ${key}:`, e);
-          props[key] = value;
-        }
+function parseJSXExpression(str) {
+  try {
+    const wrappedStr = `<dummy ${str} />`;
+    const ast = JSXParser.parse(wrappedStr, { ecmaVersion: 2020 });
+    const jsxOpeningElement = ast.body[0].expression.openingElement;
+    const props = {};
+    for (const attr of jsxOpeningElement.attributes) {
+      if (attr.type === "JSXAttribute") {
+        const key = attr.name.name;
+        const value = parseJSXAttributeValue(attr.value);
+        props[key] = value;
       }
-    } else if (value.startsWith('"') && value.endsWith('"')) {
-      props[key] = value.slice(1, -1);
-    } else {
-      props[key] = value;
     }
+    return props;
+  } catch (error) {
+    return {};
   }
-  return props;
+}
+function parseJSXAttributeValue(value) {
+  if (!value)
+    return true;
+  if (value.type === "Literal")
+    return value.value;
+  if (value.type === "JSXExpressionContainer") {
+    return parseJSXExpressionValue(value.expression);
+  }
+  return null;
+}
+function parseJSXExpressionValue(expression) {
+  if (expression.type === "ObjectExpression") {
+    const obj = {};
+    for (const prop of expression.properties) {
+      obj[prop.key.name] = parseJSXExpressionValue(prop.value);
+    }
+    return obj;
+  }
+  if (expression.type === "ArrayExpression") {
+    return expression.elements.map(parseJSXExpressionValue);
+  }
+  if (expression.type === "Literal")
+    return expression.value;
+  if (expression.type === "Identifier")
+    return expression.name;
+  return null;
 }
 function getFilePatterns(contentConfig) {
   if (typeof contentConfig === "string")
@@ -75,35 +94,38 @@ function getFilePatterns(contentConfig) {
   return [];
 }
 function addToSafelist(safelist, classes, prefix = "") {
-  if (!prefix)
-    return;
-  const addClassWithPrefix = (cls) => safelist.add(`${prefix}:${cls}`);
+  const addClassWithPrefix = (cls) => {
+    const safelistItem = prefix ? `${prefix}:${cls}` : cls;
+    safelist.add(safelistItem);
+  };
   if (typeof classes === "string") {
     classes.split(/\s+/).forEach(addClassWithPrefix);
   } else if (Array.isArray(classes)) {
     classes.forEach(addClassWithPrefix);
   } else if (typeof classes === "object" && classes !== null) {
-    Object.entries(classes).forEach(([breakpoint, breakpointClasses]) => {
-      if (breakpoint !== "default") {
-        addToSafelist(safelist, breakpointClasses, breakpoint);
+    Object.values(classes).forEach((value) => {
+      if (typeof value === "string") {
+        addClassWithPrefix(value);
+      } else if (Array.isArray(value)) {
+        value.forEach(addClassWithPrefix);
       }
     });
   }
 }
 
 // src/index.ts
+import { glob } from "glob";
+import fs from "fs";
 var src_default = plugin(function({ config }) {
   const safelist = /* @__PURE__ */ new Set();
   const components = {};
   const usages = [];
   const contentConfig = config("content");
   try {
-    if (typeof contentConfig === "object" && contentConfig !== null && "files" in contentConfig && Array.isArray(contentConfig.files) && contentConfig.files.length > 0 && typeof contentConfig.files[0] === "object" && contentConfig.files[0].raw) {
-      Object.assign(
-        components,
-        parseRecastComponents(contentConfig.files[0].raw)
-      );
-      usages.push(...parseRecastUsages(contentConfig.files[0].raw));
+    if (Array.isArray(contentConfig.files) && contentConfig.files.length > 0 && contentConfig.files[0].raw) {
+      const content = contentConfig.files[0].raw;
+      Object.assign(components, parseRecastComponents(content));
+      usages.push(...parseRecastUsages(content));
     } else {
       const filePatterns = getFilePatterns(contentConfig);
       filePatterns.forEach((pattern) => {
@@ -116,29 +138,45 @@ var src_default = plugin(function({ config }) {
       });
     }
   } catch (error) {
+    console.error("Error processing content:", error);
   }
   usages.forEach((usage) => {
     const component = components[usage.componentName];
-    if (!component)
+    if (!component) {
       return;
+    }
+    if (component.base) {
+      addToSafelist(safelist, component.base);
+    }
     Object.entries(usage.props).forEach(([propName, propValue]) => {
       var _a;
       const variantGroup = (_a = component.variants) == null ? void 0 : _a[propName];
-      if (!variantGroup)
+      if (!variantGroup) {
         return;
+      }
       if (typeof propValue === "object" && propValue !== null) {
         Object.entries(propValue).forEach(([breakpoint, value]) => {
-          if (breakpoint !== "default" && typeof value === "string") {
+          if (typeof value === "string") {
             const classes = variantGroup[value];
             if (classes) {
-              addToSafelist(safelist, classes, breakpoint);
+              addToSafelist(
+                safelist,
+                classes,
+                breakpoint !== "default" ? breakpoint : ""
+              );
             }
           }
         });
+      } else if (typeof propValue === "string") {
+        const classes = variantGroup[propValue];
+        if (classes) {
+          addToSafelist(safelist, classes);
+        }
       }
     });
   });
-  config().safelist = Array.from(safelist);
+  const finalSafelist = Array.from(safelist);
+  config().safelist = finalSafelist;
 });
 export {
   src_default as default

@@ -1,14 +1,14 @@
 import plugin from "tailwindcss/plugin";
-import fs from "fs";
-import { glob } from "glob";
 import {
   parseRecastComponents,
   parseRecastUsages,
-  getFilePatterns,
   addToSafelist,
   RecastComponent,
   RecastUsage,
+  getFilePatterns,
 } from "./utils";
+import { glob } from "glob";
+import fs from "fs";
 
 /**
  * Recast Tailwind Plugin
@@ -18,48 +18,23 @@ import {
  * are included in the final CSS output, even when not explicitly used in the markup.
  */
 export default plugin(function ({ config }) {
-  /**
-   * Set to store unique safelist entries
-   * @type {Set<string>}
-   */
   const safelist = new Set<string>();
-
-  /**
-   * Object to store parsed Recast components
-   * @type {Record<string, RecastComponent>}
-   */
   const components: Record<string, RecastComponent> = {};
-
-  /**
-   * Array to store parsed Recast component usages
-   * @type {RecastUsage[]}
-   */
   const usages: RecastUsage[] = [];
 
-  /**
-   * Content configuration from Tailwind config
-   * @type {any}
-   */
   const contentConfig = config("content");
 
   try {
     if (
-      typeof contentConfig === "object" &&
-      contentConfig !== null &&
-      "files" in contentConfig &&
       Array.isArray(contentConfig.files) &&
       contentConfig.files.length > 0 &&
-      typeof contentConfig.files[0] === "object" &&
       contentConfig.files[0].raw
     ) {
-      // Test environment: content is passed directly
-      Object.assign(
-        components,
-        parseRecastComponents(contentConfig.files[0].raw)
-      );
-      usages.push(...parseRecastUsages(contentConfig.files[0].raw));
+      const content = contentConfig.files[0].raw;
+      Object.assign(components, parseRecastComponents(content));
+      usages.push(...parseRecastUsages(content));
     } else {
-      // Real-world scenario: process file patterns
+      // Handle real-world scenario (not implemented in this example)
       const filePatterns = getFilePatterns(contentConfig);
       filePatterns.forEach((pattern) => {
         const files = glob.sync(pattern);
@@ -71,35 +46,48 @@ export default plugin(function ({ config }) {
       });
     }
   } catch (error) {
-    // Error handling without console.log
+    console.error("Error processing content:", error);
   }
 
-  /**
-   * Process each usage to generate safelist entries
-   */
   usages.forEach((usage) => {
     const component = components[usage.componentName];
-    if (!component) return;
+    if (!component) {
+      return;
+    }
+
+    // Add base classes to safelist
+    if (component.base) {
+      addToSafelist(safelist, component.base);
+    }
 
     Object.entries(usage.props).forEach(([propName, propValue]) => {
       const variantGroup = component.variants?.[propName];
-      if (!variantGroup) return;
+      if (!variantGroup) {
+        return;
+      }
 
       if (typeof propValue === "object" && propValue !== null) {
         Object.entries(propValue).forEach(([breakpoint, value]) => {
-          if (breakpoint !== "default" && typeof value === "string") {
+          if (typeof value === "string") {
             const classes = variantGroup[value];
             if (classes) {
-              addToSafelist(safelist, classes, breakpoint);
+              addToSafelist(
+                safelist,
+                classes,
+                breakpoint !== "default" ? breakpoint : ""
+              );
             }
           }
         });
+      } else if (typeof propValue === "string") {
+        const classes = variantGroup[propValue];
+        if (classes) {
+          addToSafelist(safelist, classes);
+        }
       }
     });
   });
 
-  /**
-   * Set the safelist in the Tailwind config
-   */
-  config().safelist = Array.from(safelist);
+  const finalSafelist = Array.from(safelist);
+  config().safelist = finalSafelist;
 });

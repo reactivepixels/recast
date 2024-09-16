@@ -1,8 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import plugin from "./index";
-import postcss from "postcss";
-import tailwindcss from "tailwindcss";
-import path from "path";
+import { describe, it, expect } from "vitest";
+import recastPlugin from "./index";
 import {
   parseRecastComponents,
   parseRecastUsages,
@@ -10,16 +7,22 @@ import {
   getFilePatterns,
   addToSafelist,
 } from "./utils";
+import postcss from "postcss";
+import tailwindcss from "tailwindcss";
+import path from "path";
 
 let html = String.raw;
 let css = String.raw;
 
-function run(input: string, config: any) {
+function run(config: any) {
   let { currentTestName } = expect.getState();
+  let input = css`
+    @tailwind utilities;
+  `;
   return postcss(
     tailwindcss({
       ...config,
-      plugins: [plugin],
+      plugins: [recastPlugin],
     })
   ).process(input, {
     from: `${path.resolve(__filename)}?test=${currentTestName}`,
@@ -27,19 +30,6 @@ function run(input: string, config: any) {
 }
 
 describe("Recast Tailwind Plugin", () => {
-  let consoleLogSpy: any;
-  let consoleErrorSpy: any;
-
-  beforeEach(() => {
-    consoleLogSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    consoleLogSpy.mockRestore();
-    consoleErrorSpy.mockRestore();
-  });
-
   it("should generate base classes and responsive variants", async () => {
     let config = {
       content: [
@@ -59,11 +49,7 @@ describe("Recast Tailwind Plugin", () => {
       },
     };
 
-    let input = css`
-      @tailwind utilities;
-    `;
-
-    const result = await run(input, config);
+    const result = await run(config);
 
     // Test for base classes
     expect(result.css).toContain(".bg-blue-500");
@@ -78,6 +64,99 @@ describe("Recast Tailwind Plugin", () => {
 
     // Test that default variant is not in safelist
     expect(result.css).not.toContain(".sm\\:text-sm");
+  });
+
+  it("should handle multiple components and variants", async () => {
+    let config = {
+      content: [
+        {
+          raw: html`
+            export const Button = recast(ButtonPrimitive, { base: "bg-blue-500
+            text-white", variants: { size: { sm: "text-sm", md: "text-base", lg:
+            "text-lg" } } }); <Button size={{ default: "sm", md: "lg" }} />
+          `,
+        },
+        {
+          raw: html`
+            export const Input = recast(InputPrimitive, { base: "border rounded"
+            });
+            <input type="text" placeholder="Enter your name" />
+          `,
+        },
+      ],
+      corePlugins: { preflight: false },
+      theme: {
+        screens: {
+          md: "768px",
+        },
+      },
+    };
+
+    const result = await run(config);
+
+    // Test for base classes
+    expect(result.css).toContain(".bg-blue-500");
+    expect(result.css).toContain(".text-white");
+    expect(result.css).toContain(".text-sm");
+    expect(result.css).toContain(".text-base");
+    expect(result.css).toContain(".text-lg");
+    expect(result.css).toContain(".border");
+    expect(result.css).toContain(".rounded");
+
+    // Test for responsive variant
+    expect(result.css).toContain("@media (min-width: 768px)");
+    expect(result.css).toContain(".md\\:text-lg");
+
+    // Test that default variant is not in safelist
+    expect(result.css).not.toContain(".sm\\:text-sm");
+  });
+
+  it("should only generate responsive classes for used variants", async () => {
+    let config = {
+      content: [
+        {
+          raw: html`
+            export const Button = recast(ButtonPrimitive, { base: "bg-blue-500
+            text-white", variants: { size: { sm: "text-sm", md: "text-base", lg:
+            "text-lg" }, color: { primary: "bg-blue-500", secondary:
+            "bg-green-500" } } });
+            <button size="sm" />
+          `,
+        },
+      ],
+      corePlugins: { preflight: false },
+      theme: {
+        screens: {
+          md: "768px",
+          lg: "1024px",
+        },
+      },
+    };
+
+    const result = await run(config);
+
+    // These classes should be present as they're defined in the component
+    expect(result.css).toContain(".text-sm");
+    expect(result.css).toContain(".text-base");
+    expect(result.css).toContain(".text-lg");
+    expect(result.css).toContain(".bg-blue-500");
+    expect(result.css).toContain(".bg-green-500");
+
+    // The 'sm' size variant is used, so it shouldn't have responsive variants
+    expect(result.css).not.toContain(".md\\:text-sm");
+    expect(result.css).not.toContain(".lg\\:text-sm");
+
+    // The 'md' and 'lg' size variants aren't used, so they shouldn't have responsive variants
+    expect(result.css).not.toContain(".md\\:text-base");
+    expect(result.css).not.toContain(".lg\\:text-base");
+    expect(result.css).not.toContain(".md\\:text-lg");
+    expect(result.css).not.toContain(".lg\\:text-lg");
+
+    // The color variants aren't used responsively, so they shouldn't have responsive variants
+    expect(result.css).not.toContain(".md\\:bg-blue-500");
+    expect(result.css).not.toContain(".lg\\:bg-blue-500");
+    expect(result.css).not.toContain(".md\\:bg-green-500");
+    expect(result.css).not.toContain(".lg\\:bg-green-500");
   });
 
   describe("parseRecastComponents", () => {
@@ -289,6 +368,43 @@ describe("Recast Tailwind Plugin", () => {
       expect(result.Button).toBeDefined();
       expect(result.Button.base).toBe("bg-blue-500 text-white");
     });
+
+    it("should handle complex variant definitions", () => {
+      const content = `
+        export const Button = recast(ButtonPrimitive, {
+          base: "bg-blue-500 text-white",
+          variants: {
+            size: {
+              sm: "text-sm px-2 py-1",
+              md: "text-base px-3 py-2",
+              lg: "text-lg px-4 py-3"
+            },
+            color: {
+              primary: "bg-blue-500",
+              secondary: "bg-green-500",
+              danger: "bg-red-500"
+            }
+          }
+        });
+      `;
+      const result = parseRecastComponents(content);
+      expect(result.Button).toBeDefined();
+      expect(result.Button.variants).toBeDefined();
+      if (result.Button.variants) {
+        expect(result.Button.variants.size).toBeDefined();
+        expect(result.Button.variants.color).toBeDefined();
+        if (result.Button.variants.size) {
+          expect(result.Button.variants.size).toHaveProperty("sm");
+          expect(result.Button.variants.size).toHaveProperty("md");
+          expect(result.Button.variants.size).toHaveProperty("lg");
+        }
+        if (result.Button.variants.color) {
+          expect(result.Button.variants.color).toHaveProperty("primary");
+          expect(result.Button.variants.color).toHaveProperty("secondary");
+          expect(result.Button.variants.color).toHaveProperty("danger");
+        }
+      }
+    });
   });
 
   describe("parseRecastUsages", () => {
@@ -308,6 +424,25 @@ describe("Recast Tailwind Plugin", () => {
         props: { type: "text", placeholder: "Enter your name" },
       });
     });
+
+    it("should handle usages with nested object props", () => {
+      const content = `
+        <Button style={{ color: "red", fontSize: { base: "16px", md: "18px" } }} />
+      `;
+      const result = parseRecastUsages(content);
+      expect(result[0].props.style).toEqual({
+        color: "red",
+        fontSize: { base: "16px", md: "18px" },
+      });
+    });
+
+    it("should handle usages with array props", () => {
+      const content = `
+        <List items={["apple", "banana", "cherry"]} />
+      `;
+      const result = parseRecastUsages(content);
+      expect(result[0].props.items).toEqual(["apple", "banana", "cherry"]);
+    });
   });
 
   describe("parseProps", () => {
@@ -326,6 +461,33 @@ describe("Recast Tailwind Plugin", () => {
       expect(result).toEqual({
         size: { default: "sm", md: "lg" },
         disabled: true,
+      });
+    });
+
+    it("should handle boolean-like props", () => {
+      const propsString = "disabled={true} required={false} isActive";
+      const result = parseProps(propsString);
+      expect(result).toEqual({
+        disabled: true,
+        required: false,
+        isActive: true,
+      });
+    });
+
+    it("should handle props with nested objects", () => {
+      const propsString =
+        'style={{ color: "red", padding: { top: "10px", bottom: "20px" } }}';
+      const result = parseProps(propsString);
+      expect(result).toEqual({
+        style: { color: "red", padding: { top: "10px", bottom: "20px" } },
+      });
+    });
+
+    it("should handle props with array values", () => {
+      const propsString = 'items={["apple", "banana", "cherry"]}';
+      const result = parseProps(propsString);
+      expect(result).toEqual({
+        items: ["apple", "banana", "cherry"],
       });
     });
   });

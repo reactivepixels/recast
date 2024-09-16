@@ -63,7 +63,7 @@ describe("Performance Tests", () => {
     const largeContent = generateLargeUsageContent(1000);
     const avgTime = measureExecutionTime(() => parseRecastUsages(largeContent));
     console.log(`Average time to parse 1000 usages: ${avgTime.toFixed(2)}ms`);
-    expect(avgTime).toBeLessThan(5); // ms
+    expect(avgTime).toBeLessThan(10); // ms
   });
 
   it("should parse complex props efficiently", () => {

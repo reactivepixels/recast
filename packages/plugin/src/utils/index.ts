@@ -1,16 +1,7 @@
-import util from "util";
+import { Parser } from "acorn";
+import jsx from "acorn-jsx";
 
-/**
- * Logs debug information with formatted output.
- * @param {string} label - The label for the debug information.
- * @param {any} data - The data to be logged.
- */
-export function debugLog(label: string, data: any) {
-  console.log(
-    `DEBUG - ${label}:`,
-    util.inspect(data, { depth: null, colors: true })
-  );
-}
+const JSXParser = Parser.extend(jsx());
 
 export interface RecastComponent {
   base?: string | string[] | Record<string, string | string[]>;
@@ -25,11 +16,6 @@ export interface RecastUsage {
   props: Record<string, any>;
 }
 
-/**
- * Parses Recast component definitions from the given content.
- * @param {string} content - The content to parse for Recast components.
- * @returns {Record<string, RecastComponent>} An object containing parsed Recast components.
- */
 export function parseRecastComponents(
   content: string
 ): Record<string, RecastComponent> {
@@ -53,7 +39,6 @@ export function parseRecastComponents(
     }
   }
 
-  // Handle default exports
   const defaultExportRegex = /export\s+default\s+(\w+)/;
   const defaultExportMatch = content.match(defaultExportRegex);
   if (defaultExportMatch) {
@@ -66,67 +51,142 @@ export function parseRecastComponents(
   return components;
 }
 
-/**
- * Parses Recast component usages from the given content.
- * @param {string} content - The content to parse for Recast usages.
- * @returns {RecastUsage[]} An array of parsed Recast usages.
- */
 export function parseRecastUsages(content: string): RecastUsage[] {
   const usageRegex = /<(\w+)([^>]*)>/g;
+
   return Array.from(content.matchAll(usageRegex)).map(
-    ([, componentName, propsString]) => ({
-      componentName,
-      props: parseProps(propsString),
-    })
+    ([, componentName, propsString]) => {
+      const cleanedPropsString = propsString.replace(/\s*\/$/, "").trim();
+      const props = parseJSXExpression(cleanedPropsString);
+
+      return { componentName, props };
+    }
   );
 }
 
-/**
- * Parses props from a string representation.
- * @param {string} propsString - The string containing props to parse.
- * @returns {Record<string, any>} An object containing parsed props.
- */
-export function parseProps(propsString: string): Record<string, any> {
-  const props: Record<string, any> = {};
-  const propsRegex =
-    /(\w+)\s*=\s*({[^}]+}|"[^"]*"|{`[^`]+`}|\w+|{true}|{false})/g;
+function parseJSXExpression(str: string): any {
+  try {
+    const wrappedStr = `<dummy ${str} />`;
+    const ast = JSXParser.parse(wrappedStr, { ecmaVersion: 2020 }) as any;
 
-  for (const [, key, value] of propsString.matchAll(propsRegex)) {
-    if (["ref", "className", "style"].includes(key)) continue;
+    const jsxOpeningElement = ast.body[0].expression.openingElement;
 
-    if (value.startsWith("{") && value.endsWith("}")) {
-      if (value === "{true}") {
-        props[key] = true;
-      } else if (value === "{false}") {
-        props[key] = false;
-      } else {
-        try {
-          const processedValue = value
-            .replace(/'/g, '"')
-            .replace(/(\w+):/g, '"$1":')
-            .replace(/\s+/g, "")
-            .replace(/{{/g, "{")
-            .replace(/}}/g, "}");
-          props[key] = JSON.parse(processedValue);
-        } catch (e) {
-          console.error(`Error parsing prop ${key}:`, e);
-          props[key] = value;
-        }
+    const props: Record<string, any> = {};
+    for (const attr of jsxOpeningElement.attributes) {
+      if (attr.type === "JSXAttribute") {
+        const key = attr.name.name;
+        const value = parseJSXAttributeValue(attr.value);
+        props[key] = value;
       }
-    } else if (value.startsWith('"') && value.endsWith('"')) {
-      props[key] = value.slice(1, -1);
-    } else {
-      props[key] = value;
     }
+
+    return props;
+  } catch (error) {
+    return {};
   }
-  return props;
 }
 
-/**
- * Extracts file patterns from the content configuration.
- * @param {any} contentConfig - The content configuration object.
- * @returns {string[]} An array of file patterns.
- */
+function parseJSXAttributeValue(value: any): any {
+  if (!value) return true;
+  if (value.type === "Literal") return value.value;
+  if (value.type === "JSXExpressionContainer") {
+    return parseJSXExpressionValue(value.expression);
+  }
+  return null;
+}
+
+function parseJSXExpressionValue(expression: any): any {
+  if (expression.type === "ObjectExpression") {
+    const obj: Record<string, any> = {};
+    for (const prop of expression.properties) {
+      obj[prop.key.name] = parseJSXExpressionValue(prop.value);
+    }
+    return obj;
+  }
+  if (expression.type === "ArrayExpression") {
+    return expression.elements.map(parseJSXExpressionValue);
+  }
+  if (expression.type === "Literal") return expression.value;
+  if (expression.type === "Identifier") return expression.name;
+  return null;
+}
+
+export function parseProps(propsString: string): Record<string, any> {
+  try {
+    // Wrap the props in a dummy JSX element
+    const wrappedJSX = `<dummy ${propsString} />`;
+
+    const ast = JSXParser.parse(wrappedJSX, {
+      ecmaVersion: 2020,
+      sourceType: "module",
+    }) as any;
+
+    // The parsed props will be in the attributes of the JSXOpeningElement
+    const jsxElement = ast.body[0].expression;
+    const attributes = jsxElement.openingElement.attributes;
+
+    return parseJSXAttributes(attributes);
+  } catch (error) {
+    console.error("Error parsing props:", error);
+    return {};
+  }
+}
+
+function parseJSXAttributes(attributes: any[]): Record<string, any> {
+  const result: Record<string, any> = {};
+
+  for (const attr of attributes) {
+    if (attr.type === "JSXAttribute") {
+      const key = attr.name.name;
+      const value = parseJSXAttributeValue(attr.value);
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+
+function parseObjectExpression(objectExpression: any): Record<string, any> {
+  const result: Record<string, any> = {};
+
+  for (const property of objectExpression.properties) {
+    const key = property.key.name || property.key.value;
+    const value = parseJSXExpressionValue(property.value);
+    result[key] = value;
+  }
+
+  return result;
+}
+
+function parseExpression(expression: any): any {
+  switch (expression.type) {
+    case "Literal":
+      return expression.value;
+    case "ObjectExpression":
+      return parseObjectExpression(expression);
+    case "ArrayExpression":
+      return expression.elements.map(parseExpression);
+    case "JSXElement":
+      // Handle JSX elements if needed
+      return parseJSXElement(expression);
+    case "Identifier":
+      // For identifiers like `true`, `false`, `null`
+      if (expression.name === "true") return true;
+      if (expression.name === "false") return false;
+      if (expression.name === "null") return null;
+      return expression.name;
+    default:
+      console.warn(`Unhandled expression type: ${expression.type}`);
+      return null;
+  }
+}
+
+function parseJSXElement(element: any): any {
+  // Implement JSX parsing if needed
+  // This is a placeholder implementation
+  return `<${element.openingElement.name.name} />`;
+}
+
 export function getFilePatterns(contentConfig: any): string[] {
   if (typeof contentConfig === "string") return [contentConfig];
   if (Array.isArray(contentConfig))
@@ -137,29 +197,26 @@ export function getFilePatterns(contentConfig: any): string[] {
   return [];
 }
 
-/**
- * Adds classes to the safelist with the given prefix.
- * @param {Set<string>} safelist - The set to add safelist items to.
- * @param {string | string[] | Record<string, string | string[]>} classes - The classes to add to the safelist.
- * @param {string} [prefix=""] - The prefix to apply to the classes.
- */
 export function addToSafelist(
   safelist: Set<string>,
   classes: string | string[] | Record<string, string | string[]>,
   prefix: string = ""
 ): void {
-  if (!prefix) return;
-
-  const addClassWithPrefix = (cls: string) => safelist.add(`${prefix}:${cls}`);
+  const addClassWithPrefix = (cls: string) => {
+    const safelistItem = prefix ? `${prefix}:${cls}` : cls;
+    safelist.add(safelistItem);
+  };
 
   if (typeof classes === "string") {
     classes.split(/\s+/).forEach(addClassWithPrefix);
   } else if (Array.isArray(classes)) {
     classes.forEach(addClassWithPrefix);
   } else if (typeof classes === "object" && classes !== null) {
-    Object.entries(classes).forEach(([breakpoint, breakpointClasses]) => {
-      if (breakpoint !== "default") {
-        addToSafelist(safelist, breakpointClasses, breakpoint);
+    Object.values(classes).forEach((value) => {
+      if (typeof value === "string") {
+        addClassWithPrefix(value);
+      } else if (Array.isArray(value)) {
+        value.forEach(addClassWithPrefix);
       }
     });
   }
