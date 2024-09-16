@@ -52,7 +52,7 @@ function getFilePatterns(content) {
   }
   return [];
 }
-var src_default = plugin(function({ config }) {
+var src_default = plugin(function({ addBase, config }) {
   const safelist = [];
   const contentConfig = config("content");
   const options = {
@@ -65,23 +65,30 @@ var src_default = plugin(function({ config }) {
       const content = fs.readFileSync(file, "utf8");
       const recastComponents = parseRecastComponents(content);
       recastComponents.forEach((component) => {
-        const { base, variants, breakpoints } = component;
-        addClassesToSafelist(safelist, base, "", breakpoints);
+        const { base, variants, breakpoints: breakpoints2 } = component;
+        addClassesToSafelist(safelist, base, "", breakpoints2);
         Object.values(variants).forEach((variantGroup) => {
           Object.values(variantGroup).forEach((classes) => {
-            addClassesToSafelist(safelist, classes, "", breakpoints);
+            addClassesToSafelist(safelist, classes, "", breakpoints2);
           });
         });
-        breakpoints.forEach((breakpoint) => {
-          addClassesToSafelist(safelist, base, breakpoint, breakpoints);
+        breakpoints2.forEach((breakpoint) => {
+          addClassesToSafelist(safelist, base, breakpoint, breakpoints2);
           Object.values(variants).forEach((variantGroup) => {
             Object.values(variantGroup).forEach((classes) => {
-              addClassesToSafelist(safelist, classes, breakpoint, breakpoints);
+              addClassesToSafelist(safelist, classes, breakpoint, breakpoints2);
             });
           });
         });
       });
     });
+  });
+  const screens = config("theme.screens", {});
+  const breakpoints = Object.keys(screens);
+  addBase({
+    ":root": {
+      "--recast-breakpoints": JSON.stringify(breakpoints)
+    }
   });
   const existingSafelist = config("safelist") || [];
   const combinedSafelist = existingSafelist.concat(safelist);

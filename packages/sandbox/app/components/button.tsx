@@ -37,12 +37,3 @@ export const Button = recast(Component, {
   },
   breakpoints: ["sm", "md", "lg"],
 });
-
-// flex sm:flex md:flex lg:flex items-center sm:items-center
-// md:items-center lg:items-center justify-center sm:justify-center
-// md:justify-center lg:justify-center bg-blue-500 text-white
-// md:text-white md:bg-red-500 md:text-white text-md lg:text-sm
-// md:text-lg
-
-// `default` is always required when defining responsive props.
-/* <Button variant={{ default: "primary", md: "outline"}} size={{ default: "md", lg: "sm" }}>Sandbox</Button> */

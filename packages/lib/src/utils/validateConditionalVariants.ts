@@ -1,8 +1,8 @@
-import { RelaxedCondiiton, RelaxedVariantProps } from "../types.js";
+import { RelaxedCondition, RelaxedVariantProps } from "../types.js";
 
 type ValidateConditionProps = {
   variants?: RelaxedVariantProps;
-  condition: RelaxedCondiiton;
+  condition: RelaxedCondition;
   defaults?: Record<string, string>;
 };
 

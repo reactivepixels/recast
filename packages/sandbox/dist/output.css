@@ -446,6 +446,10 @@ video {
   display: none;
 }
 
+:root {
+  --recast-breakpoints: ["sm","md","lg","xl","2xl","3xl"];
+}
+
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -566,12 +570,20 @@ video {
   width: 100%;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .items-center {
   align-items: center;
 }
 
 .justify-center {
   justify-content: center;
+}
+
+.gap-12 {
+  gap: 3rem;
 }
 
 .bg-blue-500 {
@@ -606,10 +618,6 @@ video {
 .antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-.outline {
-  outline-style: solid;
 }
 
 body {

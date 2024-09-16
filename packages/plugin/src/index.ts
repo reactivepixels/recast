@@ -129,7 +129,7 @@ function getFilePatterns(content: ContentConfig): string[] {
 /**
  * Tailwind plugin for processing Recast components and generating a safelist.
  */
-export default plugin(function ({ config }) {
+export default plugin(function ({ addBase, config }) {
   const safelist: string[] = [];
 
   // Read content configuration from Tailwind config
@@ -175,6 +175,17 @@ export default plugin(function ({ config }) {
         });
       });
     });
+  });
+
+  // Extract breakpoints from Tailwind config
+  const screens = config('theme.screens', {});
+  const breakpoints = Object.keys(screens);
+
+  // Inject breakpoints into CSS
+  addBase({
+    ':root': {
+      '--recast-breakpoints': JSON.stringify(breakpoints),
+    },
   });
 
   // Add the safelist to the Tailwind config

@@ -184,7 +184,7 @@ export interface RelaxedStyles<B extends string = string> {
 export type RelaxedDefaults = { variants?: Record<string, string>; modifiers?: string[] };
 export type RelaxedBase = string | string[] | Record<string, string | string[]>;
 
-export type RelaxedCondiiton = {
+export type RelaxedCondition = {
   variants?: Record<string, string | string[]>;
   modifiers?: string | string[];
   className: string | string[] | Record<string, string | string[]>;
