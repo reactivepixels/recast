@@ -1,6 +1,10 @@
 import type { Config } from "tailwindcss";
 import recastTailwindPlugin from "@rpxl/recast-tailwind";
 
+/**
+ * Breakpoints configuration object
+ * @type {const} Ensures TypeScript treats this as a readonly object with literal types
+ */
 export const breakpoints = {
   sm: "640px",
   md: "768px",
@@ -9,6 +13,10 @@ export const breakpoints = {
   "2xl": "1536px",
 };
 
+/**
+ * Tailwind CSS configuration object
+ * @type {import('tailwindcss').Config}
+ */
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -17,9 +25,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      /**
+       * Screen breakpoints configuration
+       * @type {typeof breakpoints}
+       */
       screens: breakpoints,
     },
   },
+  /**
+   * Recast plugin initialization
+   * @type {import('tailwindcss/plugin')}
+   */
   plugins: [recastTailwindPlugin],
 };
 

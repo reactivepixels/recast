@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseRecastComponents, parseRecastUsages, parseProps } from "./utils";
+import { parseRecastComponents, parseRecastUsages, parseProps } from "../utils";
 
 function generateLargeComponentContent(count: number): string {
   let content = "";

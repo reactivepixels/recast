@@ -30,11 +30,12 @@ export default plugin(function ({ config }) {
       contentConfig.files.length > 0 &&
       contentConfig.files[0].raw
     ) {
+      // Test environment
       const content = contentConfig.files[0].raw;
       Object.assign(components, parseRecastComponents(content));
       usages.push(...parseRecastUsages(content));
     } else {
-      // Handle real-world scenario (not implemented in this example)
+      // Handle real-world scenario
       const filePatterns = getFilePatterns(contentConfig);
       filePatterns.forEach((pattern) => {
         const files = glob.sync(pattern);

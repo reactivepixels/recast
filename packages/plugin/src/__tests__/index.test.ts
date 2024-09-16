@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
-import recastPlugin from "./index";
+import recastPlugin from "../index";
 import {
   parseRecastComponents,
   parseRecastUsages,
   parseProps,
   getFilePatterns,
   addToSafelist,
-} from "./utils";
+} from "../utils";
 import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 import path from "path";

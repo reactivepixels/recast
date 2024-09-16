@@ -3,11 +3,16 @@ import { ClassNameRecord } from "../types.js";
 /**
  * Normalizes the given classes by removing leading and trailing whitespace and joining them with a space.
  *
- * @param {string|string[]} classes - The classes to normalize. It can be a single class or an array of classes.
+ * @param {string|string[]|undefined} classes - The classes to normalize. It can be a single class, an array of classes, or undefined.
  * @returns {string} The normalized classes.
  */
 export const normalizeValue = (classes?: string | string[]) => {
-  if (Array.isArray(classes)) return classes.map((x) => x.trim()).join(" ");
+  if (Array.isArray(classes)) {
+    return classes
+      .filter(Boolean)
+      .map((x) => x?.trim())
+      .join(" ");
+  }
 
   return classes?.trim() || "";
 };
@@ -16,8 +21,8 @@ export const normalizeValue = (classes?: string | string[]) => {
  * Merges two values by normalizing them and concatenating them with a space.
  * If only one value is provided, it is normalized and returned.
  *
- * @param {string|string[]} objValue - The first value to merge. It can be a single value or an array of values.
- * @param {string|string[]} value - The second value to merge. It can be a single value or an array of values.
+ * @param {string|string[]|undefined} objValue - The first value to merge. It can be a single value, an array of values, or undefined.
+ * @param {string|string[]|undefined} value - The second value to merge. It can be a single value, an array of values, or undefined.
  * @returns {string} The merged and normalized values.
  */
 export const mergeStringClassNames = (objValue?: string | string[], value?: string | string[]): string => {
