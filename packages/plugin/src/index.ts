@@ -6,7 +6,6 @@ import {
   parseRecastUsages,
   getFilePatterns,
   addToSafelist,
-  debugLog,
   RecastComponent,
   RecastUsage,
 } from "./utils";
@@ -19,8 +18,6 @@ import {
  * are included in the final CSS output, even when not explicitly used in the markup.
  */
 export default plugin(function ({ config }) {
-  console.log("Plugin version: 1.0.3");
-
   /**
    * Set to store unique safelist entries
    * @type {Set<string>}
@@ -56,7 +53,6 @@ export default plugin(function ({ config }) {
       contentConfig.files[0].raw
     ) {
       // Test environment: content is passed directly
-      debugLog("Processing direct content", contentConfig.files[0].raw);
       Object.assign(
         components,
         parseRecastComponents(contentConfig.files[0].raw)
@@ -65,79 +61,45 @@ export default plugin(function ({ config }) {
     } else {
       // Real-world scenario: process file patterns
       const filePatterns = getFilePatterns(contentConfig);
-      debugLog("File patterns", filePatterns);
-
       filePatterns.forEach((pattern) => {
-        debugLog("Processing pattern", pattern);
         const files = glob.sync(pattern);
-        debugLog("Found files", files);
         files.forEach((file) => {
-          debugLog("Processing file", file);
           const content = fs.readFileSync(file, "utf8");
-          debugLog("File content", content);
           Object.assign(components, parseRecastComponents(content));
           usages.push(...parseRecastUsages(content));
         });
       });
     }
   } catch (error) {
-    console.error("Error processing content:", error);
+    // Error handling without console.log
   }
-
-  debugLog("All components", components);
-  debugLog("All usages", usages);
 
   /**
    * Process each usage to generate safelist entries
    */
   usages.forEach((usage) => {
-    debugLog("Processing usage", usage);
     const component = components[usage.componentName];
-    if (!component) {
-      debugLog("Component not found", usage.componentName);
-      return;
-    }
+    if (!component) return;
 
     Object.entries(usage.props).forEach(([propName, propValue]) => {
-      debugLog("Processing prop", { propName, propValue });
       const variantGroup = component.variants?.[propName];
-      if (!variantGroup) {
-        debugLog("Variant group not found", propName);
-        return;
-      }
+      if (!variantGroup) return;
 
       if (typeof propValue === "object" && propValue !== null) {
         Object.entries(propValue).forEach(([breakpoint, value]) => {
-          debugLog("Processing breakpoint", { breakpoint, value });
           if (breakpoint !== "default" && typeof value === "string") {
             const classes = variantGroup[value];
             if (classes) {
-              debugLog("Adding to safelist", { classes, breakpoint });
               addToSafelist(safelist, classes, breakpoint);
-            } else {
-              debugLog("Classes not found for variant", { propName, value });
             }
           }
         });
-      } else {
-        debugLog("Prop value is not an object", propValue);
       }
     });
   });
 
   /**
-   * Generate the final sorted safelist
-   * @type {string[]}
-   */
-  const finalSafelist = Array.from(safelist).sort();
-
-  /**
-   * Used for unit tests
-   */
-  debugLog("Final safelist", finalSafelist);
-
-  /**
    * Set the safelist in the Tailwind config
    */
-  config().safelist = finalSafelist;
+  config().safelist = Array.from(safelist);
 });

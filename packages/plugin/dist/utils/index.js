@@ -1,9 +1,11 @@
-// src/index.ts
-import plugin from "tailwindcss/plugin";
-import fs from "fs";
-import { glob } from "glob";
-
 // src/utils/index.ts
+import util from "util";
+function debugLog(label, data) {
+  console.log(
+    `DEBUG - ${label}:`,
+    util.inspect(data, { depth: null, colors: true })
+  );
+}
 function parseRecastComponents(content) {
   const componentRegex = /(?:export\s+(?:const|default)|const)\s+(\w+)\s*=\s*recast\s*\(\s*\w+\s*,\s*({[\s\S]*?})\s*\)/g;
   const components = {};
@@ -90,57 +92,12 @@ function addToSafelist(safelist, classes, prefix = "") {
     });
   }
 }
-
-// src/index.ts
-var src_default = plugin(function({ config }) {
-  const safelist = /* @__PURE__ */ new Set();
-  const components = {};
-  const usages = [];
-  const contentConfig = config("content");
-  try {
-    if (typeof contentConfig === "object" && contentConfig !== null && "files" in contentConfig && Array.isArray(contentConfig.files) && contentConfig.files.length > 0 && typeof contentConfig.files[0] === "object" && contentConfig.files[0].raw) {
-      Object.assign(
-        components,
-        parseRecastComponents(contentConfig.files[0].raw)
-      );
-      usages.push(...parseRecastUsages(contentConfig.files[0].raw));
-    } else {
-      const filePatterns = getFilePatterns(contentConfig);
-      filePatterns.forEach((pattern) => {
-        const files = glob.sync(pattern);
-        files.forEach((file) => {
-          const content = fs.readFileSync(file, "utf8");
-          Object.assign(components, parseRecastComponents(content));
-          usages.push(...parseRecastUsages(content));
-        });
-      });
-    }
-  } catch (error) {
-  }
-  usages.forEach((usage) => {
-    const component = components[usage.componentName];
-    if (!component)
-      return;
-    Object.entries(usage.props).forEach(([propName, propValue]) => {
-      var _a;
-      const variantGroup = (_a = component.variants) == null ? void 0 : _a[propName];
-      if (!variantGroup)
-        return;
-      if (typeof propValue === "object" && propValue !== null) {
-        Object.entries(propValue).forEach(([breakpoint, value]) => {
-          if (breakpoint !== "default" && typeof value === "string") {
-            const classes = variantGroup[value];
-            if (classes) {
-              addToSafelist(safelist, classes, breakpoint);
-            }
-          }
-        });
-      }
-    });
-  });
-  config().safelist = Array.from(safelist);
-});
 export {
-  src_default as default
+  addToSafelist,
+  debugLog,
+  getFilePatterns,
+  parseProps,
+  parseRecastComponents,
+  parseRecastUsages
 };
 //# sourceMappingURL=index.js.map

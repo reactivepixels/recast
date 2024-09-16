@@ -72,7 +72,7 @@ export function parseRecastComponents(
  * @returns {RecastUsage[]} An array of parsed Recast usages.
  */
 export function parseRecastUsages(content: string): RecastUsage[] {
-  const usageRegex = /<(\w+)([^>]+)>/g;
+  const usageRegex = /<(\w+)([^>]*)>/g;
   return Array.from(content.matchAll(usageRegex)).map(
     ([, componentName, propsString]) => ({
       componentName,
