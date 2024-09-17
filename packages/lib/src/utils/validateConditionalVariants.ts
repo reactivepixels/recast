@@ -1,49 +1,39 @@
-import { RelaxedCondiiton, RelaxedVariantProps } from "../types.js";
+import { RelaxedCondition, RelaxedVariantProps } from "../types.js";
+import { isNonNullObject, isVariantMatch, safeObjectAccess } from "./common.js";
 
-type ValidateConditionProps = {
-  variants?: RelaxedVariantProps;
-  condition: RelaxedCondiiton;
+type ValidateConditionalVariantsProps = {
+  condition: RelaxedCondition;
+  variants: RelaxedVariantProps;
   defaults?: Record<string, string>;
 };
 
 /**
- * Validates conditional variants for a given condition object.
- * @param condition - The condition object containing variant keys and their possible values.
- * @param variants - The variants object containing variant keys.
- * @param defaults - The default variant keys.
- * @returns A boolean indicating whether all specified conditional variant keys match.
+ * Validates if the given condition's variants match the current variants or defaults.
+ *
+ * @param {ValidateConditionalVariantsProps} props - The input properties
+ * @returns {boolean} True if the condition's variants are valid, false otherwise
  */
-export const validateConditionalVariants = ({ condition, variants, defaults }: ValidateConditionProps) => {
-  const conditionalVariantKeys = Object.keys(condition.variants || {});
+export const validateConditionalVariants = ({
+  condition,
+  variants,
+  defaults = {},
+}: ValidateConditionalVariantsProps): boolean => {
+  if (!condition.variants) return true;
 
-  // Always return true if variant conditions are empty
-  if (!conditionalVariantKeys.length) {
-    return true;
-  }
+  return Object.entries(condition.variants).every(([variantKey, conditionValue]) => {
+    const currentVariant =
+      safeObjectAccess<string, RelaxedVariantProps>(variants, [variantKey]) ?? defaults[variantKey];
 
-  // If component has all specified conditional variant keys
-  // check if each of the variant keys includes one of the specified values
-  const conditionalVariantMatches = conditionalVariantKeys.filter((x) => {
-    const conditionalVariants = condition.variants?.[x];
-
-    if (Array.isArray(conditionalVariants)) {
-      // Handle multiple possible variant values if it exists
-      if (variants?.[x]) {
-        return conditionalVariants.find((j) => j === variants[x]);
-      } else {
-        // Check defaults
-        return conditionalVariants.find((j) => j === defaults?.[x]);
-      }
-    } else {
-      // Handle a single possible value if variant exists
-      if (variants?.[x]) {
-        return conditionalVariants === variants[x];
-      } else {
-        // Check defaults
-        return conditionalVariants === defaults?.[x];
-      }
+    if (typeof currentVariant === "string") {
+      return isVariantMatch(conditionValue, currentVariant);
     }
-  });
 
-  return conditionalVariantMatches.length === conditionalVariantKeys.length;
+    if (isNonNullObject(currentVariant)) {
+      return Object.values(currentVariant).some((breakpointValue) =>
+        isVariantMatch(conditionValue, breakpointValue as string),
+      );
+    }
+
+    return false;
+  });
 };

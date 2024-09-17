@@ -19,9 +19,9 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "types": ["node", "react", "jest"],
+    "types": ["node", "react", "vitest/globals", "@testing-library/jest-dom"],
     "useDefineForClassFields": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src", "src/__tests__/setup.ts"],
+  "exclude": ["src/**/*.test.ts", "node_modules"]
 }

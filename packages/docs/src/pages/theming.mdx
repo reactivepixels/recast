@@ -8,31 +8,130 @@ import { Callout } from "nextra/components";
 
 The theme layer is where the visual presentation of the component is defined. It
 ensures that our styles are entirely decoupled from the component primitive,
-maximizing reuse. The following guide will detail the creation of a theme layer
-for a component primitive and elucidate the individual properties at our
-disposal to fulfill any design requirements.
+maximizing reuse. This guide will detail the creation of a theme layer for a
+component primitive and explain the individual properties available to fulfill
+any design requirements.
 
-> All examples below use [Tailwind CSS](https://tailwindcss.com/). If you are
-> using Tailwind CSS, check out our section on
-> [setting up Tailwind CSS with Recast](/tailwind-css).
+> While the examples below use [Tailwind CSS](https://tailwindcss.com/), Recast
+> works with any CSS solution, including CSS modules, CSS-in-JS libraries, or
+> plain CSS classes.
 
-### Create a Themed Component
+## Creating a Themed Component
 
-Once you have a component primitive, you can create a themed component by
-importing the primitive and calling the `recast{:tsx}` method and passing any
-React component. This is all that is required to start using a Recast component
-in your project.
+To create a themed component, import your component primitive and use the
+`recast` function:
 
-```tsx copy showLineNumbers filename="components/ui/button.ts"
-import { recast } from "rpxl/recast";
+```jsx
+import { recast } from "@rpxl/recast";
 import ButtonPrimitive from "@/components/primitives/button";
 
-export const Button = recast(ButtonPrimitive, {});
+export const Button = recast(ButtonPrimitive, {
+  // Theme object
+});
 ```
 
-Of course this is a very basic example and will only render a button with no
-styling. Let's build from this foundation and step through the process of
-creating a beautifully themed button.
+The `recast` function takes two arguments:
+
+1. The component primitive
+2. A theme object that defines the styling
+
+Let's explore the structure of the theme object:
+
+## Theme Object Structure
+
+### Base Styles
+
+Base styles are always applied to the component:
+
+```jsx
+export const Button = recast(ButtonPrimitive, {
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  // ...
+});
+```
+
+### Variants
+
+Variants define different variations of your component:
+
+```jsx
+export const Button = recast(ButtonPrimitive, {
+  // ...
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+      outline: "border border-gray-300 text-gray-700 hover:bg-gray-100",
+    },
+    size: {
+      sm: "px-3 py-2 text-sm",
+      md: "px-4 py-2 text-base",
+      lg: "px-6 py-3 text-lg",
+    },
+  },
+  // ...
+});
+```
+
+### Modifiers
+
+Modifiers are boolean properties that can be combined with variants:
+
+```jsx
+export const Button = recast(ButtonPrimitive, {
+  // ...
+  modifiers: {
+    fullWidth: "w-full",
+    rounded: "rounded-full",
+  },
+  // ...
+});
+```
+
+### Conditionals
+
+Conditionals allow you to apply styles based on combinations of variants and
+modifiers:
+
+```jsx
+export const Button = recast(ButtonPrimitive, {
+  // ...
+  conditionals: [
+    {
+      variants: { size: "lg", variant: "primary" },
+      modifiers: ["fullWidth"],
+      className: "font-bold uppercase",
+    },
+  ],
+  // ...
+});
+```
+
+### Defaults
+
+Set default values for variants and modifiers:
+
+```jsx
+export const Button = recast(ButtonPrimitive, {
+  // ...
+  defaults: {
+    variants: { variant: "primary", size: "md" },
+    modifiers: ["rounded"],
+  },
+});
+```
+
+## Best Practices for Theming with Recast
+
+1. Keep your component primitives simple and focused on functionality.
+2. Use descriptive names for variants and modifiers.
+3. Leverage conditionals for complex style combinations.
+4. Set sensible defaults to reduce prop clutter in usage.
+5. Use TypeScript for better type checking and developer experience.
+
+By following these guidelines and utilizing the full power of Recast's theming
+capabilities, you can create flexible, reusable components that can easily adapt
+to different design requirements across projects.
 
 <Steps>
 ### Add Base Styles

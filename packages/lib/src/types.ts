@@ -1,44 +1,69 @@
 /**
- * Recast utility types
+ * A record of class names, where each key maps to a string or array of strings.
  */
 export type ClassNameRecord = Record<string, string | string[]>;
+
+/**
+ * A function to merge class names.
+ * @param classes - The primary classes to be merged.
+ * @param className - An optional additional class name to be merged.
+ * @returns The merged class name string.
+ */
 export type MergeFn = (classes: string | string[], className?: string) => string;
+
+/**
+ * Represents null or undefined values.
+ */
 export type Nullish = null | undefined;
 
+/**
+ * Extracts the leaf types from a nested object type.
+ */
 export type Leaves<T> = {
   [K in keyof T]: T[K];
 }[keyof T];
 
+/**
+ * Adds an optional `rcx` prop to a component's props for Recast class object properties.
+ */
 export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string }> = {
   /** Recast class object properties */
   rcx?: { [P in keyof Props]?: string };
 };
 
-/*
- * Strongly typed Recast generic types
+/**
+ * Utility type to handle optional variants.
  */
 export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
-export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
+
+/**
+ * Extracts modifier props from a modifier configuration object.
+ */
+export type ExtractModifierProps<M> = {
+  [K in keyof M]?: boolean | ResponsiveValue<boolean>;
+};
+
+/**
+ * Extracts variant props from a variant configuration object.
+ */
 export type ExtractVariantProps<V> = V extends object
   ? {
-      [K in keyof V]?: K extends string ? keyof V[K] : never;
+      [K in keyof V]?: ResponsiveValue<keyof V[K]>;
     }
   : never;
 
+/**
+ * Base props for Recast components.
+ */
 export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
 
+/**
+ * Configuration object for Recast styles.
+ */
 export type RecastStyles<V, M, P> = {
   /**
    * Default values for variants and modifiers. Defaults will only be applied
    * if the variant or modifier is not provided.
-   * {@link https://reactivepixels.github.io/recast/theming#set-some-defaults | See docs}.
-   *
-   * @example
-   * ```ts
-   * defaults: {
-   *  variants: { variant: "primary", size: "md" },
-   * }
-   * ```
    */
   defaults?: {
     variants?: Omit<{ [K in keyof V]?: keyof V[K] }, MaybeVariants<V>>;
@@ -47,12 +72,6 @@ export type RecastStyles<V, M, P> = {
 
   /**
    * Base styles for component. These will always be applied.
-   * {@link https://reactivepixels.github.io/recast/theming#add-base-styles | See docs}.
-   *
-   * @example
-   * ```ts
-   * { base: "bg-blue-500 rounded-md" }
-   * ```
    */
   base?: keyof NonNullable<Leaves<P>> extends Nullish
     ? string | string[]
@@ -65,18 +84,6 @@ export type RecastStyles<V, M, P> = {
 
   /**
    * Variants can be used to create distinct variations for a component.
-   * {@link https://reactivepixels.github.io/recast/theming#add-variants | See docs}.
-   *
-   * @example
-   * ```ts
-   * variants: {
-   *  size: {
-   *    sm: "text-sm",
-   *    md: "text-md",
-   *    lg: "text-lg"
-   *  }
-   * }
-   * ```
    */
   variants?: {
     [K in keyof V]: Record<
@@ -95,16 +102,6 @@ export type RecastStyles<V, M, P> = {
   /**
    * Modifiers are variations of a component that can be "mixed-in"
    * and combined with other modifiers and all variants.
-   * {@link https://reactivepixels.github.io/recast/theming#add-modifiers | See docs}.
-   *
-   * @example
-   * ```ts
-   * modifiers: {
-   *  block: "w-full",
-   *  floating: "shadow-lg",
-   *  pill: "rounded-full px-8",
-   * }
-   * ```
    */
   modifiers?: {
     [K in keyof M]: keyof NonNullable<Leaves<P>> extends Nullish
@@ -118,19 +115,7 @@ export type RecastStyles<V, M, P> = {
   };
 
   /**
-   * Conditonals are a way to define conditional styles that will only be applied if certain rules are met.
-   * {@link https://reactivepixels.github.io/recast/theming#add-conditional-styles | See docs}.
-   *
-   * @example
-   * ```ts
-   * conditionals: [
-   *  {
-   *    variants: { size: "lg" },
-   *    modifiers: ["floating"],
-   *    className: "border-4 border-blue-500 text-white",
-   *  },
-   * ]
-   * ```
+   * Conditionals are a way to define conditional styles that will only be applied if certain rules are met.
    */
   conditionals?: {
     variants?: V extends object
@@ -153,27 +138,80 @@ export type RecastStyles<V, M, P> = {
 /**
  * Loosley typed for usage as arguments to different utility methods
  */
-export type RelaxedStyles = {
-  defaults?: RelaxedDefaults;
-  base?: RelaxedBase;
-  variants?: Record<string, Record<string, string | string[] | Record<string, string | string[]>>>;
-  modifiers?: Record<string, string | string[] | Record<string, string | string[]>>;
-  conditionals?: RelaxedCondiiton[];
-};
+export interface RelaxedStyles<B extends string = string> {
+  base?: string | string[] | ClassNameRecord;
+  variants?: {
+    [key: string]: {
+      [key: string]: string | string[] | ClassNameRecord;
+    };
+  };
+  modifiers?: {
+    [key: string]: string | string[] | ClassNameRecord;
+  };
+  conditionals?: Array<{
+    variants?: { [key: string]: string };
+    modifiers?: string | string[];
+    className: string | string[] | ClassNameRecord;
+  }>;
+  defaults?: {
+    variants?: { [key: string]: string };
+    modifiers?: string[];
+  };
+  breakpoints?: B[];
+}
 
+/**
+ * Relaxed version of default styles for internal use.
+ */
 export type RelaxedDefaults = { variants?: Record<string, string>; modifiers?: string[] };
+
+/**
+ * Relaxed version of base styles for internal use.
+ */
 export type RelaxedBase = string | string[] | Record<string, string | string[]>;
 
-export type RelaxedCondiiton = {
+/**
+ * Relaxed version of conditional styles for internal use.
+ */
+export type RelaxedCondition = {
   variants?: Record<string, string | string[]>;
   modifiers?: string | string[];
   className: string | string[] | Record<string, string | string[]>;
 };
 
+/**
+ * Props returned by getRecastClasses function.
+ */
 export type RelaxedRecastStyleProps = {
   className: string;
   rcx: ClassNameRecord;
 };
 
-export type RelaxedVariantProps = Record<string, string>;
-export type RelaxedModifierProps = string[];
+/**
+ * Relaxed version of variant props for internal use.
+ */
+export type RelaxedVariantProps = {
+  [key: string]: ResponsiveValue<string>;
+};
+
+/**
+ * Relaxed version of modifier props for internal use.
+ */
+export type RelaxedModifierProps = {
+  [key: string]: boolean | ResponsiveValue<boolean>;
+};
+
+/**
+ * Interface for defining breakpoints in a Recast application.
+ */
+export interface RecastBreakpoints {}
+
+/**
+ * Use the keys of RecastBreakpoints as breakpoint types.
+ */
+export type Breakpoint = keyof RecastBreakpoints;
+
+/**
+ * Represents a value that can be responsive (i.e., different for different breakpoints).
+ */
+export type ResponsiveValue<T> = T | ({ default: T } & Partial<Record<Breakpoint, T>>);

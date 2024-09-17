@@ -1,21 +1,29 @@
-import { RelaxedModifierProps, RelaxedStyles, RelaxedVariantProps } from "../types.js";
-import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
-
+import { RelaxedModifierProps, RelaxedStyles, RelaxedVariantProps, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
+import { generateResponsiveClasses, mergeArrays, isEmptyObject } from "./common.js";
 import { validateConditionalModifiers } from "./validateConditionalModifiers.js";
 import { validateConditionalVariants } from "./validateConditionalVariants.js";
 
-type Props = {
+type GetConditionalClassesProps = {
   styles: RelaxedStyles;
-  variants?: RelaxedVariantProps;
-  modifiers?: RelaxedModifierProps;
+  variants: RelaxedVariantProps;
+  modifiers: RelaxedModifierProps;
 };
 
-export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = [] }: Props) => {
-  // If no conditions to check then get out of here
-  if (!styles.conditionals) return RECAST_STYLE_PROPS;
+/**
+ * Generates conditional classes based on the provided styles, variants, and modifiers.
+ *
+ * @param {GetConditionalClassesProps} props - The input properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ */
+export const getConditionalClasses = ({
+  styles,
+  variants,
+  modifiers,
+}: GetConditionalClassesProps): RelaxedRecastStyleProps => {
+  if (!styles.conditionals || styles.conditionals.length === 0) return RECAST_STYLE_PROPS;
 
-  const conditionalClasses = styles.conditionals.reduce((acc, condition) => {
+  return styles.conditionals.reduce<RelaxedRecastStyleProps>((acc, condition) => {
     const hasConditionalVariants = validateConditionalVariants({
       condition,
       variants,
@@ -28,17 +36,14 @@ export const getConditionalClasses = ({ styles = {}, variants = {}, modifiers = 
       defaults: styles.defaults?.modifiers,
     });
 
-    // Only merge conditional classes if all conditions are met
     if (hasConditionalVariants && hasConditionalModifiers) {
-      if (typeof condition.className === "string" || Array.isArray(condition.className)) {
-        return { className: mergeStringClassNames(acc.className, condition.className), rcx: acc.rcx };
-      }
-
-      return { className: acc.className, rcx: mergeObjectClassNames(acc.rcx, condition.className) };
+      const responsiveClasses = generateResponsiveClasses(condition.className);
+      return {
+        className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
+        rcx: isEmptyObject(responsiveClasses.rcx) ? acc.rcx : { ...acc.rcx, ...responsiveClasses.rcx },
+      };
     }
 
     return acc;
   }, RECAST_STYLE_PROPS);
-
-  return conditionalClasses;
 };

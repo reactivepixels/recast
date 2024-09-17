@@ -1,16 +1,37 @@
+import { RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { RelaxedStyles } from "../types.js";
+import { isString, isStringArray, isNonNullObject } from "./common.js";
 
-type Props = {
+type GetBaseClassesProps = {
   styles: RelaxedStyles;
 };
 
-export const getBaseClasses = ({ styles = {} }: Props) => {
-  if (!styles.base) return RECAST_STYLE_PROPS;
-
-  if (typeof styles.base === "string" || Array.isArray(styles.base)) {
-    return { className: styles.base, rcx: {} };
+/**
+ * Extracts base classes from the provided styles object.
+ *
+ * @param {GetBaseClassesProps} props - The input properties.
+ * @returns {RelaxedRecastStyleProps} An object containing className and rcx properties.
+ */
+export const getBaseClasses = ({ styles }: GetBaseClassesProps): RelaxedRecastStyleProps => {
+  if (!styles?.base) {
+    return RECAST_STYLE_PROPS;
   }
 
-  return { className: "", rcx: styles.base };
+  const { base } = styles;
+
+  if (isString(base)) {
+    return { className: base.trim(), rcx: {} };
+  }
+
+  if (isStringArray(base)) {
+    return { className: base.filter(Boolean).join(" ").trim(), rcx: {} };
+  }
+
+  if (isNonNullObject(base)) {
+    return { className: "", rcx: base };
+  }
+
+  // Handle unexpected input
+  console.warn("Unexpected type for styles.base:", typeof base);
+  return RECAST_STYLE_PROPS;
 };

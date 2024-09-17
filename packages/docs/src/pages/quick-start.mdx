@@ -1,113 +1,161 @@
 import { Tabs } from "nextra/components";
 import { ComponentPreview } from "@/components/ui/component-preview";
 import { Button } from "@/components/ui/button";
+import { Callout } from "nextra/components";
 
 # Get started with Recast
 
-The following guide is intended as a very brief overview of how to get up and
-running quickly with Recast.
+The following guide provides a brief overview of how to get up and running
+quickly with Recast.
 
 ## 1. Installation
 
-Install the library into your React project via npm.
+Install Recast into your React project:
 
-```bash copy
-pnpm install @rpxl/recast
+```bash
+npm install @rpxl/recast
 ```
 
-## 2. Create a Component
+If you're using Tailwind CSS, you can also install the Recast Tailwind plugin:
 
-The below example is a very basic button component primitive that we will use
-later on to define a theme layer with. This component is not tied to Recast in
-any way, with the one exception being complex structure components that we will
-discuss in the [Advanced Usage](/advanced-usage) section.
+```bash
+npm install @rpxl/recast-tailwind
+```
 
-```tsx copy showLineNumbers filename="components/primitives/button.tsx"
+## 2. Create a Component Primitive
+
+Create a basic button component primitive that we'll use to define a theme
+layer:
+
+```jsx
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
-  ({ ...props }, ref) => <button ref={ref} {...props} />;
+  ({ ...props }, ref) => <button ref={ref} {...props} />
 );
 ```
 
-> **Note**: the above example is just a React component, there is no reason this
-> could not be used independently of Recast. Recast is simply syntactic sugar
-> that can be used to cleanly define a theme layer for the component.
+> **Note**: This is a standard React component that can be used independently of
+> Recast. Recast simply provides a clean way to define a theme layer for the
+> component.
 
-## 2. Add a Theme
+## 3. Add a Theme Layer
 
-Here we import the component primitive we created in the previous step and wrap
-it with a theme layer. The theme layer is responsible for definining the theme
-props that can be applied to a component.
+Import the component primitive and wrap it with a theme layer using Recast:
 
-```tsx copy showLineNumbers filename="components/ui/button.ts"
+```jsx
 import { recast } from "@rpxl/recast";
-import { ButtonPrimitive } from "@/components/primitives/button";
+import { ButtonPrimitive } from "./ButtonPrimitive";
 
 export const Button = recast(ButtonPrimitive, {
-  defaults: {
-    variants: { variant: "primary", size: "md" },
-  },
-  base: [
-    "inline-flex",
-    "items-center",
-    "justify-center",
-    "rounded-md",
-    "font-medium",
-    "ring-offset-background",
-    "transition-colors",
-  ],
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
   variants: {
     variant: {
-      primary: [
-        "text-white",
-        "bg-gradient-to-br",
-        "from-purple-600",
-        "to-blue-500",
-        "hover:bg-gradient-to-bl",
-      ],
-      secondary: [
-        "text-white",
-        "bg-gradient-to-r",
-        "from-purple-500",
-        "to-pink-500",
-        "hover:bg-gradient-to-l",
-      ],
-      outline: [
-        "text-gray-900",
-        "border bg-white",
-        "border-gray-300",
-        "dark:bg-gray-800",
-        "dark:text-white",
-        "dark:border-gray-600",
-        "dark:hover:bg-gray-700",
-        "dark:hover:border-gray-600",
-      ],
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+      outline: "border border-gray-300 text-gray-700 hover:bg-gray-100",
     },
     size: {
       sm: "px-3 py-2 text-sm",
-      md: "text-md px-5 py-2.5",
-      lg: "px-8 py-3.5 text-lg",
+      md: "px-4 py-2 text-base",
+      lg: "px-6 py-3 text-lg",
     },
   },
   modifiers: {
-    pill: "rounded-full px-8",
+    fullWidth: "w-full",
+  },
+  defaults: {
+    variants: { variant: "primary", size: "md" },
   },
 });
 ```
 
-> **Note**: the example above is using [Tailwind CSS](https://tailwindcss.com/)
-> for styles but any css classes referencing a stylesheet or css modules could
-> be used here instead. If you are using Tailwind CSS, check out our section on
-> [setting up Tailwind CSS with Recast](/tailwind-css).
+> **Note**: The example above uses Tailwind CSS classes, but Recast works with
+> any CSS classes or CSS-in-JS solution.
 
-## 4. Usage Examples
+## 4. Tailwind CSS Integration (Optional)
 
-By adjusting the theme definition, an endless array of variations can be
-effortlessly achieved, all without the need to directly modify the component
-primitive.
+If you're using Tailwind CSS, add the Recast plugin to your
+`tailwind.config.js`:
+
+```js
+module.exports = {
+  // ...other config
+  plugins: [require("@rpxl/recast-tailwind")],
+};
+```
+
+This step is only necessary if you're using Tailwind CSS and want to leverage
+the Recast Tailwind plugin features.
+
+### What the Tailwind CSS Integration Provides:
+
+1. **Automatic Safelist Generation**: The plugin automatically generates a
+   safelist for your Recast components, ensuring that all Tailwind classes used
+   in your Recast components are included in your production build, even if
+   they're not found in your templates.
+
+2. **Responsive Styling**: The plugin enables responsive styling for Recast
+   components using Tailwind's responsive syntax. For example:
+
+   ```jsx
+   <Button size={{ default: "sm", md: "lg" }}>Responsive Button</Button>
+   ```
+
+   This button will be small by default and large on medium-sized screens and
+   above. The plugin will generate classes like:
+
+   ```html
+   <button class="px-3 py-2 text-sm md:px-6 md:py-3 md:text-lg">
+     Responsive Button
+   </button>
+   ```
+
+   <Callout type="info">
+     Here, `px-3 py-2 text-sm` are applied by default, and `px-6 py-3 text-lg`
+     are applied with the `md:` prefix, activating them at the medium breakpoint
+     and above.
+   </Callout>
+
+3. **Improved Performance**: The plugin optimizes the generation of Tailwind
+   classes for Recast components, potentially improving build times and reducing
+   CSS file size.
+
+4. **Better Integration**: It ensures that Recast and Tailwind work seamlessly
+   together, allowing you to leverage the full power of both libraries in your
+   project.
+
+This integration enhances the developer experience when using Recast with
+Tailwind CSS, providing more flexibility and efficiency in styling your
+components.
+
+## 5. Usage
+
+Now you can use your themed Button component with various props:
+
+```jsx
+import { Button } from "./Button";
+
+function App() {
+  return (
+    <div>
+      <Button>Default Button</Button>
+      <Button variant="secondary" size="lg">
+        Large Secondary Button
+      </Button>
+      <Button variant="outline" fullWidth>
+        Full Width Outline Button
+      </Button>{" "}
+    </div>
+  );
+}
+```
+
+This setup allows you to create reusable, themeable components with Recast. The
+theme layer is completely decoupled from the component primitive, making it easy
+to adjust styles without modifying the core component logic.
 
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
@@ -167,7 +215,7 @@ primitive.
   <Tabs.Tab>
     ```tsx
     import { Button } from "@/components/ui/button"
-    
+
     export function ButtonDemo() {
       return (
         <div className="flex flex-col gap-16 w-full">
@@ -225,3 +273,4 @@ primitive.
 
   </Tabs.Tab>
 </Tabs>
+````

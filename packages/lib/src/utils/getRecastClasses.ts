@@ -1,6 +1,5 @@
 import { RelaxedModifierProps, RelaxedRecastStyleProps, RelaxedStyles, RelaxedVariantProps } from "../types.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
-
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { getBaseClasses } from "./getBaseClasses.js";
 import { getConditionalClasses } from "./getConditionalClasses.js";
@@ -9,37 +8,45 @@ import { getDefaultVariantClasses } from "./getDefaultVariantClasses.js";
 import { getModifierClasses } from "./getModifierClasses.js";
 import { getVariantClasses } from "./getVariantClasses.js";
 
-type RecastThemeProps = {
+type RecastClasses = {
   styles: RelaxedStyles;
-  variants?: RelaxedVariantProps;
-  modifiers?: RelaxedModifierProps;
+  variants: RelaxedVariantProps;
+  modifiers: RelaxedModifierProps;
 };
 
 /**
- * Returns an object containing the CSS classes
- * generated from the provided styles, variants, and modifiers.
+ * Generates and combines CSS classes based on the provided styles, variants, and modifiers.
+ *
+ * @param {RecastClasses} params - The input parameters
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
  */
-export function getRecastClasses({ styles, variants, modifiers }: RecastThemeProps) {
-  const baseClasses = getBaseClasses({ styles });
-  const variantClasses = getVariantClasses({ styles, variants });
-  const defaultVariantClasses = getDefaultVariantClasses({ styles, variants });
-  const modifierClasses = getModifierClasses({ styles, modifiers });
-  const defaultModifierClasses = getDefaultModifierClasses({ styles, modifiers });
-  const conditionalClasses = getConditionalClasses({ styles, variants, modifiers });
+export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
+  // Early return for empty inputs
+  if (!styles || Object.keys(styles).length === 0) {
+    return RECAST_STYLE_PROPS;
+  }
 
-  const result = [
-    baseClasses,
-    variantClasses,
-    defaultVariantClasses,
-    modifierClasses,
-    defaultModifierClasses,
-    conditionalClasses,
-  ].reduce((acc, curr) => {
+  // Generate different types of classes
+  const classGenerators = [
+    getBaseClasses,
+    getVariantClasses,
+    getDefaultVariantClasses,
+    getModifierClasses,
+    getDefaultModifierClasses,
+    getConditionalClasses,
+  ];
+
+  // Combine all generated classes in a single reduce operation
+  const result = classGenerators.reduce<RelaxedRecastStyleProps>((acc, generator) => {
+    const generated = generator({ styles, variants, modifiers });
     return {
-      className: mergeStringClassNames(acc.className, curr.className),
-      rcx: mergeObjectClassNames(acc.rcx, curr.rcx),
+      className: mergeStringClassNames(acc.className, generated.className),
+      rcx: mergeObjectClassNames(acc.rcx, generated.rcx),
     };
   }, RECAST_STYLE_PROPS);
 
-  return { className: result.className, rcx: result.rcx } as RelaxedRecastStyleProps;
+  // Ensure className is always a string
+  const className = Array.isArray(result.className) ? result.className.join(" ") : result.className;
+
+  return { className, rcx: result.rcx };
 }
