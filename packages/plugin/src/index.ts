@@ -9,7 +9,7 @@ import {
   getFilePatterns,
 } from "./utils";
 import { glob } from "glob";
-import fs from "fs";
+import { readFileSync } from "fs";
 
 /**
  * Recast Tailwind Plugin
@@ -44,7 +44,7 @@ export default plugin(function ({ addVariant, config }) {
       filePatterns.forEach((pattern) => {
         const files = glob.sync(pattern);
         files.forEach((file) => {
-          const content = fs.readFileSync(file, "utf8");
+          const content = readFileSync(file, "utf8");
           Object.assign(components, parseRecastComponents(content));
           usages.push(...parseRecastUsages(content));
         });
