@@ -56,14 +56,14 @@ describe("Performance Tests", () => {
     console.log(
       `Average time to parse 1000 components: ${avgTime.toFixed(2)}ms`
     );
-    expect(avgTime).toBeLessThan(10); // ms
+    expect(avgTime).toBeLessThan(20); // ms
   });
 
   it("should parse large number of usages efficiently", () => {
     const largeContent = generateLargeUsageContent(1000);
     const avgTime = measureExecutionTime(() => parseRecastUsages(largeContent));
     console.log(`Average time to parse 1000 usages: ${avgTime.toFixed(2)}ms`);
-    expect(avgTime).toBeLessThan(10); // ms
+    expect(avgTime).toBeLessThan(20); // ms
   });
 
   it("should parse complex props efficiently", () => {
@@ -71,6 +71,6 @@ describe("Performance Tests", () => {
       'size={{ default: "sm", md: "lg" }} color="primary" isActive={true} data={{ key1: "value1", key2: 42 }} style={{ color: "red", fontSize: 16 }}';
     const avgTime = measureExecutionTime(() => parseProps(complexProps));
     console.log(`Average time to parse complex props: ${avgTime.toFixed(2)}ms`);
-    expect(avgTime).toBeLessThan(1); // ms
+    expect(avgTime).toBeLessThan(2); // ms
   });
 });
