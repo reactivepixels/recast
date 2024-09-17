@@ -2,27 +2,24 @@
 
 ## Nested Component Structure
 
-Recast is great for applying component styles to a single html element within
-your components and offers a very comparable experience to other utilities lic
-[cva](https://cva.style/docs), [tv](https://www.tailwind-variants.org/) and
-[stitches](https://stitches.dev/docs/variants). However, when it comes to
-managing more complex React component structures, Recast really shines.
+Recast excels at managing complex React component structures, offering a
+significant advantage over other styling utilities like
+[cva](https://cva.style/docs), [tv](https://www.tailwind-variants.org/), and
+[stitches](https://stitches.dev/docs/variants). Let's explore how Recast handles
+nested components using a slider example based on
+[Radix UI](https://www.radix-ui.com/primitives/docs/components/slider).
 
-Take for example this slider component taken from
-[shad/cn](https://ui.shadcn.com/docs/components/slider) and based on the
-[Radix UI](https://www.radix-ui.com/primitives/docs/components/slider) library.
-You will see that the slider component is composed of multiple elements which
-could each have styles applied independently. Recast provides a mechanism to
-achieve this with minimal footprint on your component primitives.
+### Example: Slider Component
 
-```tsx copy showLineNumbers {3,8-13,23,25,29} /rcx/ filename="components/primitives/slider.tsx"
+Here's how you can create a slider component with independently styled elements:
+
+```jsx
 import { cn } from "../../utils/cn.js";
 import * as RadixSliderPrimitive from "@radix-ui/react-slider";
-import { RecastWithClassNameProps } from "@rpxl/recast"; /** Import the Recast type utility */
+import { RecastWithClassNameProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
-  /** Define your component className props here*/
   RecastWithClassNameProps<{
     root: string;
     track: string;
@@ -33,9 +30,6 @@ type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
 const Slider = forwardRef<
   React.ElementRef<typeof RadixSliderPrimitive.Root>,
   Props
-  /**
-   * Your component can now receive styles on any
-   * Recast className "anchor" via the `rcx` component prop. */
 >(({ className, rcx, ...props }, ref) => {
   return (
     <RadixSliderPrimitive.Root
@@ -50,14 +44,12 @@ const Slider = forwardRef<
     </RadixSliderPrimitive.Root>
   );
 });
-
-/* ... */
 ```
 
-Now when you wrap your component with Recast, you can apply styles to the nested
-elements. All Recast theme props are available to the nested elements as well.
+Now you can apply styles to nested elements when wrapping your component with
+Recast:
 
-```tsx copy showLineNumbers filename="components/ui/slider.tsx"
+```jsx
 export const Slider = recast(SliderPrimitive, {
   base: {
     root: "relative flex w-full touch-none select-none items-center",
@@ -65,31 +57,23 @@ export const Slider = recast(SliderPrimitive, {
     range: "bg-primary absolute h-full",
     thumb: "block h-4 w-4 rounded-full border border-black/50 bg-white shadow",
   },
-  /* ... Other recast theme props */
+  // Other Recast theme props can be added here
 });
 ```
 
-> Note: Even though this component uses nested className props it will still
-> work used outside of Recast as a standalone component.
+## Wrapping a Recast Component
 
-## Wrap a Recast Component
+Sometimes you might want to wrap a Recast component to customize its behavior.
+Here's an example of wrapping a ScrollArea component to infer the variant based
+on the orientation prop:
 
-It is foreseeable that you may want to "wrap" a Recast component for certain
-cases. For instance, in the example below, we are wrapping the
-ScrollAreaPrimitive component to eliminate the variant prop from the consumer.
-Instead, we conditionally apply the variant styles based on the component's
-built-in orientation prop (horizontal | vertical). In this scenario, we aim to
-spare the consumer from having to add both the orientation and the variant prop,
-as the latter can be inferred simply by the orientation prop.
-
-```tsx copy showLineNumbers filename="components/ui/scroll-area.tsx"
+```jsx
 "use client";
 import { recast } from "@rpxl/recast";
 import { ScrollAreaPrimitive } from "@/components/primitives/scroll-area.tsx";
 import { forwardRef } from "react";
 
 const BaseScrollArea = recast(ScrollAreaPrimitive, {
-  // This matches the default for the primitives built in `orientation` prop
   defaults: { variants: { variant: "vertical" } },
   base: {
     root: "relative overflow-hidden",
@@ -109,8 +93,6 @@ const BaseScrollArea = recast(ScrollAreaPrimitive, {
   },
 });
 
-// Remove the variant prop from the consumer as it will be conditionally
-// applied based on the components built in `orientation` prop
 type Props = Omit<
   React.ComponentPropsWithoutRef<typeof BaseScrollArea>,
   "variant"
@@ -120,10 +102,40 @@ export const ScrollArea = forwardRef<
   React.ElementRef<typeof BaseScrollArea>,
   Props
 >(({ ...props }, ref) => {
-  // Here we use the components built in `orientation`
-  // prop to configure the variant styles
   return <BaseScrollArea ref={ref} variant={props.orientation} {...props} />;
 });
 
 ScrollArea.displayName = "ScrollArea";
 ```
+
+This approach allows you to create more intuitive APIs for your components while
+still leveraging Recast's theming capabilities.
+
+## Performance Considerations
+
+When working with complex nested components or wrapping Recast components, keep
+these performance tips in mind:
+
+1. Memoize child components when appropriate to prevent unnecessary re-renders.
+2. Use the `useMemo` hook for expensive computations within your components.
+3. Leverage Recast's conditional styling to avoid applying unnecessary classes.
+
+## TypeScript Integration
+
+Recast is designed to work seamlessly with TypeScript. When defining your
+component props, you can use the `RecastWithClassNameProps` type to ensure type
+safety for your nested class names:
+
+```jsx
+import { RecastWithClassNameProps } from "@rpxl/recast";
+
+type Props = YourComponentProps &
+  RecastWithClassNameProps<{
+    root: string;
+    childElement: string;
+    // ... other nested elements
+  }>;
+```
+
+This approach provides excellent TypeScript support, enabling autocompletion and
+type checking for your themed components.

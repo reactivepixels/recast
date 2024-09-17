@@ -1,27 +1,52 @@
 import Image from "next/image";
 import { Steps } from "nextra/components";
 
-# Recast Tailwind Support
+# Recast Tailwind CSS Integration
+
+Recast offers seamless integration with Tailwind CSS through our dedicated
+plugin, enhancing your development experience and unlocking powerful styling
+capabilities.
+
+## Installation
+
+First, install the Recast Tailwind plugin:
+
+```bash
+npm install @rpxl/recast-tailwind
+```
+
+## Setup
+
+Add the plugin to your `tailwind.config.js` file:
+
+```js
+module.exports = { // ...other config plugins:
+[require("@rpxl/recast-tailwind")], };
+```
+
+This plugin automatically generates a safelist for your Recast components and
+provides better integration with Tailwind CSS.
+
+## Features
+
+1. **Automatic Safelist Generation**: Ensures all your Recast component classes
+   are included in your production build.
+2. **Responsive Styling**: Easily apply responsive styles to your Recast
+   components using Tailwind's breakpoint syntax.
+3. **Improved Performance**: Optimizes class generation for better runtime
+   performance.
 
 ## VS Code Setup
 
-To get [Tailwind CSS](https://tailwindcss.com/) intellisense working for Recast
-inside of [VS Code](https://code.visualstudio.com/), please follow the steps
-below:
+To get Tailwind CSS IntelliSense working with Recast in VS Code:
 
-<Steps>
-### Install Tailwind CSS IntelliSense fo VS Code
+1. Install the
+   [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+   VS Code extension.
 
-If you haven't already you will need to install the
-[Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-VSCode extension.
+2. Add the following to your `.vscode/settings.json`:
 
-### Add the Recast Regex
-
-Add the following regex to your `.vscode/settings.json` file at the root of your
-project:
-
-```json copy
+```json
 {
   "tailwindCSS.experimental.classRegex": [
     ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
@@ -29,10 +54,75 @@ project:
 }
 ```
 
-### Voilà!
+## Responsive Styling Example
 
-You should now have Tailwind CSS intellisense working inside of your Recast
-components.
+With the Recast Tailwind plugin, you can easily apply responsive styles:
+
+### Responsive Variants
+
+```jsx
+const Button = recast(ButtonPrimitive, { variants: { size: { sm: "px-2 py-1
+text-sm", md: "px-4 py-2 text-base", lg: "px-6 py-3 text-lg", }, }, });
+
+// Usage
+<Button size={{ default: "sm", md: "md", lg: "lg" }}>Responsive Button</Button>
+```
+
+This button will be small by default, medium on md screens, and large on lg
+screens. The plugin will generate classes like:
+
+```html
+<button
+  class="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base lg:px-6 lg:py-3 lg:text-lg"
+>
+  Responsive Button
+</button>
+```
+
+### Responsive Modifiers
+
+Recast also supports responsive modifiers with Tailwind CSS. Here's how you can
+use them:
+
+```jsx
+const Button = recast(ButtonPrimitive, {
+  modifiers: { pill: "rounded-full" },
+});
+
+// Usage
+<Button pill={{ default: true, md: false }}>Responsive pill Button</Button>;
+```
+
+The plugin generates HTML with classes like this:
+
+```jsx
+<button class="lg:unset:rounded rounded-full">Responsive Button</button>
+```
+
+### Custom Unset Utility
+
+The Recast Tailwind plugin introduces a custom `unset` utility that allows you
+to remove previously applied styles at specific breakpoints. This is
+particularly useful when working with responsive modifiers.
+
+#### How it works
+
+The `unset` utility is automatically added to your Tailwind configuration when
+you use the Recast Tailwind plugin allows you to "turn off" a style at a
+specific breakpoint.
+
+## Prettier Integration
+
+Recast works seamlessly with the
+[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss).
+Add the following to your `.prettierrc`:
+
+```json
+{ "tailwindFunctions": ["recast"] }
+```
+
+This ensures that your Tailwind classes within Recast components are properly
+sorted.
 
 <div className="mt-8 overflow-hidden rounded-lg">
   <Image
@@ -43,19 +133,16 @@ components.
   />
 </div>
 
-</Steps>
+## Troubleshooting
 
-## Prettier Tailwind Sort Plugin
+If you encounter any issues with the Tailwind CSS integration:
 
-Recast will also work with other Tailwind CSS utilities including:
-[prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss).
-Inside your `.prettierrc` file you can add the following configuration:
+1. Ensure you've installed both `@rpxl/recast` and `@rpxl/recast-tailwind`.
+2. Verify that the Recast Tailwind plugin is correctly added to your
+   `tailwind.config.js`.
+3. Check that your VS Code settings are correctly configured for Tailwind CSS
+   IntelliSense.
+4. Clear your build cache and restart your development server.
 
-```tsx copy
-{
-  "tailwindFunctions": ["recast"]
-}
-```
-
-More information is available here:
-[Prettier Plugin Tailwind CSS](https://github.com/tailwindlabs/prettier-plugin-tailwindcss?tab=readme-ov-file#sorting-classes-in-function-calls)
+By following these guidelines and leveraging the Recast Tailwind plugin, you can
+create powerful, flexible, and responsive components with ease.
