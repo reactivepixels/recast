@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.1.0
+
+### Minor Changes
+
+- b15ea25: Add responsive tailwind functionality to recast.
+
 ## 4.0.3
 
 ### Patch Changes
