@@ -16,7 +16,8 @@
     "lint": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm run build && pnpm run test"
   },
   "dependencies": {
     "@arethetypeswrong/cli": "^0.16.2",
