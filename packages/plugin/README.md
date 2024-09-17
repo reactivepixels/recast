@@ -11,7 +11,7 @@ Add the plugin to your `tailwind.config.js`:
 ```javascript
 module.exports = {
   // ...other config
-  plugins: [require("@rpxl/recast-tailwind").recastTailwindPlugin],
+  plugins: [require("@rpxl/recast-tailwind")],
 };
 ```
 
