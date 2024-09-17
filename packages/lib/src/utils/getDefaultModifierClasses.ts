@@ -1,4 +1,4 @@
-import { RelaxedModifierProps, RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
+import { RelaxedModifierProps, RelaxedStyles, RelaxedRecastStyleProps, ResponsiveValue } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { generateResponsiveClasses, mergeArrays, isEmptyObject, getDefaultValue } from "./common.js";
 
@@ -25,7 +25,7 @@ export const getDefaultModifierClasses = ({
     const defaultModifierStyles = styles.modifiers?.[modifier];
 
     // Skip if no default modifier styles are found or the modifier is already applied
-    if (!defaultModifierStyles || modifiers.includes(modifier)) {
+    if (!defaultModifierStyles || isModifierApplied(modifiers[modifier])) {
       return acc;
     }
 
@@ -37,3 +37,13 @@ export const getDefaultModifierClasses = ({
     };
   }, RECAST_STYLE_PROPS);
 };
+
+function isModifierApplied(value: boolean | ResponsiveValue<boolean> | undefined): boolean {
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "object") {
+    return Object.values(value).some((v) => v === true);
+  }
+  return false;
+}

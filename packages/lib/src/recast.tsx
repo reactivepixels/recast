@@ -37,10 +37,13 @@ export function recast<
     const { className, ...restProps } = props as Props;
 
     const modifierKeys = Object.keys(styles.modifiers || {});
-    const modifierProps = modifierKeys.filter(
-      (key) =>
-        restProps[key as keyof typeof restProps] !== undefined && restProps[key as keyof typeof restProps] !== false,
-    );
+    const modifierProps = modifierKeys.reduce<RelaxedModifierProps>((acc, key) => {
+      const value = restProps[key as keyof typeof restProps];
+      if (typeof value === "boolean" || isNonNullObject(value)) {
+        acc[key] = value as boolean | ResponsiveValue<boolean>;
+      }
+      return acc;
+    }, {});
 
     const variantKeys = Object.keys(styles.variants || {});
     const variantProps = variantKeys.reduce<RelaxedVariantProps>((acc, key) => {
@@ -56,7 +59,7 @@ export function recast<
     const { className: recastClassesClassName, rcx } = getRecastClasses({
       styles: styles as RelaxedStyles,
       variants: variantProps,
-      modifiers: modifierProps as RelaxedModifierProps,
+      modifiers: modifierProps,
     });
 
     const mergedClassName = mergeFn

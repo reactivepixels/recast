@@ -39,7 +39,9 @@ export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
 /**
  * Extracts modifier props from a modifier configuration object.
  */
-export type ExtractModifierProps<M> = { [K in keyof M]?: boolean };
+export type ExtractModifierProps<M> = {
+  [K in keyof M]?: boolean | ResponsiveValue<boolean>;
+};
 
 /**
  * Extracts variant props from a variant configuration object.
@@ -195,7 +197,9 @@ export type RelaxedVariantProps = {
 /**
  * Relaxed version of modifier props for internal use.
  */
-export type RelaxedModifierProps = string[];
+export type RelaxedModifierProps = {
+  [key: string]: boolean | ResponsiveValue<boolean>;
+};
 
 /**
  * Interface for defining breakpoints in a Recast application.
@@ -210,4 +214,4 @@ export type Breakpoint = keyof RecastBreakpoints;
 /**
  * Represents a value that can be responsive (i.e., different for different breakpoints).
  */
-export type ResponsiveValue<T> = T | (Record<"default", T> & Partial<Record<Exclude<Breakpoint, "default">, T>>);
+export type ResponsiveValue<T> = T | ({ default: T } & Partial<Record<Breakpoint, T>>);

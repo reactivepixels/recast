@@ -20,15 +20,30 @@ export const validateConditionalModifiers = ({
 }: ValidateConditionalModifiersProps): boolean => {
   if (!condition.modifiers) return true;
 
-  const allModifiers = new Set([...modifiers, ...defaults]);
+  const activeModifiers = new Set([
+    ...Object.entries(modifiers)
+      .filter(([_, value]) => isModifierActive(value))
+      .map(([key, _]) => key),
+    ...defaults,
+  ]);
 
   if (isString(condition.modifiers)) {
-    return allModifiers.has(condition.modifiers);
+    return activeModifiers.has(condition.modifiers);
   }
 
   if (isStringArray(condition.modifiers)) {
-    return condition.modifiers.every((modifier) => allModifiers.has(modifier));
+    return condition.modifiers.every((modifier) => activeModifiers.has(modifier));
   }
 
   return false;
 };
+
+function isModifierActive(value: boolean | { [key: string]: boolean }): boolean {
+  if (typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "object") {
+    return Object.values(value).some((v) => v === true);
+  }
+  return false;
+}

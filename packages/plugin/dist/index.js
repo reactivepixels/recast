@@ -116,7 +116,7 @@ function addToSafelist(safelist, classes, prefix = "") {
 // src/index.ts
 import { glob } from "glob";
 import fs from "fs";
-var src_default = plugin(function({ config }) {
+var src_default = plugin(function({ addVariant, config }) {
   const safelist = /* @__PURE__ */ new Set();
   const components = {};
   const usages = [];
@@ -173,6 +173,14 @@ var src_default = plugin(function({ config }) {
           addToSafelist(safelist, classes);
         }
       }
+    });
+  });
+  addVariant("unset", ({ container }) => {
+    container.walkRules((rule) => {
+      rule.selector = `.unset\\:${rule.selector.slice(1)}`;
+      rule.walkDecls((decl) => {
+        decl.value = "unset";
+      });
     });
   });
   const finalSafelist = Array.from(safelist);

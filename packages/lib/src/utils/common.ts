@@ -169,3 +169,27 @@ export const omit = (
 
   return clonedObject;
 };
+
+/**
+ * Generates an 'unset' class with the appropriate breakpoint prefix
+ * @param className - The base class name to be unset
+ * @param breakpoint - The breakpoint at which to apply the unset
+ * @returns A string representing the unset class with breakpoint prefix
+ */
+export function getUnsetClass(
+  className: string | string[] | ClassNameRecord,
+  breakpoint: string,
+): string | string[] | ClassNameRecord {
+  const prefix = breakpoint === "default" ? "" : `${breakpoint}:`;
+
+  if (typeof className === "string") {
+    return `${prefix}unset:${className}`;
+  } else if (Array.isArray(className)) {
+    return className.map((cls) => `${prefix}unset:${cls}`);
+  } else {
+    return Object.entries(className).reduce<ClassNameRecord>((acc, [key, value]) => {
+      acc[key] = Array.isArray(value) ? value.map((cls) => `${prefix}unset:${cls}`) : `${prefix}unset:${value}`;
+      return acc;
+    }, {});
+  }
+}

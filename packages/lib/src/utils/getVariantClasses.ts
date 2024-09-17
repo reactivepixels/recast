@@ -1,6 +1,6 @@
 import { RelaxedStyles, RelaxedVariantProps, ClassNameRecord, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses, isNonNullObject } from "./common.js";
+import { generateResponsiveClasses, isNonNullObject, getUnsetClass } from "./common.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
 type GetVariantClassesProps = {
@@ -53,22 +53,47 @@ const processResponsiveVariant = (
   acc: RelaxedRecastStyleProps,
   styles: RelaxedStyles,
   variantKey: string,
-  variantValue: Record<string, string>,
+  variantValue: Record<string, string | boolean>,
 ): RelaxedRecastStyleProps => {
   const responsiveClasses = Object.entries(variantValue).reduce<RelaxedRecastStyleProps>(
     (innerAcc, [breakpoint, value]) => {
-      const variantStyles = styles.variants?.[variantKey]?.[value];
-      if (!variantStyles) return innerAcc;
+      if (value === false) {
+        const defaultVariantClass = styles.variants?.[variantKey]?.[Object.keys(styles.variants[variantKey])[0]];
+        if (defaultVariantClass) {
+          const unsetClass = getUnsetClass(defaultVariantClass, breakpoint);
+          if (typeof unsetClass === "string") {
+            return {
+              className: mergeStringClassNames(innerAcc.className, unsetClass),
+              rcx: innerAcc.rcx,
+            };
+          } else if (Array.isArray(unsetClass)) {
+            return {
+              className: mergeStringClassNames(innerAcc.className, unsetClass.join(" ")),
+              rcx: innerAcc.rcx,
+            };
+          } else {
+            // Handle ClassNameRecord
+            const unsetClassName = Object.values(unsetClass).flat().join(" ");
+            return {
+              className: mergeStringClassNames(innerAcc.className, unsetClassName),
+              rcx: mergeObjectClassNames(innerAcc.rcx, unsetClass),
+            };
+          }
+        }
+      } else if (typeof value === "string") {
+        const variantStyles = styles.variants?.[variantKey]?.[value];
+        if (variantStyles) {
+          const classes = generateResponsiveClasses(variantStyles);
+          const breakpointPrefix = breakpoint === "default" ? "" : `${breakpoint}:`;
+          const prefixedClasses = prefixClasses(classes, breakpointPrefix);
 
-      const breakpointPrefix = breakpoint === "default" ? "" : `${breakpoint}:`;
-      const classes = generateResponsiveClasses(variantStyles);
-
-      const prefixedClasses = prefixClasses(classes, breakpointPrefix);
-
-      return {
-        className: mergeStringClassNames(innerAcc.className, prefixedClasses.className),
-        rcx: mergeObjectClassNames(innerAcc.rcx, prefixedClasses.rcx),
-      };
+          return {
+            className: mergeStringClassNames(innerAcc.className, prefixedClasses.className),
+            rcx: mergeObjectClassNames(innerAcc.rcx, prefixedClasses.rcx),
+          };
+        }
+      }
+      return innerAcc;
     },
     RECAST_STYLE_PROPS,
   );

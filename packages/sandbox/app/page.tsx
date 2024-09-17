@@ -13,6 +13,14 @@ export default function Page() {
         Yo
       </Button>
       <Button size={{ default: "sm", md: "lg" }}>Kevin</Button>
+
+      <div className="font-bold hover:unset:font-bold">
+        This text is bold, but font-weight will be unset on hover.
+      </div>
+
+      <div className="italic underline lg:unset:italic lg:unset:underline">
+        This text is italic and red, but both will be unset on large screens.
+      </div>
     </div>
   );
 }

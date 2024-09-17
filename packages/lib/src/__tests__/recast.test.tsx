@@ -62,6 +62,7 @@ describe("recast function", () => {
         Test
       </Button>,
     );
+
     expect(container.firstChild).toHaveClass("text-base opacity-50 cursor-not-allowed ring-2 ring-blue-500");
   });
 
@@ -353,13 +354,13 @@ describe("recast function", () => {
         color={{ default: "red", md: "blue" }}
         bold
         italic={{ default: true, lg: false }}
-        underline={{ md: true }}
+        underline={{ default: false, md: true }}
       >
         Test
       </Button>,
     );
     expect(container.firstChild).toHaveClass(
-      "p-2 text-red-500 font-bold italic md:text-blue-500 md:underline lg:not-italic",
+      "p-2 font-bold italic text-red-500 md:text-blue-500 md:underline lg:unset:italic",
     );
   });
 });
