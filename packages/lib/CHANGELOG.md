@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.1.1
+
+### Patch Changes
+
+- 1b0a637: Fix tsconfig file exclusions
+
 ## 4.1.0
 
 ### Minor Changes
