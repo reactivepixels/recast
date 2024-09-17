@@ -1,5 +1,12 @@
 # @rpxl/recast-primitives
 
+## 3.1.1
+
+### Patch Changes
+
+- Updated dependencies [1b0a637]
+  - @rpxl/recast@4.1.1
+
 ## 3.1.0
 
 ### Minor Changes
