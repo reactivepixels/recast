@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
 import recastPlugin from "../index";
+import * as RecastExports from "../index";
+
 import {
   parseRecastComponents,
   parseRecastUsages,
@@ -30,6 +32,11 @@ function run(config: any) {
 }
 
 describe("Recast Tailwind Plugin", () => {
+  it("should export all expected modules", () => {
+    expect(RecastExports).toBeDefined();
+    expect(RecastExports.default).toBeDefined();
+  });
+
   it("should generate base classes and responsive variants", async () => {
     let config = {
       content: [
