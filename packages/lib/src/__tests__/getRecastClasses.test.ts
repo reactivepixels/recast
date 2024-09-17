@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { getRecastClasses } from "../src/utils/getRecastClasses";
-import { RelaxedStyles, RelaxedVariantProps, RelaxedModifierProps } from "../src/types";
+import { getRecastClasses } from "../utils/getRecastClasses.js";
+import { RelaxedStyles, RelaxedVariantProps, RelaxedModifierProps } from "../types.js";
 
 type BreakpointKeys = "sm" | "md" | "lg" | "xl" | "2xl";
 
 // Breakpoints type augmentation for the test file
-declare module "../src/types" {
+declare module "../types.js" {
   export interface RecastBreakpoints extends Record<BreakpointKeys, string> {}
 }
 

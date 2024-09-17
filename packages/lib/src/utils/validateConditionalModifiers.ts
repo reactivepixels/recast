@@ -1,42 +1,34 @@
 import { RelaxedCondition, RelaxedModifierProps } from "../types.js";
+import { isString, isStringArray } from "./common.js";
 
-type ValidateConditionProps = {
-  modifiers?: RelaxedModifierProps;
+type ValidateConditionalModifiersProps = {
   condition: RelaxedCondition;
+  modifiers: RelaxedModifierProps;
   defaults?: string[];
 };
 
 /**
- * Validates if the given modifiers match the condition.
- * @param condition - The condition to match against.
- * @param modifiers - The modifiers to validate.
- * @param defaults - The default values to validate.
- * @returns A boolean indicating whether all specified conditional modifier keys match.
+ * Validates if the given condition's modifiers match the current modifiers or defaults.
+ *
+ * @param {ValidateConditionalModifiersProps} props - The input properties
+ * @returns {boolean} True if the condition's modifiers are valid, false otherwise
  */
-export const validateConditionalModifiers = ({ condition, modifiers, defaults }: ValidateConditionProps) => {
-  // Always return true if modifier conditions are empty
-  if (!condition.modifiers?.length) {
-    return true;
+export const validateConditionalModifiers = ({
+  condition,
+  modifiers,
+  defaults = [],
+}: ValidateConditionalModifiersProps): boolean => {
+  if (!condition.modifiers) return true;
+
+  const allModifiers = new Set([...modifiers, ...defaults]);
+
+  if (isString(condition.modifiers)) {
+    return allModifiers.has(condition.modifiers);
   }
 
-  // Handle multiple possible modifier values
-  if (Array.isArray(condition.modifiers)) {
-    const conditionalModifierMatches = condition.modifiers.filter((x) => {
-      if (modifiers?.includes(x)) {
-        return true;
-      }
-
-      return defaults?.includes(x);
-    });
-
-    // All modifiers must be matched
-    return conditionalModifierMatches.length === condition.modifiers.length;
-  } else {
-    // Handle a single possible value
-    if (modifiers?.includes(condition.modifiers)) {
-      return true;
-    }
-
-    return defaults?.includes(condition.modifiers);
+  if (isStringArray(condition.modifiers)) {
+    return condition.modifiers.every((modifier) => allModifiers.has(modifier));
   }
+
+  return false;
 };

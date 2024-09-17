@@ -1,24 +1,24 @@
+import { ClassNameRecord, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { ClassNameRecord } from "../types.js";
+import { normalizeClasses, isString, isStringArray } from "./common.js";
 
-export const generateResponsiveClasses = (classes: string | string[] | ClassNameRecord) => {
+/**
+ * Generates responsive classes based on the input.
+ *
+ * @param {string | string[] | ClassNameRecord} classes - The input classes
+ * @returns {RelaxedRecastStyleProps} An object containing className and rcx properties
+ */
+export const generateResponsiveClasses = (classes: string | string[] | ClassNameRecord): RelaxedRecastStyleProps => {
   if (!classes) return RECAST_STYLE_PROPS;
 
-  if (typeof classes === "string") {
-    const responsiveClasses = classes.split(/\s+/);
-
-    return { className: responsiveClasses.join(" "), rcx: {} };
-  } else if (Array.isArray(classes)) {
-    const responsiveClasses = classes;
-
-    return { className: responsiveClasses.join(" "), rcx: {} };
-  } else {
-    const rcx: Record<string, string> = {};
-    for (const [key, value] of Object.entries(classes)) {
-      const classArray = typeof value === "string" ? value.split(/\s+/) : value;
-      rcx[key] = classArray.join(" ");
-    }
-
-    return { className: "", rcx };
+  if (isString(classes) || isStringArray(classes)) {
+    return { className: normalizeClasses(classes), rcx: {} };
   }
+
+  const rcx: ClassNameRecord = Object.entries(classes).reduce((acc, [key, value]) => {
+    acc[key] = normalizeClasses(value);
+    return acc;
+  }, {} as ClassNameRecord);
+
+  return { className: "", rcx };
 };

@@ -1,21 +1,30 @@
-import { RelaxedModifierProps, RelaxedStyles } from "../types.js";
+import { RelaxedModifierProps, RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses } from "./generateResponsiveClasses.js";
-import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
+import { generateResponsiveClasses, mergeArrays, isEmptyObject, getDefaultValue } from "./common.js";
 
-type Props = {
+type GetDefaultModifierClassesProps = {
   styles: RelaxedStyles;
-  modifiers?: RelaxedModifierProps;
+  modifiers: RelaxedModifierProps;
 };
 
-export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
-  const defaultModifiers = styles.defaults?.modifiers;
+/**
+ * Generates default modifier classes based on the provided styles and modifiers.
+ *
+ * @param {GetDefaultModifierClassesProps} props - The input properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ */
+export const getDefaultModifierClasses = ({
+  styles,
+  modifiers,
+}: GetDefaultModifierClassesProps): RelaxedRecastStyleProps => {
+  const defaultModifiers = getDefaultValue(styles.defaults?.modifiers, []);
 
-  if (!defaultModifiers) return RECAST_STYLE_PROPS;
+  if (defaultModifiers.length === 0) return RECAST_STYLE_PROPS;
 
-  return defaultModifiers.reduce((acc, modifier) => {
+  return defaultModifiers.reduce<RelaxedRecastStyleProps>((acc, modifier) => {
     const defaultModifierStyles = styles.modifiers?.[modifier];
 
+    // Skip if no default modifier styles are found or the modifier is already applied
     if (!defaultModifierStyles || modifiers.includes(modifier)) {
       return acc;
     }
@@ -23,8 +32,8 @@ export const getDefaultModifierClasses = ({ styles = {}, modifiers = [] }: Props
     const responsiveClasses = generateResponsiveClasses(defaultModifierStyles);
 
     return {
-      className: mergeStringClassNames(acc.className, responsiveClasses.className),
-      rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
+      className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
+      rcx: isEmptyObject(responsiveClasses.rcx) ? acc.rcx : { ...acc.rcx, ...responsiveClasses.rcx },
     };
   }, RECAST_STYLE_PROPS);
 };

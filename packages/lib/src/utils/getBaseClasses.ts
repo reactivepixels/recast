@@ -1,29 +1,37 @@
-import { RelaxedStyles } from "../types.js";
+import { RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
+import { isString, isStringArray, isNonNullObject } from "./common.js";
 
-type Props = {
+type GetBaseClassesProps = {
   styles: RelaxedStyles;
 };
 
 /**
  * Extracts base classes from the provided styles object.
  *
- * @param {Object} props - The input properties.
- * @param {RelaxedStyles} props.styles - The styles object, defaulting to an empty object.
- * @returns {Object} An object containing className and rcx properties.
- *
- * @description
- * This function handles three scenarios:
- * 1. If styles.base is undefined, it returns the default RECAST_STYLE_PROPS.
- * 2. If styles.base is a string or an array, it returns an object with className set to styles.base and an empty rcx object.
- * 3. If styles.base is an object, it returns an object with an empty className and rcx set to styles.base.
+ * @param {GetBaseClassesProps} props - The input properties.
+ * @returns {RelaxedRecastStyleProps} An object containing className and rcx properties.
  */
-export const getBaseClasses = ({ styles = {} }: Props) => {
-  if (!styles.base) return RECAST_STYLE_PROPS;
-
-  if (typeof styles.base === "string" || Array.isArray(styles.base)) {
-    return { className: styles.base, rcx: {} };
+export const getBaseClasses = ({ styles }: GetBaseClassesProps): RelaxedRecastStyleProps => {
+  if (!styles?.base) {
+    return RECAST_STYLE_PROPS;
   }
 
-  return { className: "", rcx: styles.base };
+  const { base } = styles;
+
+  if (isString(base)) {
+    return { className: base.trim(), rcx: {} };
+  }
+
+  if (isStringArray(base)) {
+    return { className: base.filter(Boolean).join(" ").trim(), rcx: {} };
+  }
+
+  if (isNonNullObject(base)) {
+    return { className: "", rcx: base };
+  }
+
+  // Handle unexpected input
+  console.warn("Unexpected type for styles.base:", typeof base);
+  return RECAST_STYLE_PROPS;
 };

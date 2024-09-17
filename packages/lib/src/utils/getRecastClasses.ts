@@ -15,28 +15,33 @@ type RecastClasses = {
 };
 
 /**
- * Returns an object containing the CSS classes
- * generated from the provided styles, variants, and modifiers.
+ * Generates and combines CSS classes based on the provided styles, variants, and modifiers.
+ *
+ * @param {RecastClasses} params - The input parameters
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
  */
 export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
-  const baseClasses = getBaseClasses({ styles });
-  const variantClasses = getVariantClasses({ styles, variants });
-  const defaultVariantClasses = getDefaultVariantClasses({ styles, variants });
-  const modifierClasses = getModifierClasses({ styles, modifiers });
-  const defaultModifierClasses = getDefaultModifierClasses({ styles, modifiers });
-  const conditionalClasses = getConditionalClasses({ styles, variants, modifiers });
+  // Early return for empty inputs
+  if (!styles || Object.keys(styles).length === 0) {
+    return RECAST_STYLE_PROPS;
+  }
 
-  const result = [
-    baseClasses,
-    variantClasses,
-    defaultVariantClasses,
-    modifierClasses,
-    defaultModifierClasses,
-    conditionalClasses,
-  ].reduce((acc, curr) => {
+  // Generate different types of classes
+  const classGenerators = [
+    getBaseClasses,
+    getVariantClasses,
+    getDefaultVariantClasses,
+    getModifierClasses,
+    getDefaultModifierClasses,
+    getConditionalClasses,
+  ];
+
+  // Combine all generated classes in a single reduce operation
+  const result = classGenerators.reduce<RelaxedRecastStyleProps>((acc, generator) => {
+    const generated = generator({ styles, variants, modifiers });
     return {
-      className: mergeStringClassNames(acc.className, curr.className),
-      rcx: mergeObjectClassNames(acc.rcx, curr.rcx),
+      className: mergeStringClassNames(acc.className, generated.className),
+      rcx: mergeObjectClassNames(acc.rcx, generated.rcx),
     };
   }, RECAST_STYLE_PROPS);
 

@@ -28,7 +28,7 @@
     "tailwindcss": "^3.0.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^14.0.0",
     "@types/node": "^20",
     "@vitest/coverage-v8": "^0.34.0",

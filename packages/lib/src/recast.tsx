@@ -11,8 +11,19 @@ import {
   RelaxedModifierProps,
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
-import { omit } from "./utils/omit.js";
+import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.js";
 
+/**
+ * Creates a new component with theming capabilities based on the provided component and styles.
+ *
+ * @template P - The props of the base component
+ * @template V - The variant styles object
+ * @template M - The modifier styles object
+ * @param {React.ComponentType<P>} Component - The base component to be themed
+ * @param {RecastStyles<V, M, Pick<P, "rcx">>} styles - The styles configuration object
+ * @param {MergeFn} [mergeFn] - Optional function to merge classNames
+ * @returns {React.ForwardRefExoticComponent<React.PropsWithoutRef<Props> & React.RefAttributes<React.ElementRef<typeof Component>>>} - A new component with theming capabilities
+ */
 export function recast<
   P extends RecastProps<P>,
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
@@ -26,26 +37,21 @@ export function recast<
     const { className, ...restProps } = props as Props;
 
     const modifierKeys = Object.keys(styles.modifiers || {});
-    const modifierProps = modifierKeys.filter((x) => {
-      const key = x as keyof typeof restProps;
-      return key in restProps && restProps[key] !== undefined && restProps[key] !== false;
-    });
+    const modifierProps = modifierKeys.filter(
+      (key) =>
+        restProps[key as keyof typeof restProps] !== undefined && restProps[key as keyof typeof restProps] !== false,
+    );
 
     const variantKeys = Object.keys(styles.variants || {});
-    const variantProps = variantKeys.reduce<RelaxedVariantProps>((acc, curr) => {
-      if (curr in restProps && restProps[curr as keyof typeof restProps] !== undefined) {
-        const value = restProps[curr as keyof typeof restProps];
-        if (typeof value === "string" || (typeof value === "object" && value !== null)) {
-          acc[curr] = value as ResponsiveValue<string>;
-        }
+    const variantProps = variantKeys.reduce<RelaxedVariantProps>((acc, key) => {
+      const value = restProps[key as keyof typeof restProps];
+      if (value !== undefined && (isString(value) || isNonNullObject(value))) {
+        acc[key] = value as ResponsiveValue<string>;
       }
       return acc;
     }, {});
 
-    const propsWithoutModifiersAndVariants = omit(
-      [...modifierKeys, ...variantKeys, "className"] as string[],
-      restProps,
-    );
+    const propsWithoutModifiersAndVariants = omit([...modifierKeys, ...variantKeys, "className"], restProps);
 
     const { className: recastClassesClassName, rcx } = getRecastClasses({
       styles: styles as RelaxedStyles,
@@ -57,7 +63,14 @@ export function recast<
       ? mergeFn(recastClassesClassName, className)
       : `${recastClassesClassName} ${className || ""}`.trim();
 
-    return <Component {...(propsWithoutModifiersAndVariants as P)} ref={ref} className={mergedClassName} rcx={rcx} />;
+    return (
+      <Component
+        {...(propsWithoutModifiersAndVariants as P)}
+        ref={ref}
+        className={mergedClassName}
+        rcx={isEmptyObject(rcx) ? undefined : rcx}
+      />
+    );
   });
 
   ComponentWithThemedProps.displayName = `Recast(${Component.displayName || Component.name || "Component"})`;

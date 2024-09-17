@@ -1,17 +1,22 @@
-import { RelaxedModifierProps, RelaxedStyles } from "../types.js";
+import { RelaxedModifierProps, RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses } from "./generateResponsiveClasses.js";
-import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
+import { generateResponsiveClasses, mergeArrays, isEmptyObject } from "./common.js";
 
-type Props = {
+type GetModifierClassesProps = {
   styles: RelaxedStyles;
-  modifiers?: RelaxedModifierProps;
+  modifiers: RelaxedModifierProps;
 };
 
-export const getModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
-  if (!styles.modifiers) return RECAST_STYLE_PROPS;
+/**
+ * Generates modifier classes based on the provided styles and modifiers.
+ *
+ * @param {GetModifierClassesProps} props - The input properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ */
+export const getModifierClasses = ({ styles, modifiers }: GetModifierClassesProps): RelaxedRecastStyleProps => {
+  if (!styles.modifiers || modifiers.length === 0) return RECAST_STYLE_PROPS;
 
-  return modifiers.reduce((acc, modifier) => {
+  return modifiers.reduce<RelaxedRecastStyleProps>((acc, modifier) => {
     const modifierStyles = styles.modifiers?.[modifier];
 
     if (!modifierStyles) {
@@ -21,8 +26,8 @@ export const getModifierClasses = ({ styles = {}, modifiers = [] }: Props) => {
     const responsiveClasses = generateResponsiveClasses(modifierStyles);
 
     return {
-      className: mergeStringClassNames(acc.className, responsiveClasses.className),
-      rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
+      className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
+      rcx: isEmptyObject(responsiveClasses.rcx) ? acc.rcx : { ...acc.rcx, ...responsiveClasses.rcx },
     };
   }, RECAST_STYLE_PROPS);
 };
