@@ -115,7 +115,7 @@ function addToSafelist(safelist, classes, prefix = "") {
 
 // src/index.ts
 import { glob } from "glob";
-import fs from "fs";
+import { readFileSync } from "fs";
 var src_default = plugin(function({ addVariant, config }) {
   const safelist = /* @__PURE__ */ new Set();
   const components = {};
@@ -131,7 +131,7 @@ var src_default = plugin(function({ addVariant, config }) {
       filePatterns.forEach((pattern) => {
         const files = glob.sync(pattern);
         files.forEach((file) => {
-          const content = fs.readFileSync(file, "utf8");
+          const content = readFileSync(file, "utf8");
           Object.assign(components, parseRecastComponents(content));
           usages.push(...parseRecastUsages(content));
         });

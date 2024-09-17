@@ -22,6 +22,6 @@
     "types": ["node", "react", "vitest/globals", "@testing-library/jest-dom"],
     "useDefineForClassFields": true
   },
-  "include": ["src", "./src/__tests__/setup.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src", "src/__tests__/setup.ts"],
+  "exclude": ["src/**/*.test.ts", "node_modules"]
 }
