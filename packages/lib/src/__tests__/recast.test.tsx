@@ -5,6 +5,13 @@ import { recast } from "../recast.js";
 import type { RecastWithClassNameProps } from "../types.js";
 import { cn } from "../utils/cn.js";
 
+type BreakpointKeys = "sm" | "md" | "lg" | "xl" | "2xl";
+
+// Breakpoints type augmentation for the test file
+declare module "../types.js" {
+  interface RecastBreakpoints extends Record<BreakpointKeys, string> {}
+}
+
 describe("recast function", () => {
   // Basic component for testing
   const BaseButton = React.forwardRef<
@@ -50,7 +57,6 @@ describe("recast function", () => {
             secondary: "bg-gray-500",
           },
         },
-        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -69,7 +75,6 @@ describe("recast function", () => {
           disabled: "opacity-50 cursor-not-allowed",
           active: "ring-2 ring-blue-500",
         },
-        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -119,7 +124,6 @@ describe("recast function", () => {
             className: "font-bold",
           },
         ],
-        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -651,6 +655,25 @@ describe("recast function", () => {
 
       // @ts-expect-error - size variant does not exist
       <Button size="md" />;
+    });
+
+    it("should correctly type breakpoints", () => {
+      const Button = recast(BaseButton, {
+        base: "text-base",
+        variants: {
+          size: {
+            sm: "text-sm",
+            lg: "text-lg",
+          },
+        },
+        breakpoints: ["sm", "md", "lg"],
+      });
+
+      // This should compile without errors
+      <Button size={{ default: "sm", md: "lg" }} />;
+
+      // @ts-expect-error - xl breakpoint not specified in component definition
+      <Button size={{ default: "sm", xl: "lg" }} />;
     });
   });
 });

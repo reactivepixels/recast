@@ -9,6 +9,7 @@ import type {
   RelaxedStyles,
   RelaxedVariantProps,
   RelaxedModifierProps,
+  RecastBreakpoints,
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
 import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.js";
@@ -29,7 +30,7 @@ export function recast<
   P extends RecastProps<P>,
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
-  B extends string = never,
+  B extends keyof RecastBreakpoints = keyof RecastBreakpoints,
 >(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "rcx">, B>, mergeFn?: MergeFn) {
   type Props = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>> &
     ExtractVariantProps<V, B> &

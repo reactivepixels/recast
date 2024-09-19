@@ -60,7 +60,7 @@ export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
 /**
  * Configuration object for Recast styles.
  */
-export interface RecastStyles<V, M, P, B extends string> {
+export interface RecastStyles<V, M, P, B extends keyof RecastBreakpoints> {
   /**
    * Default values for variants and modifiers. Defaults will only be applied
    * if the variant or modifier is not provided.
