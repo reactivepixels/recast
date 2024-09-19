@@ -1,129 +1,220 @@
 import plugin from "tailwindcss/plugin";
-import type { Rule } from "postcss";
-import type { RecastComponent, RecastUsage } from "./utils";
-import {
-  parseRecastComponents,
-  parseRecastUsages,
-  addToSafelist,
-  getFilePatterns,
-} from "./utils";
-import { glob } from "glob";
-import { readFileSync } from "fs";
+import fs from "fs";
+import type { Config } from "tailwindcss";
 
-/**
- * Recast Tailwind Plugin
- *
- * This plugin extends Tailwind CSS functionality to support Recast components
- * and provides an 'unset' variant for more flexible styling control.
- *
- * @param {Object} helpers - Tailwind plugin helper functions
- * @param {Function} helpers.addVariant - Function to add a new variant
- * @param {Function} helpers.config - Function to access and modify Tailwind config
- */
-export default plugin(function ({ addVariant, config }) {
-  const safelist = new Set<string>();
+interface RecastComponent {
+  base?: string | string[];
+  variants?: Record<string, Record<string, string | string[]>>;
+  breakpoints?: string[];
+}
+// const recastRegex = /recast\s*\(\s*[\w\d.]+\s*,\s*({[\s\S]*?})\s*\)/g;
+
+export function extractRecastComponents(
+  content: string
+): Record<string, RecastComponent> {
   const components: Record<string, RecastComponent> = {};
-  const usages: RecastUsage[] = [];
+  const regex =
+    /(?:export\s+(?:const|let|var|function)|const|let|var|function)\s+(\w+)\s*=\s*recast\s*\(\s*[\w.]+\s*,\s*({[\s\S]*?})\s*\)/g;
+  let match;
 
-  const contentConfig = config("content");
-
-  try {
-    if (
-      Array.isArray(contentConfig.files) &&
-      contentConfig.files.length > 0 &&
-      contentConfig.files[0].raw
-    ) {
-      // Test environment
-      const content = contentConfig.files[0].raw;
-      Object.assign(components, parseRecastComponents(content));
-      usages.push(...parseRecastUsages(content));
+  while ((match = regex.exec(content)) !== null) {
+    const [, componentName, componentDef] = match;
+    if (componentName && componentDef) {
+      try {
+        const processedDef = componentDef
+          .replace(/'/g, '"')
+          .replace(/(\w+):/g, '"$1":')
+          .replace(/,\s*([\]}])/g, "$1"); // Remove trailing commas
+        const parsedDef = JSON.parse(processedDef);
+        components[componentName] = parsedDef;
+      } catch (e) {
+        console.error(`Error parsing component ${componentName}:`, e);
+      }
     } else {
-      // Handle real-world scenario
-      const filePatterns = getFilePatterns(contentConfig);
-      filePatterns.forEach((pattern) => {
-        const files = glob.sync(pattern);
-        files.forEach((file) => {
-          const content = readFileSync(file, "utf8");
-          Object.assign(components, parseRecastComponents(content));
-          usages.push(...parseRecastUsages(content));
-        });
-      });
+      console.warn(
+        "Matched recast call, but component name or definition is missing"
+      );
     }
-  } catch (error) {
-    console.error("Error processing content:", error);
   }
 
-  usages.forEach((usage) => {
-    const component = components[usage.componentName];
-    if (!component) {
-      return;
-    }
+  return components;
+}
 
-    // Add base classes to safelist
+function parseComponentDefinition(componentDef: string): RecastComponent {
+  // Remove comments
+  const cleanDef = componentDef
+    .replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, "$1")
+    .trim();
+
+  // Replace single quotes with double quotes for JSON parsing
+  const jsonReadyDef = cleanDef
+    .replace(/'/g, '"')
+    .replace(/(\w+):/g, '"$1":')
+    .replace(/,\s*([\]}])/g, "$1"); // Remove trailing commas
+
+  try {
+    return JSON.parse(jsonReadyDef);
+  } catch (e) {
+    console.error("Error parsing component definition:", e);
+    return {};
+  }
+}
+
+function generateSafelist(
+  components: Record<string, RecastComponent>,
+  screens: Record<string, string>
+): Set<string> {
+  const safelist = new Set<string>();
+
+  Object.entries(components).forEach(([componentName, component]) => {
+    console.log(`Processing component: ${componentName}`);
+
     if (component.base) {
       addToSafelist(safelist, component.base);
     }
 
-    Object.entries(usage.props).forEach(([propName, propValue]) => {
-      const variantGroup = component.variants?.[propName];
-      if (!variantGroup) {
-        return;
-      }
+    if (component.variants) {
+      Object.entries(component.variants).forEach(
+        ([variantName, variantOptions]) => {
+          Object.entries(variantOptions).forEach(([optionName, classes]) => {
+            addToSafelist(safelist, classes);
+          });
+        }
+      );
+    }
 
-      if (typeof propValue === "object" && propValue !== null) {
-        Object.entries(propValue).forEach(([breakpoint, value]) => {
-          if (typeof value === "string") {
-            const classes = variantGroup[value];
-            if (classes) {
-              addToSafelist(
-                safelist,
-                classes,
-                breakpoint !== "default" ? breakpoint : ""
+    const breakpoints = component.breakpoints || Object.keys(screens);
+    console.log(`Breakpoints for ${componentName}:`, breakpoints);
+
+    breakpoints.forEach((breakpoint) => {
+      if (screens[breakpoint]) {
+        if (component.base) {
+          addToSafelist(safelist, component.base, breakpoint);
+        }
+        if (component.variants) {
+          Object.entries(component.variants).forEach(
+            ([variantName, variantOptions]) => {
+              Object.entries(variantOptions).forEach(
+                ([optionName, classes]) => {
+                  addToSafelist(safelist, classes, breakpoint);
+                }
               );
             }
-          }
-        });
-      } else if (typeof propValue === "string") {
-        const classes = variantGroup[propValue];
-        if (classes) {
-          addToSafelist(safelist, classes);
+          );
         }
+      } else {
+        console.warn(
+          `Warning: Breakpoint "${breakpoint}" is not defined in Tailwind config.`
+        );
       }
     });
   });
 
-  /**
-   * Adds the 'unset' variant to Tailwind CSS
-   *
-   * This variant allows for easy "unsetting" of CSS properties at specific breakpoints,
-   * which is particularly useful for responsive design and when working with design systems.
-   *
-   * Use cases:
-   * 1. Removing styles at specific breakpoints
-   * 2. Creating exceptions to inherited styles
-   * 3. Simplifying responsive layouts by unsetting properties instead of overriding
-   *
-   * Example usage:
-   * <div class="font-bold md:unset:font-bold">
-   *   This text is bold by default, but font weight is unset on medium screens and above.
-   * </div>
-   *
-   * Note: The 'unset' variant should be used after responsive prefixes (e.g., md:unset:font-bold)
-   * to ensure it applies at the correct breakpoint.
-   *
-   * @param {Object} options - Options passed by Tailwind's plugin system
-   * @param {Object} options.container - PostCSS container for rule manipulation
-   */
-  // @ts-expect-error - works as expected but unsure of typings
-  addVariant("unset", ({ container }) => {
-    container.walkRules((rule: Rule) => {
-      rule.selector = `.unset\\:${rule.selector.slice(1)}`;
-      rule.walkDecls((decl) => {
-        decl.value = "unset";
-      });
-    });
-  });
+  return safelist;
+}
 
-  const finalSafelist = Array.from(safelist);
-  config().safelist = finalSafelist;
+function addToSafelist(
+  safelist: Set<string>,
+  classes: string | string[],
+  prefix: string = ""
+) {
+  const classList = Array.isArray(classes) ? classes : classes.split(" ");
+  classList.forEach((cls) => {
+    const safelistClass = prefix ? `${prefix}:${cls}` : cls;
+    safelist.add(safelistClass);
+    console.log(`Added to safelist: ${safelistClass}`);
+  });
+}
+
+const recastTailwindPlugin = plugin(({ addComponents, theme }) => {
+  return async ({
+    addComponents,
+    theme,
+    content,
+  }: {
+    addComponents: (components: any) => void;
+    theme: (path: string, defaultValue?: any) => any;
+    content: Config["content"];
+  }) => {
+    const extractedComponents: Record<string, RecastComponent> = {};
+
+    if (Array.isArray(content)) {
+      content.forEach((item) => {
+        if (typeof item === "string") {
+          const fileContent = fs.readFileSync(item, "utf8");
+          Object.assign(
+            extractedComponents,
+            extractRecastComponents(fileContent)
+          );
+        } else if (typeof item === "object" && item !== null && "raw" in item) {
+          Object.assign(extractedComponents, extractRecastComponents(item.raw));
+        }
+      });
+    } else if (typeof content === "object" && content !== null) {
+      if ("files" in content && Array.isArray(content.files)) {
+        content.files.forEach((file) => {
+          if (typeof file === "string") {
+            const fileContent = fs.readFileSync(file, "utf8");
+            Object.assign(
+              extractedComponents,
+              extractRecastComponents(fileContent)
+            );
+          }
+        });
+      }
+      if ("raw" in content && typeof content.raw === "string") {
+        Object.assign(
+          extractedComponents,
+          extractRecastComponents(content.raw)
+        );
+      }
+    }
+
+    console.log(
+      "Extracted components:",
+      JSON.stringify(extractedComponents, null, 2)
+    );
+
+    const screens = theme("screens") as Record<string, string>;
+    const safelist = generateSafelist(extractedComponents, screens);
+
+    console.log("Generated safelist:", Array.from(safelist));
+
+    // Add base classes
+    const baseClasses = Array.from(safelist)
+      .filter((cls) => !cls.includes(":"))
+      .reduce((acc, cls) => ({ ...acc, [`.${cls}`]: {} }), {});
+
+    console.log("Base classes:", JSON.stringify(baseClasses, null, 2));
+
+    addComponents(baseClasses);
+
+    // Add responsive variants
+    Object.entries(screens).forEach(([breakpoint, minWidth]) => {
+      const responsiveClasses = Array.from(safelist)
+        .filter((cls) => cls.startsWith(`${breakpoint}:`))
+        .reduce(
+          (acc, cls) => ({
+            ...acc,
+            [`.${cls.replace(":", "\\:")}`]: {},
+          }),
+          {}
+        );
+
+      if (Object.keys(responsiveClasses).length > 0) {
+        const responsiveComponent = {
+          [`@media (min-width: ${minWidth})`]: responsiveClasses,
+        };
+
+        console.log(
+          `Responsive classes for ${breakpoint}:`,
+          JSON.stringify(responsiveComponent, null, 2)
+        );
+
+        addComponents(responsiveComponent);
+      }
+    });
+  };
 });
+
+export default recastTailwindPlugin;

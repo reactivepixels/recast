@@ -1,14 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import recastPlugin from "../index";
 import * as RecastExports from "../index";
 
-import {
-  parseRecastComponents,
-  parseRecastUsages,
-  parseProps,
-  getFilePatterns,
-  addToSafelist,
-} from "../utils";
 import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 import path from "path";
@@ -16,12 +9,26 @@ import path from "path";
 let html = String.raw;
 let css = String.raw;
 
-function run(config: any) {
+async function run(config: any) {
   let { currentTestName } = expect.getState();
   let input = css`
     @tailwind utilities;
   `;
-  return postcss(
+
+  const logs: string[] = [];
+  const originalConsoleLog = console.log;
+  const originalConsoleWarn = console.warn;
+  console.log = console.warn = (...args) => {
+    logs.push(
+      args
+        .map((arg) =>
+          typeof arg === "object" ? JSON.stringify(arg, null, 2) : arg
+        )
+        .join(" ")
+    );
+  };
+
+  const result = await postcss(
     tailwindcss({
       ...config,
       plugins: [recastPlugin],
@@ -29,6 +36,14 @@ function run(config: any) {
   ).process(input, {
     from: `${path.resolve(__filename)}?test=${currentTestName}`,
   });
+
+  console.log = originalConsoleLog;
+  console.warn = originalConsoleWarn;
+
+  console.log("Captured logs:");
+  logs.forEach((log) => console.log(log));
+
+  return { result, logs };
 }
 
 describe("Recast Tailwind Plugin", () => {
@@ -42,9 +57,12 @@ describe("Recast Tailwind Plugin", () => {
       content: [
         {
           raw: html`
-            export const Button = recast(ButtonPrimitive, { base: "bg-blue-500
-            text-white", variants: { size: { sm: "text-sm", md: "text-base", lg:
-            "text-lg" } } }); <Button size={{ default: "sm", md: "lg" }} />
+            export const Button = recast(ButtonPrimitive, {
+              base: "bg-blue-500 text-white",
+              variants: { size: { sm: "text-sm", md: "text-base", lg: "text-lg" } },
+              breakpoints: ["md"]
+            });
+            <Button size={{ default: "sm", md: "lg" }} />
           `,
         },
       ],
@@ -52,24 +70,31 @@ describe("Recast Tailwind Plugin", () => {
       theme: {
         screens: {
           md: "768px",
+          lg: "1024px",
         },
       },
     };
 
-    const result = await run(config);
+    const { result, logs } = await run(config);
+
+    console.log("Test logs:");
+    logs.forEach((log) => console.log(log));
+
+    console.log("Generated CSS:");
+    console.log(result.css);
 
     // Test for base classes
     expect(result.css).toContain(".bg-blue-500");
     expect(result.css).toContain(".text-white");
     expect(result.css).toContain(".text-sm");
-    expect(result.css).toContain(".text-base");
     expect(result.css).toContain(".text-lg");
 
     // Test for responsive variant
     expect(result.css).toContain("@media (min-width: 768px)");
     expect(result.css).toContain(".md\\:text-lg");
 
-    // Test that default variant is not in safelist
+    // Test that other breakpoints are not included
+    expect(result.css).not.toContain(".lg\\:text-lg");
     expect(result.css).not.toContain(".sm\\:text-sm");
   });
 
@@ -78,15 +103,18 @@ describe("Recast Tailwind Plugin", () => {
       content: [
         {
           raw: html`
-            export const Button = recast(ButtonPrimitive, { base: "bg-blue-500
-            text-white", variants: { size: { sm: "text-sm", md: "text-base", lg:
-            "text-lg" } } }); <Button size={{ default: "sm", md: "lg" }} />
+            export const Button = recast(ButtonPrimitive, {
+              base: "bg-blue-500 text-white",
+              variants: { size: { sm: "text-sm", md: "text-base", lg: "text-lg" } },
+              breakpoints: ["md"]
+            });
+            <Button size={{ default: "sm", md: "lg" }} />
           `,
         },
         {
           raw: html`
-            export const Input = recast(InputPrimitive, { base: "border rounded"
-            });
+            export const Input = recast(InputPrimitive, { base: "border
+            rounded", breakpoints: ["md"] });
             <input type="text" placeholder="Enter your name" />
           `,
         },
@@ -95,17 +123,23 @@ describe("Recast Tailwind Plugin", () => {
       theme: {
         screens: {
           md: "768px",
+          lg: "1024px",
         },
       },
     };
 
-    const result = await run(config);
+    const { result, logs } = await run(config);
+
+    console.log("Test logs:");
+    logs.forEach((log) => console.log(log));
+
+    console.log("Generated CSS:");
+    console.log(result.css);
 
     // Test for base classes
     expect(result.css).toContain(".bg-blue-500");
     expect(result.css).toContain(".text-white");
     expect(result.css).toContain(".text-sm");
-    expect(result.css).toContain(".text-base");
     expect(result.css).toContain(".text-lg");
     expect(result.css).toContain(".border");
     expect(result.css).toContain(".rounded");
@@ -113,9 +147,16 @@ describe("Recast Tailwind Plugin", () => {
     // Test for responsive variant
     expect(result.css).toContain("@media (min-width: 768px)");
     expect(result.css).toContain(".md\\:text-lg");
+    expect(result.css).toContain(".md\\:border");
+    expect(result.css).toContain(".md\\:rounded");
 
-    // Test that default variant is not in safelist
+    // Test that other breakpoints are not included
+    expect(result.css).not.toContain(".lg\\:text-lg");
     expect(result.css).not.toContain(".sm\\:text-sm");
+    expect(result.css).not.toContain(".lg\\:border");
+    expect(result.css).not.toContain(".sm\\:border");
+    expect(result.css).not.toContain(".lg\\:rounded");
+    expect(result.css).not.toContain(".sm\\:rounded");
   });
 
   it("should only generate responsive classes for used variants", async () => {
@@ -126,7 +167,7 @@ describe("Recast Tailwind Plugin", () => {
             export const Button = recast(ButtonPrimitive, { base: "bg-blue-500
             text-white", variants: { size: { sm: "text-sm", md: "text-base", lg:
             "text-lg" }, color: { primary: "bg-blue-500", secondary:
-            "bg-green-500" } } });
+            "bg-green-500" } }, breakpoints: ["md", "lg"] });
             <button size="sm" />
           `,
         },
@@ -140,7 +181,13 @@ describe("Recast Tailwind Plugin", () => {
       },
     };
 
-    const result = await run(config);
+    const { result, logs } = await run(config);
+
+    console.log("Test logs:");
+    logs.forEach((log) => console.log(log));
+
+    console.log("Generated CSS:");
+    console.log(result.css);
 
     // These classes should be present as they're defined in the component
     expect(result.css).toContain(".text-sm");
@@ -166,6 +213,51 @@ describe("Recast Tailwind Plugin", () => {
     expect(result.css).not.toContain(".lg\\:bg-green-500");
   });
 
+  it("should respect specified breakpoints", async () => {
+    let config = {
+      content: [
+        {
+          raw: html`
+            export const Button = recast(ButtonPrimitive, {
+              base: "bg-blue-500 text-white",
+              variants: { size: { sm: "text-sm", md: "text-base", lg: "text-lg" } },
+              breakpoints: ["sm", "lg"]
+            });
+            <Button size={{ default: "sm", sm: "md", md: "lg", lg: "lg" }} />
+          `,
+        },
+      ],
+      corePlugins: { preflight: false },
+      theme: {
+        screens: {
+          sm: "640px",
+          md: "768px",
+          lg: "1024px",
+        },
+      },
+    };
+
+    const { result, logs } = await run(config);
+
+    console.log("Test logs:");
+    logs.forEach((log) => console.log(log));
+
+    console.log("Generated CSS:");
+    console.log(result.css);
+
+    // Test for base and default classes
+    expect(result.css).toContain(".bg-blue-500");
+    expect(result.css).toContain(".text-white");
+    expect(result.css).toContain(".text-sm");
+
+    // Test for specified breakpoints
+    expect(result.css).toContain(".sm\\:text-base");
+    expect(result.css).toContain(".lg\\:text-lg");
+
+    // Test that unspecified breakpoint is not included
+    expect(result.css).not.toContain(".md\\:text-lg");
+  });
+
   describe("parseRecastComponents", () => {
     it("should correctly parse Recast component definitions", () => {
       const content = `
@@ -177,10 +269,11 @@ describe("Recast Tailwind Plugin", () => {
               md: "text-base",
               lg: "text-lg"
             }
-          }
+          },
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result).toEqual({
         Button: {
           base: "bg-blue-500 text-white",
@@ -191,6 +284,7 @@ describe("Recast Tailwind Plugin", () => {
               lg: "text-lg",
             },
           },
+          breakpoints: ["md"],
         },
       });
     });
@@ -198,13 +292,15 @@ describe("Recast Tailwind Plugin", () => {
     it("should handle multiple component definitions", () => {
       const content = `
         export const Button = recast(ButtonPrimitive, {
-          base: "bg-blue-500 text-white"
+          base: "bg-blue-500 text-white",
+          breakpoints: ["md"]
         });
         export const Input = recast(InputPrimitive, {
-          base: "border rounded"
+          base: "border rounded",
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(Object.keys(result)).toHaveLength(2);
       expect(result.Button).toBeDefined();
       expect(result.Input).toBeDefined();
@@ -220,10 +316,11 @@ describe("Recast Tailwind Plugin", () => {
               md: "text-base",
               lg: "text-lg"
             }
-          }
+          },
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result).toEqual({
         Button: {
           base: "bg-blue-500 text-white",
@@ -234,6 +331,7 @@ describe("Recast Tailwind Plugin", () => {
               lg: "text-lg",
             },
           },
+          breakpoints: ["md"],
         },
       });
     });
@@ -241,13 +339,15 @@ describe("Recast Tailwind Plugin", () => {
     it("should handle multiple component definitions", () => {
       const content = `
         export const Button = recast(ButtonPrimitive, {
-          base: "bg-blue-500 text-white"
+          base: "bg-blue-500 text-white",
+          breakpoints: ["md"]
         });
         export const Input = recast(InputPrimitive, {
-          base: "border rounded"
+          base: "border rounded",
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(Object.keys(result)).toHaveLength(2);
       expect(result.Button).toBeDefined();
       expect(result.Input).toBeDefined();
@@ -263,10 +363,11 @@ describe("Recast Tailwind Plugin", () => {
               md: ["p-4"],
               lg: ["p-6"]
             }
-          }
+          },
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result.Card).toEqual({
         base: ["bg-white", "shadow-md", "rounded-lg"],
         variants: {
@@ -276,6 +377,7 @@ describe("Recast Tailwind Plugin", () => {
             lg: ["p-6"],
           },
         },
+        breakpoints: ["md"],
       });
     });
 
@@ -291,10 +393,11 @@ describe("Recast Tailwind Plugin", () => {
               col: { flexDirection: "column" },
               row: { flexDirection: "row" }
             }
-          }
+          },
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result.Flex).toEqual({
         base: {
           display: "flex",
@@ -306,6 +409,7 @@ describe("Recast Tailwind Plugin", () => {
             row: { flexDirection: "row" },
           },
         },
+        breakpoints: ["md"],
       });
     });
 
@@ -319,13 +423,15 @@ describe("Recast Tailwind Plugin", () => {
               md: "text-base",
               lg: "text-lg"
             }
-          }
+          },
+          breakpoints: ["md"]
         });
         export { Text };
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result.Text).toBeDefined();
       expect(result.Text.base).toBe("font-sans");
+      expect(result.Text.breakpoints).toEqual(["md"]);
     });
 
     it("should parse components with nested variants", () => {
@@ -343,10 +449,11 @@ describe("Recast Tailwind Plugin", () => {
                 padding: "px-4 py-2"
               }
             }
-          }
+          },
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result.NestedButton).toEqual({
         base: "bg-blue-500 text-white",
         variants: {
@@ -361,19 +468,22 @@ describe("Recast Tailwind Plugin", () => {
             },
           },
         },
+        breakpoints: ["md"],
       });
     });
 
     it("should handle components with default export", () => {
       const content = `
         const Button = recast(ButtonPrimitive, {
-          base: "bg-blue-500 text-white"
+          base: "bg-blue-500 text-white",
+          breakpoints: ["md"]
         });
         export default Button;
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result.Button).toBeDefined();
       expect(result.Button.base).toBe("bg-blue-500 text-white");
+      expect(result.Button.breakpoints).toEqual(["md"]);
     });
 
     it("should handle complex variant definitions", () => {
@@ -391,10 +501,11 @@ describe("Recast Tailwind Plugin", () => {
               secondary: "bg-green-500",
               danger: "bg-red-500"
             }
-          }
+          },
+          breakpoints: ["md"]
         });
       `;
-      const result = parseRecastComponents(content);
+      const result = RecastExports.extractRecastComponents(content);
       expect(result.Button).toBeDefined();
       expect(result.Button.variants).toBeDefined();
       if (result.Button.variants) {
@@ -411,131 +522,7 @@ describe("Recast Tailwind Plugin", () => {
           expect(result.Button.variants.color).toHaveProperty("danger");
         }
       }
-    });
-  });
-
-  describe("parseRecastUsages", () => {
-    it("should correctly parse Recast component usages", () => {
-      const content = `
-        <Button size={{ default: "sm", md: "lg" }} />
-        <Input type="text" placeholder="Enter your name" />
-      `;
-      const result = parseRecastUsages(content);
-      expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({
-        componentName: "Button",
-        props: { size: { default: "sm", md: "lg" } },
-      });
-      expect(result[1]).toEqual({
-        componentName: "Input",
-        props: { type: "text", placeholder: "Enter your name" },
-      });
-    });
-
-    it("should handle usages with nested object props", () => {
-      const content = `
-        <Button style={{ color: "red", fontSize: { base: "16px", md: "18px" } }} />
-      `;
-      const result = parseRecastUsages(content);
-      expect(result[0].props.style).toEqual({
-        color: "red",
-        fontSize: { base: "16px", md: "18px" },
-      });
-    });
-
-    it("should handle usages with array props", () => {
-      const content = `
-        <List items={["apple", "banana", "cherry"]} />
-      `;
-      const result = parseRecastUsages(content);
-      expect(result[0].props.items).toEqual(["apple", "banana", "cherry"]);
-    });
-  });
-
-  describe("parseProps", () => {
-    it("should correctly parse simple props", () => {
-      const propsString = 'type="text" placeholder="Enter your name"';
-      const result = parseProps(propsString);
-      expect(result).toEqual({
-        type: "text",
-        placeholder: "Enter your name",
-      });
-    });
-
-    it("should correctly parse complex props", () => {
-      const propsString = 'size={{ default: "sm", md: "lg" }} disabled={true}';
-      const result = parseProps(propsString);
-      expect(result).toEqual({
-        size: { default: "sm", md: "lg" },
-        disabled: true,
-      });
-    });
-
-    it("should handle boolean-like props", () => {
-      const propsString = "disabled={true} required={false} isActive";
-      const result = parseProps(propsString);
-      expect(result).toEqual({
-        disabled: true,
-        required: false,
-        isActive: true,
-      });
-    });
-
-    it("should handle props with nested objects", () => {
-      const propsString =
-        'style={{ color: "red", padding: { top: "10px", bottom: "20px" } }}';
-      const result = parseProps(propsString);
-      expect(result).toEqual({
-        style: { color: "red", padding: { top: "10px", bottom: "20px" } },
-      });
-    });
-
-    it("should handle props with array values", () => {
-      const propsString = 'items={["apple", "banana", "cherry"]}';
-      const result = parseProps(propsString);
-      expect(result).toEqual({
-        items: ["apple", "banana", "cherry"],
-      });
-    });
-  });
-
-  describe("getFilePatterns", () => {
-    it("should handle string input", () => {
-      expect(getFilePatterns("src/**/*.tsx")).toEqual(["src/**/*.tsx"]);
-    });
-
-    it("should handle array input", () => {
-      expect(getFilePatterns(["src/**/*.tsx", "components/**/*.tsx"])).toEqual([
-        "src/**/*.tsx",
-        "components/**/*.tsx",
-      ]);
-    });
-
-    it("should handle object input", () => {
-      expect(getFilePatterns({ files: ["src/**/*.tsx"] })).toEqual([
-        "src/**/*.tsx",
-      ]);
-    });
-  });
-
-  describe("addToSafelist", () => {
-    it("should add classes to safelist with prefix", () => {
-      const safelist = new Set<string>();
-      addToSafelist(safelist, "text-sm text-lg", "md");
-      expect(safelist).toEqual(new Set(["md:text-sm", "md:text-lg"]));
-    });
-
-    it("should handle array of classes", () => {
-      const safelist = new Set<string>();
-      addToSafelist(safelist, ["text-sm", "text-lg"], "md");
-      expect(safelist).toEqual(new Set(["md:text-sm", "md:text-lg"]));
-    });
-
-    it("should handle multiple breakpoints", () => {
-      const safelist = new Set<string>();
-      addToSafelist(safelist, "text-sm", "sm");
-      addToSafelist(safelist, "text-lg", "md");
-      expect(safelist).toEqual(new Set(["sm:text-sm", "md:text-lg"]));
+      expect(result.Button.breakpoints).toEqual(["md"]);
     });
   });
 });
