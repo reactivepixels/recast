@@ -1,4 +1,4 @@
-import { ClassNameRecord, RelaxedRecastStyleProps } from "../types.js";
+import type { ClassNameRecord, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { normalizeClasses, isString, isStringArray } from "./common.js";
 

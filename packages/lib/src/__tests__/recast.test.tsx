@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { recast } from "../recast.js";
-import { RecastWithClassNameProps } from "../types.js";
+import type { RecastWithClassNameProps } from "../types.js";
 import { cn } from "../utils/cn.js";
 
 describe("recast function", () => {
@@ -50,6 +50,7 @@ describe("recast function", () => {
             secondary: "bg-gray-500",
           },
         },
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -68,6 +69,7 @@ describe("recast function", () => {
           disabled: "opacity-50 cursor-not-allowed",
           active: "ring-2 ring-blue-500",
         },
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -90,6 +92,7 @@ describe("recast function", () => {
             lg: "text-lg",
           },
         },
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(<Button size={{ default: "sm", md: "lg" }}>Test</Button>);
@@ -116,6 +119,7 @@ describe("recast function", () => {
             className: "font-bold",
           },
         ],
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -156,6 +160,7 @@ describe("recast function", () => {
             className: "pointer-events-none",
           },
         ],
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
@@ -195,10 +200,11 @@ describe("recast function", () => {
             className: "uppercase tracking-wide",
           },
         ],
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { container } = render(
-        <Button size={{ default: "sm", md: "lg" }} color={{ default: "ghost", lg: "primary" }}>
+        <Button size={{ default: "sm", md: "lg", xl: "lg" }} color={{ default: "ghost", lg: "primary" }}>
           Test
         </Button>,
       );
@@ -216,6 +222,44 @@ describe("recast function", () => {
       // Note: Conditional classes (uppercase, tracking-wide) are applied without breakpoint prefixes
       // and are present if the condition is met at any breakpoint.
       // This is the current behavior of the recast function.
+    });
+  });
+
+  describe("breakpoints functionality", () => {
+    it("should handle specific breakpoints", () => {
+      const Button = recast(BaseButton, {
+        base: "text-base",
+        variants: {
+          size: {
+            sm: "text-sm",
+            md: "text-md",
+            lg: "text-lg",
+          },
+        },
+        breakpoints: ["sm", "lg"],
+      });
+
+      // @ts-expect-error - invalid breakpoint in props (`md`)
+      const { container } = render(<Button size={{ default: "sm", sm: "md", md: "lg", lg: "lg" }}>Test</Button>);
+      expect(container.firstChild).toHaveClass("text-base text-sm sm:text-md lg:text-lg");
+      expect(container.firstChild).not.toHaveClass("md:text-lg");
+    });
+
+    it("should ignore breakpoints if not specified", () => {
+      const Button = recast(BaseButton, {
+        base: "text-base",
+        variants: {
+          size: {
+            sm: "text-sm",
+            md: "text-md",
+            lg: "text-lg",
+          },
+        },
+        breakpoints: ["sm", "md", "lg", "xl"],
+      });
+
+      const { container } = render(<Button size={{ default: "sm", sm: "md", md: "lg", lg: "lg" }}>Test</Button>);
+      expect(container.firstChild).toHaveClass("text-base text-sm sm:text-md md:text-lg lg:text-lg");
     });
   });
 
@@ -286,6 +330,7 @@ describe("recast function", () => {
           },
         },
       });
+
       const { container } = render(<Button size={undefined}>Test</Button>);
       expect(container.firstChild).toHaveClass("text-base");
       expect(container.firstChild).not.toHaveClass("text-sm");
@@ -350,37 +395,6 @@ describe("recast function", () => {
       expect(container.firstChild).toHaveClass("opacity-50 cursor-not-allowed");
       expect(container.firstChild).toHaveClass("border-2 border-red-500");
       expect(container.firstChild).toHaveClass("ring-2 ring-blue-500");
-    });
-
-    it("should handle responsive modifiers", () => {
-      const Button = recast(BaseButton, {
-        base: "p-2",
-        variants: {
-          color: {
-            red: "text-red-500",
-            blue: "text-blue-500",
-          },
-        },
-        modifiers: {
-          bold: "font-bold",
-          italic: "italic",
-          underline: "underline",
-        },
-      });
-
-      const { container } = render(
-        <Button
-          color={{ default: "red", md: "blue" }}
-          bold
-          italic={{ default: true, lg: false }}
-          underline={{ default: false, md: true }}
-        >
-          Test
-        </Button>,
-      );
-      expect(container.firstChild).toHaveClass(
-        "p-2 font-bold italic text-red-500 md:text-blue-500 md:underline lg:unset:italic",
-      );
     });
   });
 
@@ -475,6 +489,7 @@ describe("recast function", () => {
             },
           },
         },
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       const { getByTestId } = render(<Slider size={{ default: "sm", md: "lg" }} />);
@@ -482,6 +497,7 @@ describe("recast function", () => {
       expect(getByTestId("slider-root")).toHaveClass(
         "relative flex w-full touch-none select-none items-center h-4 md:h-6",
       );
+
       expect(getByTestId("slider-thumb")).toHaveClass(
         "block rounded-full border border-black/50 bg-white shadow h-3 w-3 md:h-5 md:w-5",
       );
@@ -624,6 +640,7 @@ describe("recast function", () => {
             size: "sm",
           },
         },
+        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       // This should compile without errors

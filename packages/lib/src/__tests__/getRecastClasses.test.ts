@@ -5,14 +5,14 @@ import { RelaxedStyles, RelaxedVariantProps, RelaxedModifierProps } from "../typ
 type BreakpointKeys = "sm" | "md" | "lg" | "xl" | "2xl";
 
 // Breakpoints type augmentation for the test file
-declare module "../types.js" {
-  export interface RecastBreakpoints extends Record<BreakpointKeys, string> {}
-}
+// declare module "../types.js" {
+//   export interface RecastBreakpoints extends Record<BreakpointKeys, string> {}
+// }
 
 describe("getRecastClasses", () => {
   describe("Basic Functionality", () => {
     it("should generate base classes correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: "text-base font-normal",
       };
       const result = getRecastClasses({ styles, variants: {}, modifiers: {} });
@@ -20,7 +20,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should generate variant classes correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         variants: {
           size: {
             sm: "text-sm",
@@ -29,7 +29,7 @@ describe("getRecastClasses", () => {
           },
         },
       };
-      const variants: RelaxedVariantProps = {
+      const variants: RelaxedVariantProps<BreakpointKeys> = {
         size: "md",
       };
       const result = getRecastClasses({ styles, variants, modifiers: {} });
@@ -37,7 +37,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should generate modifier classes correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         modifiers: {
           disabled: "opacity-50 cursor-not-allowed",
         },
@@ -48,7 +48,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should generate conditional classes correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         conditionals: [
           {
             variants: { size: "lg" },
@@ -57,14 +57,14 @@ describe("getRecastClasses", () => {
           },
         ],
       };
-      const variants: RelaxedVariantProps = { size: "lg" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: "lg" };
       const modifiers: RelaxedModifierProps = { disabled: true };
       const result = getRecastClasses({ styles, variants, modifiers });
       expect(result.className).toBe("border-4");
     });
 
     it("should handle only base classes", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: "text-base font-normal",
       };
       const result = getRecastClasses({ styles, variants: {}, modifiers: {} });
@@ -77,7 +77,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should handle empty variant and modifier objects", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: "text-base",
         variants: {},
         modifiers: {},
@@ -89,7 +89,7 @@ describe("getRecastClasses", () => {
 
   describe("Responsive Styling", () => {
     it("should generate responsive variant classes correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         variants: {
           size: {
             sm: "text-sm",
@@ -98,7 +98,7 @@ describe("getRecastClasses", () => {
           },
         },
       };
-      const variants: RelaxedVariantProps = {
+      const variants: RelaxedVariantProps<BreakpointKeys> = {
         size: { default: "sm", md: "lg" },
       };
       const result = getRecastClasses({ styles, variants, modifiers: {} });
@@ -106,7 +106,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should correctly combine base, responsive variants, and nested classes", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: ["flex", "items-center", "justify-center"],
         variants: {
           variant: {
@@ -121,7 +121,7 @@ describe("getRecastClasses", () => {
         },
       };
 
-      const variants: RelaxedVariantProps = {
+      const variants: RelaxedVariantProps<BreakpointKeys> = {
         size: { default: "sm", md: "lg", lg: "sm" },
         variant: { default: "primary", md: "secondary" },
       };
@@ -133,7 +133,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should handle complex responsive variants", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         variants: {
           color: {
             red: "text-red-500",
@@ -147,7 +147,7 @@ describe("getRecastClasses", () => {
           },
         },
       };
-      const variants: RelaxedVariantProps = {
+      const variants: RelaxedVariantProps<BreakpointKeys> = {
         color: { default: "red", sm: "blue", md: "green", lg: "blue", xl: "red" },
         size: { default: "sm", md: "lg", xl: "sm" },
       };
@@ -160,7 +160,7 @@ describe("getRecastClasses", () => {
 
   describe("Complex Scenarios", () => {
     it("should combine all types of classes correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: "text-base",
         variants: {
           size: {
@@ -180,7 +180,7 @@ describe("getRecastClasses", () => {
           },
         ],
       };
-      const variants: RelaxedVariantProps = { size: { default: "sm", md: "lg" } };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: { default: "sm", md: "lg" } };
       const modifiers: RelaxedModifierProps = { disabled: true };
       const result = getRecastClasses({ styles, variants, modifiers });
 
@@ -188,7 +188,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should handle complex edge cases correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         // @ts-expect-error Testing empty string and undefined in base classes array
         base: ["text-base", "", undefined, "font-normal"],
         variants: {
@@ -225,7 +225,7 @@ describe("getRecastClasses", () => {
         ],
       };
 
-      const variants: RelaxedVariantProps = {
+      const variants: RelaxedVariantProps<BreakpointKeys> = {
         color: { default: "red", md: "", lg: "green", xl: "blue" },
         size: { default: "sm", md: "lg", xl: undefined },
       };
@@ -240,7 +240,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should handle conflicting conditionals", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         conditionals: [
           {
             variants: { size: "sm" },
@@ -253,14 +253,14 @@ describe("getRecastClasses", () => {
           },
         ],
       };
-      const variants: RelaxedVariantProps = { size: "sm" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: "sm" };
       const modifiers: RelaxedModifierProps = { active: true };
       const result = getRecastClasses({ styles, variants, modifiers });
       expect(result.className).toBe("text-sm text-lg font-bold");
     });
 
     it("should apply default variants and modifiers correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         variants: {
           color: {
             red: "text-red-500",
@@ -280,13 +280,13 @@ describe("getRecastClasses", () => {
           modifiers: ["active"],
         },
       };
-      const variants: RelaxedVariantProps = { color: "red" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { color: "red" };
       const result = getRecastClasses({ styles, variants, modifiers: {} });
       expect(result.className).toBe("text-red-500 text-sm font-bold");
     });
 
     it("should correctly combine base, variants, and modifiers", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: "text-base font-normal",
         variants: {
           size: {
@@ -302,14 +302,14 @@ describe("getRecastClasses", () => {
           disabled: "opacity-50 cursor-not-allowed",
         },
       };
-      const variants: RelaxedVariantProps = { size: "lg", color: "primary" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: "lg", color: "primary" };
       const modifiers: RelaxedModifierProps = { disabled: true };
       const result = getRecastClasses({ styles, variants, modifiers });
       expect(result.className).toBe("text-base font-normal text-lg text-blue-500 opacity-50 cursor-not-allowed");
     });
 
     it("should handle undefined or non-existent variants", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         variants: {
           size: {
             sm: "text-sm",
@@ -317,13 +317,13 @@ describe("getRecastClasses", () => {
           },
         },
       };
-      const variants: RelaxedVariantProps = { size: "md", color: "primary" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: "md", color: "primary" };
       const result = getRecastClasses({ styles, variants, modifiers: {} });
       expect(result.className).toBe("");
     });
 
     it("should apply conditional styles correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         conditionals: [
           {
             variants: { size: "lg" },
@@ -332,14 +332,14 @@ describe("getRecastClasses", () => {
           },
         ],
       };
-      const variants: RelaxedVariantProps = { size: "lg" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: "lg" };
       const modifiers: RelaxedModifierProps = { disabled: true };
       const result = getRecastClasses({ styles, variants, modifiers });
       expect(result.className).toBe("border-2 border-red-500");
     });
 
     it("should combine multiple modifiers correctly", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         modifiers: {
           disabled: "opacity-50 cursor-not-allowed",
           loading: "animate-pulse",
@@ -351,7 +351,7 @@ describe("getRecastClasses", () => {
     });
 
     it("should handle complex conditional styles", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         conditionals: [
           {
             variants: { size: "lg", color: "primary" },
@@ -360,7 +360,7 @@ describe("getRecastClasses", () => {
           },
         ],
       };
-      const variants: RelaxedVariantProps = { size: "lg", color: "primary" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { size: "lg", color: "primary" };
       const modifiers: RelaxedModifierProps = { active: true };
       const result = getRecastClasses({ styles, variants, modifiers });
       expect(result.className).toBe("shadow-lg ring-2 ring-blue-500");
@@ -369,7 +369,7 @@ describe("getRecastClasses", () => {
 
   describe("RCX Output", () => {
     it("should generate correct rcx output", () => {
-      const styles: RelaxedStyles = {
+      const styles: RelaxedStyles<BreakpointKeys> = {
         base: { default: "text-base", md: "text-lg" },
         variants: {
           color: {
@@ -377,7 +377,7 @@ describe("getRecastClasses", () => {
           },
         },
       };
-      const variants: RelaxedVariantProps = { color: "red" };
+      const variants: RelaxedVariantProps<BreakpointKeys> = { color: "red" };
       const result = getRecastClasses({ styles, variants, modifiers: {} });
       expect(result.rcx).toEqual({
         default: "text-base text-red-500",

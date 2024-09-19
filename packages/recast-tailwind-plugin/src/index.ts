@@ -1,11 +1,10 @@
 import plugin from "tailwindcss/plugin";
 import type { Rule } from "postcss";
+import type { RecastComponent, RecastUsage } from "./utils";
 import {
   parseRecastComponents,
   parseRecastUsages,
   addToSafelist,
-  RecastComponent,
-  RecastUsage,
   getFilePatterns,
 } from "./utils";
 import { glob } from "glob";

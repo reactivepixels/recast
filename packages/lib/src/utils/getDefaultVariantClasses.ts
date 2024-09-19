@@ -1,10 +1,10 @@
-import { RelaxedStyles, RelaxedVariantProps, RelaxedRecastStyleProps } from "../types.js";
+import type { RelaxedStyles, RelaxedVariantProps, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { generateResponsiveClasses, mergeArrays, isEmptyObject } from "./common.js";
 
-type GetDefaultVariantClassesProps = {
-  styles: RelaxedStyles;
-  variants: RelaxedVariantProps;
+type GetDefaultVariantClassesProps<B extends string = string> = {
+  styles: RelaxedStyles<B>;
+  variants: RelaxedVariantProps<B>;
 };
 
 /**
@@ -13,10 +13,10 @@ type GetDefaultVariantClassesProps = {
  * @param {GetDefaultVariantClassesProps} props - The input properties
  * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
  */
-export const getDefaultVariantClasses = ({
+export const getDefaultVariantClasses = <B extends string>({
   styles,
   variants,
-}: GetDefaultVariantClassesProps): RelaxedRecastStyleProps => {
+}: GetDefaultVariantClassesProps<B>): RelaxedRecastStyleProps => {
   const defaultVariants = styles.defaults?.variants;
 
   if (!defaultVariants) return RECAST_STYLE_PROPS;
