@@ -1,5 +1,5 @@
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { ClassNameRecord, RelaxedRecastStyleProps } from "../types.js";
+import type { ClassNameRecord, RelaxedRecastStyleProps } from "../types.js";
 
 /**
  * Checks if the given value is a string.
@@ -171,25 +171,66 @@ export const omit = (
 };
 
 /**
- * Generates an 'unset' class with the appropriate breakpoint prefix
- * @param className - The base class name to be unset
- * @param breakpoint - The breakpoint at which to apply the unset
- * @returns A string representing the unset class with breakpoint prefix
+ * Checks if a given breakpoint is valid within the context of provided breakpoints.
+ *
+ * This function serves as a type guard, narrowing the type of `breakpoint` to either `B` or "default"
+ * if it's valid. It considers a breakpoint valid if:
+ * 1. It's the string "default", which is always considered valid.
+ * 2. It's included in the provided array of breakpoints.
+ * 3. No breakpoints are provided (in which case all strings are considered valid).
+ *
+ * @template B - A string type representing valid breakpoint names.
+ * @param {string} breakpoint - The breakpoint to validate.
+ * @param {B[]} [breakpoints] - An optional array of valid breakpoints.
+ * @returns {breakpoint is B | "default"} - A type predicate indicating if the breakpoint is valid.
+ *
+ * @example
+ * const breakpoints = ['sm', 'md', 'lg'] as const;
+ * type Breakpoints = typeof breakpoints[number];
+ *
+ * console.log(isValidBreakpoint('sm', breakpoints)); // true
+ * console.log(isValidBreakpoint('xl', breakpoints)); // false
+ * console.log(isValidBreakpoint('default', breakpoints)); // true
+ * console.log(isValidBreakpoint('any', undefined)); // true
  */
-export function getUnsetClass(
-  className: string | string[] | ClassNameRecord,
+export function isValidBreakpoint<B extends string>(
   breakpoint: string,
-): string | string[] | ClassNameRecord {
-  const prefix = breakpoint === "default" ? "" : `${breakpoint}:`;
-
-  if (typeof className === "string") {
-    return `${prefix}unset:${className}`;
-  } else if (Array.isArray(className)) {
-    return className.map((cls) => `${prefix}unset:${cls}`);
-  } else {
-    return Object.entries(className).reduce<ClassNameRecord>((acc, [key, value]) => {
-      acc[key] = Array.isArray(value) ? value.map((cls) => `${prefix}unset:${cls}`) : `${prefix}unset:${value}`;
-      return acc;
-    }, {});
-  }
+  breakpoints?: B[],
+): breakpoint is B | "default" {
+  return breakpoint === "default" || (breakpoints ? breakpoints.includes(breakpoint as B) : true);
 }
+
+/**
+ * Prefixes all classes in a RelaxedRecastStyleProps object with a given prefix.
+ *
+ * This function is useful for adding breakpoint prefixes to classes in responsive designs.
+ * It handles both the `className` string and the `rcx` object, ensuring all classes are prefixed.
+ *
+ * @param {RelaxedRecastStyleProps} classes - The original classes object to be prefixed.
+ * @param {string} prefix - The prefix to be added to each class.
+ * @returns {RelaxedRecastStyleProps} A new RelaxedRecastStyleProps object with all classes prefixed.
+ *
+ * @example
+ * const original = {
+ *   className: "text-red-500 bg-blue-300",
+ *   rcx: { hover: "text-blue-500", focus: ["outline-none", "ring-2"] }
+ * };
+ * const prefixed = prefixClasses(original, "md:");
+ * // Result:
+ * // {
+ * //   className: "md:text-red-500 md:bg-blue-300",
+ * //   rcx: { hover: "md:text-blue-500", focus: "md:outline-none md:ring-2" }
+ * // }
+ */
+export const prefixResponsiveClasses = (classes: RelaxedRecastStyleProps, prefix: string): RelaxedRecastStyleProps => ({
+  className: classes.className
+    .split(" ")
+    .map((cls) => `${prefix}${cls}`)
+    .join(" "),
+  rcx: Object.entries(classes.rcx).reduce<ClassNameRecord>((rcxAcc, [rcxKey, rcxValue]) => {
+    rcxAcc[rcxKey] = (Array.isArray(rcxValue) ? rcxValue : rcxValue.split(" "))
+      .map((cls) => `${prefix}${cls}`)
+      .join(" ");
+    return rcxAcc;
+  }, {}),
+});

@@ -1,9 +1,9 @@
-import { RelaxedCondition, RelaxedVariantProps } from "../types.js";
+import type { RelaxedCondition, RelaxedVariantProps } from "../types.js";
 import { isNonNullObject, isVariantMatch, safeObjectAccess } from "./common.js";
 
-type ValidateConditionalVariantsProps = {
+type ValidateConditionalVariantsProps<B extends string> = {
   condition: RelaxedCondition;
-  variants: RelaxedVariantProps;
+  variants: RelaxedVariantProps<B>;
   defaults?: Record<string, string>;
 };
 
@@ -13,16 +13,16 @@ type ValidateConditionalVariantsProps = {
  * @param {ValidateConditionalVariantsProps} props - The input properties
  * @returns {boolean} True if the condition's variants are valid, false otherwise
  */
-export const validateConditionalVariants = ({
+export const validateConditionalVariants = <B extends string>({
   condition,
   variants,
   defaults = {},
-}: ValidateConditionalVariantsProps): boolean => {
+}: ValidateConditionalVariantsProps<B>): boolean => {
   if (!condition.variants) return true;
 
   return Object.entries(condition.variants).every(([variantKey, conditionValue]) => {
     const currentVariant =
-      safeObjectAccess<string, RelaxedVariantProps>(variants, [variantKey]) ?? defaults[variantKey];
+      safeObjectAccess<string, RelaxedVariantProps<B>>(variants, [variantKey]) ?? defaults[variantKey];
 
     if (typeof currentVariant === "string") {
       return isVariantMatch(conditionValue, currentVariant);

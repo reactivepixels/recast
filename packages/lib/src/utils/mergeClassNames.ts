@@ -1,4 +1,4 @@
-import { ClassNameRecord } from "../types.js";
+import type { ClassNameRecord } from "../types.js";
 import { normalizeClasses, mergeArrays } from "./common.js";
 
 /**

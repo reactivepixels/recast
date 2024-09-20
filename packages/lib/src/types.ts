@@ -40,15 +40,15 @@ export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
  * Extracts modifier props from a modifier configuration object.
  */
 export type ExtractModifierProps<M> = {
-  [K in keyof M]?: boolean | ResponsiveValue<boolean>;
+  [K in keyof M]?: boolean;
 };
 
 /**
  * Extracts variant props from a variant configuration object.
  */
-export type ExtractVariantProps<V> = V extends object
+export type ExtractVariantProps<V, B extends string = never> = V extends object
   ? {
-      [K in keyof V]?: ResponsiveValue<keyof V[K]>;
+      [K in keyof V]?: ResponsiveValue<B, keyof V[K] & string> | (keyof V[K] & string);
     }
   : never;
 
@@ -60,7 +60,7 @@ export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
 /**
  * Configuration object for Recast styles.
  */
-export type RecastStyles<V, M, P> = {
+export interface RecastStyles<V, M, P, B extends keyof RecastBreakpoints> {
   /**
    * Default values for variants and modifiers. Defaults will only be applied
    * if the variant or modifier is not provided.
@@ -104,14 +104,12 @@ export type RecastStyles<V, M, P> = {
    * and combined with other modifiers and all variants.
    */
   modifiers?: {
-    [K in keyof M]: keyof NonNullable<Leaves<P>> extends Nullish
-      ? string | string[]
-      :
-          | string
-          | string[]
-          | {
-              [K in keyof NonNullable<Leaves<P>>]: string | string[];
-            };
+    [K in keyof M]:
+      | string
+      | string[]
+      | {
+          [K in keyof NonNullable<Leaves<P>>]: string | string[];
+        };
   };
 
   /**
@@ -133,12 +131,17 @@ export type RecastStyles<V, M, P> = {
               [K in keyof NonNullable<Leaves<P>>]: string | string[];
             };
   }[];
-};
+
+  /**
+   * Breakpoints for responsive styling.
+   */
+  breakpoints?: B[];
+}
 
 /**
  * Loosley typed for usage as arguments to different utility methods
  */
-export interface RelaxedStyles<B extends string = string> {
+export interface RelaxedStyles<B extends string> {
   base?: string | string[] | ClassNameRecord;
   variants?: {
     [key: string]: {
@@ -190,15 +193,15 @@ export type RelaxedRecastStyleProps = {
 /**
  * Relaxed version of variant props for internal use.
  */
-export type RelaxedVariantProps = {
-  [key: string]: ResponsiveValue<string>;
+export type RelaxedVariantProps<B extends string> = {
+  [key: string]: ResponsiveValue<B, string>;
 };
 
 /**
  * Relaxed version of modifier props for internal use.
  */
 export type RelaxedModifierProps = {
-  [key: string]: boolean | ResponsiveValue<boolean>;
+  [key: string]: boolean;
 };
 
 /**
@@ -214,4 +217,6 @@ export type Breakpoint = keyof RecastBreakpoints;
 /**
  * Represents a value that can be responsive (i.e., different for different breakpoints).
  */
-export type ResponsiveValue<T> = T | ({ default: T } & Partial<Record<Breakpoint, T>>);
+export type ResponsiveValue<B extends string = never, T = never> = B extends never
+  ? T
+  : T | ({ default: T } & Partial<Record<B, T>>);

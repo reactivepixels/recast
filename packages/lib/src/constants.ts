@@ -1,4 +1,4 @@
-import { RelaxedRecastStyleProps } from "./types.js";
+import type { RelaxedRecastStyleProps } from "./types.js";
 
 /**
  * Default Recast style props.

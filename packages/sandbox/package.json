@@ -17,7 +17,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@rpxl/recast-tailwind": "workspace:*",
+    "@rpxl/recast-tailwind-plugin": "workspace:*",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

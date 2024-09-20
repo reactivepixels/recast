@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import recastTailwindPlugin from "@rpxl/recast-tailwind";
+import recastTailwindPlugin from "@rpxl/recast-tailwind-plugin";
 
 /**
  * Breakpoints configuration object

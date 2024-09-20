@@ -1,18 +1,19 @@
-import { RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
+import type { RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
 import { isString, isStringArray, isNonNullObject } from "./common.js";
 
-type GetBaseClassesProps = {
-  styles: RelaxedStyles;
+type GetBaseClassesProps<B extends string> = {
+  styles: RelaxedStyles<B>;
 };
 
 /**
  * Extracts base classes from the provided styles object.
  *
- * @param {GetBaseClassesProps} props - The input properties.
+ * @template B - String literal type for breakpoints
+ * @param {GetBaseClassesProps<B>} props - The input properties.
  * @returns {RelaxedRecastStyleProps} An object containing className and rcx properties.
  */
-export const getBaseClasses = ({ styles }: GetBaseClassesProps): RelaxedRecastStyleProps => {
+export const getBaseClasses = <B extends string>({ styles }: GetBaseClassesProps<B>): RelaxedRecastStyleProps => {
   if (!styles?.base) {
     return RECAST_STYLE_PROPS;
   }

@@ -1,4 +1,4 @@
-import { RelaxedCondition, RelaxedModifierProps } from "../types.js";
+import type { RelaxedCondition, RelaxedModifierProps } from "../types.js";
 import { isString, isStringArray } from "./common.js";
 
 type ValidateConditionalModifiersProps = {
