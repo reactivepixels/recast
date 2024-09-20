@@ -36,4 +36,5 @@ export const Button = recast(Component, {
       lg: "text-2xl",
     },
   },
+  breakpoints: ["sm", "md", "lg"],
 });

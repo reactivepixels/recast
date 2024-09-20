@@ -22,7 +22,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
-    "types": ["node", "react", "vitest/globals", "@testing-library/jest-dom"]
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src", "src/__tests__/setup.ts"],
   "exclude": ["src/**/*.test.ts", "node_modules", "dist"]

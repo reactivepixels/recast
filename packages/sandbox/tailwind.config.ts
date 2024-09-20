@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-// import recastTailwindPlugin from "@rpxl/recast-tailwind";
+import recastTailwindPlugin from "@rpxl/recast-tailwind-plugin";
 
 /**
  * Breakpoints configuration object
@@ -36,7 +36,7 @@ const config: Config = {
    * Recast plugin initialization
    * @type {import('tailwindcss/plugin')}
    */
-  // plugins: [recastTailwindPlugin],
+  plugins: [recastTailwindPlugin],
 };
 
 export default config;
