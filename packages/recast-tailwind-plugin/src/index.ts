@@ -77,39 +77,62 @@ export function extractRecastComponents(
   content: string
 ): Record<string, RecastComponent> {
   const components: Record<string, RecastComponent> = {};
+  const ast = parse(content, {
+    sourceType: "module",
+    plugins: ["jsx", "typescript"],
+  });
 
-  try {
-    const ast = parse(content, {
-      sourceType: "module",
-      plugins: ["typescript", "jsx"],
-    });
-
-    traverse(ast, {
-      CallExpression(path) {
-        if (
-          t.isIdentifier(path.node.callee) &&
-          path.node.callee.name === "recast" &&
-          path.node.arguments.length >= 2
-        ) {
+  traverse(ast, {
+    CallExpression(path) {
+      if (
+        t.isIdentifier(path.node.callee) &&
+        path.node.callee.name === "recast"
+      ) {
+        try {
+          const parentPath = path.findParent(
+            (p) => p.isVariableDeclarator() || p.isExportNamedDeclaration()
+          );
           let componentName: string | null = null;
+
           if (
-            t.isVariableDeclarator(path.parent) &&
-            t.isIdentifier(path.parent.id)
+            parentPath?.isVariableDeclarator() &&
+            t.isIdentifier(parentPath.node.id)
           ) {
-            componentName = path.parent.id.name;
+            componentName = parentPath.node.id.name;
+          } else if (parentPath?.isExportNamedDeclaration()) {
+            const declaration = parentPath.node.declaration;
+            if (
+              t.isVariableDeclaration(declaration) &&
+              declaration.declarations.length > 0
+            ) {
+              const firstDeclaration = declaration.declarations[0];
+              if (firstDeclaration && t.isIdentifier(firstDeclaration.id)) {
+                componentName = firstDeclaration.id.name;
+              }
+            }
           }
 
-          const configNode = path.node.arguments[1];
-          if (componentName && t.isObjectExpression(configNode)) {
-            const config = parseRecastConfig(configNode);
-            components[componentName] = config;
+          if (!componentName) {
+            throw new Error("Missing component name");
           }
+
+          if (
+            path.node.arguments.length < 2 ||
+            !t.isObjectExpression(path.node.arguments[1])
+          ) {
+            throw new Error("Invalid recast component definition");
+          }
+
+          const config = parseRecastConfig(
+            path.node.arguments[1] as t.ObjectExpression
+          );
+          components[componentName] = config;
+        } catch (error) {
+          console.warn("Error parsing recast component:", error);
         }
-      },
-    });
-  } catch (error) {
-    console.warn("Error parsing content:", error);
-  }
+      }
+    },
+  });
 
   return components;
 }
