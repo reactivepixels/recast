@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.1.2
+
+### Patch Changes
+
+- 141f02a: Update recast api to include breakpoints
+
 ## 4.1.1
 
 ### Patch Changes
