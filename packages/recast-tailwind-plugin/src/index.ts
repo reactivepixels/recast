@@ -275,33 +275,24 @@ export function processContent(
   extractedComponents: Record<string, any>,
   errors: string[]
 ) {
-  console.log("Processing content:", content);
-
   if (typeof content === "string") {
-    console.log("Content is a string (file pattern)");
     const files = glob.sync(content);
 
-    console.log("Found files:", files);
     if (files && files.length > 0) {
       files.forEach((file) => {
         try {
           const fileContent = fs.readFileSync(file, "utf-8");
-          console.log(`File content for ${file}:`, fileContent);
           const components = extractRecastComponents(fileContent);
-          console.log(`Extracted components from ${file}:`, components);
           Object.assign(extractedComponents, components);
         } catch (error) {
-          console.error(`Error processing file ${file}:`, error);
           errors.push(`Error reading file ${file}: ${error}`);
         }
       });
     } else {
-      console.warn(`No files found matching pattern: ${content}`);
+      // console.warn(`No files found matching pattern: ${content}`);
     }
   } else if (typeof content === "object" && content.raw) {
-    console.log("Content is a raw object");
     const components = extractRecastComponents(content.raw);
-    console.log("Extracted components from raw:", components);
     Object.assign(extractedComponents, components);
   } else {
     console.warn("Invalid content type:", typeof content);
@@ -336,10 +327,7 @@ function processFile(
 ) {
   try {
     const content = fs.readFileSync(file, "utf8");
-    console.log("Processing file:", file);
-    console.log("File content:", content);
     const extractedFromFile = extractRecastComponents(content);
-    console.log("Extracted components from file:", extractedFromFile);
     Object.assign(extractedComponents, extractedFromFile);
   } catch (error) {
     errors.push(`Error reading file ${file}: ${error}`);
