@@ -1,5 +1,11 @@
 # @rpxl/recast-tailwind
 
+## 0.2.3
+
+### Patch Changes
+
+- 292a33b: Add nested variant resolution
+
 ## 0.2.2
 
 ### Patch Changes
