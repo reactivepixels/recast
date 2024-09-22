@@ -9,7 +9,8 @@ import { breakpoints } from "../tailwind.config";
  * Type definition for user breakpoints
  * @typedef {RecastBreakpoints<typeof breakpoints>} UserBreakpoints
  */
-type BreakpointKeys = keyof typeof breakpoints;
+// type BreakpointKeys = keyof typeof breakpoints;
+type BreakpointKeys = "sm" | "md" | "lg" | "xl" | "2xl";
 
 /**
  * Module augmentation for @rpxl/recast

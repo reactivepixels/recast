@@ -219,23 +219,48 @@ export function generateSafelist(
   Object.entries(components).forEach(([componentName, component]) => {
     const breakpoints = component.breakpoints || [];
 
+    // Check for undefined breakpoints
+    breakpoints.forEach((breakpoint) => {
+      if (!screens[breakpoint]) {
+        console.warn(
+          `Breakpoint "${breakpoint}" is not defined in Tailwind config.`
+        );
+      }
+    });
+
+    // Add base classes
+    if (component.base) {
+      addToSafelist(safelist, component.base);
+      breakpoints.forEach((breakpoint) => {
+        if (screens[breakpoint] && component.base) {
+          addToSafelist(safelist, component.base, breakpoint);
+        }
+      });
+    }
+
     if (component.variants) {
       Object.entries(component.variants).forEach(
         ([variantName, variantOptions]) => {
           Object.entries(variantOptions).forEach(([optionName, classes]) => {
-            // Add classes without breakpoint
-            addToSafelist(safelist, classes);
-
-            // Add classes with breakpoints
-            breakpoints.forEach((breakpoint) => {
-              if (screens[breakpoint]) {
-                addToSafelist(safelist, classes, breakpoint);
-              } else {
-                console.warn(
-                  `Warning: Breakpoint "${breakpoint}" is not defined in Tailwind config.`
-                );
-              }
-            });
+            if (typeof classes === "object" && classes !== null) {
+              Object.entries(classes).forEach(([subKey, subClasses]) => {
+                if (subClasses) {
+                  addToSafelist(safelist, subClasses);
+                  breakpoints.forEach((breakpoint) => {
+                    if (screens[breakpoint]) {
+                      addToSafelist(safelist, subClasses, breakpoint);
+                    }
+                  });
+                }
+              });
+            } else if (classes) {
+              addToSafelist(safelist, classes);
+              breakpoints.forEach((breakpoint) => {
+                if (screens[breakpoint]) {
+                  addToSafelist(safelist, classes, breakpoint);
+                }
+              });
+            }
           });
         }
       );
@@ -253,10 +278,23 @@ export function generateSafelist(
  */
 export function addToSafelist(
   safelist: Set<string>,
-  classes: string | string[],
+  classes: string | string[] | Record<string, string>,
   prefix: string = ""
 ) {
-  const classList = Array.isArray(classes) ? classes : classes.split(" ");
+  let classList: string[];
+
+  if (typeof classes === "string") {
+    classList = classes.split(" ");
+  } else if (Array.isArray(classes)) {
+    classList = classes;
+  } else if (typeof classes === "object" && classes !== null) {
+    classList = Object.values(classes).flatMap((value) =>
+      typeof value === "string" ? value.split(" ") : []
+    );
+  } else {
+    console.warn("Invalid classes input:", classes);
+    return;
+  }
 
   classList.forEach((cls) => {
     const safelistClass = prefix ? `${prefix}:${cls}` : cls;

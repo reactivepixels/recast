@@ -5,8 +5,8 @@ import type { PluginAPI } from "tailwindcss/types/config";
  * Interface for the Recast Tailwind Plugin
  */
 export interface RecastComponent {
-  base?: string | string[];
-  variants?: Record<string, Record<string, string | string[]>>;
+  base?: string | Record<string, string>;
+  variants?: Record<string, Record<string, string | Record<string, string>>>;
   breakpoints?: string[];
 }
 

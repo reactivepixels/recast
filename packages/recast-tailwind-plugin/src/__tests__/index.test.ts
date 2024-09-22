@@ -81,7 +81,7 @@ describe("Recast Tailwind Plugin", () => {
     vi.resetAllMocks();
   });
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe("DEBUG", () => {
@@ -160,6 +160,74 @@ describe("Recast Tailwind Plugin", () => {
 
       const { result, pluginResult } = await run(config);
       console.log(pluginResult);
+    });
+
+
+
+    it("should handle nested variant structures", async () => {
+      let config = {
+        content: [
+          {
+            raw: js`
+              import { cn } from "@/utils/cn";
+              import { RecastWithClassNameProps, recast } from "@rpxl/recast";
+              import React, { forwardRef } from "react";
+
+              type Props = React.HTMLAttributes<HTMLElement> & {
+                as?: React.ElementType<
+                  React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+                >;
+              } & RecastWithClassNameProps<{
+                  root: string;
+                  inner: string;
+                }>;
+
+              const Component = forwardRef<HTMLElement, Props>(
+                ({ rcx, children, as: Tag = "section", className, ...props }, ref) => {
+                  return (
+                    <Tag className={cn(rcx?.root, className)} ref={ref} {...props}>
+                      <div className={rcx?.inner}>{children}</div>
+                    </Tag>
+                  );
+                },
+              );
+
+              Component.displayName = "SectionWrapper";
+
+              export const SectionWrapper = recast(Component, {
+                defaults: { variants: { width: "md" } },
+                breakpoints: ["md"],
+                base: {
+                  root: "flex w-full justify-center overflow-hidden",
+                  inner: "relative w-full px-4",
+                },
+                variants: {
+                  width: {
+                    sm: { root: "bg-blue-500", inner: "max-w-4xl" },
+                    md: { root: "bg-red-500", inner: "max-w-6xl" },
+                    lg: { root: "bg-green-500", inner: "max-w-7xl" },
+                  },
+                },
+              });
+    
+            `,
+          },
+        ],
+        corePlugins: { preflight: false },
+        theme: {
+          screens: {
+            md: DEFAULT_SCREEN_SIZE,
+          },
+        },
+      };
+
+      const { result, pluginResult } = await run(config);
+      expect(result.css).toContain(".md\\:bg-blue-500");
+      expect(result.css).toContain(".md\\:max-w-4xl");
+      expect(result.css).toContain(".md\\:bg-red-500");
+      expect(result.css).toContain(".md\\:max-w-6xl");
+      expect(result.css).toContain(".md\\:bg-green-500");
+      expect(result.css).toContain(".md\\:max-w-7xl");
     });
   });
 
@@ -436,6 +504,8 @@ describe("Recast Tailwind Plugin", () => {
         )
       );
     });
+
+
   });
 
   describe("getFilePatterns", () => {
