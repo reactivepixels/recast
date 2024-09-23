@@ -1,5 +1,12 @@
 # @rpxl/recast-tailwind
 
+## 0.2.4
+
+### Patch Changes
+
+- c8fc500: Remove responsive values from recast components that have no breakpoints defined
+- c8fc500: Fix string literal variant extraction from recast components
+
 ## 0.2.3
 
 ### Patch Changes

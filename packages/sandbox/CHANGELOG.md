@@ -1,5 +1,13 @@
 # @rpxl/sandbox
 
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [c8fc500]
+  - @rpxl/recast@4.2.0
+  - @rpxl/recast-primitives@3.1.3
+
 ## 0.2.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.2.0
+
+### Minor Changes
+
+- c8fc500: Remove responsive values from recast components that have no breakpoints defined
+
 ## 4.1.2
 
 ### Patch Changes
