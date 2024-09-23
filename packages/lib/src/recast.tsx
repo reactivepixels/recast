@@ -22,7 +22,7 @@ import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.j
  * @template M - The modifier options
  * @template B - The breakpoint options
  * @param {React.ComponentType<P>} Component - The base component to add theming to
- * @param {RecastStyles<V, M, Pick<P, "rcx">, B>} styles - The styles to apply to the component
+ * @param {RecastStyles<V, M, Pick<P, "cls">, B>} styles - The styles to apply to the component
  * @param {MergeFn} [mergeFn] - Optional function to merge props
  * @returns {RecastComponent<P, V, M, B>} A new component with theming capabilities
  */
@@ -31,7 +31,7 @@ export function recast<
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
   B extends keyof RecastBreakpoints | never = never,
->(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "rcx">, B>, mergeFn?: MergeFn) {
+>(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "cls">, B>, mergeFn?: MergeFn) {
   type Props = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>> &
     ExtractVariantProps<V, B> &
     ExtractModifierProps<M> & { className?: string };
@@ -69,7 +69,7 @@ export function recast<
       restProps,
     );
 
-    const { className: recastClassesClassName, rcx } = getRecastClasses<B>({
+    const { className: recastClassesClassName, cls } = getRecastClasses<B>({
       styles: styles as RelaxedStyles<B>,
       variants: variantProps,
       modifiers: modifierProps,
@@ -85,7 +85,7 @@ export function recast<
         {...(propsWithoutModifiersAndVariants as P)}
         ref={ref}
         className={mergedClassName}
-        rcx={isEmptyObject(rcx) ? undefined : rcx}
+        cls={isEmptyObject(cls) ? undefined : cls}
       />
     );
   });

@@ -14,15 +14,15 @@ type Props = React.ComponentPropsWithoutRef<
 const Component = forwardRef<
   React.ElementRef<typeof RadixProgressPrimitive.Root>,
   Props
->(({ className, rcx, value, ...props }, ref) => {
+>(({ className, cls, value, ...props }, ref) => {
   return (
     <RadixProgressPrimitive.Root
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       ref={ref}
       {...props}
     >
       <RadixProgressPrimitive.Indicator
-        className={rcx?.indicator}
+        className={cls?.indicator}
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </RadixProgressPrimitive.Root>

@@ -414,13 +414,13 @@ describe("recast function", () => {
         className?: string;
       };
 
-    const SliderPrimitive = React.forwardRef<HTMLDivElement, SliderProps>(({ className, rcx, ...props }, ref) => {
+    const SliderPrimitive = React.forwardRef<HTMLDivElement, SliderProps>(({ className, cls, ...props }, ref) => {
       return (
-        <div ref={ref} className={rcx?.root} data-testid="slider-root" {...props}>
-          <div className={rcx?.track} data-testid="slider-track">
-            <div className={rcx?.range} data-testid="slider-range" />
+        <div ref={ref} className={cls?.root} data-testid="slider-root" {...props}>
+          <div className={cls?.track} data-testid="slider-track">
+            <div className={cls?.range} data-testid="slider-range" />
           </div>
-          <div className={rcx?.thumb} data-testid="slider-thumb" />
+          <div className={cls?.thumb} data-testid="slider-thumb" />
         </div>
       );
     });

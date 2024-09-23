@@ -11,7 +11,7 @@ type GetBaseClassesProps<B extends string> = {
  *
  * @template B - String literal type for breakpoints
  * @param {GetBaseClassesProps<B>} props - The input properties.
- * @returns {RelaxedRecastStyleProps} An object containing className and rcx properties.
+ * @returns {RelaxedRecastStyleProps} An object containing className and cls properties.
  */
 export const getBaseClasses = <B extends string>({ styles }: GetBaseClassesProps<B>): RelaxedRecastStyleProps => {
   if (!styles?.base) {
@@ -21,15 +21,15 @@ export const getBaseClasses = <B extends string>({ styles }: GetBaseClassesProps
   const { base } = styles;
 
   if (isString(base)) {
-    return { className: base.trim(), rcx: {} };
+    return { className: base.trim(), cls: {} };
   }
 
   if (isStringArray(base)) {
-    return { className: base.filter(Boolean).join(" ").trim(), rcx: {} };
+    return { className: base.filter(Boolean).join(" ").trim(), cls: {} };
   }
 
   if (isNonNullObject(base)) {
-    return { className: "", rcx: base };
+    return { className: "", cls: base };
   }
 
   // Handle unexpected input

@@ -257,16 +257,16 @@ export const Button = recast(ButtonPrimitive, {
 <Tabs items={["Preview", "Code"]}>
   <Tabs.Tab>
     <ComponentPreview>
-      <Button variant="outline" size="md" floating block>Primary</Button>
+      <Button variant="outline" size="md" floating block pill>Primary</Button>
     </ComponentPreview>
   </Tabs.Tab>
   <Tabs.Tab>
-    ```tsx  /floating/ /block/
+    ```tsx  /floating/ /block/ /pill/
     import { Button } from "@/components/ui/button"
     
     export function ButtonDemo() {
       return (
-        <Button variant="outline" size="md" floating block>Primary</Button>
+        <Button variant="outline" size="md" floating block pill>Primary</Button>
       )
     }
     ```

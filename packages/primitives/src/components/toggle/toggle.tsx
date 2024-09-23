@@ -12,11 +12,11 @@ type Props = React.ComponentPropsWithoutRef<typeof RadixTogglePrimitive.Root> &
 const Component = forwardRef<
   React.ElementRef<typeof RadixTogglePrimitive.Root>,
   Props
->(({ rcx, className, ...props }, ref) => {
+>(({ cls, className, ...props }, ref) => {
   return (
     <RadixTogglePrimitive.Root
       ref={ref}
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       {...props}
     />
   );

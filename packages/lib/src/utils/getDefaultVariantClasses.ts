@@ -11,7 +11,7 @@ type GetDefaultVariantClassesProps<B extends string = string> = {
  * Generates default variant classes based on the provided styles and variants.
  *
  * @param {GetDefaultVariantClassesProps} props - The input properties
- * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
 export const getDefaultVariantClasses = <B extends string>({
   styles,
@@ -33,7 +33,7 @@ export const getDefaultVariantClasses = <B extends string>({
 
     return {
       className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
-      rcx: isEmptyObject(responsiveClasses.rcx) ? acc.rcx : { ...acc.rcx, ...responsiveClasses.rcx },
+      cls: isEmptyObject(responsiveClasses.cls) ? acc.cls : { ...acc.cls, ...responsiveClasses.cls },
     };
   }, RECAST_STYLE_PROPS);
 };

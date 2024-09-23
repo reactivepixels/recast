@@ -24,11 +24,11 @@ export type Leaves<T> = {
 }[keyof T];
 
 /**
- * Adds an optional `rcx` prop to a component's props for Recast class object properties.
+ * Adds an optional `cls` prop to a component's props for Recast class object properties.
  */
 export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string }> = {
   /** Recast class object properties */
-  rcx?: { [P in keyof Props]?: string };
+  cls?: { [P in keyof Props]?: string };
 };
 
 /**
@@ -55,7 +55,7 @@ export type ExtractVariantProps<V, B extends string = never> = V extends object
 /**
  * Base props for Recast components.
  */
-export type RecastProps<T> = { [K in keyof T]: T[K] } & { rcx?: object };
+export type RecastProps<T> = { [K in keyof T]: T[K] } & { cls?: object };
 
 /**
  * Configuration object for Recast styles.
@@ -187,7 +187,7 @@ export type RelaxedCondition = {
  */
 export type RelaxedRecastStyleProps = {
   className: string;
-  rcx: ClassNameRecord;
+  cls: ClassNameRecord;
 };
 
 /**

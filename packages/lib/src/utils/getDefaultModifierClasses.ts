@@ -12,7 +12,7 @@ type GetDefaultModifierClassesProps<B extends string> = {
  *
  * @template B - String literal type for breakpoints
  * @param {GetDefaultModifierClassesProps<B>} props - The input properties
- * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
 export const getDefaultModifierClasses = <B extends string>({
   styles,
@@ -35,7 +35,7 @@ export const getDefaultModifierClasses = <B extends string>({
 
     return {
       className: mergeArrays(acc.className.split(" "), classesArray).join(" "),
-      rcx: acc.rcx,
+      cls: acc.cls,
     };
   }, RECAST_STYLE_PROPS);
 };

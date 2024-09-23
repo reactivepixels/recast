@@ -19,18 +19,18 @@ const Component = React.forwardRef<
   Props
 >(
   (
-    { className, children, icon: Icon = ChevronDownIcon, rcx, ...props },
+    { className, children, icon: Icon = ChevronDownIcon, cls, ...props },
     ref,
   ) => {
     return (
-      <RadixAccordionPrimitive.Header className={cn(rcx?.root, className)}>
+      <RadixAccordionPrimitive.Header className={cn(cls?.root, className)}>
         <RadixAccordionPrimitive.Trigger
           ref={ref}
-          className={rcx?.trigger}
+          className={cls?.trigger}
           {...props}
         >
           {children}
-          <Icon className={rcx?.icon} />
+          <Icon className={cls?.icon} />
         </RadixAccordionPrimitive.Trigger>
       </RadixAccordionPrimitive.Header>
     );

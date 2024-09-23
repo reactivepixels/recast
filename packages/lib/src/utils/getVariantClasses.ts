@@ -12,7 +12,7 @@ type GetVariantClassesProps<B extends string> = {
  * Generates variant classes based on the provided styles and variants.
  *
  * @param {GetVariantClassesProps} props - The input properties
- * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
 export const getVariantClasses = <B extends string = string>({
   styles,
@@ -52,7 +52,7 @@ const processStringVariant = <B extends string>(
   const responsiveClasses = generateResponsiveClasses(variantStyles);
   return {
     className: mergeStringClassNames(acc.className, responsiveClasses.className),
-    rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
+    cls: mergeObjectClassNames(acc.cls, responsiveClasses.cls),
   };
 };
 
@@ -77,7 +77,7 @@ const processResponsiveVariant = <B extends string>(
 
           return {
             className: mergeStringClassNames(innerAcc.className, prefixedClasses.className),
-            rcx: mergeObjectClassNames(innerAcc.rcx, prefixedClasses.rcx),
+            cls: mergeObjectClassNames(innerAcc.cls, prefixedClasses.cls),
           };
         }
       }
@@ -88,6 +88,6 @@ const processResponsiveVariant = <B extends string>(
 
   return {
     className: mergeStringClassNames(acc.className, responsiveClasses.className),
-    rcx: mergeObjectClassNames(acc.rcx, responsiveClasses.rcx),
+    cls: mergeObjectClassNames(acc.cls, responsiveClasses.cls),
   };
 };

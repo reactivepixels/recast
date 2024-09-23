@@ -12,7 +12,7 @@ type GetModifierClassesProps<B extends string> = {
  * Generates modifier classes based on the provided styles and modifiers.
  *
  * @param {GetModifierClassesProps} props - The input properties
- * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
 export const getModifierClasses = <B extends string>({
   styles,
@@ -28,7 +28,7 @@ export const getModifierClasses = <B extends string>({
       const classes = generateResponsiveClasses(modifierStyles);
       return {
         className: mergeStringClassNames(acc.className, classes.className),
-        rcx: mergeObjectClassNames(acc.rcx, classes.rcx),
+        cls: mergeObjectClassNames(acc.cls, classes.cls),
       };
     }
 

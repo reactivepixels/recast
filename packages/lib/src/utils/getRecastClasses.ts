@@ -25,7 +25,7 @@ type ClassGeneratorProps<B extends string = string> = {
  * Generates and combines CSS classes based on the provided styles, variants, and modifiers.
  *
  * @param {RecastClasses} params - The input parameters
- * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
 export function getRecastClasses<B extends string = string>({
   styles,
@@ -53,12 +53,12 @@ export function getRecastClasses<B extends string = string>({
     const generated = generator({ styles, variants, modifiers });
     return {
       className: mergeStringClassNames(acc.className, generated.className),
-      rcx: mergeObjectClassNames(acc.rcx, generated.rcx),
+      cls: mergeObjectClassNames(acc.cls, generated.cls),
     };
   }, RECAST_STYLE_PROPS);
 
   // Ensure className is always a string
   const className = Array.isArray(result.className) ? result.className.join(" ") : result.className;
 
-  return { className, rcx: result.rcx };
+  return { className, cls: result.cls };
 }

@@ -17,7 +17,7 @@ Add the plugin to your `tailwind.config.js` file:
 ```js
 module.exports = {
   // ...other config
-  plugins: [require("@rpxl/recast-tailwind")],
+  plugins: [require("@rpxl/recast-tailwind-plugin")],
 };
 ```
 
@@ -60,6 +60,7 @@ const Button = recast(ButtonPrimitive, {
       lg: "px-6 py-3 text-lg",
     },
   },
+  breakpoints: ["sm", "md", "lg"],
 });
 
 <Button size={{ default: "sm", md: "md", lg: "lg" }}>Responsive Button</Button>;
@@ -73,24 +74,6 @@ This button will be small by default, medium on md screens, and large on lg scre
 >
   Responsive Button
 </button>
-```
-
-### Modifiers
-
-Recast also supports modifiers with Tailwind CSS. Here's how you can use them:
-
-```jsx
-const Button = recast(ButtonPrimitive, {
-  modifiers: { pill: "rounded-full" },
-});
-
-<Button pill>Pill Button</Button>;
-```
-
-The plugin generates HTML with classes like this:
-
-```html
-<button class="rounded-full">Pill Button</button>
 ```
 
 ## Prettier Integration
@@ -117,53 +100,4 @@ export const breakpoints = {
 };
 ```
 
-These breakpoints are then used in your Recast components for responsive styling.
-
-## Plugin Implementation
-
-The Recast Tailwind plugin handles the generation of safelist classes based on your component definitions and usages.
-
-```ts
-usages.forEach((usage) => {
-  const component = components[usage.componentName];
-  if (!component) {
-    return;
-  }
-
-  // Add base classes to safelist
-  if (component.base) {
-    addToSafelist(safelist, component.base);
-  }
-
-  Object.entries(usage.props).forEach(([propName, propValue]) => {
-    const variantGroup = component.variants?.[propName];
-    if (!variantGroup) {
-      return;
-    }
-
-    if (typeof propValue === "object" && propValue !== null) {
-      Object.entries(propValue).forEach(([breakpoint, value]) => {
-        if (typeof value === "string") {
-          const classes = variantGroup[value];
-          if (classes) {
-            addToSafelist(
-              safelist,
-              classes,
-              breakpoint !== "default" ? breakpoint : ""
-            );
-          }
-        }
-      });
-    } else if (typeof propValue === "string") {
-      const classes = variantGroup[propValue];
-      if (classes) {
-        addToSafelist(safelist, classes);
-      }
-    }
-  });
-});
-```
-
-This implementation ensures that all necessary classes for your Recast components are included in your final CSS, even when using dynamic class generation.
-
-By following this setup and usage guide, you can leverage the full power of Recast with Tailwind CSS, creating flexible and responsive components with ease.
+These breakpoints can then used in your Recast components for responsive styling.
