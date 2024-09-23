@@ -658,7 +658,7 @@ describe("recast function", () => {
     });
 
     it("should correctly type breakpoints", () => {
-      const Button = recast(BaseButton, {
+      const ButtonWithBreakpoints = recast(BaseButton, {
         base: "text-base",
         variants: {
           size: {
@@ -670,10 +670,26 @@ describe("recast function", () => {
       });
 
       // This should compile without errors
-      <Button size={{ default: "sm", md: "lg" }} />;
+      <ButtonWithBreakpoints size={{ default: "sm", md: "lg" }} />;
 
       // @ts-expect-error - xl breakpoint not specified in component definition
-      <Button size={{ default: "sm", xl: "lg" }} />;
+      <ButtonWithBreakpoints size={{ default: "sm", xl: "lg" }} />;
+
+      const ButtonWithoutBreakpoints = recast(BaseButton, {
+        base: "text-base",
+        variants: {
+          size: {
+            sm: "text-sm",
+            lg: "text-lg",
+          },
+        },
+      });
+
+      // This should compile without errors
+      <ButtonWithoutBreakpoints size="sm" />;
+
+      // @ts-expect-error - Responsive object not allowed when no breakpoints are specified
+      <ButtonWithoutBreakpoints size={{ default: "sm", md: "lg" }} />;
     });
   });
 });

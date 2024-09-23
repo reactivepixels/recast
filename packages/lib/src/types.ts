@@ -193,7 +193,7 @@ export type RelaxedRecastStyleProps = {
 /**
  * Relaxed version of variant props for internal use.
  */
-export type RelaxedVariantProps<B extends string> = {
+export type RelaxedVariantProps<B extends string = never> = {
   [key: string]: ResponsiveValue<B, string>;
 };
 
@@ -215,7 +215,7 @@ export interface RecastBreakpoints {}
 export type Breakpoint = keyof RecastBreakpoints;
 
 /**
- * Represents a value that can be responsive (i.e., different for different breakpoints).
+ * Represents a value that can be responsive (i.e. tailwind breakpoints).
  */
 export type ResponsiveValue<B extends string = never, T = never> = B extends never
   ? T
