@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 4.3.0
+
+### Minor Changes
+
+- 6e156e4: Change nested classes prop from rcx to cls
+
 ## 4.2.0
 
 ### Minor Changes
