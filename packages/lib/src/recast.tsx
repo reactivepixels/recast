@@ -30,7 +30,7 @@ export function recast<
   P extends RecastProps<P>,
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
-  B extends keyof RecastBreakpoints = keyof RecastBreakpoints,
+  B extends keyof RecastBreakpoints | never = never,
 >(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "rcx">, B>, mergeFn?: MergeFn) {
   type Props = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>> &
     ExtractVariantProps<V, B> &

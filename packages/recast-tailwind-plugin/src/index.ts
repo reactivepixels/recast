@@ -175,8 +175,13 @@ function parseVariants(node: t.Node): Record<string, any> {
   if (t.isObjectExpression(node)) {
     const variants: Record<string, any> = {};
     for (const prop of node.properties) {
-      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-        variants[prop.key.name] = parseVariantValue(prop.value);
+      if (t.isObjectProperty(prop)) {
+        const key = t.isIdentifier(prop.key)
+          ? prop.key.name
+          : t.isStringLiteral(prop.key)
+            ? prop.key.value
+            : String(prop.key);
+        variants[key] = parseVariantValue(prop.value);
       }
     }
     return variants;
@@ -191,7 +196,10 @@ function parseVariantValue(node: t.Node): any {
     return node.value;
   } else if (t.isArrayExpression(node)) {
     return parseClassValue(node);
+  } else if (t.isIdentifier(node)) {
+    return node.name;
   }
+
   return "";
 }
 
@@ -227,16 +235,6 @@ export function generateSafelist(
         );
       }
     });
-
-    // Add base classes
-    if (component.base) {
-      addToSafelist(safelist, component.base);
-      breakpoints.forEach((breakpoint) => {
-        if (screens[breakpoint] && component.base) {
-          addToSafelist(safelist, component.base, breakpoint);
-        }
-      });
-    }
 
     if (component.variants) {
       Object.entries(component.variants).forEach(
@@ -335,55 +333,6 @@ export function processContent(
   } else {
     console.warn("Invalid content type:", typeof content);
   }
-}
-
-/**
- * Process a file pattern and extract Recast components from matching files
- * @param pattern - Glob pattern to match files
- * @param extractedComponents - Object to store extracted components
- * @param errors - Array to store any errors encountered during processing
- */
-function processFilePattern(
-  pattern: string,
-  extractedComponents: Record<string, RecastComponent>,
-  errors: string[]
-): void {
-  const files = glob.sync(pattern) || [];
-  files.forEach((file) => processFile(file, extractedComponents, errors));
-}
-
-/**
- * Process a single file and extract Recast components
- * @param file - Path to the file to process
- * @param extractedComponents - Object to store extracted components
- * @param errors - Array to store any errors encountered during processing
- */
-function processFile(
-  file: string,
-  extractedComponents: Record<string, RecastComponent>,
-  errors: string[]
-) {
-  try {
-    const content = fs.readFileSync(file, "utf8");
-    const extractedFromFile = extractRecastComponents(content);
-    Object.assign(extractedComponents, extractedFromFile);
-  } catch (error) {
-    errors.push(`Error reading file ${file}: ${error}`);
-  }
-}
-
-/**
- * Type guard to check if an item is a raw content object
- * @param item - Item to check
- * @returns True if the item is a raw content object, false otherwise
- */
-function isRawContent(item: unknown): item is { raw: string } {
-  return (
-    typeof item === "object" &&
-    item !== null &&
-    "raw" in item &&
-    typeof item.raw === "string"
-  );
 }
 
 export default recastTailwindPlugin;
