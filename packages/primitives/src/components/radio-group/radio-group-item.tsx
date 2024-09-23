@@ -17,15 +17,15 @@ type Props = React.ComponentPropsWithoutRef<
 const Component = forwardRef<
   React.ElementRef<typeof RadixRadioGroupPrimitive.Item>,
   Props
->(({ className, icon: Icon = CheckIcon, rcx, ...props }, ref) => {
+>(({ className, icon: Icon = CheckIcon, cls, ...props }, ref) => {
   return (
     <RadixRadioGroupPrimitive.Item
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       ref={ref}
       {...props}
     >
-      <RadixRadioGroupPrimitive.Indicator className={rcx?.indicator}>
-        <Icon className={rcx?.icon} />
+      <RadixRadioGroupPrimitive.Indicator className={cls?.indicator}>
+        <Icon className={cls?.icon} />
       </RadixRadioGroupPrimitive.Indicator>
     </RadixRadioGroupPrimitive.Item>
   );

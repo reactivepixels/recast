@@ -368,7 +368,7 @@ describe("getRecastClasses", () => {
   });
 
   describe("RCX Output", () => {
-    it("should generate correct rcx output", () => {
+    it("should generate correct cls output", () => {
       const styles: RelaxedStyles<BreakpointKeys> = {
         base: { default: "text-base", md: "text-lg" },
         variants: {
@@ -379,7 +379,7 @@ describe("getRecastClasses", () => {
       };
       const variants: RelaxedVariantProps<BreakpointKeys> = { color: "red" };
       const result = getRecastClasses({ styles, variants, modifiers: {} });
-      expect(result.rcx).toEqual({
+      expect(result.cls).toEqual({
         default: "text-base text-red-500",
         md: "text-lg",
         dark: "text-red-300",

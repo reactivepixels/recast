@@ -14,14 +14,14 @@ type Props = React.ComponentPropsWithoutRef<
 const Component = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Content>,
   Props
->(({ className, rcx, children, ...props }, ref) => {
+>(({ className, cls, children, ...props }, ref) => {
   return (
     <RadixAccordionPrimitive.Content
       ref={ref}
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       {...props}
     >
-      <div className={cn(rcx?.content, className)}>{children}</div>
+      <div className={cn(cls?.content, className)}>{children}</div>
     </RadixAccordionPrimitive.Content>
   );
 });

@@ -47,21 +47,21 @@ export const normalizeClasses = (classes?: string | string[]): string => {
 /**
  * Generates responsive classes based on the input.
  * @param classes - The input classes.
- * @returns An object containing className and rcx properties.
+ * @returns An object containing className and cls properties.
  */
 export const generateResponsiveClasses = (classes: string | string[] | ClassNameRecord): RelaxedRecastStyleProps => {
   if (!classes) return RECAST_STYLE_PROPS;
 
   if (isString(classes) || isStringArray(classes)) {
-    return { className: normalizeClasses(classes), rcx: {} };
+    return { className: normalizeClasses(classes), cls: {} };
   }
 
-  const rcx: ClassNameRecord = Object.entries(classes).reduce((acc, [key, value]) => {
+  const cls: ClassNameRecord = Object.entries(classes).reduce((acc, [key, value]) => {
     acc[key] = normalizeClasses(value);
     return acc;
   }, {} as ClassNameRecord);
 
-  return { className: "", rcx };
+  return { className: "", cls };
 };
 
 /**
@@ -204,7 +204,7 @@ export function isValidBreakpoint<B extends string>(
  * Prefixes all classes in a RelaxedRecastStyleProps object with a given prefix.
  *
  * This function is useful for adding breakpoint prefixes to classes in responsive designs.
- * It handles both the `className` string and the `rcx` object, ensuring all classes are prefixed.
+ * It handles both the `className` string and the `cls` object, ensuring all classes are prefixed.
  *
  * @param {RelaxedRecastStyleProps} classes - The original classes object to be prefixed.
  * @param {string} prefix - The prefix to be added to each class.
@@ -213,13 +213,13 @@ export function isValidBreakpoint<B extends string>(
  * @example
  * const original = {
  *   className: "text-red-500 bg-blue-300",
- *   rcx: { hover: "text-blue-500", focus: ["outline-none", "ring-2"] }
+ *   cls: { hover: "text-blue-500", focus: ["outline-none", "ring-2"] }
  * };
  * const prefixed = prefixClasses(original, "md:");
  * // Result:
  * // {
  * //   className: "md:text-red-500 md:bg-blue-300",
- * //   rcx: { hover: "md:text-blue-500", focus: "md:outline-none md:ring-2" }
+ * //   cls: { hover: "md:text-blue-500", focus: "md:outline-none md:ring-2" }
  * // }
  */
 export const prefixResponsiveClasses = (classes: RelaxedRecastStyleProps, prefix: string): RelaxedRecastStyleProps => ({
@@ -227,10 +227,10 @@ export const prefixResponsiveClasses = (classes: RelaxedRecastStyleProps, prefix
     .split(" ")
     .map((cls) => `${prefix}${cls}`)
     .join(" "),
-  rcx: Object.entries(classes.rcx).reduce<ClassNameRecord>((rcxAcc, [rcxKey, rcxValue]) => {
-    rcxAcc[rcxKey] = (Array.isArray(rcxValue) ? rcxValue : rcxValue.split(" "))
+  cls: Object.entries(classes.cls).reduce<ClassNameRecord>((clsAcc, [clsKey, clsValue]) => {
+    clsAcc[clsKey] = (Array.isArray(clsValue) ? clsValue : clsValue.split(" "))
       .map((cls) => `${prefix}${cls}`)
       .join(" ");
-    return rcxAcc;
+    return clsAcc;
   }, {}),
 });

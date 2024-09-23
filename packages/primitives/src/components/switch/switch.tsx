@@ -12,14 +12,14 @@ type Props = React.ComponentPropsWithoutRef<typeof RadixSwitchPrimitive.Root> &
 const Component = forwardRef<
   React.ElementRef<typeof RadixSwitchPrimitive.Root>,
   Props
->(({ className, rcx, ...props }, ref) => {
+>(({ className, cls, ...props }, ref) => {
   return (
     <RadixSwitchPrimitive.Root
       ref={ref}
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       {...props}
     >
-      <RadixSwitchPrimitive.Thumb className={rcx?.thumb} />
+      <RadixSwitchPrimitive.Thumb className={cls?.thumb} />
     </RadixSwitchPrimitive.Root>
   );
 });

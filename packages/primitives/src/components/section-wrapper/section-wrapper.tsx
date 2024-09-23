@@ -11,12 +11,12 @@ type Props = React.HTMLAttributes<HTMLElement> & {
   }>;
 
 const Component = forwardRef<HTMLElement, Props>(
-  ({ rcx, children, className, asChild, ...props }, ref) => {
+  ({ cls, children, className, asChild, ...props }, ref) => {
     const Comp = asChild ? Slot : "section";
 
     return (
-      <Comp className={cn(rcx?.root, className)} ref={ref} {...props}>
-        <div className={rcx?.inner}>{children}</div>
+      <Comp className={cn(cls?.root, className)} ref={ref} {...props}>
+        <div className={cls?.inner}>{children}</div>
       </Comp>
     );
   },

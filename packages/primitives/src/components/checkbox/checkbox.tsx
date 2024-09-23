@@ -17,15 +17,15 @@ type Props = React.ComponentPropsWithoutRef<
 const Component = forwardRef<
   React.ElementRef<typeof RadixCheckboxPrimitive.Root>,
   Props
->(({ className, rcx, icon: Icon = CheckIcon, ...props }, ref) => {
+>(({ className, cls, icon: Icon = CheckIcon, ...props }, ref) => {
   return (
     <RadixCheckboxPrimitive.Root
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       ref={ref}
       {...props}
     >
-      <RadixCheckboxPrimitive.Indicator className={rcx?.indicator}>
-        <Icon className={rcx?.indicator} />
+      <RadixCheckboxPrimitive.Indicator className={cls?.indicator}>
+        <Icon className={cls?.indicator} />
       </RadixCheckboxPrimitive.Indicator>
     </RadixCheckboxPrimitive.Root>
   );

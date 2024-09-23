@@ -19,7 +19,7 @@ npm install @rpxl/recast
 If you're using Tailwind CSS, you can also install the Recast Tailwind plugin:
 
 ```bash
-npm install @rpxl/recast-tailwind
+npm install @rpxl/recast-tailwind-plugin
 ```
 
 ## 2. Create a Component Primitive
@@ -49,8 +49,15 @@ Import the component primitive and wrap it with a theme layer using Recast:
 import { recast } from "@rpxl/recast";
 import { ButtonPrimitive } from "./ButtonPrimitive";
 
+// Create the Button component with Recast
 export const Button = recast(ButtonPrimitive, {
+  // Define the default values
+  defaults: {
+    variants: { variant: "primary", size: "md" },
+  },
+  // Define the base styles
   base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  // Define the variants
   variants: {
     variant: {
       primary: "bg-blue-500 text-white hover:bg-blue-600",
@@ -63,11 +70,9 @@ export const Button = recast(ButtonPrimitive, {
       lg: "px-6 py-3 text-lg",
     },
   },
+  // Define the modifiers
   modifiers: {
     fullWidth: "w-full",
-  },
-  defaults: {
-    variants: { variant: "primary", size: "md" },
   },
 });
 ```
@@ -75,63 +80,7 @@ export const Button = recast(ButtonPrimitive, {
 > **Note**: The example above uses Tailwind CSS classes, but Recast works with
 > any CSS classes or CSS-in-JS solution.
 
-## 4. Tailwind CSS Integration (Optional)
-
-If you're using Tailwind CSS, add the Recast plugin to your
-`tailwind.config.js`:
-
-```js
-module.exports = {
-  // ...other config
-  plugins: [require("@rpxl/recast-tailwind")],
-};
-```
-
-This step is only necessary if you're using Tailwind CSS and want to leverage
-the Recast Tailwind plugin features.
-
-### What the Tailwind CSS Integration Provides:
-
-1. **Automatic Safelist Generation**: The plugin automatically generates a
-   safelist for your Recast components, ensuring that all Tailwind classes used
-   in your Recast components are included in your production build, even if
-   they're not found in your templates.
-
-2. **Responsive Styling**: The plugin enables responsive styling for Recast
-   components using Tailwind's responsive syntax. For example:
-
-   ```jsx
-   <Button size={{ default: "sm", md: "lg" }}>Responsive Button</Button>
-   ```
-
-   This button will be small by default and large on medium-sized screens and
-   above. The plugin will generate classes like:
-
-   ```html
-   <button class="px-3 py-2 text-sm md:px-6 md:py-3 md:text-lg">
-     Responsive Button
-   </button>
-   ```
-
-   <Callout type="info">
-     Here, `px-3 py-2 text-sm` are applied by default, and `px-6 py-3 text-lg`
-     are applied with the `md:` prefix, activating them at the medium breakpoint
-     and above.
-   </Callout>
-
-3. **Improved Performance**: The plugin optimizes the generation of Tailwind
-   classes for Recast components, potentially improving build times and reducing
-   CSS file size.
-
-4. **Better Integration**: It ensures that Recast and Tailwind work seamlessly
-   together, allowing you to leverage the full power of both libraries in your
-   project.
-
-This integration enhances the developer experience when using Recast with
-Tailwind CSS, providing more flexibility and efficiency in styling your
-components.
-
-## 5. Usage
+## 4. Usage
 
 Now you can use your themed Button component with various props:
 
@@ -147,7 +96,7 @@ function App() {
       </Button>
       <Button variant="outline" fullWidth>
         Full Width Outline Button
-      </Button>{" "}
+      </Button>
     </div>
   );
 }
@@ -273,4 +222,3 @@ to adjust styles without modifying the core component logic.
 
   </Tabs.Tab>
 </Tabs>
-````

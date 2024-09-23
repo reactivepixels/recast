@@ -171,10 +171,10 @@ describe("Recast Tailwind Plugin", () => {
                 }>;
 
               const Component = forwardRef<HTMLElement, Props>(
-                ({ rcx, children, as: Tag = "section", className, ...props }, ref) => {
+                ({ cls, children, as: Tag = "section", className, ...props }, ref) => {
                   return (
-                    <Tag className={cn(rcx?.root, className)} ref={ref} {...props}>
-                      <div className={rcx?.inner}>{children}</div>
+                    <Tag className={cn(cls?.root, className)} ref={ref} {...props}>
+                      <div className={cls?.inner}>{children}</div>
                     </Tag>
                   );
                 },

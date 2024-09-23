@@ -15,7 +15,7 @@ type GetConditionalClassesProps<B extends string> = {
  *
  * @template B - String literal type for breakpoints
  * @param {GetConditionalClassesProps<B>} props - The input properties
- * @returns {RelaxedRecastStyleProps} An object containing the generated className and rcx properties
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
 export const getConditionalClasses = <B extends string>({
   styles,
@@ -41,7 +41,7 @@ export const getConditionalClasses = <B extends string>({
       const responsiveClasses = generateResponsiveClasses(condition.className);
       return {
         className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
-        rcx: isEmptyObject(responsiveClasses.rcx) ? acc.rcx : { ...acc.rcx, ...responsiveClasses.rcx },
+        cls: isEmptyObject(responsiveClasses.cls) ? acc.cls : { ...acc.cls, ...responsiveClasses.cls },
       };
     }
 

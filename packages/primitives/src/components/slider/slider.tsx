@@ -14,17 +14,17 @@ type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
 const Component = forwardRef<
   React.ElementRef<typeof RadixSliderPrimitive.Root>,
   Props
->(({ className, rcx, ...props }, ref) => {
+>(({ className, cls, ...props }, ref) => {
   return (
     <RadixSliderPrimitive.Root
       ref={ref}
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       {...props}
     >
-      <RadixSliderPrimitive.Track className={rcx?.track}>
-        <RadixSliderPrimitive.Range className={rcx?.range} />
+      <RadixSliderPrimitive.Track className={cls?.track}>
+        <RadixSliderPrimitive.Range className={cls?.range} />
       </RadixSliderPrimitive.Track>
-      <RadixSliderPrimitive.Thumb className={rcx?.thumb} />
+      <RadixSliderPrimitive.Thumb className={cls?.thumb} />
     </RadixSliderPrimitive.Root>
   );
 });

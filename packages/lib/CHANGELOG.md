@@ -34,7 +34,7 @@
 
 ### Patch Changes
 
-- 63cc987: Remove unused rcx props from Recast components
+- 63cc987: Remove unused cls props from Recast components
 
 ## 4.0.1
 

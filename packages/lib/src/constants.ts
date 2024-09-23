@@ -13,4 +13,4 @@ import type { RelaxedRecastStyleProps } from "./types.js";
  *   return userStyles || RECAST_STYLE_PROPS;
  * }
  */
-export const RECAST_STYLE_PROPS: RelaxedRecastStyleProps = { className: "", rcx: {} };
+export const RECAST_STYLE_PROPS: RelaxedRecastStyleProps = { className: "", cls: {} };

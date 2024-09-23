@@ -23,23 +23,23 @@ type Props = React.ComponentPropsWithoutRef<
 const Component = forwardRef<
   React.ElementRef<typeof RadixScrollAreaPrimitive.Root>,
   Props
->(({ className, rcx, children, orientation = "vertical", ...props }, ref) => {
+>(({ className, cls, children, orientation = "vertical", ...props }, ref) => {
   return (
     <RadixScrollAreaPrimitive.Root
       ref={ref}
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       {...props}
     >
-      <RadixScrollAreaPrimitive.Viewport className={rcx?.viewport}>
+      <RadixScrollAreaPrimitive.Viewport className={cls?.viewport}>
         {children}
       </RadixScrollAreaPrimitive.Viewport>
       <RadixScrollAreaPrimitive.ScrollAreaScrollbar
         orientation={orientation}
-        className={rcx?.scrollbar}
+        className={cls?.scrollbar}
       >
-        <RadixScrollAreaPrimitive.ScrollAreaThumb className={rcx?.thumb} />
+        <RadixScrollAreaPrimitive.ScrollAreaThumb className={cls?.thumb} />
       </RadixScrollAreaPrimitive.ScrollAreaScrollbar>
-      <RadixScrollAreaPrimitive.Corner className={rcx?.corner} />
+      <RadixScrollAreaPrimitive.Corner className={cls?.corner} />
     </RadixScrollAreaPrimitive.Root>
   );
 });

@@ -30,17 +30,17 @@ type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
 const Slider = forwardRef<
   React.ElementRef<typeof RadixSliderPrimitive.Root>,
   Props
->(({ className, rcx, ...props }, ref) => {
+>(({ className, cls, ...props }, ref) => {
   return (
     <RadixSliderPrimitive.Root
       ref={ref}
-      className={cn(rcx?.root, className)}
+      className={cn(cls?.root, className)}
       {...props}
     >
-      <RadixSliderPrimitive.Track className={rcx?.track}>
-        <RadixSliderPrimitive.Range className={rcx?.range} />
+      <RadixSliderPrimitive.Track className={cls?.track}>
+        <RadixSliderPrimitive.Range className={cls?.range} />
       </RadixSliderPrimitive.Track>
-      <RadixSliderPrimitive.Thumb className={rcx?.thumb} />
+      <RadixSliderPrimitive.Thumb className={cls?.thumb} />
     </RadixSliderPrimitive.Root>
   );
 });
@@ -60,6 +60,26 @@ export const Slider = recast(SliderPrimitive, {
   // Other Recast theme props can be added here
 });
 ```
+
+## TypeScript Integration
+
+Recast is designed to work seamlessly with TypeScript. When defining your
+component props, you can use the `RecastWithClassNameProps` type to ensure type
+safety for your nested class names:
+
+```jsx
+import { RecastWithClassNameProps } from "@rpxl/recast";
+
+type Props = YourComponentProps &
+  RecastWithClassNameProps<{
+    root: string;
+    childElement: string;
+    // ... other nested elements
+  }>;
+```
+
+This approach provides excellent TypeScript support, enabling autocompletion and
+type checking for your themed components.
 
 ## Wrapping a Recast Component
 
@@ -110,32 +130,3 @@ ScrollArea.displayName = "ScrollArea";
 
 This approach allows you to create more intuitive APIs for your components while
 still leveraging Recast's theming capabilities.
-
-## Performance Considerations
-
-When working with complex nested components or wrapping Recast components, keep
-these performance tips in mind:
-
-1. Memoize child components when appropriate to prevent unnecessary re-renders.
-2. Use the `useMemo` hook for expensive computations within your components.
-3. Leverage Recast's conditional styling to avoid applying unnecessary classes.
-
-## TypeScript Integration
-
-Recast is designed to work seamlessly with TypeScript. When defining your
-component props, you can use the `RecastWithClassNameProps` type to ensure type
-safety for your nested class names:
-
-```jsx
-import { RecastWithClassNameProps } from "@rpxl/recast";
-
-type Props = YourComponentProps &
-  RecastWithClassNameProps<{
-    root: string;
-    childElement: string;
-    // ... other nested elements
-  }>;
-```
-
-This approach provides excellent TypeScript support, enabling autocompletion and
-type checking for your themed components.
