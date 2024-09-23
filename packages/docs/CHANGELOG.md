@@ -1,5 +1,14 @@
 # docs
 
+## 1.1.4
+
+### Patch Changes
+
+- 6e156e4: Improve recast tailwind docs
+- Updated dependencies [6e156e4]
+  - @rpxl/recast@4.3.0
+  - @rpxl/recast-primitives@3.1.4
+
 ## 1.1.3
 
 ### Patch Changes
