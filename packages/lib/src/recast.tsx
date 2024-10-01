@@ -40,7 +40,7 @@ type RecastConfig<V, M> = {
  * @template B - The breakpoint options
  * @param {React.ComponentType<P>} Component - The base component to add theming to
  * @param {RecastStyles<V, M, Pick<P, "cls">, B>} styles - The styles to apply to the component
- * @param {RecastConfig<P, V, M>} [config] - Optional configuration for recast
+ * @param {RecastConfig<V, M>} [config] - Optional configuration for recast
  * @returns {RecastComponent<P, V, M, B>} A new component with theming capabilities
  */
 export function recast<
