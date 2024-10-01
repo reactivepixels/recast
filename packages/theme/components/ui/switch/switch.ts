@@ -10,7 +10,7 @@ export const Switch = recast(SwitchPrimitive, {
       "transition-all",
       "backdrop-blur",
       "bg-primary-300/5",
-      "data-[state=checked]:bg-primary-500/10",
+      // "data-[state=checked]:bg-primary-500/10",
       "cursor-pointer",
       "disabled:cursor-not-allowed",
       "disabled:opacity-50",
@@ -28,7 +28,7 @@ export const Switch = recast(SwitchPrimitive, {
     thumb: [
       "bg-primary-300/5",
       "transition-all",
-      "data-[state=checked]:bg-primary-300/20",
+      // "data-[state=checked]:bg-primary-300/20",
       "block",
       "data-[state=checked]:translate-x-full",
       "data-[state=unchecked]:translate-x-0",

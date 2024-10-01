@@ -15,6 +15,23 @@ import { getRecastClasses } from "./utils/getRecastClasses.js";
 import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.js";
 
 /**
+ * Configuration options for the recast function.
+ */
+type RecastConfig<V, M> = {
+  /**
+   * An array of prop names that should be passed through to the base component.
+   * These can include both variant and modifier props.
+   */
+  passThroughProps?: (keyof V | keyof M)[];
+
+  /**
+   * Optional function to merge classNames.
+   * If not provided, Recast uses a default merging strategy.
+   */
+  mergeFn?: MergeFn;
+};
+
+/**
  * Creates a new component with theming capabilities.
  *
  * @template P - The props of the base component
@@ -23,7 +40,7 @@ import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.j
  * @template B - The breakpoint options
  * @param {React.ComponentType<P>} Component - The base component to add theming to
  * @param {RecastStyles<V, M, Pick<P, "cls">, B>} styles - The styles to apply to the component
- * @param {MergeFn} [mergeFn] - Optional function to merge props
+ * @param {RecastConfig<P, V, M>} [config] - Optional configuration for recast
  * @returns {RecastComponent<P, V, M, B>} A new component with theming capabilities
  */
 export function recast<
@@ -31,10 +48,12 @@ export function recast<
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
   B extends keyof RecastBreakpoints | never = never,
->(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "cls">, B>, mergeFn?: MergeFn) {
-  type Props = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>> &
-    ExtractVariantProps<V, B> &
-    ExtractModifierProps<M> & { className?: string };
+>(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "cls">, B>, config: RecastConfig<V, M> = {}) {
+  type BaseProps = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>>;
+  type VariantProps = ExtractVariantProps<V, B>;
+  type ModifierProps = ExtractModifierProps<M>;
+
+  type Props = BaseProps & VariantProps & ModifierProps & { className?: string };
 
   const processModifiers = (props: Record<string, unknown>): RelaxedModifierProps => {
     const modifierKeys = Object.keys(styles.modifiers || {});
@@ -76,13 +95,29 @@ export function recast<
       breakpoints: styles.breakpoints,
     });
 
-    const mergedClassName = mergeFn
-      ? mergeFn(recastClassesClassName, className)
+    const mergedClassName = config?.mergeFn
+      ? config.mergeFn(recastClassesClassName, className)
       : `${recastClassesClassName} ${className || ""}`.trim();
+
+    type PassThroughProp = keyof V | keyof M | keyof P;
+
+    function getPassThroughValue(prop: PassThroughProp): unknown {
+      return props[prop];
+    }
+
+    const passThroughProps = config.passThroughProps
+      ? Object.fromEntries(
+          config.passThroughProps
+            .filter((prop) => prop in props)
+            .map((prop) => [prop, getPassThroughValue(prop)])
+            .filter(([, value]) => value !== undefined),
+        )
+      : {};
 
     return (
       <Component
         {...(propsWithoutModifiersAndVariants as P)}
+        {...passThroughProps}
         ref={ref}
         className={mergedClassName}
         cls={isEmptyObject(cls) ? undefined : cls}

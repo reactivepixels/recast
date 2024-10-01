@@ -40,7 +40,10 @@ To get Tailwind CSS IntelliSense working with Recast in VS Code:
 ```json
 {
   "tailwindCSS.experimental.classRegex": [
-    ["recast\\(([^)]_)\\)", "[\"'`]([^\"'`]_).*?[\"'`]"]
+    [
+      "recast\\(([^)]*)\\)",
+      "(?<!(?:breakpoints|defaults):\\s*(?:\\[|\\{)[^\\]}]*)[\"'`]([^\"'`]*).*?[\"'`]"
+    ]
   ]
 }
 ```
