@@ -301,7 +301,7 @@ describe("recast function", () => {
             },
           },
         },
-        cn,
+        { mergeFn: cn },
       );
 
       const { container: container1 } = render(<Button className="bg-red-500">Test</Button>);
@@ -690,6 +690,71 @@ describe("recast function", () => {
 
       // @ts-expect-error - Responsive object not allowed when no breakpoints are specified
       <ButtonWithoutBreakpoints size={{ default: "sm", md: "lg" }} />;
+    });
+  });
+
+  describe("passThroughProps functionality", () => {
+    type RecastClasses = {
+      className: string;
+      cls: Record<string, string>;
+    };
+
+    const TestComponent: React.FC<{
+      className?: string;
+      size?: string;
+      disabled?: boolean;
+      recastClasses?: RecastClasses;
+      children?: React.ReactNode;
+    }> = ({ className, size, disabled, recastClasses, children }) => (
+      <div className={className} data-testid="test-component" data-size={size} data-disabled={disabled}>
+        {children}
+        <span data-testid="recast-classes">{JSON.stringify(recastClasses)}</span>
+      </div>
+    );
+
+    const styles = {
+      variants: {
+        size: { sm: "text-sm", md: "text-md", lg: "text-lg" },
+      },
+      modifiers: {
+        disabled: "opacity-50",
+      },
+    };
+
+    it("does not pass through props by default", () => {
+      const ThemedComponent = recast(TestComponent, styles);
+      render(
+        <ThemedComponent size="lg" disabled>
+          Test
+        </ThemedComponent>,
+      );
+      const component = screen.getByTestId("test-component");
+      expect(component).not.toHaveAttribute("data-size");
+      expect(component).not.toHaveAttribute("data-disabled");
+    });
+
+    it("passes through specified props when configured", () => {
+      const ThemedComponent = recast(TestComponent, styles, { passThroughProps: ["size", "disabled"] });
+      render(
+        <ThemedComponent size="lg" disabled>
+          Test
+        </ThemedComponent>,
+      );
+      const component = screen.getByTestId("test-component");
+      expect(component).toHaveAttribute("data-size", "lg");
+      expect(component).toHaveAttribute("data-disabled", "true");
+    });
+
+    it("only passes through specified props", () => {
+      const ThemedComponent = recast(TestComponent, styles, { passThroughProps: ["size"] });
+      render(
+        <ThemedComponent size="lg" disabled>
+          Test
+        </ThemedComponent>,
+      );
+      const component = screen.getByTestId("test-component");
+      expect(component).toHaveAttribute("data-size", "lg");
+      expect(component).not.toHaveAttribute("data-disabled");
     });
   });
 });

@@ -1,11 +1,13 @@
 {
-  "eslint.runtime": "node",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
   "css.lint.unknownAtRules": "ignore",
   "tailwindCSS.experimental.classRegex": [
-    ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+    [
+      "recast\\(([^)]*)\\)",
+      "(?<!(?:breakpoints|defaults|passThroughProps):\\s*(?:\\[|\\{)[^\\]}]*)[\"'`]([^\"'`]*).*?[\"'`]"
+    ]
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "prettier.printWidth": 80

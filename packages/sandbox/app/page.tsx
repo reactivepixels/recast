@@ -1,18 +1,25 @@
 import { Button } from "./components/button";
+import { SectionWrapperNew } from "./components/section-wrapper";
 
 export default function Page() {
   return (
     <div className="p-8 flex flex-col gap-12 justify-center items-center w-full min-h-screen">
-      {/* <Button size="lg" variant="secondary">
+      <SectionWrapperNew george="sms" kevin="arnold">
+        Content
+      </SectionWrapperNew>
+
+      <Button size="huge" variant="secondary">
         Sandbox
-      </Button> */}
+      </Button>
+
       <Button
-        variant={{ default: "primary", "2xl": "secondary" }}
-        size={{ default: "sm", md: "md", "2xl": "lg" }}
+        variant={{ default: "primary", sm: "secondary", lg: "tertiary" }}
+        size={{ default: "md", sm: "tiny", md: "md", lg: "huge" }}
+        george="sms"
+        block
       >
         Yo
       </Button>
-      {/* <Button size={{ default: "sm", md: "lg" }}>Kevin</Button> */}
     </div>
   );
 }
