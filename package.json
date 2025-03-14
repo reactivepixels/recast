@@ -11,11 +11,9 @@
     "primitives:dev": "pnpm --filter @rpxl/recast-primitives run dev",
     "recast:build": "pnpm --filter @rpxl/recast run build",
     "recast:dev": "pnpm --filter @rpxl/recast run dev",
-    "plugin:build": "pnpm --filter @rpxl/recast-tailwind-plugin run build",
-    "plugin:dev": "pnpm --filter @rpxl/recast-tailwind-plugin run dev",
     "sandbox:dev": "pnpm --filter @rpxl/sandbox run dev",
     "release": "pnpm run build:all && npx changeset publish",
-    "test:ci": "pnpm --filter @rpxl/recast run test:coverage && pnpm --filter @rpxl/recast-tailwind-plugin run test:coverage"
+    "test:ci": "pnpm --filter @rpxl/recast run test:coverage"
   },
   "dependencies": {
     "@changesets/cli": "^2.27.8"

@@ -1,90 +1,6 @@
 import Image from "next/image";
 import { Steps, Callout } from "nextra/components";
 
-# Recast Tailwind CSS Integration
-
-Recast offers seamless integration with Tailwind CSS through our dedicated
-plugin, enhancing your development experience and unlocking powerful styling
-capabilities.
-
-## Installation
-
-First, install the Recast Tailwind plugin:
-
-```bash
-npm install @rpxl/recast-tailwind-plugin
-```
-
-## Setup
-
-If you're using Tailwind CSS, add the Recast plugin to your
-`tailwind.config.js`:
-
-```js
-module.exports = {
-  // ...other config
-  plugins: [require("@rpxl/recast-tailwind-plugin")],
-};
-```
-
-This step is necessary if you're using Tailwind CSS and want to leverage the
-Recast Tailwind plugin's features.
-
-### What the Tailwind CSS Integration Provides:
-
-1. **Automatic Safelist Generation**: The plugin automatically generates a
-   safelist for your Recast components based on the breakpoints specified in
-   your component definitions. This ensures that all Tailwind classes used in
-   your Recast components are included in your production build, even if they
-   aren't explicitly used in your templates.
-
-2. **Responsive Styling**: The plugin enables responsive styling for Recast
-   components using Tailwind's responsive syntax. Responsive component features
-   are opt-in on a per-component basis. For example:
-
-```jsx
-const Button = recast(ButtonPrimitive, {
-  variants: {
-    size: {
-      sm: "px-2 py-1 text-sm",
-      md: "px-4 py-2 text-base",
-      lg: "px-6 py-3 text-lg",
-    },
-  },
-  // Only allow these breakpoints to be
-  // used within the button component
-  breakpoints: ["sm", "md", "lg"],
-});
-
-<Button size={{ default: "sm", md: "md", lg: "lg" }}>Responsive Button</Button>;
-```
-
-Will generate the following classes:
-
-```html
-<button
-  class="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base lg:px-6 lg:py-3 lg:text-lg"
->
-  Responsive Button
-</button>
-```
-
-<Callout type="info">
-  Use responsive styles carefully. Specified breakpoints will automatically
-  generate and add the corresponding classes to Tailwind, whether they're used
-  or not. This is due to how Tailwind CSS statically analyzes classes during
-  build time. For more details, see the [Tailwind CSS
-  documentation](https://tailwindcss.com/docs/content-configuration#class-detection-in-depth).
-</Callout>
-
-3. **Better Integration**: The plugin ensures that Recast and Tailwind work
-   together smoothly, allowing you to fully leverage both libraries'
-   capabilities in your project.
-
-This integration significantly enhances the developer experience when using
-Recast with Tailwind CSS, offering increased flexibility and efficiency in
-styling components.
-
 ## VS Code Setup
 
 To get Tailwind CSS IntelliSense working with Recast in VS Code:
@@ -129,10 +45,6 @@ sorted.
 
 If you encounter any issues with the Tailwind CSS integration:
 
-1. Ensure you've installed both `@rpxl/recast` and
-   `@rpxl/recast-tailwind-plugin`.
-2. Verify that the Recast Tailwind plugin is correctly added to your
-   `tailwind.config.js`.
-3. Check that your VS Code settings are correctly configured for Tailwind CSS
+1. Check that your VS Code settings are correctly configured for Tailwind CSS
    IntelliSense.
-4. Clear your build cache and restart your development server.
+2. Clear your build cache and restart your development server.

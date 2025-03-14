@@ -21,7 +21,7 @@ const Component = React.forwardRef<
       className={cn(cls?.root, className)}
       {...props}
     >
-      <div className={cn(cls?.content, className)}>{children}</div>
+      <div className={cls?.content}>{children}</div>
     </RadixAccordionPrimitive.Content>
   );
 });
