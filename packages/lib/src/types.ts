@@ -46,9 +46,9 @@ export type ExtractModifierProps<M> = {
 /**
  * Extracts variant props from a variant configuration object.
  */
-export type ExtractVariantProps<V, B extends string = never> = V extends object
+export type ExtractVariantProps<V> = V extends object
   ? {
-      [K in keyof V]?: ResponsiveValue<B, keyof V[K] & string> | (keyof V[K] & string);
+      [K in keyof V]?: keyof V[K] & string;
     }
   : never;
 
@@ -60,7 +60,7 @@ export type RecastProps<T> = { [K in keyof T]: T[K] } & { cls?: object };
 /**
  * Configuration object for Recast styles.
  */
-export interface RecastStyles<V, M, P, B extends keyof RecastBreakpoints> {
+export interface RecastStyles<V, M, P> {
   /**
    * Default values for variants and modifiers. Defaults will only be applied
    * if the variant or modifier is not provided.
@@ -131,17 +131,12 @@ export interface RecastStyles<V, M, P, B extends keyof RecastBreakpoints> {
               [K in keyof NonNullable<Leaves<P>>]: string | string[];
             };
   }[];
-
-  /**
-   * Breakpoints for responsive styling.
-   */
-  breakpoints?: B[];
 }
 
 /**
  * Loosley typed for usage as arguments to different utility methods
  */
-export interface RelaxedStyles<B extends string> {
+export interface RelaxedStyles {
   base?: string | string[] | ClassNameRecord;
   variants?: {
     [key: string]: {
@@ -160,7 +155,6 @@ export interface RelaxedStyles<B extends string> {
     variants?: { [key: string]: string };
     modifiers?: string[];
   };
-  breakpoints?: B[];
 }
 
 /**
@@ -193,8 +187,8 @@ export type RelaxedRecastStyleProps = {
 /**
  * Relaxed version of variant props for internal use.
  */
-export type RelaxedVariantProps<B extends string = never> = {
-  [key: string]: ResponsiveValue<B, string>;
+export type RelaxedVariantProps = {
+  [key: string]: string;
 };
 
 /**
@@ -203,20 +197,3 @@ export type RelaxedVariantProps<B extends string = never> = {
 export type RelaxedModifierProps = {
   [key: string]: boolean;
 };
-
-/**
- * Interface for defining breakpoints in a Recast application.
- */
-export interface RecastBreakpoints {}
-
-/**
- * Use the keys of RecastBreakpoints as breakpoint types.
- */
-export type Breakpoint = keyof RecastBreakpoints;
-
-/**
- * Represents a value that can be responsive (i.e. tailwind breakpoints).
- */
-export type ResponsiveValue<B extends string = never, T = never> = B extends never
-  ? T
-  : T | ({ default: T } & Partial<Record<B, T>>);

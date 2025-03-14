@@ -1,47 +1,53 @@
-import type { RelaxedModifierProps, RelaxedStyles, RelaxedVariantProps, RelaxedRecastStyleProps } from "../types.js";
+import type {
+  RelaxedCondition,
+  RelaxedModifierProps,
+  RelaxedRecastStyleProps,
+  RelaxedStyles,
+  RelaxedVariantProps,
+} from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses, mergeArrays, isEmptyObject } from "./common.js";
+import { generateResponsiveClasses } from "./common.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 import { validateConditionalModifiers } from "./validateConditionalModifiers.js";
 import { validateConditionalVariants } from "./validateConditionalVariants.js";
 
-type GetConditionalClassesProps<B extends string> = {
-  styles: RelaxedStyles<B>;
-  variants: RelaxedVariantProps<B>;
+type GetConditionalClassesProps = {
+  styles: RelaxedStyles;
+  variants: RelaxedVariantProps;
   modifiers: RelaxedModifierProps;
 };
 
 /**
  * Generates conditional classes based on the provided styles, variants, and modifiers.
  *
- * @template B - String literal type for breakpoints
- * @param {GetConditionalClassesProps<B>} props - The input properties
+ * @param {GetConditionalClassesProps} props - The input properties
  * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
-export const getConditionalClasses = <B extends string>({
+export const getConditionalClasses = ({
   styles,
   variants,
   modifiers,
-}: GetConditionalClassesProps<B>): RelaxedRecastStyleProps => {
+}: GetConditionalClassesProps): RelaxedRecastStyleProps => {
   if (!styles.conditionals || styles.conditionals.length === 0) return RECAST_STYLE_PROPS;
 
-  return styles.conditionals.reduce<RelaxedRecastStyleProps>((acc, condition) => {
-    const hasConditionalVariants = validateConditionalVariants({
+  return styles.conditionals.reduce((acc: RelaxedRecastStyleProps, condition: RelaxedCondition) => {
+    const variantsMatch = validateConditionalVariants({
       condition,
       variants,
       defaults: styles.defaults?.variants,
     });
 
-    const hasConditionalModifiers = validateConditionalModifiers({
+    const modifiersMatch = validateConditionalModifiers({
       condition,
       modifiers,
       defaults: styles.defaults?.modifiers,
     });
 
-    if (hasConditionalVariants && hasConditionalModifiers) {
-      const responsiveClasses = generateResponsiveClasses(condition.className);
+    if (variantsMatch && modifiersMatch) {
+      const classes = generateResponsiveClasses(condition.className);
       return {
-        className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
-        cls: isEmptyObject(responsiveClasses.cls) ? acc.cls : { ...acc.cls, ...responsiveClasses.cls },
+        className: mergeStringClassNames(acc.className, classes.className),
+        cls: mergeObjectClassNames(acc.cls, classes.cls),
       };
     }
 

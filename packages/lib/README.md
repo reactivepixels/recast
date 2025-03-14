@@ -114,17 +114,7 @@ const Button = recast(ButtonPrimitive, {
 });
 ```
 
-### 3.4 Responsive Styling
-
-Recast supports responsive styling out of the box when used with the `@rpx/tailwind-recast-plugin`. This is an opt-in feature that is tightly coupled with Tailwind CSS:
-
-```jsx
-<Button size={{ default: "sm", md: "lg" }}>Responsive Button</Button>
-```
-
-> Note: To enable responsive styling, you need to install and configure the `@rpx/tailwind-recast-plugin`. This plugin integrates Recast with Tailwind CSS, allowing you to use Tailwind's responsive breakpoints in your Recast components.
-
-### 3.5 Conditional Styling
+### 3.4 Conditional Styling
 
 Apply styles based on specific combinations of variants and modifiers:
 
@@ -215,10 +205,9 @@ interface RecastStyles {
 
 1. Keep your primitive components simple and focused on functionality.
 2. Use Recast to handle all styling concerns.
-3. Leverage responsive styling for adaptable components.
-4. Use conditionals for complex style combinations.
-5. Set sensible defaults to reduce prop clutter in usage.
-6. Use TypeScript for better type checking and developer experience.
+3. Use conditionals for complex style combinations.
+4. Set sensible defaults to reduce prop clutter in usage.
+5. Use TypeScript for better type checking and developer experience.
 
 ## 7. Troubleshooting
 
@@ -247,9 +236,7 @@ Recent changes and updates to Recast:
 - v2.0.0: Major release with improved TypeScript support and performance optimizations.
 - v1.5.0: Added support for nested component structures.
 - v1.4.0: Introduced conditional styling feature.
-- v1.3.0: Enhanced responsive styling capabilities.
 - v1.2.0: Added support for default variants and modifiers.
-- v1.1.0: Improved integration with Tailwind CSS.
 - v1.0.0: Initial stable release of Recast.
 
 For a complete list of changes, please refer to the [CHANGELOG.md](https://github.com/reactivepixels/recast/blob/main/CHANGELOG.md) file.

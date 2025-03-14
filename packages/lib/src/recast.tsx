@@ -5,14 +5,12 @@ import type {
   MergeFn,
   ExtractModifierProps,
   ExtractVariantProps,
-  ResponsiveValue,
   RelaxedStyles,
   RelaxedVariantProps,
   RelaxedModifierProps,
-  RecastBreakpoints,
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
-import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.js";
+import { omit, isEmptyObject, isString } from "./utils/common.js";
 
 /**
  * Creates a new component with theming capabilities.
@@ -20,20 +18,18 @@ import { omit, isEmptyObject, isString, isNonNullObject } from "./utils/common.j
  * @template P - The props of the base component
  * @template V - The variant options
  * @template M - The modifier options
- * @template B - The breakpoint options
  * @param {React.ComponentType<P>} Component - The base component to add theming to
- * @param {RecastStyles<V, M, Pick<P, "cls">, B>} styles - The styles to apply to the component
+ * @param {RecastStyles<V, M, Pick<P, "cls">>} styles - The styles to apply to the component
  * @param {MergeFn} [mergeFn] - Optional function to merge props
- * @returns {RecastComponent<P, V, M, B>} A new component with theming capabilities
+ * @returns {RecastComponent<P, V, M>} A new component with theming capabilities
  */
 export function recast<
   P extends RecastProps<P>,
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
-  B extends keyof RecastBreakpoints | never = never,
->(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "cls">, B>, mergeFn?: MergeFn) {
-  type Props = Omit<P, keyof ExtractVariantProps<V, B> | keyof ExtractModifierProps<M>> &
-    ExtractVariantProps<V, B> &
+>(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "cls">>, mergeFn?: MergeFn) {
+  type Props = Omit<P, keyof ExtractVariantProps<V> | keyof ExtractModifierProps<M>> &
+    ExtractVariantProps<V> &
     ExtractModifierProps<M> & { className?: string };
 
   const processModifiers = (props: Record<string, unknown>): RelaxedModifierProps => {
@@ -47,12 +43,12 @@ export function recast<
     }, {});
   };
 
-  const processVariants = (props: Record<string, unknown>): RelaxedVariantProps<B> => {
+  const processVariants = (props: Record<string, unknown>): RelaxedVariantProps => {
     const variantKeys = Object.keys(styles.variants || {});
-    return variantKeys.reduce<RelaxedVariantProps<B>>((acc, key) => {
+    return variantKeys.reduce<RelaxedVariantProps>((acc, key) => {
       const value = props[key as keyof typeof props];
-      if (value !== undefined && (isString(value) || isNonNullObject(value))) {
-        acc[key] = value as ResponsiveValue<B, string>;
+      if (value !== undefined && isString(value)) {
+        acc[key] = value as string;
       }
       return acc;
     }, {});
@@ -69,11 +65,10 @@ export function recast<
       restProps,
     );
 
-    const { className: recastClassesClassName, cls } = getRecastClasses<B>({
-      styles: styles as RelaxedStyles<B>,
+    const { className: recastClassesClassName, cls } = getRecastClasses({
+      styles: styles as RelaxedStyles,
       variants: variantProps,
       modifiers: modifierProps,
-      breakpoints: styles.breakpoints,
     });
 
     const mergedClassName = mergeFn
