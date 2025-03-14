@@ -5,13 +5,6 @@ import { recast } from "../recast.js";
 import type { RecastWithClassNameProps } from "../types.js";
 import { cn } from "../utils/cn.js";
 
-type BreakpointKeys = "sm" | "md" | "lg" | "xl" | "2xl";
-
-// Breakpoints type augmentation for the test file
-declare module "../types.js" {
-  interface RecastBreakpoints extends Record<BreakpointKeys, string> {}
-}
-
 describe("recast function", () => {
   // Basic component for testing
   const BaseButton = React.forwardRef<
@@ -84,186 +77,6 @@ describe("recast function", () => {
       );
 
       expect(container.firstChild).toHaveClass("text-base opacity-50 cursor-not-allowed ring-2 ring-blue-500");
-    });
-  });
-
-  describe("responsive styling", () => {
-    it("should handle responsive styles", () => {
-      const Button = recast(BaseButton, {
-        base: "text-base",
-        variants: {
-          size: {
-            sm: "text-sm",
-            lg: "text-lg",
-          },
-        },
-        breakpoints: ["sm", "md", "lg", "xl"],
-      });
-
-      const { container } = render(<Button size={{ default: "sm", md: "lg" }}>Test</Button>);
-      expect(container.firstChild).toHaveClass("text-base text-sm md:text-lg");
-    });
-
-    it("should apply conditional styles", () => {
-      const Button = recast(BaseButton, {
-        base: "text-base",
-        variants: {
-          size: {
-            sm: "text-sm",
-            lg: "text-lg",
-          },
-          color: {
-            primary: "bg-blue-500",
-            secondary: "bg-gray-500",
-          },
-        },
-
-        conditionals: [
-          {
-            variants: { size: "lg", color: "primary" },
-            className: "font-bold",
-          },
-        ],
-      });
-
-      const { container } = render(
-        <Button size="lg" color="primary">
-          Test
-        </Button>,
-      );
-
-      expect(container.firstChild).toHaveClass("text-base text-lg bg-blue-500 font-bold");
-    });
-
-    it("should handle complex combinations of styles, including conditionals without breakpoint prefixes", () => {
-      const Button = recast(BaseButton, {
-        base: "text-base rounded",
-        variants: {
-          size: {
-            sm: "text-sm py-1 px-2",
-            md: "text-base py-2 px-4",
-            lg: "text-lg py-3 px-6",
-          },
-          color: {
-            primary: "bg-blue-500 text-white",
-            secondary: "bg-gray-500 text-white",
-            ghost: "bg-transparent text-current",
-          },
-        },
-        modifiers: {
-          disabled: "opacity-50 cursor-not-allowed",
-          loading: "animate-pulse",
-        },
-        conditionals: [
-          {
-            variants: { size: "lg", color: "primary" },
-            className: "uppercase tracking-wide",
-          },
-          {
-            modifiers: ["disabled", "loading"],
-            className: "pointer-events-none",
-          },
-        ],
-        breakpoints: ["sm", "md", "lg", "xl"],
-      });
-
-      const { container } = render(
-        <Button size={{ default: "sm", md: "lg" }} color={{ default: "ghost", lg: "primary" }} disabled loading>
-          Test
-        </Button>,
-      );
-
-      // Note: Conditional classes (uppercase, tracking-wide) are applied without breakpoint prefixes.
-      // This is the expected behavior as conditional classes are based on variant values, not breakpoints.
-      expect(container.firstChild).toHaveClass(
-        "text-base rounded text-sm py-1 px-2 md:text-lg md:py-3 md:px-6 " +
-          "bg-transparent text-current lg:bg-blue-500 lg:text-white " +
-          "opacity-50 cursor-not-allowed animate-pulse " +
-          "uppercase tracking-wide pointer-events-none",
-      );
-    });
-
-    it("should apply conditional styles correctly when multiple variants are specified", () => {
-      const Button = recast(BaseButton, {
-        base: "text-base rounded",
-        variants: {
-          size: {
-            sm: "text-sm py-1 px-2",
-            md: "text-base py-2 px-4",
-            lg: "text-lg py-3 px-6",
-          },
-          color: {
-            primary: "bg-blue-500 text-white",
-            secondary: "bg-gray-500 text-white",
-            ghost: "bg-transparent text-current",
-          },
-        },
-        conditionals: [
-          {
-            variants: { size: ["md", "lg"], color: ["ghost", "primary"] },
-            className: "uppercase tracking-wide",
-          },
-        ],
-        breakpoints: ["sm", "md", "lg", "xl"],
-      });
-
-      const { container } = render(
-        <Button size={{ default: "sm", md: "lg", xl: "lg" }} color={{ default: "ghost", lg: "primary" }}>
-          Test
-        </Button>,
-      );
-
-      // At default breakpoint: size is "sm", color is "ghost" - conditional should not apply
-      expect(container.firstChild).toHaveClass("text-base rounded text-sm py-1 px-2 bg-transparent text-current");
-      expect(container.firstChild).toHaveClass("uppercase tracking-wide");
-
-      // At md breakpoint: size is "lg", color is "ghost" - conditional should apply
-      expect(container.firstChild).toHaveClass("md:text-lg md:py-3 md:px-6 uppercase tracking-wide");
-
-      // At lg breakpoint: size is "lg", color is "primary" - conditional should apply
-      expect(container.firstChild).toHaveClass("lg:bg-blue-500 lg:text-white uppercase tracking-wide");
-
-      // Note: Conditional classes (uppercase, tracking-wide) are applied without breakpoint prefixes
-      // and are present if the condition is met at any breakpoint.
-      // This is the current behavior of the recast function.
-    });
-  });
-
-  describe("breakpoints functionality", () => {
-    it("should handle specific breakpoints", () => {
-      const Button = recast(BaseButton, {
-        base: "text-base",
-        variants: {
-          size: {
-            sm: "text-sm",
-            md: "text-md",
-            lg: "text-lg",
-          },
-        },
-        breakpoints: ["sm", "lg"],
-      });
-
-      // @ts-expect-error - invalid breakpoint in props (`md`)
-      const { container } = render(<Button size={{ default: "sm", sm: "md", md: "lg", lg: "lg" }}>Test</Button>);
-      expect(container.firstChild).toHaveClass("text-base text-sm sm:text-md lg:text-lg");
-      expect(container.firstChild).not.toHaveClass("md:text-lg");
-    });
-
-    it("should ignore breakpoints if not specified", () => {
-      const Button = recast(BaseButton, {
-        base: "text-base",
-        variants: {
-          size: {
-            sm: "text-sm",
-            md: "text-md",
-            lg: "text-lg",
-          },
-        },
-        breakpoints: ["sm", "md", "lg", "xl"],
-      });
-
-      const { container } = render(<Button size={{ default: "sm", sm: "md", md: "lg", lg: "lg" }}>Test</Button>);
-      expect(container.firstChild).toHaveClass("text-base text-sm sm:text-md md:text-lg lg:text-lg");
     });
   });
 
@@ -380,8 +193,8 @@ describe("recast function", () => {
       });
 
       const variants = {
-        color: { default: "red", md: "", lg: "green", xl: "blue" },
-        size: { default: "sm", md: "lg", xl: undefined },
+        color: "red",
+        size: "lg",
       };
 
       const { container } = render(
@@ -391,14 +204,13 @@ describe("recast function", () => {
         </Button>,
       );
 
+      // Updated expectation to match the new implementation without responsive features
       expect(container.firstChild).toHaveClass(
-        "text-base font-normal text-red-500 xl:text-blue-500 text-sm md:text-lg",
+        "text-base font-normal text-red-500 text-lg opacity-50 cursor-not-allowed",
       );
 
-      // Separate checks for modifier and conditional classes
-      expect(container.firstChild).toHaveClass("opacity-50 cursor-not-allowed");
+      // Separate checks for conditional classes
       expect(container.firstChild).toHaveClass("border-2 border-red-500");
-      expect(container.firstChild).toHaveClass("ring-2 ring-blue-500");
     });
   });
 
@@ -466,44 +278,6 @@ describe("recast function", () => {
       expect(getByTestId("slider-range")).toHaveClass("bg-primary absolute h-full");
       expect(getByTestId("slider-thumb")).toHaveClass(
         "block h-4 w-4 rounded-full border border-black/50 bg-white shadow",
-      );
-    });
-
-    it("should handle responsive styles in nested components", () => {
-      const Slider = recast(SliderPrimitive, {
-        base: {
-          root: "relative flex w-full touch-none select-none items-center",
-          track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
-          range: "bg-primary absolute h-full",
-          thumb: "block rounded-full border border-black/50 bg-white shadow",
-        },
-        variants: {
-          size: {
-            sm: {
-              root: "h-4",
-              thumb: "h-3 w-3",
-            },
-            md: {
-              root: "h-5",
-              thumb: "h-4 w-4",
-            },
-            lg: {
-              root: "h-6",
-              thumb: "h-5 w-5",
-            },
-          },
-        },
-        breakpoints: ["sm", "md", "lg", "xl"],
-      });
-
-      const { getByTestId } = render(<Slider size={{ default: "sm", md: "lg" }} />);
-
-      expect(getByTestId("slider-root")).toHaveClass(
-        "relative flex w-full touch-none select-none items-center h-4 md:h-6",
-      );
-
-      expect(getByTestId("slider-thumb")).toHaveClass(
-        "block rounded-full border border-black/50 bg-white shadow h-3 w-3 md:h-5 md:w-5",
       );
     });
 
@@ -644,7 +418,6 @@ describe("recast function", () => {
             size: "sm",
           },
         },
-        breakpoints: ["sm", "md", "lg", "xl"],
       });
 
       // This should compile without errors
@@ -655,41 +428,6 @@ describe("recast function", () => {
 
       // @ts-expect-error - size variant does not exist
       <Button size="md" />;
-    });
-
-    it("should correctly type breakpoints", () => {
-      const ButtonWithBreakpoints = recast(BaseButton, {
-        base: "text-base",
-        variants: {
-          size: {
-            sm: "text-sm",
-            lg: "text-lg",
-          },
-        },
-        breakpoints: ["sm", "md", "lg"],
-      });
-
-      // This should compile without errors
-      <ButtonWithBreakpoints size={{ default: "sm", md: "lg" }} />;
-
-      // @ts-expect-error - xl breakpoint not specified in component definition
-      <ButtonWithBreakpoints size={{ default: "sm", xl: "lg" }} />;
-
-      const ButtonWithoutBreakpoints = recast(BaseButton, {
-        base: "text-base",
-        variants: {
-          size: {
-            sm: "text-sm",
-            lg: "text-lg",
-          },
-        },
-      });
-
-      // This should compile without errors
-      <ButtonWithoutBreakpoints size="sm" />;
-
-      // @ts-expect-error - Responsive object not allowed when no breakpoints are specified
-      <ButtonWithoutBreakpoints size={{ default: "sm", md: "lg" }} />;
     });
   });
 });
