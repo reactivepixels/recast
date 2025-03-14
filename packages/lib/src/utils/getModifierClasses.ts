@@ -1,6 +1,6 @@
 import type { RelaxedModifierProps, RelaxedRecastStyleProps, RelaxedStyles } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses } from "./common.js";
+import { formatClassesObject } from "./common.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
 type GetModifierClassesProps = {
@@ -23,7 +23,7 @@ export const getModifierClasses = ({ styles, modifiers }: GetModifierClassesProp
     const modifierStyles = styles.modifiers?.[modifierKey];
     if (!modifierStyles) return acc;
 
-    const classes = generateResponsiveClasses(modifierStyles);
+    const classes = formatClassesObject(modifierStyles);
     return {
       className: mergeStringClassNames(acc.className, classes.className),
       cls: mergeObjectClassNames(acc.cls, classes.cls),

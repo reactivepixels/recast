@@ -6,7 +6,7 @@ import type {
   RelaxedVariantProps,
 } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses } from "./common.js";
+import { formatClassesObject } from "./common.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 import { validateConditionalModifiers } from "./validateConditionalModifiers.js";
 import { validateConditionalVariants } from "./validateConditionalVariants.js";
@@ -44,7 +44,7 @@ export const getConditionalClasses = ({
     });
 
     if (variantsMatch && modifiersMatch) {
-      const classes = generateResponsiveClasses(condition.className);
+      const classes = formatClassesObject(condition.className);
       return {
         className: mergeStringClassNames(acc.className, classes.className),
         cls: mergeObjectClassNames(acc.cls, classes.cls),

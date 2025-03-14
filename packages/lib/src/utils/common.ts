@@ -45,11 +45,11 @@ export const normalizeClasses = (classes?: string | string[]): string => {
 };
 
 /**
- * Generates responsive classes based on the input.
- * @param classes - The input classes.
- * @returns An object containing className and cls properties.
+ * Formats class names into a consistent object structure.
+ * @param classes - The input classes (string, string array, or object).
+ * @returns An object containing normalized className and cls properties.
  */
-export const generateResponsiveClasses = (classes: string | string[] | ClassNameRecord): RelaxedRecastStyleProps => {
+export const formatClassesObject = (classes: string | string[] | ClassNameRecord): RelaxedRecastStyleProps => {
   if (!classes) return RECAST_STYLE_PROPS;
 
   if (isString(classes) || isStringArray(classes)) {

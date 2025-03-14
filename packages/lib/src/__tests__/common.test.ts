@@ -4,7 +4,7 @@ import {
   isStringArray,
   isNonNullObject,
   normalizeClasses,
-  generateResponsiveClasses,
+  formatClassesObject,
   isVariantMatch,
   safeObjectAccess,
   getDefaultValue,
@@ -111,32 +111,32 @@ describe("common utilities", () => {
     });
   });
 
-  describe("generateResponsiveClasses", () => {
+  describe("formatClassesObject", () => {
     it("should return RECAST_STYLE_PROPS for falsy input", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(generateResponsiveClasses(undefined as any)).toEqual(RECAST_STYLE_PROPS);
+      expect(formatClassesObject(undefined as any)).toEqual(RECAST_STYLE_PROPS);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(generateResponsiveClasses(null as any)).toEqual(RECAST_STYLE_PROPS);
+      expect(formatClassesObject(null as any)).toEqual(RECAST_STYLE_PROPS);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(generateResponsiveClasses("" as any)).toEqual(RECAST_STYLE_PROPS);
+      expect(formatClassesObject("" as any)).toEqual(RECAST_STYLE_PROPS);
     });
 
     it("should handle string input", () => {
-      expect(generateResponsiveClasses("hello")).toEqual({
+      expect(formatClassesObject("hello")).toEqual({
         className: "hello",
         cls: {},
       });
     });
 
     it("should handle string array input", () => {
-      expect(generateResponsiveClasses(["hello", "world"])).toEqual({
+      expect(formatClassesObject(["hello", "world"])).toEqual({
         className: "hello world",
         cls: {},
       });
     });
 
     it("should handle object input", () => {
-      expect(generateResponsiveClasses({ sm: "small", md: "medium", lg: "large" })).toEqual({
+      expect(formatClassesObject({ sm: "small", md: "medium", lg: "large" })).toEqual({
         className: "",
         cls: {
           sm: "small",
@@ -147,7 +147,7 @@ describe("common utilities", () => {
     });
 
     it("should normalize values in object input", () => {
-      expect(generateResponsiveClasses({ sm: " small ", md: ["medium", "mid"] })).toEqual({
+      expect(formatClassesObject({ sm: " small ", md: ["medium", "mid"] })).toEqual({
         className: "",
         cls: {
           sm: "small",

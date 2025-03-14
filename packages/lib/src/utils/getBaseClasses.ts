@@ -1,6 +1,6 @@
 import type { RelaxedRecastStyleProps, RelaxedStyles } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses } from "./common.js";
+import { formatClassesObject } from "./common.js";
 
 type GetBaseClassesProps = {
   styles: RelaxedStyles;
@@ -15,5 +15,5 @@ type GetBaseClassesProps = {
 export const getBaseClasses = ({ styles }: GetBaseClassesProps): RelaxedRecastStyleProps => {
   if (!styles.base) return RECAST_STYLE_PROPS;
 
-  return generateResponsiveClasses(styles.base);
+  return formatClassesObject(styles.base);
 };

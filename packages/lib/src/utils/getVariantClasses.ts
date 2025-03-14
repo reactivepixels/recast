@@ -1,6 +1,6 @@
 import type { RelaxedStyles, RelaxedVariantProps, RelaxedRecastStyleProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses } from "./common.js";
+import { formatClassesObject } from "./common.js";
 import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
 type GetVariantClassesProps = {
@@ -21,7 +21,7 @@ export const getVariantClasses = ({ styles, variants }: GetVariantClassesProps):
     const variantStyles = styles.variants?.[variantKey]?.[variantValue];
     if (!variantStyles) return acc;
 
-    const responsiveClasses = generateResponsiveClasses(variantStyles);
+    const responsiveClasses = formatClassesObject(variantStyles);
     return {
       className: mergeStringClassNames(acc.className, responsiveClasses.className),
       cls: mergeObjectClassNames(acc.cls, responsiveClasses.cls),
