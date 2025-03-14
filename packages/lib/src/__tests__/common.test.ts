@@ -97,20 +97,27 @@ describe("common utilities", () => {
 
     it("should filter out falsy values from arrays", () => {
       expect(normalizeClasses(["hello", "", "world"])).toBe("hello world");
-      expect(normalizeClasses(["hello", undefined, "world"])).toBe("hello world");
-      expect(normalizeClasses(["hello", null, "world"])).toBe("hello world");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect(normalizeClasses(["hello", undefined as any, "world"])).toBe("hello world");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect(normalizeClasses(["hello", null as any, "world"])).toBe("hello world");
     });
 
     it("should throw an error for invalid input types", () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => normalizeClasses(123 as any)).toThrow("Invalid input type for normalizeClasses");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => normalizeClasses({} as any)).toThrow("Invalid input type for normalizeClasses");
     });
   });
 
   describe("generateResponsiveClasses", () => {
     it("should return RECAST_STYLE_PROPS for falsy input", () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(generateResponsiveClasses(undefined as any)).toEqual(RECAST_STYLE_PROPS);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(generateResponsiveClasses(null as any)).toEqual(RECAST_STYLE_PROPS);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(generateResponsiveClasses("" as any)).toEqual(RECAST_STYLE_PROPS);
     });
 

@@ -4,8 +4,11 @@ import { RECAST_STYLE_PROPS } from "../constants.js";
 
 describe("generateResponsiveClasses", () => {
   it("should return default RECAST_STYLE_PROPS when input is falsy", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(generateResponsiveClasses(null as any)).toEqual(RECAST_STYLE_PROPS);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(generateResponsiveClasses(undefined as any)).toEqual(RECAST_STYLE_PROPS);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(generateResponsiveClasses("" as any)).toEqual(RECAST_STYLE_PROPS);
   });
 
@@ -26,6 +29,7 @@ describe("generateResponsiveClasses", () => {
   });
 
   it("should handle string array with empty or undefined values", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = generateResponsiveClasses(["text-base", "", undefined as any, "font-bold"]);
     expect(result).toEqual({
       className: "text-base font-bold",
@@ -67,9 +71,11 @@ describe("generateResponsiveClasses", () => {
 
   it("should handle ClassNameRecord with empty or undefined values", () => {
     const result = generateResponsiveClasses({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       default: ["text-base", "", undefined as any],
       md: "text-lg",
       lg: "",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       xl: undefined as any,
     });
 

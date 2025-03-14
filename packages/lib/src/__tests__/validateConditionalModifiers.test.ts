@@ -77,6 +77,7 @@ describe("validateConditionalModifiers", () => {
 
     // Test with a complex object value that has at least one true value
     const complexModifiers: RelaxedModifierProps = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       complex: { state1: true, state2: false } as any,
     };
 
@@ -84,6 +85,7 @@ describe("validateConditionalModifiers", () => {
 
     // Test with a complex object value that has no true values
     const inactiveComplexModifiers: RelaxedModifierProps = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       complex: { state1: false, state2: false } as any,
     };
 
@@ -92,6 +94,7 @@ describe("validateConditionalModifiers", () => {
 
   it("should return false for invalid modifier types", () => {
     const condition: RelaxedCondition = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       modifiers: {} as any, // Invalid type
       className: "test-class",
     };
