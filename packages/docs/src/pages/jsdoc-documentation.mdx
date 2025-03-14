@@ -1,0 +1,161 @@
+# JSDoc Documentation
+
+Adding proper JSDoc documentation to your Recast components enhances the
+developer experience by providing helpful tooltips and type information when
+using your components.
+
+## Documenting String Literal Values
+
+When using Recast, you often define variants and modifiers with specific string
+values. Adding JSDoc documentation for these string literals improves the
+developer experience by showing helpful tooltips when hovering over these
+values.
+
+### Step 1: Define TypeDefs for String Literals
+
+First, define TypeScript string literal union types using JSDoc `@typedef` tags:
+
+```tsx
+/**
+ * Button variants
+ * @typedef {'primary' | 'secondary' | 'tertiary'} ButtonVariant
+ */
+
+/**
+ * Button sizes
+ * @typedef {'sm' | 'md' | 'lg'} ButtonSize
+ */
+```
+
+### Step 2: Document Variant Properties
+
+Add JSDoc comments to each variant property, using the `@param` tag to reference
+your typedef:
+
+```tsx
+variants: {
+  /**
+   * The variant of the button
+   * @param {ButtonVariant} variant - Controls the visual style of the button
+   * - 'primary' - Blue background with white text, used for main actions
+   * - 'secondary' - Red background with white text, used for secondary actions
+   * - 'tertiary' - Green background with white text, used for tertiary actions
+   */
+  variant: {
+    /** Blue background with white text, used for main actions */
+    primary: "bg-blue-500 text-white",
+    /** Red background with white text, used for secondary actions */
+    secondary: ["bg-red-500", "text-white"],
+    /** Green background with white text, used for tertiary actions */
+    tertiary: ["bg-green-500", "text-white"],
+  },
+}
+```
+
+### Step 3: Document Individual Values
+
+Add JSDoc comments to each individual value to provide specific information:
+
+```tsx
+size: {
+  /** Small text size */
+  sm: "text-sm",
+  /** Medium text size */
+  md: "text-md",
+  /** Large text size */
+  lg: "text-2xl",
+}
+```
+
+### Step 4: Document Modifiers
+
+For boolean modifiers, use JSDoc to explain what they do:
+
+```tsx
+modifiers: {
+  /**
+   * Makes the component interactive with hover effects
+   * @param {boolean} interactive - When true, adds hover and active states
+   */
+  interactive: "hover:scale-105 hover:shadow-md active:scale-100 cursor-pointer",
+}
+```
+
+## Complete Example
+
+Here's a complete example of a well-documented Card component:
+
+```tsx
+/**
+ * Card color variants
+ * @typedef {'default' | 'primary' | 'secondary' | 'accent'} CardColorVariant
+ */
+
+/**
+ * Card size variants
+ * @typedef {'sm' | 'md' | 'lg'} CardSizeVariant
+ */
+
+/**
+ * Card border radius variants
+ * @typedef {'none' | 'sm' | 'md' | 'lg' | 'full'} CardRadiusVariant
+ */
+
+export const Card = recast(Component, {
+  defaults: {
+    variants: { color: "default", size: "md", radius: "md" },
+    modifiers: [],
+  },
+  base: [
+    "flex",
+    "flex-col",
+    "overflow-hidden",
+    "transition-all",
+    "duration-200",
+  ],
+  variants: {
+    /**
+     * The color variant of the card
+     * @param {CardColorVariant} color - Controls the color scheme of the card
+     * - 'default' - White background with subtle border
+     * - 'primary' - Blue background with white text
+     * - 'secondary' - Gray background with dark text
+     * - 'accent' - Accent color background with contrasting text
+     */
+    color: {
+      /** White background with subtle border */
+      default: "border border-gray-200 bg-white text-gray-900",
+      /** Blue background with white text */
+      primary: "bg-blue-500 text-white",
+      /** Gray background with dark text */
+      secondary: "bg-gray-100 text-gray-800",
+      /** Accent color background with contrasting text */
+      accent: "bg-purple-500 text-white",
+    },
+    // Other variants...
+  },
+  modifiers: {
+    /**
+     * Adds a shadow to the card
+     * @param {boolean} shadowed - When true, adds a drop shadow to the card
+     */
+    shadowed: "shadow-lg",
+    // Other modifiers...
+  },
+});
+```
+
+## Benefits
+
+Adding JSDoc documentation to your Recast components provides several benefits:
+
+1. **Better Developer Experience**: Developers get helpful tooltips when using
+   your components
+2. **Self-Documenting Code**: The code itself becomes more understandable
+3. **Type Safety**: TypeScript can provide better type checking and
+   autocompletion
+4. **Documentation Generation**: Tools can generate documentation from your
+   JSDoc comments
+
+By following these guidelines, you can create more developer-friendly components
+that are easier to use and understand.

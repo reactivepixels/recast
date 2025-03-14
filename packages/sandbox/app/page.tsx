@@ -5,7 +5,7 @@ export default function Page() {
     <div className="p-8 flex flex-col gap-12 justify-center items-center w-full min-h-screen">
       <h1 className="text-4xl font-bold underline">Hello world!</h1>
 
-      <Button size="lg" variant="secondary">
+      <Button size="sm" variant="secondary">
         Sandbox
       </Button>
     </div>

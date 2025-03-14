@@ -3,9 +3,10 @@
     "type": "separator",
     "title": "Getting Started"
   },
-  "index": "Overview",
+  "index": "Introduction",
   "quick-start": "Quick Start",
   "theming": "Theming",
   "advanced-usage": "Advanced Usage",
-  "tailwind-css": "Tailwind CSS"
+  "tailwind-css": "Tailwind CSS",
+  "jsdoc-documentation": "JSDoc Documentation"
 }
