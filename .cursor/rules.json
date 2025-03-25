@@ -1,0 +1,151 @@
+{
+  "version": "1.0",
+  "rules": {
+    "typescript": {
+      "strict": true,
+      "target": "es2022",
+      "module": "Preserve",
+      "jsx": "preserve",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "resolveJsonModule": true,
+      "declaration": true,
+      "declarationMap": true,
+      "sourceMap": true,
+      "noUncheckedIndexedAccess": true,
+      "noImplicitOverride": true,
+      "verbatimModuleSyntax": true,
+      "lib": ["esnext", "dom", "dom.iterable"],
+      "types": ["node", "react", "vitest/globals", "@testing-library/jest-dom"]
+    },
+    "formatting": {
+      "printWidth": 120,
+      "tabWidth": 2,
+      "useTabs": false,
+      "semi": true,
+      "singleQuote": false,
+      "trailingComma": "es5",
+      "bracketSpacing": true,
+      "arrowParens": "always",
+      "endOfLine": "lf"
+    },
+    "linting": {
+      "eslint": {
+        "env": ["browser", "es2021"],
+        "plugins": ["react", "@typescript-eslint", "prettier"],
+        "extends": [
+          "plugin:react/recommended",
+          "plugin:@typescript-eslint/recommended"
+        ],
+        "rules": {
+          "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+              "args": "all",
+              "argsIgnorePattern": "^_",
+              "caughtErrors": "all",
+              "caughtErrorsIgnorePattern": "^_",
+              "destructuredArrayIgnorePattern": "^_",
+              "varsIgnorePattern": "^_",
+              "ignoreRestSiblings": true
+            }
+          ],
+          "react/react-in-jsx-scope": "off",
+          "react/prop-types": "off"
+        }
+      }
+    },
+    "editor": {
+      "formatOnSave": true,
+      "defaultFormatter": "esbenp.prettier-vscode",
+      "codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+      },
+      "tabSize": 2,
+      "insertSpaces": true,
+      "trimTrailingWhitespace": true,
+      "insertFinalNewline": true
+    },
+    "tailwind": {
+      "experimental": {
+        "classRegex": [["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]]
+      },
+      "config": {
+        "content": ["./packages/**/*.{js,jsx,ts,tsx}", "./packages/**/*.mdx"]
+      }
+    },
+    "search": {
+      "exclude": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/.git/**",
+        "**/coverage/**",
+        "**/.changeset/**",
+        "**/build/**",
+        "**/.next/**",
+        "**/.turbo/**"
+      ],
+      "include": [
+        "packages/**/*.{ts,tsx,js,jsx,md,mdx}",
+        "package.json",
+        "pnpm-workspace.yaml"
+      ]
+    },
+    "files": {
+      "associations": {
+        "*.tsx": "typescriptreact",
+        "*.ts": "typescript",
+        "*.js": "javascript",
+        "*.json": "json",
+        "*.md": "markdown",
+        "*.mdx": "markdown"
+      },
+      "exclude": {
+        "**/node_modules": true,
+        "**/dist": true,
+        "**/.git": true,
+        "**/coverage": true,
+        "**/.changeset": true,
+        "**/build": true,
+        "**/.next": true,
+        "**/.turbo": true
+      }
+    },
+    "path": {
+      "monorepo": {
+        "packages": ["packages/*"],
+        "root": "."
+      },
+      "aliases": {
+        "@rpxl/recast": "packages/lib/src",
+        "@rpxl/primitives": "packages/primitives/src",
+        "@rpxl/plugin": "packages/recast-tailwind-plugin/src"
+      }
+    },
+    "testing": {
+      "framework": "vitest",
+      "coverage": {
+        "enabled": true,
+        "threshold": {
+          "global": {
+            "branches": 80,
+            "functions": 80,
+            "lines": 80,
+            "statements": 80
+          }
+        }
+      }
+    },
+    "build": {
+      "tool": "tsup",
+      "output": {
+        "dir": "dist",
+        "format": ["esm", "cjs"],
+        "sourcemap": true,
+        "declaration": true
+      }
+    }
+  }
+}

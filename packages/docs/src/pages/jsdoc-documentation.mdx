@@ -1,0 +1,53 @@
+# JSDoc Documentation
+
+Adding proper JSDoc documentation to your Recast components enhances the
+developer experience by providing helpful tooltips and type information when
+using your components.
+
+## Documenting String Literal Values
+
+When using Recast, you often define variants and modifiers with specific string
+values. Adding JSDoc documentation for these string literals improves the
+developer experience by showing helpful tooltips when hovering over these
+values.
+
+### Document Variant Properties
+
+Add JSDoc comments to each variant property.
+
+```tsx
+variants: {
+  /**
+    * Controls the visual style of the button
+    *
+    * @default 'primary'
+    *
+    * @description Possible values:
+    * - `'primary'` - Blue background with white text, used for main actions.
+    * - `'secondary'` - Red background with white text, used for secondary actions.
+    * - `'tertiary'` - Green background with white text, used for tertiary actions.
+    */
+  variant: {
+    primary: "bg-blue-500 text-white",
+    secondary: ["bg-red-500", "text-white"],
+    tertiary: ["bg-green-500", "text-white"],
+  },
+}
+```
+
+### Step 4: Document Modifiers
+
+For boolean modifiers, use JSDoc to explain what they do:
+
+```tsx
+modifiers: {
+  /**
+   * Makes the component interactive with hover effects
+   * @param {boolean} interactive - When true, adds hover and active states
+   */
+  interactive: "hover:scale-105 hover:shadow-md active:scale-100 cursor-pointer",
+}
+```
+
+By following these guidelines, you can create more developer-friendly components
+that are easier to use and understand.

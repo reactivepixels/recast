@@ -3,16 +3,22 @@ import { Button } from "./components/button";
 export default function Page() {
   return (
     <div className="p-8 flex flex-col gap-12 justify-center items-center w-full min-h-screen">
-      {/* <Button size="lg" variant="secondary">
-        Sandbox
-      </Button> */}
-      <Button
-        variant={{ default: "primary", "2xl": "secondary" }}
-        size={{ default: "sm", md: "md", "2xl": "lg" }}
-      >
-        Yo
-      </Button>
-      {/* <Button size={{ default: "sm", md: "lg" }}>Kevin</Button> */}
+      <h1 className="text-4xl font-bold underline">Hello world!</h1>
+
+      <div className="flex flex-col gap-4 items-center">
+        <h2 className="text-2xl font-bold">Buttons</h2>
+        <div className="flex gap-4">
+          <Button size="sm" variant="primary">
+            Primary
+          </Button>
+          <Button size="sm" variant="secondary">
+            Secondary
+          </Button>
+          <Button size="sm" variant="tertiary">
+            Tertiary
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

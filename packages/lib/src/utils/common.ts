@@ -45,11 +45,11 @@ export const normalizeClasses = (classes?: string | string[]): string => {
 };
 
 /**
- * Generates responsive classes based on the input.
- * @param classes - The input classes.
- * @returns An object containing className and cls properties.
+ * Formats class names into a consistent object structure.
+ * @param classes - The input classes (string, string array, or object).
+ * @returns An object containing normalized className and cls properties.
  */
-export const generateResponsiveClasses = (classes: string | string[] | ClassNameRecord): RelaxedRecastStyleProps => {
+export const formatClassesObject = (classes: string | string[] | ClassNameRecord): RelaxedRecastStyleProps => {
   if (!classes) return RECAST_STYLE_PROPS;
 
   if (isString(classes) || isStringArray(classes)) {
@@ -151,86 +151,22 @@ export function memoize<TArgs extends unknown[], TReturn>(
 }
 
 /**
- * Omits specified keys from an object and returns a new object.
- *
- * @param {string[]} keysToOmit - An array of keys to be omitted from the object.
- * @param {Record<string, string | string[] | Record<string, string | string[]>>} originalObject - The original object to omit keys from.
- * @returns {Record<string, string | string[] | Record<string, string | string[]>>} A new object with the specified keys omitted.
+ * Omits specified keys from an object.
+ * @param keysToOmit - The keys to omit from the object.
+ * @param originalObject - The original object.
+ * @returns A new object without the specified keys.
  */
 export const omit = (
   keysToOmit: string[] = [],
   originalObject: Record<string, string | string[] | Record<string, string | string[]>> = {},
 ) => {
-  const clonedObject = { ...originalObject };
-
-  for (const path of keysToOmit) {
-    delete clonedObject[path];
-  }
-
-  return clonedObject;
+  return Object.entries(originalObject).reduce(
+    (acc, [key, value]) => {
+      if (!keysToOmit.includes(key)) {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {} as Record<string, string | string[] | Record<string, string | string[]>>,
+  );
 };
-
-/**
- * Checks if a given breakpoint is valid within the context of provided breakpoints.
- *
- * This function serves as a type guard, narrowing the type of `breakpoint` to either `B` or "default"
- * if it's valid. It considers a breakpoint valid if:
- * 1. It's the string "default", which is always considered valid.
- * 2. It's included in the provided array of breakpoints.
- * 3. No breakpoints are provided (in which case all strings are considered valid).
- *
- * @template B - A string type representing valid breakpoint names.
- * @param {string} breakpoint - The breakpoint to validate.
- * @param {B[]} [breakpoints] - An optional array of valid breakpoints.
- * @returns {breakpoint is B | "default"} - A type predicate indicating if the breakpoint is valid.
- *
- * @example
- * const breakpoints = ['sm', 'md', 'lg'] as const;
- * type Breakpoints = typeof breakpoints[number];
- *
- * console.log(isValidBreakpoint('sm', breakpoints)); // true
- * console.log(isValidBreakpoint('xl', breakpoints)); // false
- * console.log(isValidBreakpoint('default', breakpoints)); // true
- * console.log(isValidBreakpoint('any', undefined)); // true
- */
-export function isValidBreakpoint<B extends string>(
-  breakpoint: string,
-  breakpoints?: B[],
-): breakpoint is B | "default" {
-  return breakpoint === "default" || (breakpoints ? breakpoints.includes(breakpoint as B) : true);
-}
-
-/**
- * Prefixes all classes in a RelaxedRecastStyleProps object with a given prefix.
- *
- * This function is useful for adding breakpoint prefixes to classes in responsive designs.
- * It handles both the `className` string and the `cls` object, ensuring all classes are prefixed.
- *
- * @param {RelaxedRecastStyleProps} classes - The original classes object to be prefixed.
- * @param {string} prefix - The prefix to be added to each class.
- * @returns {RelaxedRecastStyleProps} A new RelaxedRecastStyleProps object with all classes prefixed.
- *
- * @example
- * const original = {
- *   className: "text-red-500 bg-blue-300",
- *   cls: { hover: "text-blue-500", focus: ["outline-none", "ring-2"] }
- * };
- * const prefixed = prefixClasses(original, "md:");
- * // Result:
- * // {
- * //   className: "md:text-red-500 md:bg-blue-300",
- * //   cls: { hover: "md:text-blue-500", focus: "md:outline-none md:ring-2" }
- * // }
- */
-export const prefixResponsiveClasses = (classes: RelaxedRecastStyleProps, prefix: string): RelaxedRecastStyleProps => ({
-  className: classes.className
-    .split(" ")
-    .map((cls) => `${prefix}${cls}`)
-    .join(" "),
-  cls: Object.entries(classes.cls).reduce<ClassNameRecord>((clsAcc, [clsKey, clsValue]) => {
-    clsAcc[clsKey] = (Array.isArray(clsValue) ? clsValue : clsValue.split(" "))
-      .map((cls) => `${prefix}${cls}`)
-      .join(" ");
-    return clsAcc;
-  }, {}),
-});

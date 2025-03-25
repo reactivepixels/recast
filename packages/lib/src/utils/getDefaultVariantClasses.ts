@@ -1,10 +1,11 @@
-import type { RelaxedStyles, RelaxedVariantProps, RelaxedRecastStyleProps } from "../types.js";
+import type { RelaxedRecastStyleProps, RelaxedStyles, RelaxedVariantProps } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { generateResponsiveClasses, mergeArrays, isEmptyObject } from "./common.js";
+import { formatClassesObject } from "./common.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
-type GetDefaultVariantClassesProps<B extends string = string> = {
-  styles: RelaxedStyles<B>;
-  variants: RelaxedVariantProps<B>;
+type GetDefaultVariantClassesProps = {
+  styles: RelaxedStyles;
+  variants: RelaxedVariantProps;
 };
 
 /**
@@ -13,27 +14,27 @@ type GetDefaultVariantClassesProps<B extends string = string> = {
  * @param {GetDefaultVariantClassesProps} props - The input properties
  * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
-export const getDefaultVariantClasses = <B extends string>({
+export const getDefaultVariantClasses = ({
   styles,
   variants,
-}: GetDefaultVariantClassesProps<B>): RelaxedRecastStyleProps => {
-  const defaultVariants = styles.defaults?.variants;
+}: GetDefaultVariantClassesProps): RelaxedRecastStyleProps => {
+  if (!styles.defaults?.variants) return RECAST_STYLE_PROPS;
 
-  if (!defaultVariants) return RECAST_STYLE_PROPS;
-
-  return Object.entries(defaultVariants).reduce<RelaxedRecastStyleProps>((acc, [variant, defaultValue]) => {
-    const defaultVariantStyles = styles.variants?.[variant]?.[defaultValue];
-
-    // Skip if no default variant styles are found or a variant has been set
-    if (!defaultVariantStyles || variants[variant]) {
+  return Object.entries(styles.defaults.variants).reduce((acc: RelaxedRecastStyleProps, [variantKey, variantValue]) => {
+    // Skip if the variant is already explicitly set
+    if (variants[variantKey]) {
       return acc;
     }
 
-    const responsiveClasses = generateResponsiveClasses(defaultVariantStyles);
+    const variantStyles = styles.variants?.[variantKey]?.[variantValue];
+    if (!variantStyles) {
+      return acc;
+    }
 
+    const classes = formatClassesObject(variantStyles);
     return {
-      className: mergeArrays(acc.className.split(" "), responsiveClasses.className.split(" ")).join(" "),
-      cls: isEmptyObject(responsiveClasses.cls) ? acc.cls : { ...acc.cls, ...responsiveClasses.cls },
+      className: mergeStringClassNames(acc.className, classes.className),
+      cls: mergeObjectClassNames(acc.cls, classes.cls),
     };
   }, RECAST_STYLE_PROPS);
 };

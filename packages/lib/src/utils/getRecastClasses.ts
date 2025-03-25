@@ -8,16 +8,15 @@ import { getDefaultVariantClasses } from "./getDefaultVariantClasses.js";
 import { getModifierClasses } from "./getModifierClasses.js";
 import { getVariantClasses } from "./getVariantClasses.js";
 
-type RecastClasses<B extends string = string> = {
-  styles: RelaxedStyles<B>;
-  variants: RelaxedVariantProps<B>;
+type RecastClasses = {
+  styles: RelaxedStyles;
+  variants: RelaxedVariantProps;
   modifiers: RelaxedModifierProps;
-  breakpoints?: B[];
 };
 
-type ClassGeneratorProps<B extends string = string> = {
-  styles: RelaxedStyles<B>;
-  variants: RelaxedVariantProps<B>;
+type ClassGeneratorProps = {
+  styles: RelaxedStyles;
+  variants: RelaxedVariantProps;
   modifiers: RelaxedModifierProps;
 };
 
@@ -27,21 +26,16 @@ type ClassGeneratorProps<B extends string = string> = {
  * @param {RecastClasses} params - The input parameters
  * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
-export function getRecastClasses<B extends string = string>({
-  styles,
-  variants,
-  modifiers,
-  breakpoints,
-}: RecastClasses<B>): RelaxedRecastStyleProps {
+export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
   // Early return for empty inputs
   if (!styles || Object.keys(styles).length === 0) {
     return RECAST_STYLE_PROPS;
   }
 
   // Generate different types of classes
-  const classGenerators: Array<(props: ClassGeneratorProps<B>) => RelaxedRecastStyleProps> = [
+  const classGenerators: Array<(props: ClassGeneratorProps) => RelaxedRecastStyleProps> = [
     getBaseClasses,
-    ({ styles, variants }) => getVariantClasses({ styles, variants, breakpoints }),
+    getVariantClasses,
     getDefaultVariantClasses,
     getModifierClasses,
     getDefaultModifierClasses,

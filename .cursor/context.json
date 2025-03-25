@@ -1,0 +1,140 @@
+{
+  "version": "1.0",
+  "project": {
+    "name": "recast",
+    "description": "A React component styling library that separates component functionality from styling/theming concerns",
+    "type": "library",
+    "framework": "react",
+    "language": "typescript",
+    "repository": "https://github.com/reactivepixels/recast",
+    "license": "MIT"
+  },
+  "architecture": {
+    "pattern": "monorepo",
+    "packages": {
+      "lib": {
+        "description": "Core recast library",
+        "type": "library",
+        "keyFiles": ["src/recast.tsx", "src/types.ts"],
+        "exports": {
+          "recast": "Main function for creating themed components",
+          "types": "TypeScript type definitions",
+          "utils": "Utility functions for style processing"
+        }
+      },
+      "primitives": {
+        "description": "Reusable component primitives",
+        "type": "library",
+        "keyFiles": ["src/components/*"],
+        "exports": {
+          "Button": "Base button primitive",
+          "Card": "Base card primitive",
+          "Input": "Base input primitive"
+        }
+      },
+      "recast-tailwind-plugin": {
+        "description": "Tailwind CSS integration for recast",
+        "type": "plugin",
+        "keyFiles": ["src/index.ts"],
+        "features": ["Class extraction", "Safelist generation"]
+      },
+      "docs": {
+        "description": "Documentation site",
+        "type": "documentation",
+        "framework": "nextra",
+        "keyFiles": ["src/pages/*.mdx"]
+      },
+      "sandbox": {
+        "description": "Testing and demo environment",
+        "type": "application",
+        "keyFiles": ["src/App.tsx", "src/components/*"]
+      }
+    }
+  },
+  "concepts": {
+    "core": {
+      "componentAbstraction": {
+        "description": "Separation of component functionality from styling",
+        "keyFiles": ["packages/lib/src/recast.tsx"],
+        "benefits": [
+          "True component reusability",
+          "Theme independence",
+          "Simplified maintenance"
+        ]
+      },
+      "stylingSystem": {
+        "description": "Flexible styling system with variants, modifiers, and conditionals",
+        "keyFiles": ["packages/lib/src/types.ts"],
+        "features": ["Base styles", "Variants", "Modifiers", "Conditionals"]
+      }
+    }
+  },
+  "patterns": {
+    "componentCreation": {
+      "description": "Using the recast function to create themed components",
+      "example": "const Button = recast(ButtonPrimitive, { base: '...', variants: {...} })",
+      "keyFiles": ["packages/lib/src/recast.tsx"],
+      "usage": {
+        "basic": "Simple component with base styles",
+        "variants": "Component with style variations",
+        "modifiers": "Component with boolean style toggles",
+        "conditionals": "Component with complex style combinations"
+      }
+    },
+    "stylingDefinition": {
+      "description": "Defining styles with variants, modifiers, and conditionals",
+      "example": "{ base: '...', variants: {...}, modifiers: {...}, conditionals: [...] }",
+      "keyFiles": ["packages/lib/src/types.ts"],
+      "structure": {
+        "base": "Default styles",
+        "variants": "Style variations",
+        "modifiers": "Boolean style toggles",
+        "conditionals": "Complex style combinations"
+      }
+    }
+  },
+  "context": {
+    "styling": {
+      "approach": "class-based",
+      "integrations": ["tailwind-css"],
+      "keyFiles": ["packages/recast-tailwind-plugin/src/index.ts"],
+      "features": ["Class extraction", "Safelist generation"]
+    },
+    "typescript": {
+      "strict": true,
+      "features": ["strict", "jsx", "esModuleInterop"],
+      "keyFiles": ["packages/lib/tsconfig.json"],
+      "typeSystem": {
+        "strict": true,
+        "jsx": "preserve",
+        "moduleResolution": "node"
+      }
+    },
+    "build": {
+      "tool": "tsup",
+      "packageManager": "pnpm",
+      "keyFiles": ["packages/lib/tsup.config.ts"],
+      "features": [
+        "TypeScript compilation",
+        "Declaration generation",
+        "Source maps"
+      ]
+    }
+  },
+  "development": {
+    "setup": {
+      "requirements": ["Node.js >= 16", "pnpm >= 8", "TypeScript >= 5"],
+      "commands": {
+        "install": "pnpm install",
+        "build": "pnpm run build:all",
+        "dev": "pnpm run recast:dev",
+        "test": "pnpm run test:ci"
+      }
+    },
+    "workflow": {
+      "branching": "main",
+      "commits": "conventional",
+      "releases": "changesets"
+    }
+  }
+}

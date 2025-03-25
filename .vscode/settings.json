@@ -8,5 +8,7 @@
     ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.printWidth": 80
+  "prettier.printWidth": 80,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }

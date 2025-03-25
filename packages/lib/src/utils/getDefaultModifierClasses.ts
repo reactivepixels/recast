@@ -1,45 +1,47 @@
-import type { RelaxedModifierProps, RelaxedStyles, RelaxedRecastStyleProps } from "../types.js";
+import type { RelaxedModifierProps, RelaxedRecastStyleProps, RelaxedStyles } from "../types.js";
 import { RECAST_STYLE_PROPS } from "../constants.js";
-import { mergeArrays, getDefaultValue } from "./common.js";
+import { formatClassesObject } from "./common.js";
+import { mergeObjectClassNames, mergeStringClassNames } from "./mergeClassNames.js";
 
-type GetDefaultModifierClassesProps<B extends string> = {
-  styles: RelaxedStyles<B>;
+type GetDefaultModifierClassesProps = {
+  styles: RelaxedStyles;
   modifiers: RelaxedModifierProps;
 };
 
 /**
  * Generates default modifier classes based on the provided styles and modifiers.
  *
- * @template B - String literal type for breakpoints
- * @param {GetDefaultModifierClassesProps<B>} props - The input properties
+ * @param {GetDefaultModifierClassesProps} props - The input properties
  * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
-export const getDefaultModifierClasses = <B extends string>({
+export const getDefaultModifierClasses = ({
   styles,
   modifiers,
-}: GetDefaultModifierClassesProps<B>): RelaxedRecastStyleProps => {
-  const defaultModifiers = getDefaultValue(styles.defaults?.modifiers, []);
+}: GetDefaultModifierClassesProps): RelaxedRecastStyleProps => {
+  if (!styles.defaults?.modifiers || styles.defaults.modifiers.length === 0) {
+    return RECAST_STYLE_PROPS;
+  }
 
-  if (defaultModifiers.length === 0) return RECAST_STYLE_PROPS;
-
-  return defaultModifiers.reduce<RelaxedRecastStyleProps>((acc, modifier) => {
-    const defaultModifierStyles = styles.modifiers?.[modifier];
-
-    // Skip if no default modifier styles are found or the modifier is already applied
-    if (!defaultModifierStyles || isModifierApplied(modifiers[modifier])) {
+  return styles.defaults.modifiers.reduce((acc: RelaxedRecastStyleProps, modifier: string) => {
+    // Skip if the modifier is explicitly set to false
+    if (modifiers[modifier] === false) {
       return acc;
     }
 
-    // Handle defaultModifierStyles as a string or array of strings
-    const classesArray = Array.isArray(defaultModifierStyles) ? defaultModifierStyles : [defaultModifierStyles];
+    // Skip if the modifier is already explicitly set to true
+    if (modifiers[modifier] === true) {
+      return acc;
+    }
 
+    const modifierStyles = styles.modifiers?.[modifier];
+    if (!modifierStyles) {
+      return acc;
+    }
+
+    const classes = formatClassesObject(modifierStyles);
     return {
-      className: mergeArrays(acc.className.split(" "), classesArray).join(" "),
-      cls: acc.cls,
+      className: mergeStringClassNames(acc.className, classes.className),
+      cls: mergeObjectClassNames(acc.cls, classes.cls),
     };
   }, RECAST_STYLE_PROPS);
 };
-
-function isModifierApplied(value: boolean | undefined): boolean {
-  return value === true;
-}
