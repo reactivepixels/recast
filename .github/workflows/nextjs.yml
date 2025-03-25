@@ -28,6 +28,8 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -44,11 +46,16 @@ jobs:
       - name: Build Recast primitives
         run: pnpm run primitives:build
       - name: Build with Next.js
-        run: pnpm run docs:build
+        run: |
+          export NODE_ENV=production
+          pnpm run docs:build
+      - name: Debug output directory
+        run: ls -la ./packages/docs/out
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./packages/docs/out
+          retention-days: 1
 
   # Deployment job
   deploy:
@@ -61,3 +68,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEBUG: true
