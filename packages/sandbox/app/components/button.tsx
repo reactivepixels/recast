@@ -19,16 +19,6 @@ const Component = forwardRef<HTMLButtonElement, Props>(
 
 Component.displayName = "ButtonPrimitive";
 
-/**
- * Button variants
- * @typedef {'primary' | 'secondary' | 'tertiary'} ButtonVariant
- */
-
-/**
- * Button sizes
- * @typedef {'sm' | 'md' | 'lg'} ButtonSize
- */
-
 export const Button = recast(Component, {
   defaults: {
     variants: { variant: "primary", size: "md" },
@@ -50,34 +40,42 @@ export const Button = recast(Component, {
   ],
   variants: {
     /**
-     * The variant of the button
-     * @param {ButtonVariant} variant - Controls the visual style of the button
-     * - 'primary' - Blue background with white text, used for main actions
-     * - 'secondary' - Red background with white text, used for secondary actions
-     * - 'tertiary' - Green background with white text, used for tertiary actions
+     * Controls the visual style of the button
+     *
+     * @default 'primary'
+     *
+     * @description Possible values:
+     * - `'primary'` - Blue background with white text, used for main actions.
+     * - `'secondary'` - Red background with white text, used for secondary actions.
+     * - `'tertiary'` - Green background with white text, used for tertiary actions.
      */
     variant: {
-      /** Blue background with white text, used for main actions */
       primary: "bg-blue-500 text-white",
-      /** Red background with white text, used for secondary actions */
-      secondary: ["bg-red-500", "text-white"],
-      /** Green background with white text, used for tertiary actions */
-      tertiary: ["bg-green-500", "text-white"],
+      secondary: "bg-red-500 text-white",
+      tertiary: "bg-green-500 text-white",
     },
     /**
-     * The size of the button
-     * @param {ButtonSize} size - Controls the size of the button
-     * - 'sm' - Small text size
-     * - 'md' - Medium text size
-     * - 'lg' - Large text size
+     * Controls the size of the button
+     *
+     * @default 'md'
+     *
+     * @description Possible values:
+     * - `'sm'` - Small text size
+     * - `'md'` - Medium text size
+     * - `'lg'` - Large text size
      */
     size: {
-      /** Small text size */
       sm: "text-sm",
-      /** Medium text size */
       md: "text-md",
-      /** Large text size */
       lg: "text-2xl",
     },
+  },
+  modifiers: {
+    /**
+     * Makes the component interactive with hover effects
+     * @param {boolean} interactive - When true, adds hover and active states
+     */
+    interactive:
+      "hover:scale-105 hover:shadow-md active:scale-100 cursor-pointer",
   },
 });
