@@ -14,7 +14,7 @@ export default function Page() {
           <Button size="sm" variant="secondary">
             Secondary
           </Button>
-          <Button size="sm" variant="tertiary">
+          <Button size="sm" variant="tertiary" interactive>
             Tertiary
           </Button>
         </div>
