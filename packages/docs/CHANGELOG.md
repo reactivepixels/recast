@@ -1,5 +1,14 @@
 # docs
 
+## 1.1.6
+
+### Patch Changes
+
+- 8260de3: Fix broken build script
+- Updated dependencies [8260de3]
+  - @rpxl/recast@5.0.1
+  - @rpxl/recast-primitives@3.1.6
+
 ## 1.1.5
 
 ### Patch Changes
