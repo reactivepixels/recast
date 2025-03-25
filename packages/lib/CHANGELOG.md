@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 5.0.1
+
+### Patch Changes
+
+- 8260de3: Fix broken build script
+
 ## 5.0.0
 
 ### Major Changes
