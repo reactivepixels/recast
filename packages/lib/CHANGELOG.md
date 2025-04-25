@@ -1,5 +1,11 @@
 # @rpxl/recast
 
+## 5.0.2
+
+### Patch Changes
+
+- 3ee3902: Update dependencies
+
 ## 5.0.1
 
 ### Patch Changes
