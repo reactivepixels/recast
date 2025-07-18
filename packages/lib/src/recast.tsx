@@ -12,6 +12,7 @@ import type {
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
 import { omit, isEmptyObject, isString } from "./utils/common.js";
+import { validateAndThrow } from "./utils/validateStyles.js";
 
 // Global configuration
 interface RecastConfig {
@@ -70,6 +71,9 @@ export function styles<
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
 >(stylesConfig: RecastStyles<V, M, { cls?: ClassNameRecord }>): RecastStylesObject<V, M> {
+  // Validate styles in development mode
+  validateAndThrow(stylesConfig as RelaxedStyles);
+
   const processModifiers = (props: Record<string, unknown>): RelaxedModifierProps => {
     const modifierKeys = Object.keys(stylesConfig.modifiers || {});
     return modifierKeys.reduce<RelaxedModifierProps>((acc, key) => {
