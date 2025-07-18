@@ -55,6 +55,12 @@ interface RecastStylesObject<
    * Extract class names without applying to a component
    */
   extract(props: ExtractVariantProps<V> & ExtractModifierProps<M>): string | ClassNameRecord;
+
+  /**
+   * Internal property to store the original style configuration for composition
+   * @internal
+   */
+  _config: RecastStyles<V, M, { cls?: ClassNameRecord }>;
 }
 
 /**
@@ -151,8 +157,35 @@ export function styles<
   // Create the styles object that is both callable and has extract method
   const stylesObject = applyToComponent as RecastStylesObject<V, M>;
   stylesObject.extract = extract;
+  stylesObject._config = stylesConfig; // Store original config for composition
 
   return stylesObject;
+}
+
+/**
+ * Type for any style object created by recast.styles()
+ */
+type AnyRecastStylesObject = RecastStylesObject<
+  Record<string, Record<string, string | string[]>>,
+  Record<string, string | string[]>
+>;
+
+/**
+ * Composes multiple style objects into a single style object
+ */
+export function compose(styleObjects: AnyRecastStylesObject[]): AnyRecastStylesObject {
+  if (!styleObjects.length) {
+    throw new Error("recast.compose() requires at least one style object");
+  }
+
+  if (styleObjects.length === 1) {
+    return styleObjects[0]!;
+  }
+
+  // TODO: Implement actual merging logic
+  // For now, just return the first style object
+  console.warn("recast.compose() merging logic not yet implemented, returning first object");
+  return styleObjects[0]!;
 }
 
 /**
@@ -160,5 +193,6 @@ export function styles<
  */
 export const recast = {
   styles,
+  compose,
   configure,
 };
