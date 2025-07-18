@@ -1,0 +1,5 @@
+---
+description: do not use 'any' types when writing typescript code
+globs:
+alwaysApply: true
+---

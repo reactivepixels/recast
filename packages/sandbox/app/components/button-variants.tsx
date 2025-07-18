@@ -19,7 +19,7 @@ const Component = forwardRef<HTMLButtonElement, Props>(
 
 Component.displayName = "ButtonPrimitive";
 
-export const ButtonWithVariants = recast({
+export const ButtonWithVariants = recast.styles({
   defaults: {
     variants: { variant: "primary", size: "md" },
   },
@@ -80,4 +80,5 @@ export const ButtonWithVariants = recast({
   },
 });
 
-export const Buttton = ButtonWithVariants(Component);
+/** Component argument curried and applied later. */
+export const Button = ButtonWithVariants(Component);
