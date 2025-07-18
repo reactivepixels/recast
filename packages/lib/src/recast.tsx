@@ -8,10 +8,11 @@ import type {
   RelaxedStyles,
   RelaxedVariantProps,
   RelaxedModifierProps,
+  RelaxedDefaults,
   ClassNameRecord,
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
-import { omit, isEmptyObject, isString } from "./utils/common.js";
+import { omit, isEmptyObject, isString, mergeArrays } from "./utils/common.js";
 import { validateAndThrow } from "./utils/validateStyles.js";
 
 // Global configuration
@@ -167,8 +168,79 @@ export function styles<
 }
 
 /**
+ * Merges two style configurations, with the second config taking precedence
+ */
+function mergeStyleConfigs(config1: RelaxedStyles, config2: RelaxedStyles): RelaxedStyles {
+  const mergedConfig: RelaxedStyles = {
+    // Merge base - concatenate if both are strings, take second if only one exists
+    base: (() => {
+      if (config1.base && config2.base) {
+        const base1 = isString(config1.base) ? config1.base : (config1.base as string[]).join(" ");
+        const base2 = isString(config2.base) ? config2.base : (config2.base as string[]).join(" ");
+        return `${base1} ${base2}`.trim();
+      }
+      return config2.base || config1.base;
+    })(),
+
+    // Merge variants - combine variant groups, later overrides earlier for same keys
+    variants: (() => {
+      if (!config1.variants && !config2.variants) return undefined;
+      return {
+        ...config1.variants,
+        ...config2.variants,
+      };
+    })(),
+
+    // Merge modifiers - combine modifier groups, later overrides earlier for same keys
+    modifiers: (() => {
+      if (!config1.modifiers && !config2.modifiers) return undefined;
+      return {
+        ...config1.modifiers,
+        ...config2.modifiers,
+      };
+    })(),
+
+    // Merge defaults - combine defaults, later overrides earlier for same keys
+    defaults: (() => {
+      if (!config1.defaults && !config2.defaults) return undefined;
+
+      const mergedDefaults: RelaxedDefaults = {};
+
+      // Merge variant defaults
+      if (config1.defaults?.variants || config2.defaults?.variants) {
+        mergedDefaults.variants = {
+          ...config1.defaults?.variants,
+          ...config2.defaults?.variants,
+        };
+      }
+
+      // Merge modifier defaults
+      if (config1.defaults?.modifiers || config2.defaults?.modifiers) {
+        mergedDefaults.modifiers = mergeArrays(config1.defaults?.modifiers, config2.defaults?.modifiers);
+      }
+
+      return Object.keys(mergedDefaults).length > 0 ? mergedDefaults : undefined;
+    })(),
+
+    // Merge conditionals - concatenate arrays
+    conditionals: (() => {
+      if (!config1.conditionals && !config2.conditionals) return undefined;
+      return mergeArrays(config1.conditionals, config2.conditionals);
+    })(),
+  };
+
+  // Remove undefined properties
+  Object.keys(mergedConfig).forEach((key) => {
+    if (mergedConfig[key as keyof typeof mergedConfig] === undefined) {
+      delete mergedConfig[key as keyof typeof mergedConfig];
+    }
+  });
+
+  return mergedConfig;
+}
+
+/**
  * Composes multiple style objects into a single style object
- * Currently returns the first style object to preserve type inference
  */
 export function compose<
   T extends RecastStylesObject<Record<string, Record<string, string | string[]>>, Record<string, string | string[]>>,
@@ -181,10 +253,16 @@ export function compose<
     return styleObjects[0]!;
   }
 
-  // For now, implement a simpler approach that just returns the first style object
-  // This avoids complex type merging issues while still providing the compose API
-  console.warn("recast.compose() full merging logic not yet implemented, returning first object");
-  return styleObjects[0]!;
+  // Start with the first style object's config
+  let mergedConfig = styleObjects[0]!._config as RelaxedStyles;
+
+  // Merge each subsequent config
+  for (let i = 1; i < styleObjects.length; i++) {
+    mergedConfig = mergeStyleConfigs(mergedConfig, styleObjects[i]!._config as RelaxedStyles);
+  }
+
+  // Create a new styles object with the merged config
+  return styles(mergedConfig) as T;
 }
 
 /**

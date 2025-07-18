@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { styles, compose } from "../recast.js";
 
 describe("recast.compose()", () => {
-  it("should return first style object when multiple are provided (simplified implementation)", () => {
+  it("should merge multiple style objects correctly", () => {
     const baseStyles = styles({
       base: "base-class",
       variants: {
@@ -24,12 +24,12 @@ describe("recast.compose()", () => {
 
     const composed = compose([baseStyles, colorStyles]);
 
-    // Test that the composed styles work (currently returns first object)
-    // Test that the composed styles work (currently returns first object)
-    const result = composed.extract({ size: "sm" });
+    // Test that the composed styles work with merged variants
+    const result = composed.extract({ size: "sm", color: "primary" });
     expect(result).toContain("base-class");
     expect(result).toContain("text-sm");
-    // Note: color variants are not available in current simplified implementation
+    expect(result).toContain("bg-blue-500");
+    expect(result).toContain("text-white");
   });
 
   it("should handle single style object", () => {
@@ -50,7 +50,7 @@ describe("recast.compose()", () => {
     expect(() => compose([])).toThrow("recast.compose() requires at least one style object");
   });
 
-  it("should return first style object modifiers (simplified implementation)", () => {
+  it("should merge modifiers correctly", () => {
     const baseStyles = styles({
       base: "base-class",
       modifiers: {
@@ -65,14 +65,14 @@ describe("recast.compose()", () => {
     });
 
     const composed = compose([baseStyles, additionalStyles]);
-    const result = composed.extract({ disabled: true });
+    const result = composed.extract({ disabled: true, fullWidth: true });
 
     expect(result).toContain("base-class");
     expect(result).toContain("opacity-50");
-    // Note: fullWidth modifier is not available in current simplified implementation
+    expect(result).toContain("w-full");
   });
 
-  it("should return first style object defaults (simplified implementation)", () => {
+  it("should merge defaults correctly", () => {
     const baseStyles = styles({
       base: "base-class",
       variants: {
@@ -103,6 +103,6 @@ describe("recast.compose()", () => {
 
     expect(result).toContain("base-class");
     expect(result).toContain("text-sm");
-    // Note: color defaults are not available in current simplified implementation
+    expect(result).toContain("bg-blue-500");
   });
 });

@@ -147,7 +147,7 @@ export interface RelaxedStyles {
     [key: string]: string | string[] | ClassNameRecord;
   };
   conditionals?: Array<{
-    variants?: { [key: string]: string };
+    variants?: { [key: string]: string | string[] };
     modifiers?: string | string[];
     className: string | string[] | ClassNameRecord;
   }>;
