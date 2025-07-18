@@ -12,12 +12,16 @@ import type {
   ClassNameRecord,
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
-import { omit, isEmptyObject, isString, mergeArrays } from "./utils/common.js";
+import { omit, isEmptyObject, isString, mergeArrays, memoize } from "./utils/common.js";
 import { validateAndThrow } from "./utils/validateStyles.js";
 
 // Global configuration
 interface RecastConfig {
   mergeFn?: MergeFn;
+  performance?: {
+    enableMonitoring?: boolean;
+    cacheSize?: number;
+  };
 }
 
 let globalConfig: RecastConfig = {};
@@ -75,7 +79,8 @@ export function styles<
   // Validate styles in development mode
   validateAndThrow(stylesConfig as RelaxedStyles);
 
-  const processModifiers = (props: Record<string, unknown>): RelaxedModifierProps => {
+  // Memoize the modifier and variant processing functions for better performance
+  const processModifiers = memoize((props: Record<string, unknown>): RelaxedModifierProps => {
     const modifierKeys = Object.keys(stylesConfig.modifiers || {});
     return modifierKeys.reduce<RelaxedModifierProps>((acc, key) => {
       const value = props[key as keyof typeof props];
@@ -84,9 +89,9 @@ export function styles<
       }
       return acc;
     }, {});
-  };
+  });
 
-  const processVariants = (props: Record<string, unknown>): RelaxedVariantProps => {
+  const processVariants = memoize((props: Record<string, unknown>): RelaxedVariantProps => {
     const variantKeys = Object.keys(stylesConfig.variants || {});
     return variantKeys.reduce<RelaxedVariantProps>((acc, key) => {
       const value = props[key as keyof typeof props];
@@ -95,7 +100,7 @@ export function styles<
       }
       return acc;
     }, {});
-  };
+  });
 
   // Create the callable function for applying to components
   const applyToComponent = <ComponentProps extends RecastProps<ComponentProps>>(
@@ -168,9 +173,9 @@ export function styles<
 }
 
 /**
- * Merges two style configurations, with the second config taking precedence
+ * Internal unmemoized version of mergeStyleConfigs
  */
-function mergeStyleConfigs(config1: RelaxedStyles, config2: RelaxedStyles): RelaxedStyles {
+function mergeStyleConfigsInternal(config1: RelaxedStyles, config2: RelaxedStyles): RelaxedStyles {
   const mergedConfig: RelaxedStyles = {
     // Merge base - concatenate if both are strings, take second if only one exists
     base: (() => {
@@ -238,6 +243,13 @@ function mergeStyleConfigs(config1: RelaxedStyles, config2: RelaxedStyles): Rela
 
   return mergedConfig;
 }
+
+/**
+ * Memoized version of mergeStyleConfigs for optimal performance.
+ * Merges two style configurations, with the second config taking precedence.
+ * This is memoized because style composition can happen frequently with the same inputs.
+ */
+const mergeStyleConfigs = memoize(mergeStyleConfigsInternal);
 
 /**
  * Composes multiple style objects into a single style object

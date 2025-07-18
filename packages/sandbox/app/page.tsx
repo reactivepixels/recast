@@ -1,10 +1,68 @@
+"use client";
+
 import { Button } from "./components/button";
 import { ComposedButton } from "./components/composed-button";
 import { ComposedSlider } from "./components/composed-slider";
+import React, { useEffect, useState } from "react";
+
+// Component to force rerender every second
+function RerenderTicker() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 8,
+        right: 8,
+        background: "#eee",
+        padding: 8,
+        borderRadius: 4,
+        zIndex: 100,
+      }}
+    >
+      <span>Rerender tick: {tick}</span>
+    </div>
+  );
+}
 
 export default function Page() {
+  const [buttonCount, setButtonCount] = useState(10);
+  const buttonVariants = ["primary", "secondary", "tertiary"] as const;
+  const buttonSizes = ["sm", "md", "lg"] as const;
+
   return (
     <div className="p-8 flex flex-col gap-12 justify-center items-center w-full min-h-screen">
+      <RerenderTicker />
+      <div className="flex items-center gap-4 mb-4">
+        <label htmlFor="button-count" className="font-mono">
+          Button count:
+        </label>
+        <input
+          id="button-count"
+          type="range"
+          min={1}
+          max={1000}
+          value={buttonCount}
+          onChange={(e) => setButtonCount(Number(e.target.value))}
+        />
+        <span className="font-mono">{buttonCount}</span>
+      </div>
+      <div className="flex flex-wrap gap-2 justify-center mb-8">
+        {Array.from({ length: buttonCount }).map((_, i) => (
+          <Button
+            key={i}
+            size={buttonSizes[i % buttonSizes.length]}
+            variant={buttonVariants[i % buttonVariants.length]}
+            interactive={i % 2 === 0}
+          >
+            Btn {i + 1}
+          </Button>
+        ))}
+      </div>
       <h1 className="text-4xl font-bold underline">Recast Sandbox</h1>
 
       <div className="flex flex-col gap-4 items-center">

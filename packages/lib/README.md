@@ -8,29 +8,78 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/@rpxl/recast)](https://bundlephobia.com/package/@rpxl/recast@2.0.0)
 
-## TL;DR
+# Recast
 
-Recast is a fundamentally different approach to building React components to maximise reusability.
+A powerful and flexible styling library for React components.
 
-## 1. Introduction
+## Performance Optimizations
 
-### 1.1 Why Recast?
+Recast includes several built-in performance optimizations to ensure fast rendering:
 
-Creating component libraries is a challenging and time-consuming task. Even the seemingly straightforward process of developing a sensible button component can lead to a daunting proliferation of props, primarily driven by the need for theming. Consider the numerous instances where theme-related props and styles are embedded in a component - such as **variant**: "primary" | "secondary" | "tertiary" or **size**: "sm" | "md" | "lg". This tight coupling of component props with theme requirements not only results in an ever-expanding list of props but also presents a significant hurdle to reusing components across projects without duplicating code purely for the purposes of theming.
+### Memoization
 
-Imagine being able to liberate your component primitives from theme dependencies, allowing them to be written once and used across projects.
+- **`getRecastClasses`**: The core class generation function is memoized with LRU caching
+- **`mergeStringClassNames`**: Class name merging is memoized for repeated combinations
+- **`processModifiers` & `processVariants`**: Props processing functions are memoized per style object
 
-### 1.2 What is Recast?
+### Caching Strategy
 
-Recast is not just a collection of small utilities; it is an approach/pattern to building **truly** reusable component primitives by abstracting the theme layer from the internal workings of a component.
+- **LRU Cache**: Prevents memory leaks by limiting cache size (default: 200 entries)
+- **Intelligent Eviction**: Least recently used entries are automatically removed
+- **Cache Statistics**: Available in development mode for monitoring hit rates
 
-The specific values that a Recast "primitive" can receive are not specified within the component, instead these are defined by wrapping the component with a styles definition that will form the theme API.
+### Development Mode Monitoring
 
-### 1.3 Who is Recast for?
+Performance monitoring is automatically enabled in development mode:
 
-Recast is for any individual/team who wants to build a truly reusable component library that can be used across projects without duplicating code purely for the purposes of theming.
+```typescript
+// Logs performance stats every 100 calls
+// [Recast Performance] getRecastClasses: 100 calls, avg 0.23ms
+```
 
-## 2. Getting Started
+### Advanced Configuration
+
+```typescript
+import { recast } from "@rpxl/recast";
+
+// Configure performance settings
+recast.configure({
+  performance: {
+    enableMonitoring: true, // Force enable monitoring
+    cacheSize: 500, // Increase cache size
+  },
+});
+```
+
+### Custom Performance Tools
+
+For advanced use cases, performance utilities are exported:
+
+```typescript
+import { memoize, memoizeWithLRU, withPerformanceMonitoring } from "@rpxl/recast";
+
+// Basic memoization
+const memoizedFn = memoize(expensiveFunction);
+
+// LRU memoization with size limit
+const lruMemoizedFn = memoizeWithLRU(expensiveFunction, 100);
+
+// Performance monitoring wrapper
+const monitoredFn = withPerformanceMonitoring(expensiveFunction, "myFunction");
+
+// Access cache statistics
+console.log(lruMemoizedFn.getCacheStats());
+// { size: 50, maxSize: 100, hitRate: 0.85 }
+```
+
+### Performance Best Practices
+
+1. **Reuse style objects**: Create styles once and reuse them across components
+2. **Stable prop values**: Avoid creating new objects in render functions
+3. **Use composition**: Compose styles instead of recreating them
+4. **Monitor cache hit rates**: Check performance stats in development
+
+## Installation & Usage
 
 ### 2.1 Installation
 
