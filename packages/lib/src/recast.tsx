@@ -163,17 +163,12 @@ export function styles<
 }
 
 /**
- * Type for any style object created by recast.styles()
- */
-type AnyRecastStylesObject = RecastStylesObject<
-  Record<string, Record<string, string | string[]>>,
-  Record<string, string | string[]>
->;
-
-/**
  * Composes multiple style objects into a single style object
+ * Currently returns the first style object to preserve type inference
  */
-export function compose(styleObjects: AnyRecastStylesObject[]): AnyRecastStylesObject {
+export function compose<
+  T extends RecastStylesObject<Record<string, Record<string, string | string[]>>, Record<string, string | string[]>>,
+>(styleObjects: T[]): T {
   if (!styleObjects.length) {
     throw new Error("recast.compose() requires at least one style object");
   }
@@ -182,9 +177,9 @@ export function compose(styleObjects: AnyRecastStylesObject[]): AnyRecastStylesO
     return styleObjects[0]!;
   }
 
-  // TODO: Implement actual merging logic
-  // For now, just return the first style object
-  console.warn("recast.compose() merging logic not yet implemented, returning first object");
+  // For now, implement a simpler approach that just returns the first style object
+  // This avoids complex type merging issues while still providing the compose API
+  console.warn("recast.compose() full merging logic not yet implemented, returning first object");
   return styleObjects[0]!;
 }
 
