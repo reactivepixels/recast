@@ -1,0 +1,89 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Recast",
+  "colors": {
+    "primary": "#3B82F6",
+    "light": "#60A5FA",
+    "dark": "#1D4ED8"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": ["index", "quickstart", "development"]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "essentials/components",
+              "essentials/theming",
+              "essentials/variants"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "essentials/advanced-usage",
+              "essentials/customization",
+              "essentials/migration"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Core API",
+            "pages": ["api-reference/recast", "api-reference/components"]
+          },
+          {
+            "group": "Utilities",
+            "pages": ["api-reference/utils", "api-reference/types"]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/reactivepixels/recast",
+          "icon": "github"
+        },
+        {
+          "anchor": "Discussions",
+          "href": "https://github.com/reactivepixels/recast/discussions",
+          "icon": "message-circle"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://github.com/reactivepixels/recast/issues"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started",
+      "href": "https://github.com/reactivepixels/recast"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/reactivepixels/recast"
+    }
+  }
+}
