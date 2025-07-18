@@ -1,18 +1,14 @@
 import { cn } from "../../utils/cn.js";
 import { CheckIcon } from "@radix-ui/react-icons";
 import * as RadixRadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixRadioGroupPrimitive.Item
 > & {
   icon: React.ComponentType;
-} & RecastWithClassNameProps<{
-    root: string;
-    indicator: string;
-    icon: string;
-  }>;
+} & RecastClsProps<"root" | "indicator" | "icon">;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixRadioGroupPrimitive.Item>,

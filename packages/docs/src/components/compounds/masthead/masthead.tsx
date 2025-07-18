@@ -5,7 +5,7 @@ import { Stack } from "@/components/ui/stack";
 
 type Props = React.ComponentProps<typeof SectionWrapper>;
 
-const Masthead = forwardRef<React.ComponentRef<typeof SectionWrapper>, Props>(
+const Masthead = forwardRef<HTMLElement, Props>(
   ({ className, ...props }, ref) => {
     return (
       <SectionWrapper

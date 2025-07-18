@@ -3,7 +3,7 @@
 import { ButtonPrimitive } from "@rpxl/recast-primitives";
 import { recast } from "@rpxl/recast";
 
-export const Button = recast(ButtonPrimitive, {
+const buttonStyles = recast.styles({
   base: [
     "inline-flex",
     "items-center",
@@ -71,3 +71,5 @@ export const Button = recast(ButtonPrimitive, {
     },
   ],
 });
+
+export const Button = buttonStyles(ButtonPrimitive);

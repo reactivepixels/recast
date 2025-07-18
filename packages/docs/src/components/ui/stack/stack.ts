@@ -1,7 +1,7 @@
 import { StackPrimitive } from "@rpxl/recast-primitives";
 import { recast } from "@rpxl/recast";
 
-export const Stack = recast(StackPrimitive, {
+const stackStyles = recast.styles({
   defaults: { variants: { size: "md" } },
   base: "flex flex-col",
   variants: {
@@ -16,3 +16,5 @@ export const Stack = recast(StackPrimitive, {
     },
   },
 });
+
+export const Stack = stackStyles(StackPrimitive);

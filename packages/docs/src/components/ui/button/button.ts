@@ -3,7 +3,7 @@
 import { ButtonPrimitive } from "@rpxl/recast-primitives";
 import { recast } from "@rpxl/recast";
 
-export const Button = recast(ButtonPrimitive, {
+const buttonStyles = recast.styles({
   defaults: {
     variants: { variant: "primary", size: "md" },
   },
@@ -67,3 +67,5 @@ export const Button = recast(ButtonPrimitive, {
     pill: "!rounded-full px-8",
   },
 });
+
+export const Button = buttonStyles(ButtonPrimitive);

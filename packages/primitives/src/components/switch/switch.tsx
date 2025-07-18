@@ -1,13 +1,10 @@
 import { cn } from "../../utils/cn.js";
 import * as RadixSwitchPrimitive from "@radix-ui/react-switch";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<typeof RadixSwitchPrimitive.Root> &
-  RecastWithClassNameProps<{
-    root: string;
-    thumb: string;
-  }>;
+  RecastClsProps<"root" | "thumb">;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixSwitchPrimitive.Root>,
