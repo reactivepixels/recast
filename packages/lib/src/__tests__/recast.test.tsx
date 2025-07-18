@@ -2,8 +2,8 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { recast } from "../recast.js";
-import type { RecastWithClassNameProps } from "../types.js";
 import { cn } from "../utils/cn.js";
+import type { RecastClsProps } from "../types.js";
 
 describe("recast.styles", () => {
   // Basic component for testing
@@ -21,7 +21,7 @@ describe("recast.styles", () => {
   // Slider primitive for nested component testing
   const SliderPrimitive = React.forwardRef<
     HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement> & RecastWithClassNameProps<{ root: string; track: string; thumb: string }>
+    React.HTMLAttributes<HTMLDivElement> & RecastClsProps<"root" | "track" | "thumb">
   >(({ className, cls, children, ...props }, ref) => (
     <div ref={ref} className={cn(cls?.root, className)} {...props}>
       <div className={cls?.track}>

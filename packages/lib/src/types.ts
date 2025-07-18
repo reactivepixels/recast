@@ -41,23 +41,6 @@ export type RecastClsProps<T extends string> = {
 };
 
 /**
- * @deprecated Use RecastClsProps instead. Will be removed in a future version.
- *
- * @example
- * ```typescript
- * // Old way:
- * RecastWithClassNameProps<{ root: string; track: string }>
- *
- * // New way:
- * RecastClsProps<'root' | 'track'>
- * ```
- */
-export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string }> = {
-  /** Recast class object properties */
-  cls?: { [P in keyof Props]?: string };
-};
-
-/**
  * Utility type to handle optional variants.
  */
 export type MaybeVariants<V> = keyof V extends Nullish ? "variants" : "";
