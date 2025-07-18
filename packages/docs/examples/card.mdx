@@ -1,0 +1,787 @@
+---
+title: "Card Component"
+description: "A comprehensive card example demonstrating nested styling and complex layouts"
+---
+
+# Card Component
+
+This example demonstrates how to build a sophisticated card component with nested styling, showcasing Recast's power for complex UI components with multiple parts.
+
+<Note>
+  This example shows advanced patterns including nested object styling, composition, conditional styling, and flexible layout options.
+</Note>
+
+## What we'll build
+
+A flexible card component with multiple styled parts and comprehensive customization options:
+
+<CodeGroup>
+```tsx Usage Examples
+// Basic card with all parts
+<Card variant="default" size="md">
+  <Card.Header>
+    <Card.Title>Card Title</Card.Title>
+    <Card.Description>A brief description of the card content</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <p>Main card content goes here.</p>
+  </Card.Content>
+  <Card.Footer>
+    <Button size="sm">Action</Button>
+  </Card.Footer>
+</Card>
+
+// Enhanced card with modifiers
+<Card 
+  variant="primary" 
+  size="lg" 
+  elevated 
+  hoverable 
+  borderless
+>
+  <Card.Header>
+    <Card.Title>Enhanced Card</Card.Title>
+  </Card.Header>
+  <Card.Content>
+    <p>This card has elevation, hover effects, and no border.</p>
+  </Card.Content>
+</Card>
+
+// Compact informational card
+<Card variant="info" size="sm" rounded dense>
+  <Card.Content>
+    <p>Quick info card with compact styling.</p>
+  </Card.Content>
+</Card>
+```
+
+```tsx TypeScript Support
+// All parts are fully typed with autocomplete
+interface CardProps {
+  variant?: "default" | "primary" | "secondary" | "success" | "warning" | "error" | "info"
+  size?: "sm" | "md" | "lg" | "xl"
+  elevated?: boolean
+  hoverable?: boolean
+  borderless?: boolean
+  rounded?: boolean
+  dense?: boolean
+  fullWidth?: boolean
+  // + all div HTML attributes
+}
+```
+</CodeGroup>
+
+## Step 1: Create the primitives
+
+Start with clean, unstyled primitives for each card part:
+
+<CodeGroup>
+```tsx CardPrimitive.tsx
+import React, { HTMLAttributes, forwardRef } from 'react'
+import { RecastClsProps } from '@rpxl/recast'
+
+interface CardPrimitiveProps 
+  extends HTMLAttributes<HTMLDivElement>,
+          RecastClsProps<'root' | 'header' | 'title' | 'description' | 'content' | 'footer'> {
+  children: React.ReactNode
+}
+
+export const CardPrimitive = forwardRef<HTMLDivElement, CardPrimitiveProps>(
+  ({ cls, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cls?.root} {...props}>
+        {children}
+      </div>
+    )
+  }
+)
+
+CardPrimitive.displayName = 'CardPrimitive'
+```
+
+```tsx CardHeaderPrimitive.tsx
+interface CardHeaderPrimitiveProps 
+  extends HTMLAttributes<HTMLDivElement>,
+          RecastClsProps<'root'> {
+  children: React.ReactNode
+}
+
+export const CardHeaderPrimitive = forwardRef<HTMLDivElement, CardHeaderPrimitiveProps>(
+  ({ cls, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cls?.root} {...props}>
+        {children}
+      </div>
+    )
+  }
+)
+```
+
+```tsx Other Primitives
+// CardTitlePrimitive.tsx
+export const CardTitlePrimitive = forwardRef<HTMLHeadingElement, CardTitlePrimitiveProps>(
+  ({ cls, children, ...props }, ref) => {
+    return (
+      <h3 ref={ref} className={cls?.root} {...props}>
+        {children}
+      </h3>
+    )
+  }
+)
+
+// CardDescriptionPrimitive.tsx  
+export const CardDescriptionPrimitive = forwardRef<HTMLParagraphElement, CardDescriptionPrimitiveProps>(
+  ({ cls, children, ...props }, ref) => {
+    return (
+      <p ref={ref} className={cls?.root} {...props}>
+        {children}
+      </p>
+    )
+  }
+)
+
+// CardContentPrimitive.tsx
+export const CardContentPrimitive = forwardRef<HTMLDivElement, CardContentPrimitiveProps>(
+  ({ cls, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cls?.root} {...props}>
+        {children}
+      </div>
+    )
+  }
+)
+
+// CardFooterPrimitive.tsx
+export const CardFooterPrimitive = forwardRef<HTMLDivElement, CardFooterPrimitiveProps>(
+  ({ cls, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cls?.root} {...props}>
+        {children}
+      </div>
+    )
+  }
+)
+```
+</CodeGroup>
+
+## Step 2: Build styles with composition
+
+Create focused style modules for different concerns:
+
+### Foundation styles
+
+Essential card structure and accessibility:
+
+```tsx foundationStyles.ts
+import { recast } from '@rpxl/recast'
+
+export const cardFoundationStyles = recast.styles({
+  base: {
+    root: [
+      "bg-white border border-gray-200",
+      "transition-all duration-200",
+      "overflow-hidden"
+    ].join(" ")
+  },
+  
+  modifiers: {
+    fullWidth: {
+      root: "w-full"
+    }
+  }
+})
+```
+
+### Layout and sizing
+
+Consistent sizing and spacing across the design system:
+
+```tsx layoutStyles.ts
+export const cardLayoutStyles = recast.styles({
+  base: {
+    root: "rounded-lg",
+    header: "px-6 py-4",
+    title: "text-lg font-semibold leading-none tracking-tight",
+    description: "text-sm text-gray-600 mt-1.5",
+    content: "px-6 py-4",
+    footer: "px-6 py-4 border-t border-gray-200"
+  },
+  
+  variants: {
+    size: {
+      sm: {
+        root: "max-w-sm",
+        header: "px-4 py-3",
+        title: "text-base font-medium",
+        description: "text-xs",
+        content: "px-4 py-3",
+        footer: "px-4 py-3"
+      },
+      md: {
+        root: "max-w-md"
+      },
+      lg: {
+        root: "max-w-lg",
+        header: "px-8 py-6",
+        title: "text-xl font-bold",
+        content: "px-8 py-6",
+        footer: "px-8 py-6"
+      },
+      xl: {
+        root: "max-w-2xl",
+        header: "px-10 py-8",
+        title: "text-2xl font-bold",
+        content: "px-10 py-8",
+        footer: "px-10 py-8"
+      }
+    }
+  },
+  
+  modifiers: {
+    dense: {
+      header: "py-2",
+      content: "py-2",
+      footer: "py-2"
+    },
+    rounded: {
+      root: "rounded-xl"
+    }
+  },
+  
+  defaults: {
+    variants: { size: "md" }
+  }
+})
+```
+
+### Visual variants
+
+Different visual styles for semantic purposes:
+
+```tsx visualStyles.ts
+export const cardVisualStyles = recast.styles({
+  variants: {
+    variant: {
+      default: {
+        root: "border-gray-200 bg-white text-gray-900"
+      },
+      primary: {
+        root: "border-blue-200 bg-blue-50 text-blue-900",
+        header: "border-blue-200",
+        title: "text-blue-900",
+        description: "text-blue-700",
+        footer: "border-blue-200 bg-blue-100"
+      },
+      secondary: {
+        root: "border-gray-300 bg-gray-50 text-gray-900",
+        header: "border-gray-300",
+        footer: "border-gray-300 bg-gray-100"
+      },
+      success: {
+        root: "border-green-200 bg-green-50 text-green-900",
+        header: "border-green-200",
+        title: "text-green-900",
+        description: "text-green-700",
+        footer: "border-green-200 bg-green-100"
+      },
+      warning: {
+        root: "border-yellow-200 bg-yellow-50 text-yellow-900",
+        header: "border-yellow-200",
+        title: "text-yellow-900",
+        description: "text-yellow-700",
+        footer: "border-yellow-200 bg-yellow-100"
+      },
+      error: {
+        root: "border-red-200 bg-red-50 text-red-900",
+        header: "border-red-200",
+        title: "text-red-900",
+        description: "text-red-700",
+        footer: "border-red-200 bg-red-100"
+      },
+      info: {
+        root: "border-blue-200 bg-blue-50 text-blue-900",
+        header: "border-blue-200",
+        title: "text-blue-900",
+        description: "text-blue-700",
+        footer: "border-blue-200 bg-blue-100"
+      }
+    }
+  },
+  
+  defaults: {
+    variants: { variant: "default" }
+  }
+})
+```
+
+### Enhancement modifiers
+
+Optional visual and behavioral enhancements:
+
+```tsx enhancementStyles.ts
+export const cardEnhancementStyles = recast.styles({
+  modifiers: {
+    elevated: {
+      root: "shadow-lg"
+    },
+    hoverable: {
+      root: "hover:shadow-xl cursor-pointer"
+    },
+    borderless: {
+      root: "border-0"
+    }
+  }
+})
+```
+
+### Conditional styles
+
+Complex styling logic for specific combinations:
+
+```tsx conditionalStyles.ts
+export const cardConditionalStyles = recast.styles({
+  conditionals: [
+    // Large elevated cards get extra shadow
+    {
+      variants: { size: "lg" },
+      modifiers: ["elevated"],
+      className: {
+        root: "shadow-2xl"
+      }
+    },
+    
+    // XL cards get even more dramatic shadows when elevated
+    {
+      variants: { size: "xl" },
+      modifiers: ["elevated"],
+      className: {
+        root: "shadow-2xl shadow-gray-500/20"
+      }
+    },
+    
+    // Hoverable elevated cards have enhanced hover effects
+    {
+      modifiers: ["hoverable", "elevated"],
+      className: {
+        root: "hover:shadow-2xl hover:-translate-y-1"
+      }
+    },
+    
+    // Dense cards without headers need different spacing
+    {
+      modifiers: ["dense"],
+      className: {
+        content: "pt-4"
+      }
+    },
+    
+    // Borderless elevated cards need special treatment
+    {
+      modifiers: ["borderless", "elevated"],
+      className: {
+        root: "shadow-xl"
+      }
+    },
+    
+    // Primary variant with hoverable gets special hover color
+    {
+      variants: { variant: "primary" },
+      modifiers: ["hoverable"],
+      className: {
+        root: "hover:bg-blue-100"
+      }
+    },
+    
+    // Error variant gets pulsing animation when hoverable
+    {
+      variants: { variant: "error" },
+      modifiers: ["hoverable"],
+      className: {
+        root: "hover:animate-pulse"
+      }
+    },
+    
+    // Small dense cards get minimal padding
+    {
+      variants: { size: "sm" },
+      modifiers: ["dense"],
+      className: {
+        header: "px-3 py-1.5",
+        content: "px-3 py-1.5",
+        footer: "px-3 py-1.5"
+      }
+    }
+  ]
+})
+```
+
+## Step 3: Compose the card styles
+
+Bring all style modules together:
+
+```tsx Card.tsx
+import { recast } from '@rpxl/recast'
+import { 
+  CardPrimitive,
+  CardHeaderPrimitive,
+  CardTitlePrimitive,
+  CardDescriptionPrimitive,
+  CardContentPrimitive,
+  CardFooterPrimitive
+} from './CardPrimitives'
+import {
+  cardFoundationStyles,
+  cardLayoutStyles,
+  cardVisualStyles,
+  cardEnhancementStyles,
+  cardConditionalStyles
+} from './cardStyles'
+
+// Compose main card styles
+const cardStyles = recast.compose([
+  cardFoundationStyles,
+  cardLayoutStyles,
+  cardVisualStyles,
+  cardEnhancementStyles,
+  cardConditionalStyles
+])
+
+// Create styled components
+export const Card = cardStyles(CardPrimitive)
+
+// Create simple styled subcomponents (these don't need complex styling)
+const headerStyles = recast.styles({
+  base: { root: "" } // Let parent card control styling
+})
+
+const titleStyles = recast.styles({
+  base: { root: "" }
+})
+
+const descriptionStyles = recast.styles({
+  base: { root: "" }
+})
+
+const contentStyles = recast.styles({
+  base: { root: "" }
+})
+
+const footerStyles = recast.styles({
+  base: { root: "" }
+})
+
+// Attach subcomponents to main Card
+Card.Header = headerStyles(CardHeaderPrimitive)
+Card.Title = titleStyles(CardTitlePrimitive)
+Card.Description = descriptionStyles(CardDescriptionPrimitive)
+Card.Content = contentStyles(CardContentPrimitive)
+Card.Footer = footerStyles(CardFooterPrimitive)
+
+// Export types
+export type CardProps = ComponentProps<typeof Card>
+```
+
+## Step 4: Usage examples
+
+Now you can use the card with powerful combinations:
+
+<CodeGroup>
+```tsx Basic Usage
+// Simple card
+<Card>
+  <Card.Header>
+    <Card.Title>Simple Card</Card.Title>
+    <Card.Description>Basic card with minimal styling</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <p>Card content goes here.</p>
+  </Card.Content>
+</Card>
+
+// Styled card
+<Card variant="primary" size="lg" elevated>
+  <Card.Header>
+    <Card.Title>Primary Card</Card.Title>
+    <Card.Description>A larger, elevated primary card</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <p>This card stands out with primary styling and elevation.</p>
+  </Card.Content>
+  <Card.Footer>
+    <Button variant="primary">Primary Action</Button>
+  </Card.Footer>
+</Card>
+```
+
+```tsx Advanced Combinations
+// Interactive product card
+<Card 
+  variant="default" 
+  size="md" 
+  elevated 
+  hoverable 
+  rounded
+  onClick={() => navigate(`/product/${product.id}`)}
+>
+  <Card.Content>
+    <img src={product.image} alt={product.name} className="w-full h-48 object-cover mb-4" />
+    <Card.Title>{product.name}</Card.Title>
+    <Card.Description>${product.price}</Card.Description>
+  </Card.Content>
+  <Card.Footer>
+    <Button fullWidth>Add to Cart</Button>
+  </Card.Footer>
+</Card>
+
+// Alert card
+<Card variant="error" size="sm" borderless dense>
+  <Card.Content>
+    <div className="flex items-center gap-2">
+      <AlertCircle className="h-4 w-4" />
+      <span>Something went wrong. Please try again.</span>
+    </div>
+  </Card.Content>
+</Card>
+
+// Feature highlight card
+<Card 
+  variant="success" 
+  size="xl" 
+  elevated 
+  hoverable 
+  rounded 
+  fullWidth
+>
+  <Card.Header>
+    <Card.Title>Premium Feature</Card.Title>
+    <Card.Description>Unlock advanced capabilities with our premium plan</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <ul className="space-y-2">
+      <li>✓ Advanced analytics</li>
+      <li>✓ Priority support</li>
+      <li>✓ Custom integrations</li>
+    </ul>
+  </Card.Content>
+  <Card.Footer>
+    <Button variant="primary" size="lg" fullWidth>
+      Upgrade Now
+    </Button>
+  </Card.Footer>
+</Card>
+```
+
+```tsx Real-world Integration
+function ProductGrid({ products }: { products: Product[] }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {products.map(product => (
+        <Card 
+          key={product.id}
+          variant="default" 
+          hoverable 
+          elevated
+          className="transform transition-transform hover:scale-105"
+        >
+          <Card.Content>
+            <img 
+              src={product.image} 
+              alt={product.name}
+              className="w-full h-48 object-cover rounded mb-4" 
+            />
+            <Card.Title>{product.name}</Card.Title>
+            <Card.Description>{product.description}</Card.Description>
+            <div className="mt-4 flex items-center justify-between">
+              <span className="text-lg font-bold">${product.price}</span>
+              <Button size="sm">Add to Cart</Button>
+            </div>
+          </Card.Content>
+        </Card>
+      ))}
+    </div>
+  )
+}
+
+function NotificationCard({ notification }: { notification: Notification }) {
+  const variants = {
+    info: 'info',
+    success: 'success', 
+    warning: 'warning',
+    error: 'error'
+  } as const
+
+  return (
+    <Card 
+      variant={variants[notification.type]}
+      size="sm"
+      borderless
+      className="mb-4"
+    >
+      <Card.Content>
+        <div className="flex items-start gap-3">
+          <NotificationIcon type={notification.type} />
+          <div>
+            <Card.Title>{notification.title}</Card.Title>
+            <Card.Description>{notification.message}</Card.Description>
+          </div>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => dismissNotification(notification.id)}
+          >
+            ×
+          </Button>
+        </div>
+      </Card.Content>
+    </Card>
+  )
+}
+```
+</CodeGroup>
+
+## Step 5: Style extraction for advanced use cases
+
+Extract computed styles for integration with other systems:
+
+```tsx Style Extraction
+// Get computed classes for specific combinations
+const primaryCardClasses = Card.extract({
+  variant: "primary",
+  size: "lg", 
+  elevated: true,
+  hoverable: true
+})
+
+// Use with external libraries
+function MotionCard({ children, ...props }) {
+  const cardClasses = Card.extract(props)
+  
+  return (
+    <motion.div
+      className={cardClasses.root}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+// Server-side rendering
+function generateCardHTML(props: CardProps, content: string) {
+  const classes = Card.extract(props)
+  return `
+    <div class="${classes.root}">
+      <div class="${classes.header}">
+        <h3 class="${classes.title}">Title</h3>
+        <p class="${classes.description}">Description</p>
+      </div>
+      <div class="${classes.content}">
+        ${content}
+      </div>
+    </div>
+  `
+}
+```
+
+## Testing the card component
+
+Test individual style modules and the composed result:
+
+```tsx Card.test.tsx
+import { describe, it, expect } from 'vitest'
+import { render } from '@testing-library/react'
+import { Card } from './Card'
+import { cardLayoutStyles, cardVisualStyles } from './cardStyles'
+
+describe('Card Component', () => {
+  it('applies correct layout classes for different sizes', () => {
+    expect(cardLayoutStyles.extract({ size: 'sm' }))
+      .toEqual(expect.objectContaining({
+        root: expect.stringContaining('max-w-sm'),
+        header: expect.stringContaining('px-4 py-3')
+      }))
+  })
+  
+  it('applies correct visual styles for variants', () => {
+    const primaryClasses = cardVisualStyles.extract({ variant: 'primary' })
+    expect(primaryClasses.root).toContain('border-blue-200')
+    expect(primaryClasses.title).toContain('text-blue-900')
+  })
+  
+  it('renders with composed styles', () => {
+    const { container } = render(
+      <Card variant="primary" size="lg" elevated>
+        <Card.Header>
+          <Card.Title>Test Title</Card.Title>
+        </Card.Header>
+        <Card.Content>Test content</Card.Content>
+      </Card>
+    )
+    
+    const card = container.querySelector('div')
+    expect(card).toHaveClass('max-w-lg') // from size
+    expect(card).toHaveClass('border-blue-200') // from variant
+    expect(card).toHaveClass('shadow-lg') // from elevated
+  })
+  
+  it('applies conditional styling correctly', () => {
+    const classes = Card.extract({ 
+      variant: "primary",
+      modifiers: ["hoverable", "elevated"],
+      size: "xl"
+    })
+    
+    expect(classes.root).toContain('hover:shadow-2xl')
+    expect(classes.root).toContain('shadow-2xl')
+  })
+})
+```
+
+## Key patterns demonstrated
+
+This card example showcases several important patterns:
+
+<AccordionGroup>
+  <Accordion title="Nested object styling">
+    The card uses object-based base classes to style multiple parts of a complex component with a single style definition.
+  </Accordion>
+  
+  <Accordion title="Subcomponent composition">
+    Card.Header, Card.Title, etc. are attached as properties, creating a clean component API.
+  </Accordion>
+  
+  <Accordion title="Multi-layer composition">
+    Foundation, layout, visual, enhancement, and conditional styles are composed in layers.
+  </Accordion>
+  
+  <Accordion title="Semantic variants">
+    Success, warning, error variants communicate purpose and provide appropriate styling.
+  </Accordion>
+  
+  <Accordion title="Complex conditionals">
+    Multiple conditional rules handle edge cases and sophisticated styling combinations.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Form Components" icon="input" href="/examples/form-components">
+    Learn patterns for consistent form element styling
+  </Card>
+  <Card title="Layout Components" icon="layout" href="/examples/layout-components">
+    Build flexible layout systems with Recast
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Advanced patterns for maintainable design systems
+  </Card>
+  <Card title="Nested Styles Guide" icon="sitemap" href="/concepts/nested-styles">
+    Deep dive into nested component styling
+  </Card>
+</CardGroup>
+
+<Check>
+  **Production ready:** This card pattern demonstrates how Recast excels at complex, multi-part components that would be difficult to style with traditional approaches.
+</Check> 

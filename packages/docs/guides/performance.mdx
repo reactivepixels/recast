@@ -1,0 +1,822 @@
+---
+title: "Performance Guide"
+description: "Optimize Recast performance for production applications"
+---
+
+# Performance Guide
+
+Learn how to optimize Recast for maximum performance in production applications. This guide covers caching strategies, bundle optimization, runtime performance, and monitoring techniques.
+
+<Note>
+  Recast is designed for performance out of the box, but understanding these optimization techniques will help you build even faster applications.
+</Note>
+
+## Core Performance Features
+
+Recast includes several built-in performance optimizations:
+
+### Automatic Memoization
+
+All style computations are automatically memoized:
+
+```tsx Automatic Memoization
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded",
+  variants: {
+    variant: { primary: "bg-blue-500", secondary: "bg-gray-500" },
+    size: { sm: "text-sm", md: "text-base", lg: "text-lg" }
+  }
+})
+
+// First call - computed and cached
+const classes1 = buttonStyles.extract({ variant: "primary", size: "lg" })
+
+// Second call with same props - returns cached result instantly
+const classes2 = buttonStyles.extract({ variant: "primary", size: "lg" })
+
+// Different props - new computation, cached for future use
+const classes3 = buttonStyles.extract({ variant: "secondary", size: "sm" })
+```
+
+### LRU Cache System
+
+Recast uses an LRU (Least Recently Used) cache to prevent memory leaks:
+
+```tsx LRU Cache Configuration
+import { recast } from '@rpxl/recast'
+
+// Configure cache size based on your application needs
+recast.configure({
+  performance: {
+    // Default: 200 entries
+    cacheSize: 500, // Increase for large applications
+    
+    // Enable performance monitoring in development
+    enableMonitoring: process.env.NODE_ENV === 'development'
+  }
+})
+```
+
+### Performance Monitoring
+
+Monitor cache effectiveness in development:
+
+```tsx Performance Monitoring
+recast.configure({
+  performance: {
+    enableMonitoring: true
+  }
+})
+
+// Console output:
+// Recast Performance: Style computation took 0.23ms (cache hit)
+// Recast Performance: Style computation took 1.45ms (cache miss)
+// Recast Cache Stats: 85% hit rate (170/200 entries)
+```
+
+## Optimization Strategies
+
+### 1. Optimize Style Object Creation
+
+Create style objects once, not on every render:
+
+```tsx Style Object Optimization
+// ✅ Good: Created once outside component
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded",
+  variants: {
+    variant: { primary: "bg-blue-500", secondary: "bg-gray-500" }
+  }
+})
+
+function MyComponent() {
+  return <Button variant="primary">Good Performance</Button>
+}
+
+// ❌ Bad: Created on every render
+function MyComponent() {
+  const buttonStyles = recast.styles({ // Recreated every render!
+    base: "px-4 py-2 rounded",
+    variants: {
+      variant: { primary: "bg-blue-500", secondary: "bg-gray-500" }
+    }
+  })
+  
+  return <Button variant="primary">Poor Performance</Button>
+}
+
+// ✅ Good: Memoized if dynamic creation is necessary
+function MyComponent({ theme }) {
+  const buttonStyles = useMemo(() => recast.styles({
+    base: "px-4 py-2 rounded",
+    variants: {
+      variant: { 
+        primary: theme.primary, 
+        secondary: theme.secondary 
+      }
+    }
+  }), [theme.primary, theme.secondary])
+  
+  return <Button variant="primary">Optimized Dynamic Styles</Button>
+}
+```
+
+### 2. Maximize Cache Hit Rates
+
+Use stable prop values to maximize cache effectiveness:
+
+```tsx Cache Optimization
+// ✅ Good: Stable prop values
+const BUTTON_SIZES = {
+  small: 'sm',
+  medium: 'md', 
+  large: 'lg'
+} as const
+
+function MyComponent({ size }: { size: keyof typeof BUTTON_SIZES }) {
+  return (
+    <Button 
+      variant="primary" 
+      size={BUTTON_SIZES[size]} // Stable reference
+    >
+      Click me
+    </Button>
+  )
+}
+
+// ❌ Bad: Dynamic prop creation
+function MyComponent({ size }: { size: string }) {
+  return (
+    <Button 
+      variant="primary" 
+      size={size.toLowerCase() as any} // New value every time
+    >
+      Click me
+    </Button>
+  )
+}
+
+// ✅ Good: Memoized dynamic props
+function MyComponent({ items }: { items: string[] }) {
+  const buttonProps = useMemo(() => ({
+    variant: 'primary' as const,
+    disabled: items.length === 0
+  }), [items.length])
+  
+  return <Button {...buttonProps}>Process Items</Button>
+}
+```
+
+### 3. Optimize Class Name Merging
+
+Configure efficient merge functions:
+
+```tsx Merge Function Optimization
+import { twMerge } from 'tailwind-merge'
+import { clsx } from 'clsx'
+
+// ✅ Good: Use tailwind-merge for Tailwind CSS projects
+recast.configure({
+  mergeFn: twMerge // Removes duplicate/conflicting classes
+})
+
+// Before: "px-4 text-sm px-6 text-lg" (redundant)
+// After:  "px-6 text-lg" (optimized)
+
+// ✅ Good: Use clsx for general-purpose merging  
+recast.configure({
+  mergeFn: clsx // Fast conditional merging
+})
+
+// ❌ Avoid: Complex custom merge functions
+recast.configure({
+  mergeFn: (classes, className) => {
+    // Complex logic that runs on every merge
+    return expensiveClassMerging(classes, className)
+  }
+})
+
+// ✅ Better: Optimized custom merge function
+const optimizedMerge = memoize((classes: string, className?: string) => {
+  return `${classes} ${className || ''}`.trim()
+})
+
+recast.configure({
+  mergeFn: optimizedMerge
+})
+```
+
+### 4. Minimize Style Composition Complexity
+
+Keep composition chains reasonable:
+
+```tsx Composition Optimization
+// ✅ Good: Focused composition (3-5 style objects)
+const buttonStyles = recast.compose([
+  baseStyles,
+  colorStyles,
+  sizeStyles,
+  stateStyles
+])
+
+// ❌ Avoid: Excessive composition (10+ style objects)
+const buttonStyles = recast.compose([
+  style1, style2, style3, style4, style5,
+  style6, style7, style8, style9, style10,
+  style11, style12 // Too many layers
+])
+
+// ✅ Better: Pre-compose related styles
+const foundationStyles = recast.compose([
+  baseStyles,
+  accessibilityStyles,
+  transitionStyles
+])
+
+const visualStyles = recast.compose([
+  colorStyles,
+  sizeStyles,
+  borderStyles
+])
+
+const buttonStyles = recast.compose([
+  foundationStyles,
+  visualStyles,
+  stateStyles
+])
+```
+
+## Bundle Optimization
+
+### Tree Shaking
+
+Ensure proper tree shaking with ES modules:
+
+```tsx Tree Shaking
+// ✅ Good: Import only what you need
+import { recast } from '@rpxl/recast'
+import { twMerge } from 'tailwind-merge'
+
+// ✅ Good: Named imports for utilities
+import { memoize, memoizeWithLRU } from '@rpxl/recast/utils'
+
+// ❌ Avoid: Importing everything
+import * as Recast from '@rpxl/recast'
+```
+
+### Code Splitting
+
+Split large style configurations:
+
+```tsx Code Splitting
+// styles/button.ts
+export const buttonStyles = recast.styles({
+  // Button styles
+})
+
+// styles/card.ts  
+export const cardStyles = recast.styles({
+  // Card styles
+})
+
+// Dynamic imports for large style sets
+const loadDashboardStyles = async () => {
+  const { dashboardStyles } = await import('./styles/dashboard')
+  return dashboardStyles
+}
+
+// Usage in component
+function Dashboard() {
+  const [styles, setStyles] = useState(null)
+  
+  useEffect(() => {
+    loadDashboardStyles().then(setStyles)
+  }, [])
+  
+  if (!styles) return <Loading />
+  
+  return <DashboardContent styles={styles} />
+}
+```
+
+### Build-Time Optimization
+
+Optimize Recast in build tools:
+
+```tsx Build Configuration
+// webpack.config.js
+module.exports = {
+  resolve: {
+    alias: {
+      // Point to ES modules for better tree shaking
+      '@rpxl/recast': '@rpxl/recast/esm'
+    }
+  },
+  
+  optimization: {
+    usedExports: true, // Enable tree shaking
+    sideEffects: false // Mark packages as side-effect free
+  }
+}
+
+// vite.config.ts
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: ['react', 'react-dom'], // Externalize peer deps
+      output: {
+        manualChunks: {
+          recast: ['@rpxl/recast'] // Separate chunk for Recast
+        }
+      }
+    }
+  }
+})
+```
+
+## Runtime Performance Optimization
+
+### Component Optimization
+
+Optimize components that use Recast:
+
+```tsx Component Performance
+import { memo, useMemo, useCallback } from 'react'
+
+// ✅ Good: Memoized component with stable props
+const OptimizedButton = memo(({ variant, size, children, onClick }) => {
+  const handleClick = useCallback(onClick, [onClick])
+  
+  return (
+    <Button 
+      variant={variant}
+      size={size}
+      onClick={handleClick}
+    >
+      {children}
+    </Button>
+  )
+})
+
+// ✅ Good: Memoized style extraction for expensive computations
+function ComplexComponent({ theme, size, variant }) {
+  const buttonClasses = useMemo(() => {
+    return complexButtonStyles.extract({
+      variant,
+      size,
+      theme: theme.name
+    })
+  }, [theme.name, size, variant])
+  
+  return (
+    <div className={buttonClasses.root}>
+      <span className={buttonClasses.label}>Complex Button</span>
+    </div>
+  )
+}
+
+// ❌ Avoid: Creating new objects/functions on every render
+function BadComponent({ items }) {
+  return (
+    <Button 
+      onClick={() => processItems(items)} // New function every render
+      style={{ margin: Math.random() }}    // New object every render
+      className={items.length > 0 ? 'active' : 'inactive'} // Conditional logic in render
+    >
+      Process {items.length} items
+    </Button>
+  )
+}
+```
+
+### List Optimization
+
+Optimize lists of styled components:
+
+```tsx List Performance
+// ✅ Good: Extract styles outside render
+const listItemStyles = recast.styles({
+  base: "p-4 border-b",
+  modifiers: {
+    selected: "bg-blue-50",
+    highlighted: "bg-yellow-50"
+  }
+})
+
+const ListItem = memo(({ item, selected, highlighted }) => {
+  const ItemComponent = listItemStyles('div')
+  
+  return (
+    <ItemComponent 
+      selected={selected}
+      highlighted={highlighted}
+    >
+      {item.name}
+    </ItemComponent>
+  )
+})
+
+function OptimizedList({ items, selectedId }) {
+  return (
+    <div>
+      {items.map(item => (
+        <ListItem
+          key={item.id}
+          item={item}
+          selected={item.id === selectedId}
+          highlighted={item.priority === 'high'}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ✅ Good: Virtualized list for large datasets
+import { FixedSizeList } from 'react-window'
+
+function VirtualizedList({ items }) {
+  const renderItem = useCallback(({ index, style }) => {
+    const item = items[index]
+    
+    return (
+      <div style={style}>
+        <ListItem item={item} />
+      </div>
+    )
+  }, [items])
+  
+  return (
+    <FixedSizeList
+      height={400}
+      itemCount={items.length}
+      itemSize={60}
+    >
+      {renderItem}
+    </FixedSizeList>
+  )
+}
+```
+
+## Performance Monitoring
+
+### Built-in Monitoring
+
+Use Recast's built-in performance monitoring:
+
+```tsx Built-in Monitoring
+// Enable monitoring in development
+recast.configure({
+  performance: {
+    enableMonitoring: process.env.NODE_ENV === 'development',
+    cacheSize: 500
+  }
+})
+
+// Custom performance listener
+function setupPerformanceMonitoring() {
+  if (process.env.NODE_ENV === 'development') {
+    // Monitor cache statistics
+    const logCacheStats = () => {
+      console.log('Recast Cache Stats:', recast.getCacheStats?.())
+    }
+    
+    // Log every 10 seconds in development
+    setInterval(logCacheStats, 10000)
+  }
+}
+```
+
+### Custom Performance Tracking
+
+Track custom performance metrics:
+
+```tsx Custom Performance Tracking
+// Performance tracking utility
+class PerformanceTracker {
+  private metrics: Map<string, number[]> = new Map()
+  
+  time<T>(label: string, fn: () => T): T {
+    const start = performance.now()
+    const result = fn()
+    const duration = performance.now() - start
+    
+    if (!this.metrics.has(label)) {
+      this.metrics.set(label, [])
+    }
+    this.metrics.get(label)!.push(duration)
+    
+    return result
+  }
+  
+  getStats(label: string) {
+    const times = this.metrics.get(label) || []
+    if (times.length === 0) return null
+    
+    const sum = times.reduce((a, b) => a + b, 0)
+    const avg = sum / times.length
+    const min = Math.min(...times)
+    const max = Math.max(...times)
+    
+    return { avg, min, max, count: times.length }
+  }
+  
+  report() {
+    console.table(
+      Object.fromEntries(
+        Array.from(this.metrics.keys()).map(label => [
+          label,
+          this.getStats(label)
+        ])
+      )
+    )
+  }
+}
+
+const tracker = new PerformanceTracker()
+
+// Usage
+function ExpensiveComponent({ props }) {
+  const styles = tracker.time('style-computation', () => {
+    return complexStyles.extract(props)
+  })
+  
+  return <div className={styles}>Content</div>
+}
+
+// Report performance in development
+if (process.env.NODE_ENV === 'development') {
+  setInterval(() => tracker.report(), 30000)
+}
+```
+
+### Bundle Analysis
+
+Analyze bundle size impact:
+
+```tsx Bundle Analysis
+// package.json scripts
+{
+  "analyze": "npm run build && npx webpack-bundle-analyzer dist/static/js/*.js",
+  "analyze:treemap": "npx vite-bundle-analyzer dist"
+}
+
+// Measure Recast impact
+function measureRecastImpact() {
+  // Before Recast
+  const beforeSize = getBundleSize()
+  
+  // Import Recast
+  import('@rpxl/recast').then(() => {
+    const afterSize = getBundleSize()
+    console.log(`Recast added ${afterSize - beforeSize}kb to bundle`)
+  })
+}
+```
+
+## Server-Side Rendering (SSR) Performance
+
+### Style Extraction for SSR
+
+Optimize SSR with style extraction:
+
+```tsx SSR Performance
+// server.tsx
+import { renderToString } from 'react-dom/server'
+
+function renderPage(Component, props) {
+  // Extract styles on server
+  const extractedStyles = extractAllStyles(Component, props)
+  
+  // Generate critical CSS
+  const criticalCSS = generateCriticalCSS(extractedStyles)
+  
+  // Render HTML
+  const html = renderToString(<Component {...props} />)
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style id="critical-css">${criticalCSS}</style>
+      </head>
+      <body>
+        <div id="root">${html}</div>
+      </body>
+    </html>
+  `
+}
+
+// Extract styles utility
+function extractAllStyles(Component, props) {
+  const styles = new Set()
+  
+  // Recursively extract styles from component tree
+  function extractFromComponent(comp, compProps) {
+    if (comp.extract) {
+      styles.add(comp.extract(compProps))
+    }
+    // Handle child components...
+  }
+  
+  extractFromComponent(Component, props)
+  return Array.from(styles)
+}
+```
+
+### Hydration Optimization
+
+Optimize client-side hydration:
+
+```tsx Hydration Optimization
+// client.tsx
+import { hydrateRoot } from 'react-dom/client'
+
+function hydratePage() {
+  // Preload styles cache with SSR-extracted styles
+  const ssrStyles = window.__SSR_STYLES__
+  if (ssrStyles) {
+    preloadStylesCache(ssrStyles)
+  }
+  
+  // Hydrate normally
+  const container = document.getElementById('root')
+  hydrateRoot(container, <App />)
+  
+  // Remove critical CSS after hydration
+  const criticalCSS = document.getElementById('critical-css')
+  if (criticalCSS) {
+    setTimeout(() => criticalCSS.remove(), 1000)
+  }
+}
+
+function preloadStylesCache(styles) {
+  styles.forEach(({ props, result }) => {
+    // Warm up the cache with SSR results
+    recast.preloadCache(props, result)
+  })
+}
+```
+
+## Performance Best Practices
+
+### Development vs Production
+
+Different strategies for different environments:
+
+```tsx Environment Strategies
+// Development: Enable all monitoring
+if (process.env.NODE_ENV === 'development') {
+  recast.configure({
+    performance: {
+      enableMonitoring: true,
+      cacheSize: 100 // Smaller cache for easier debugging
+    }
+  })
+}
+
+// Production: Optimize for performance
+if (process.env.NODE_ENV === 'production') {
+  recast.configure({
+    performance: {
+      enableMonitoring: false,
+      cacheSize: 1000 // Larger cache for better performance
+    }
+  })
+}
+
+// Testing: Predictable behavior
+if (process.env.NODE_ENV === 'test') {
+  recast.configure({
+    performance: {
+      enableMonitoring: false,
+      cacheSize: 10 // Minimal cache for consistent tests
+    }
+  })
+}
+```
+
+### Component Library Optimization
+
+Optimize component libraries built with Recast:
+
+```tsx Library Optimization
+// Export pre-configured components
+export const OptimizedButton = buttonStyles(ButtonPrimitive)
+export const OptimizedCard = cardStyles(CardPrimitive)
+
+// Provide style extraction for advanced users
+export const extractButtonStyles = buttonStyles.extract
+export const extractCardStyles = cardStyles.extract
+
+// Provide pre-computed common variants
+export const PRIMARY_BUTTON_CLASSES = buttonStyles.extract({ variant: 'primary' })
+export const SECONDARY_BUTTON_CLASSES = buttonStyles.extract({ variant: 'secondary' })
+
+// Bundle optimization hints
+export const RECAST_COMPONENTS = {
+  Button: OptimizedButton,
+  Card: OptimizedCard
+} as const
+
+// Allow tree shaking of unused components
+if (process.env.NODE_ENV === 'production') {
+  // Only include used components in production builds
+}
+```
+
+## Performance Testing
+
+### Benchmark Common Operations
+
+Test performance of common operations:
+
+```tsx Performance Testing
+// benchmark.test.ts
+import { performance } from 'perf_hooks'
+
+describe('Recast Performance', () => {
+  it('should compute styles quickly', () => {
+    const start = performance.now()
+    
+    for (let i = 0; i < 1000; i++) {
+      buttonStyles.extract({ 
+        variant: i % 2 === 0 ? 'primary' : 'secondary',
+        size: 'md'
+      })
+    }
+    
+    const duration = performance.now() - start
+    expect(duration).toBeLessThan(100) // Should complete in <100ms
+  })
+  
+  it('should benefit from caching', () => {
+    const props = { variant: 'primary', size: 'lg' }
+    
+    // First call (cache miss)
+    const start1 = performance.now()
+    buttonStyles.extract(props)
+    const duration1 = performance.now() - start1
+    
+    // Second call (cache hit)
+    const start2 = performance.now()
+    buttonStyles.extract(props)
+    const duration2 = performance.now() - start2
+    
+    // Cache hit should be significantly faster
+    expect(duration2).toBeLessThan(duration1 * 0.1)
+  })
+})
+```
+
+### Memory Usage Testing
+
+Monitor memory usage in tests:
+
+```tsx Memory Testing
+// memory.test.ts
+describe('Recast Memory Usage', () => {
+  it('should not leak memory', () => {
+    const initialMemory = process.memoryUsage()
+    
+    // Perform many style computations
+    for (let i = 0; i < 10000; i++) {
+      buttonStyles.extract({
+        variant: 'primary',
+        size: `size-${i}` // Unique values to test cache limits
+      })
+    }
+    
+    // Force garbage collection
+    if (global.gc) global.gc()
+    
+    const finalMemory = process.memoryUsage()
+    const memoryIncrease = finalMemory.heapUsed - initialMemory.heapUsed
+    
+    // Memory increase should be reasonable (< 10MB)
+    expect(memoryIncrease).toBeLessThan(10 * 1024 * 1024)
+  })
+})
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Component library architecture and maintenance strategies
+  </Card>
+  <Card title="TypeScript Guide" icon="code" href="/guides/typescript">
+    Type-safe performance optimizations
+  </Card>
+  <Card title="Server-Side Rendering" icon="server" href="/guides/server-side-rendering">
+    SSR-specific performance considerations
+  </Card>
+  <Card title="API Reference" icon="book" href="/api/recast-configure">
+    Configuration options for performance tuning
+  </Card>
+</CardGroup>
+
+<Check>
+  **Performance Optimized:** Your Recast implementation is now optimized for production use with monitoring, caching, and best practices in place.
+</Check> 

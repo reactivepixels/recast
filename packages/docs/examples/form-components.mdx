@@ -1,0 +1,967 @@
+---
+title: "Form Components"
+description: "Build consistent, accessible form elements with Recast"
+---
+
+# Form Components
+
+Learn how to create a cohesive set of form components that work together seamlessly. This example demonstrates consistent styling patterns, validation states, and accessibility features across all form elements.
+
+<Note>
+  This example shows how to build a design system of form components that share common patterns while maintaining individual customization options.
+</Note>
+
+## What we'll build
+
+A complete set of form components with shared design principles:
+
+<CodeGroup>
+```tsx Form Component Usage
+// Complete form with all components
+<Form>
+  <FormField>
+    <Label htmlFor="name" required>Full Name</Label>
+    <Input 
+      id="name" 
+      placeholder="Enter your full name"
+      error={errors.name}
+    />
+    <FieldMessage variant="error">{errors.name}</FieldMessage>
+  </FormField>
+
+  <FormField>
+    <Label htmlFor="email">Email Address</Label>
+    <Input 
+      id="email" 
+      type="email"
+      placeholder="Enter your email"
+      size="lg"
+    />
+    <FieldMessage variant="hint">We'll never share your email</FieldMessage>
+  </FormField>
+
+  <FormField>
+    <Label htmlFor="message">Message</Label>
+    <Textarea 
+      id="message"
+      placeholder="Tell us about your project"
+      rows={4}
+    />
+  </FormField>
+
+  <FormField orientation="horizontal">
+    <Checkbox id="newsletter">
+      Subscribe to newsletter
+    </Checkbox>
+  </FormField>
+
+  <Button type="submit" variant="primary" size="lg" fullWidth>
+    Send Message
+  </Button>
+</Form>
+```
+
+```tsx Validation States
+// All components support consistent validation states
+<FormField>
+  <Label>Email</Label>
+  <Input 
+    value={email}
+    error={emailError}
+    success={emailValid}
+  />
+  {emailError && (
+    <FieldMessage variant="error">{emailError}</FieldMessage>
+  )}
+  {emailValid && (
+    <FieldMessage variant="success">Email looks good!</FieldMessage>
+  )}
+</FormField>
+
+// Loading states
+<FormField>
+  <Label>Username</Label>
+  <Input 
+    value={username}
+    loading={checkingUsername}
+    placeholder="Check availability..."
+  />
+  {checkingUsername && (
+    <FieldMessage variant="loading">Checking availability...</FieldMessage>
+  )}
+</FormField>
+```
+</CodeGroup>
+
+## Step 1: Create shared form styles
+
+Start with common patterns used across all form components:
+
+### Form field foundations
+
+```tsx formFieldStyles.ts
+import { recast } from '@rpxl/recast'
+
+export const formFieldStyles = recast.styles({
+  base: {
+    root: "space-y-2"
+  },
+  
+  variants: {
+    orientation: {
+      vertical: {
+        root: "flex flex-col"
+      },
+      horizontal: {
+        root: "flex flex-row items-center space-x-3 space-y-0"
+      }
+    }
+  },
+  
+  defaults: {
+    variants: { orientation: "vertical" }
+  }
+})
+```
+
+### Input foundations
+
+Shared styling for all input-like components:
+
+```tsx inputFoundationStyles.ts
+export const inputFoundationStyles = recast.styles({
+  base: {
+    root: [
+      "flex w-full rounded-md border border-gray-300",
+      "bg-white px-3 py-2",
+      "text-sm text-gray-900 placeholder:text-gray-500",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+      "disabled:cursor-not-allowed disabled:opacity-50",
+      "transition-all duration-200"
+    ].join(" ")
+  },
+  
+  variants: {
+    size: {
+      sm: {
+        root: "h-8 px-2 text-xs"
+      },
+      md: {
+        root: "h-9 px-3 py-2"
+      },
+      lg: {
+        root: "h-10 px-4 py-2 text-base"
+      }
+    }
+  },
+  
+  modifiers: {
+    error: {
+      root: "border-red-500 focus-visible:ring-red-500"
+    },
+    success: {
+      root: "border-green-500 focus-visible:ring-green-500"
+    },
+    loading: {
+      root: "relative"
+    }
+  },
+  
+  defaults: {
+    variants: { size: "md" }
+  }
+})
+```
+
+### Label styling
+
+Consistent labels across all form fields:
+
+```tsx labelStyles.ts
+export const labelStyles = recast.styles({
+  base: {
+    root: "text-sm font-medium text-gray-700"
+  },
+  
+  variants: {
+    size: {
+      sm: {
+        root: "text-xs"
+      },
+      md: {
+        root: "text-sm"
+      },
+      lg: {
+        root: "text-base"
+      }
+    }
+  },
+  
+  modifiers: {
+    required: {
+      root: "after:content-['*'] after:ml-1 after:text-red-500"
+    },
+    disabled: {
+      root: "text-gray-400 cursor-not-allowed"
+    }
+  },
+  
+  defaults: {
+    variants: { size: "md" }
+  }
+})
+```
+
+### Field message styling
+
+Consistent helper text and validation messages:
+
+```tsx fieldMessageStyles.ts
+export const fieldMessageStyles = recast.styles({
+  base: {
+    root: "text-xs mt-1 flex items-center gap-1"
+  },
+  
+  variants: {
+    variant: {
+      hint: {
+        root: "text-gray-500"
+      },
+      error: {
+        root: "text-red-600"
+      },
+      success: {
+        root: "text-green-600"
+      },
+      warning: {
+        root: "text-yellow-600"
+      },
+      loading: {
+        root: "text-blue-600"
+      }
+    }
+  },
+  
+  defaults: {
+    variants: { variant: "hint" }
+  }
+})
+```
+
+## Step 2: Build specific input components
+
+### Text Input
+
+Enhanced text input with validation states:
+
+```tsx Input.tsx
+import { forwardRef, InputHTMLAttributes } from 'react'
+import { recast } from '@rpxl/recast'
+import { inputFoundationStyles } from './formStyles'
+
+// Enhanced input with loading and validation
+const inputEnhancementStyles = recast.styles({
+  conditionals: [
+    {
+      modifiers: ["loading"],
+      className: {
+        root: "pr-8" // Make room for loading spinner
+      }
+    }
+  ]
+})
+
+// Compose input styles
+const inputStyles = recast.compose([
+  inputFoundationStyles,
+  inputEnhancementStyles
+])
+
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+  size?: "sm" | "md" | "lg"
+  error?: string | boolean
+  success?: boolean
+  loading?: boolean
+}
+
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ size, error, success, loading, className, ...props }, ref) => {
+    const InputComponent = inputStyles(({ className: cls, ...inputProps }) => (
+      <div className="relative">
+        <input 
+          ref={ref}
+          className={cls}
+          {...inputProps}
+        />
+        {loading && (
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <LoadingSpinner size="sm" />
+          </div>
+        )}
+      </div>
+    ))
+    
+    return (
+      <InputComponent
+        size={size}
+        error={!!error}
+        success={success}
+        loading={loading}
+        className={className}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+### Textarea
+
+Textarea with consistent styling and auto-resize:
+
+```tsx Textarea.tsx
+const textareaStyles = recast.compose([
+  inputFoundationStyles,
+  recast.styles({
+    base: {
+      root: "min-h-[80px] resize-y"
+    },
+    
+    variants: {
+      resize: {
+        none: { root: "resize-none" },
+        vertical: { root: "resize-y" },
+        horizontal: { root: "resize-x" },
+        both: { root: "resize" }
+      }
+    },
+    
+    modifiers: {
+      autoResize: {
+        root: "resize-none overflow-hidden"
+      }
+    },
+    
+    defaults: {
+      variants: { resize: "vertical" }
+    }
+  })
+])
+
+interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  size?: "sm" | "md" | "lg"
+  resize?: "none" | "vertical" | "horizontal" | "both"
+  autoResize?: boolean
+  error?: string | boolean
+  success?: boolean
+}
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ size, resize, autoResize, error, success, ...props }, ref) => {
+    const TextareaComponent = textareaStyles('textarea')
+    
+    return (
+      <TextareaComponent
+        ref={ref}
+        size={size}
+        resize={resize}
+        autoResize={autoResize}
+        error={!!error}
+        success={success}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+### Select
+
+Custom select component with consistent styling:
+
+```tsx Select.tsx
+const selectStyles = recast.compose([
+  inputFoundationStyles,
+  recast.styles({
+    base: {
+      root: "pr-8 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,<svg...>')] bg-no-repeat bg-right bg-[center_right_8px]"
+    },
+    
+    modifiers: {
+      multiple: {
+        root: "bg-none pr-3" // Remove arrow for multiple select
+      }
+    }
+  })
+])
+
+interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+  size?: "sm" | "md" | "lg"
+  error?: string | boolean
+  success?: boolean
+  placeholder?: string
+}
+
+export const Select = forwardRef<HTMLSelectElement, SelectProps>(
+  ({ size, error, success, placeholder, children, ...props }, ref) => {
+    const SelectComponent = selectStyles('select')
+    
+    return (
+      <SelectComponent
+        ref={ref}
+        size={size}
+        error={!!error}
+        success={success}
+        {...props}
+      >
+        {placeholder && (
+          <option value="" disabled hidden>
+            {placeholder}
+          </option>
+        )}
+        {children}
+      </SelectComponent>
+    )
+  }
+)
+```
+
+### Checkbox and Radio
+
+Consistent checkbox and radio styling:
+
+```tsx Checkbox.tsx
+const checkboxStyles = recast.styles({
+  base: {
+    root: "flex items-center space-x-2",
+    input: [
+      "h-4 w-4 rounded border-gray-300 text-blue-600",
+      "focus:ring-blue-500 focus:ring-2 focus:ring-offset-0",
+      "disabled:cursor-not-allowed disabled:opacity-50"
+    ].join(" "),
+    label: "text-sm text-gray-700 cursor-pointer select-none"
+  },
+  
+  variants: {
+    size: {
+      sm: {
+        input: "h-3 w-3",
+        label: "text-xs"
+      },
+      md: {
+        input: "h-4 w-4",
+        label: "text-sm"
+      },
+      lg: {
+        input: "h-5 w-5",
+        label: "text-base"
+      }
+    }
+  },
+  
+  modifiers: {
+    error: {
+      input: "border-red-500 text-red-600 focus:ring-red-500"
+    },
+    disabled: {
+      root: "opacity-50 cursor-not-allowed",
+      label: "cursor-not-allowed"
+    }
+  },
+  
+  defaults: {
+    variants: { size: "md" }
+  }
+})
+
+interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {
+  size?: "sm" | "md" | "lg"
+  error?: boolean
+  children: React.ReactNode
+}
+
+export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
+  ({ size, error, disabled, children, id, ...props }, ref) => {
+    const CheckboxComponent = checkboxStyles(({ cls }) => (
+      <div className={cls?.root}>
+        <input
+          ref={ref}
+          type="checkbox"
+          id={id}
+          className={cls?.input}
+          disabled={disabled}
+          {...props}
+        />
+        <label htmlFor={id} className={cls?.label}>
+          {children}
+        </label>
+      </div>
+    ))
+    
+    return (
+      <CheckboxComponent
+        size={size}
+        error={error}
+        disabled={disabled}
+      />
+    )
+  }
+)
+```
+
+## Step 3: Create compound components
+
+### FormField
+
+Wrapper component that provides consistent spacing and layout:
+
+```tsx FormField.tsx
+interface FormFieldProps {
+  children: React.ReactNode
+  orientation?: "vertical" | "horizontal"
+  className?: string
+}
+
+export const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
+  ({ children, orientation, className }, ref) => {
+    const FormFieldComponent = formFieldStyles('div')
+    
+    return (
+      <FormFieldComponent
+        ref={ref}
+        orientation={orientation}
+        className={className}
+      >
+        {children}
+      </FormFieldComponent>
+    )
+  }
+)
+```
+
+### Label
+
+Enhanced label with required indicator:
+
+```tsx Label.tsx
+interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
+  size?: "sm" | "md" | "lg"
+  required?: boolean
+  disabled?: boolean
+  children: React.ReactNode
+}
+
+export const Label = forwardRef<HTMLLabelElement, LabelProps>(
+  ({ size, required, disabled, ...props }, ref) => {
+    const LabelComponent = labelStyles('label')
+    
+    return (
+      <LabelComponent
+        ref={ref}
+        size={size}
+        required={required}
+        disabled={disabled}
+        {...props}
+      />
+    )
+  }
+)
+```
+
+### FieldMessage
+
+Helper text and validation messages:
+
+```tsx FieldMessage.tsx
+interface FieldMessageProps {
+  variant?: "hint" | "error" | "success" | "warning" | "loading"
+  children: React.ReactNode
+  icon?: React.ReactNode
+}
+
+export const FieldMessage = forwardRef<HTMLDivElement, FieldMessageProps>(
+  ({ variant, children, icon }, ref) => {
+    const MessageComponent = fieldMessageStyles(({ cls }) => (
+      <div ref={ref} className={cls?.root}>
+        {icon && <span className="flex-shrink-0">{icon}</span>}
+        <span>{children}</span>
+      </div>
+    ))
+    
+    return (
+      <MessageComponent variant={variant} />
+    )
+  }
+)
+```
+
+## Step 4: Build complex form examples
+
+### Contact Form
+
+Complete contact form demonstrating all components:
+
+```tsx ContactForm.tsx
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    message: '',
+    newsletter: false,
+    urgency: 'normal'
+  })
+  const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  return (
+    <Form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
+      <FormField>
+        <Label htmlFor="name" required>Full Name</Label>
+        <Input
+          id="name"
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          placeholder="Enter your full name"
+          error={errors.name}
+          disabled={isSubmitting}
+        />
+        {errors.name && (
+          <FieldMessage variant="error">{errors.name}</FieldMessage>
+        )}
+      </FormField>
+
+      <FormField>
+        <Label htmlFor="email" required>Email Address</Label>
+        <Input
+          id="email"
+          type="email"
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          placeholder="your@email.com"
+          error={errors.email}
+          disabled={isSubmitting}
+        />
+        {errors.email ? (
+          <FieldMessage variant="error">{errors.email}</FieldMessage>
+        ) : (
+          <FieldMessage variant="hint">We'll never share your email</FieldMessage>
+        )}
+      </FormField>
+
+      <FormField>
+        <Label htmlFor="company">Company (Optional)</Label>
+        <Input
+          id="company"
+          value={formData.company}
+          onChange={(e) => setFormData({...formData, company: e.target.value})}
+          placeholder="Your company name"
+          disabled={isSubmitting}
+        />
+      </FormField>
+
+      <FormField>
+        <Label htmlFor="urgency">Project Urgency</Label>
+        <Select
+          id="urgency"
+          value={formData.urgency}
+          onChange={(e) => setFormData({...formData, urgency: e.target.value})}
+          disabled={isSubmitting}
+        >
+          <option value="low">Low - Not urgent</option>
+          <option value="normal">Normal - Standard timeline</option>
+          <option value="high">High - ASAP</option>
+        </Select>
+      </FormField>
+
+      <FormField>
+        <Label htmlFor="message" required>Message</Label>
+        <Textarea
+          id="message"
+          value={formData.message}
+          onChange={(e) => setFormData({...formData, message: e.target.value})}
+          placeholder="Tell us about your project..."
+          rows={4}
+          error={errors.message}
+          disabled={isSubmitting}
+        />
+        {errors.message && (
+          <FieldMessage variant="error">{errors.message}</FieldMessage>
+        )}
+      </FormField>
+
+      <FormField orientation="horizontal">
+        <Checkbox
+          id="newsletter"
+          checked={formData.newsletter}
+          onChange={(e) => setFormData({...formData, newsletter: e.target.checked})}
+          disabled={isSubmitting}
+        >
+          Subscribe to newsletter for updates
+        </Checkbox>
+      </FormField>
+
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        fullWidth
+        loading={isSubmitting}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Sending...' : 'Send Message'}
+      </Button>
+    </Form>
+  )
+}
+```
+
+### Dynamic Form with Validation
+
+Form with real-time validation and dynamic fields:
+
+```tsx DynamicForm.tsx
+function DynamicForm() {
+  const [fields, setFields] = useState([
+    { id: 1, name: '', email: '', role: 'member' }
+  ])
+  const [validationState, setValidationState] = useState({})
+
+  const addField = () => {
+    setFields([...fields, { 
+      id: Date.now(), 
+      name: '', 
+      email: '', 
+      role: 'member' 
+    }])
+  }
+
+  const removeField = (id) => {
+    setFields(fields.filter(field => field.id !== id))
+  }
+
+  const updateField = (id, updates) => {
+    setFields(fields.map(field => 
+      field.id === id ? { ...field, ...updates } : field
+    ))
+  }
+
+  return (
+    <Form className="space-y-6">
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold">Team Members</h3>
+        
+        {fields.map((field, index) => (
+          <Card key={field.id} variant="default" className="p-4">
+            <div className="flex items-start justify-between mb-4">
+              <h4 className="font-medium">Member {index + 1}</h4>
+              {fields.length > 1 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeField(field.id)}
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField>
+                <Label required>Name</Label>
+                <Input
+                  value={field.name}
+                  onChange={(e) => updateField(field.id, { name: e.target.value })}
+                  placeholder="Full name"
+                  error={validationState[`name_${field.id}`]}
+                />
+              </FormField>
+
+              <FormField>
+                <Label required>Email</Label>
+                <Input
+                  type="email"
+                  value={field.email}
+                  onChange={(e) => updateField(field.id, { email: e.target.value })}
+                  placeholder="email@company.com"
+                  error={validationState[`email_${field.id}`]}
+                />
+              </FormField>
+            </div>
+
+            <FormField>
+              <Label>Role</Label>
+              <Select
+                value={field.role}
+                onChange={(e) => updateField(field.id, { role: e.target.value })}
+              >
+                <option value="member">Member</option>
+                <option value="admin">Admin</option>
+                <option value="owner">Owner</option>
+              </Select>
+            </FormField>
+          </Card>
+        ))}
+      </div>
+
+      <Button variant="outline" onClick={addField} fullWidth>
+        + Add Another Member
+      </Button>
+
+      <Button variant="primary" size="lg" fullWidth>
+        Create Team
+      </Button>
+    </Form>
+  )
+}
+```
+
+## Step 5: Advanced patterns
+
+### Form with Sections
+
+Large forms organized into logical sections:
+
+```tsx SectionedForm.tsx
+function SectionedForm() {
+  return (
+    <Form className="max-w-2xl mx-auto space-y-8">
+      {/* Personal Information */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField>
+            <Label required>First Name</Label>
+            <Input placeholder="John" />
+          </FormField>
+          <FormField>
+            <Label required>Last Name</Label>
+            <Input placeholder="Doe" />
+          </FormField>
+        </div>
+        <FormField>
+          <Label required>Email</Label>
+          <Input type="email" placeholder="john@example.com" />
+        </FormField>
+      </section>
+
+      {/* Company Information */}
+      <section className="border-t pt-6">
+        <h2 className="text-xl font-semibold mb-4">Company Information</h2>
+        <FormField>
+          <Label required>Company Name</Label>
+          <Input placeholder="Acme Corp" />
+        </FormField>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField>
+            <Label>Industry</Label>
+            <Select placeholder="Select industry">
+              <option value="tech">Technology</option>
+              <option value="finance">Finance</option>
+              <option value="healthcare">Healthcare</option>
+            </Select>
+          </FormField>
+          <FormField>
+            <Label>Company Size</Label>
+            <Select placeholder="Select size">
+              <option value="1-10">1-10 employees</option>
+              <option value="11-50">11-50 employees</option>
+              <option value="51-200">51-200 employees</option>
+            </Select>
+          </FormField>
+        </div>
+      </section>
+
+      {/* Preferences */}
+      <section className="border-t pt-6">
+        <h2 className="text-xl font-semibold mb-4">Preferences</h2>
+        <div className="space-y-3">
+          <Checkbox id="newsletter">
+            Send me product updates and news
+          </Checkbox>
+          <Checkbox id="marketing">
+            Send me marketing communications
+          </Checkbox>
+          <Checkbox id="events">
+            Notify me about events and webinars
+          </Checkbox>
+        </div>
+      </section>
+
+      <div className="flex gap-4 pt-6 border-t">
+        <Button variant="outline" fullWidth>
+          Save Draft
+        </Button>
+        <Button variant="primary" fullWidth>
+          Submit Application
+        </Button>
+      </div>
+    </Form>
+  )
+}
+```
+
+## Key patterns demonstrated
+
+<AccordionGroup>
+  <Accordion title="Shared foundation styles">
+    Common styling patterns are extracted into reusable style objects that all form components can compose from.
+  </Accordion>
+  
+  <Accordion title="Consistent validation states">
+    Error, success, warning, and loading states are handled consistently across all input types.
+  </Accordion>
+  
+  <Accordion title="Compound component patterns">
+    FormField, Label, and FieldMessage work together to create consistent form layouts.
+  </Accordion>
+  
+  <Accordion title="Accessibility focus">
+    Proper labeling, focus management, and ARIA attributes are built into the component foundations.
+  </Accordion>
+  
+  <Accordion title="Responsive design">
+    Forms adapt to different screen sizes while maintaining usability and visual hierarchy.
+  </Accordion>
+</AccordionGroup>
+
+## Testing form components
+
+```tsx FormComponents.test.tsx
+describe('Form Components', () => {
+  it('applies consistent sizing across all inputs', () => {
+    const inputClasses = Input.extract({ size: 'lg' })
+    const textareaClasses = Textarea.extract({ size: 'lg' })
+    const selectClasses = Select.extract({ size: 'lg' })
+    
+    expect(inputClasses).toContain('h-10')
+    expect(textareaClasses).toContain('h-10')
+    expect(selectClasses).toContain('h-10')
+  })
+  
+  it('applies error state styling consistently', () => {
+    const errorInput = Input.extract({ error: true })
+    const errorTextarea = Textarea.extract({ error: true })
+    
+    expect(errorInput).toContain('border-red-500')
+    expect(errorTextarea).toContain('border-red-500')
+  })
+})
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Layout Components" icon="layout" href="/examples/layout-components">
+    Build flexible layout systems with Recast
+  </Card>
+  <Card title="TypeScript Guide" icon="code" href="/guides/typescript">
+    Advanced TypeScript patterns for form components
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Form design patterns and accessibility
+  </Card>
+  <Card title="Performance Guide" icon="gauge" href="/guides/performance">
+    Optimize form rendering and interactions
+  </Card>
+</CardGroup> 

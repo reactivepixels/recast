@@ -1,0 +1,173 @@
+# Advanced Usage
+
+## Nested Component Structure
+
+Recast excels at managing complex React component structures, offering a
+significant advantage over other styling utilities like
+[cva](https://cva.style/docs), [tv](https://www.tailwind-variants.org/), and
+[stitches](https://stitches.dev/docs/variants). Let's explore how Recast handles
+nested components using a slider example based on
+[Radix UI](https://www.radix-ui.com/primitives/docs/components/slider).
+
+### Example: Slider Component
+
+Here's how you can create a slider component with independently styled elements:
+
+```jsx
+import { cn } from "../../utils/cn.js";
+import * as RadixSliderPrimitive from "@radix-ui/react-slider";
+import { RecastClsProps } from "@rpxl/recast";
+import React, { forwardRef } from "react";
+
+type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
+  RecastClsProps<'root' | 'track' | 'range' | 'thumb'>;
+
+const SliderPrimitive = forwardRef<
+  React.ElementRef<typeof RadixSliderPrimitive.Root>,
+  Props
+>(({ className, cls, ...props }, ref) => {
+  return (
+    <RadixSliderPrimitive.Root
+      ref={ref}
+      className={cn(cls?.root, className)}
+      {...props}
+    >
+      <RadixSliderPrimitive.Track className={cls?.track}>
+        <RadixSliderPrimitive.Range className={cls?.range} />
+      </RadixSliderPrimitive.Track>
+      <RadixSliderPrimitive.Thumb className={cls?.thumb} />
+    </RadixSliderPrimitive.Root>
+  );
+});
+```
+
+Now you can apply styles to nested elements using the new Recast API:
+
+```jsx
+import { recast } from "@rpxl/recast";
+
+const sliderStyles = recast.styles({
+  base: {
+    root: "relative flex w-full touch-none select-none items-center",
+    track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
+    range: "bg-primary absolute h-full",
+    thumb: "block h-4 w-4 rounded-full border border-black/50 bg-white shadow",
+  },
+  variants: {
+    size: {
+      sm: {
+        root: "h-4",
+        track: "h-1",
+        thumb: "h-3 w-3",
+      },
+      lg: {
+        root: "h-6",
+        track: "h-2",
+        thumb: "h-5 w-5",
+      },
+    },
+  },
+});
+
+export const Slider = sliderStyles(SliderPrimitive);
+```
+
+## TypeScript Integration
+
+Recast is designed to work seamlessly with TypeScript. When defining your
+component props, you can use the `RecastClsProps` type to ensure type safety for
+your nested class names:
+
+```jsx
+import { RecastClsProps } from "@rpxl/recast";
+
+type Props = YourComponentProps &
+  RecastClsProps<'root' | 'childElement'>;
+```
+
+This approach provides excellent TypeScript support, enabling autocompletion and
+type checking for your themed components. The `RecastClsProps` helper
+automatically creates the correct type for the `cls` prop based on the component
+keys you specify.
+
+## Style Composition
+
+One of the powerful features of the new Recast API is the ability to compose
+styles:
+
+```jsx
+import { recast } from "@rpxl/recast";
+
+// Create base styles
+const baseButtonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md font-medium",
+});
+
+// Create color styles
+const colorButtonStyles = recast.styles({
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+    },
+  },
+});
+
+// Create size styles
+const sizeButtonStyles = recast.styles({
+  variants: {
+    size: {
+      sm: "px-3 py-2 text-sm",
+      lg: "px-6 py-3 text-lg",
+    },
+  },
+});
+
+// Compose all styles together
+const ComposedButton = recast.compose([
+  baseButtonStyles,
+  colorButtonStyles,
+  sizeButtonStyles,
+])(ButtonPrimitive);
+```
+
+## Class Name Extraction
+
+The new API also supports extracting class names without rendering components,
+which is useful for server-side rendering or testing:
+
+```jsx
+const buttonStyles = recast.styles({
+  base: "rounded px-4 py-2",
+  variants: {
+    variant: { primary: "bg-blue-500", secondary: "bg-gray-500" },
+    size: { sm: "text-sm", lg: "text-lg" },
+  },
+});
+
+// Extract class names
+const className = buttonStyles.extract({ variant: "primary", size: "lg" });
+// Returns: "px-4 py-2 rounded bg-blue-500 text-lg"
+
+// For nested components, returns an object
+const sliderClasses = sliderStyles.extract({ size: "lg" });
+// Returns: { root: "...", track: "...", range: "...", thumb: "..." }
+```
+
+## Global Configuration
+
+You can configure Recast globally for consistent behavior across your
+application:
+
+```jsx
+import { recast } from "@rpxl/recast";
+import { cn } from "./utils/cn"; // Your class merging function
+
+recast.configure({
+  mergeFn: cn, // Default merge function
+  performance: {
+    enableMonitoring: true, // Enable performance monitoring in development
+    cacheSize: 200, // Set cache size for performance optimization
+  },
+});
+```

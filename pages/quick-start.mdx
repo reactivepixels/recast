@@ -1,0 +1,220 @@
+import { Tabs } from "nextra/components";
+import { ComponentPreview } from "@/components/ui/component-preview";
+import { Button } from "@/components/ui/button";
+import { Callout } from "nextra/components";
+
+# Get started with Recast
+
+The following guide provides a brief overview of how to get up and running
+quickly with Recast.
+
+## 1. Installation
+
+Install Recast into your React project:
+
+```bash
+npm install @rpxl/recast
+```
+
+## 2. Create a Component Primitive
+
+Create a basic button component primitive that we'll use to define a theme
+layer:
+
+```jsx
+import React, { ButtonHTMLAttributes, forwardRef } from "react";
+
+type Props = ButtonHTMLAttributes<HTMLButtonElement>;
+
+export const ButtonPrimitive = forwardRef<HTMLButtonElement, Props>(
+  ({ ...props }, ref) => <button ref={ref} {...props} />
+);
+```
+
+> **Note**: This is a standard React component that can be used independently of
+> Recast. Recast simply provides a clean way to define a theme layer for the
+> component.
+
+## 3. Add a Theme Layer
+
+Import the component primitive and create styles using the new Recast API:
+
+```jsx
+import { recast } from "@rpxl/recast";
+import { ButtonPrimitive } from "./ButtonPrimitive";
+
+// Create reusable styles
+const buttonStyles = recast.styles({
+  // Define the default values
+  defaults: {
+    variants: { variant: "primary", size: "md" },
+  },
+  // Define the base styles
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  // Define the variants
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+      outline: "border border-gray-300 text-gray-700 hover:bg-gray-100",
+    },
+    size: {
+      sm: "px-3 py-2 text-sm",
+      md: "px-4 py-2 text-base",
+      lg: "px-6 py-3 text-lg",
+    },
+  },
+  // Define the modifiers
+  modifiers: {
+    fullWidth: "w-full",
+  },
+});
+
+// Apply styles to the component
+export const Button = buttonStyles(ButtonPrimitive);
+```
+
+> **Note**: The example above uses Tailwind CSS classes, but Recast works with
+> any CSS classes or CSS-in-JS solution.
+
+## 4. Usage
+
+Now you can use your themed Button component with various props:
+
+```jsx
+import { Button } from "./Button";
+
+function App() {
+  return (
+    <div>
+      <Button>Default Button</Button>
+      <Button variant="secondary" size="lg">
+        Large Secondary Button
+      </Button>
+      <Button variant="outline" fullWidth>
+        Full Width Outline Button
+      </Button>
+    </div>
+  );
+}
+```
+
+This setup allows you to create reusable, themeable components with Recast. The
+theme layer is completely decoupled from the component primitive, making it easy
+to adjust styles without modifying the core component logic.
+
+<Tabs items={["Preview", "Code"]}>
+  <Tabs.Tab>
+    <ComponentPreview>
+      <div className="flex flex-col gap-16 w-full">
+        <div className="flex flex-col gap-4">
+          <h4 className="font-bold text-lg w-24 lg:text-end">Primary</h4>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+            <Button size="sm" variant="primary">Small</Button>
+            <Button size="md" variant="primary">Medium</Button>
+            <Button size="lg" variant="primary">Large</Button>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+            <Button size="sm" variant="primary" pill>Primary</Button>
+            <Button size="md" variant="primary" pill>Primary</Button>
+            <Button size="lg" variant="primary" pill>Primary</Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h4 className="font-bold text-lg w-24 lg:text-end">Secondary</h4>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+            <Button size="sm" variant="secondary">Small</Button>
+            <Button size="md" variant="secondary">Medium</Button>
+            <Button size="lg" variant="secondary">Large</Button>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+            <Button size="sm" variant="secondary" pill>Secondary</Button>
+            <Button size="md" variant="secondary" pill>Secondary</Button>
+            <Button size="lg" variant="secondary" pill>Secondary</Button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h4 className="font-bold text-lg w-24 lg:text-end">Outline</h4>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+            <Button size="sm" variant="outline">Small</Button>
+            <Button size="md" variant="outline">Medium</Button>
+            <Button size="lg" variant="outline">Large</Button>
+          </div>
+          <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+            <Button size="sm" variant="outline" pill>Outline</Button>
+            <Button size="md" variant="outline" pill>Outline</Button>
+            <Button size="lg" variant="outline" pill>Outline</Button>
+          </div>
+        </div>
+      </div>
+    </ComponentPreview>
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { Button } from "@/components/ui/button"
+
+    export function ButtonDemo() {
+      return (
+        <div className="flex flex-col gap-16 w-full">
+          <div className="flex flex-col gap-4">
+            <h4 className="font-bold text-lg w-24 lg:text-end">Primary</h4>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+              <Button size="sm" variant="primary">Small</Button>
+              <Button size="md" variant="primary">Medium</Button>
+              <Button size="lg" variant="primary">Large</Button>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+              <Button size="sm" variant="primary" pill>Primary</Button>
+              <Button size="md" variant="primary" pill>Primary</Button>
+              <Button size="lg" variant="primary" pill>Primary</Button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h4 className="font-bold text-lg w-24 lg:text-end">Secondary</h4>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+              <Button size="sm" variant="secondary">Small</Button>
+              <Button size="md" variant="secondary">Medium</Button>
+              <Button size="lg" variant="secondary">Large</Button>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+              <Button size="sm" variant="secondary" pill>Secondary</Button>
+              <Button size="md" variant="secondary" pill>Secondary</Button>
+              <Button size="lg" variant="secondary" pill>Secondary</Button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h4 className="font-bold text-lg w-24 lg:text-end">Outline</h4>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Size:</h4>
+              <Button size="sm" variant="outline">Small</Button>
+              <Button size="md" variant="outline">Medium</Button>
+              <Button size="lg" variant="outline">Large</Button>
+            </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+              <h4 className="font-bold w-24 lg:text-end text-sm">Pill:</h4>
+              <Button size="sm" variant="outline" pill>Outline</Button>
+              <Button size="md" variant="outline" pill>Outline</Button>
+              <Button size="lg" variant="outline" pill>Outline</Button>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    ```
+  </Tabs.Tab>
+</Tabs>

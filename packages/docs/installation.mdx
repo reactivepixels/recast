@@ -1,0 +1,289 @@
+---
+title: "Installation"
+description: "Install and configure Recast in your React project"
+---
+
+# Installation
+
+Get Recast up and running in your React project in minutes.
+
+## Requirements
+
+<Note>
+  Recast requires **React 17 or later** and works with any CSS framework or styling solution.
+</Note>
+
+<CardGroup cols={3}>
+  <Card title="React 17+" icon="react">
+    Compatible with React 17, 18, and 19
+  </Card>
+  <Card title="TypeScript" icon="code">
+    Full TypeScript support included
+  </Card>
+  <Card title="CSS Framework" icon="palette">
+    Works with Tailwind, CSS Modules, and more
+  </Card>
+</CardGroup>
+
+## Install the package
+
+Choose your preferred package manager:
+
+<CodeGroup>
+```bash npm
+npm install @rpxl/recast
+```
+
+```bash yarn
+yarn add @rpxl/recast
+```
+
+```bash pnpm
+pnpm add @rpxl/recast
+```
+
+```bash bun
+bun add @rpxl/recast
+```
+</CodeGroup>
+
+## Basic usage
+
+Import Recast and start creating styled components:
+
+```tsx
+import { recast } from '@rpxl/recast'
+
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white",
+      secondary: "bg-gray-200 text-gray-800"
+    }
+  }
+})
+
+const Button = buttonStyles(YourButtonComponent)
+```
+
+<Tip>
+  That's it! No additional configuration is required to start using Recast.
+</Tip>
+
+## Global configuration (optional)
+
+For advanced use cases, you can configure Recast globally:
+
+```tsx
+import { recast } from '@rpxl/recast'
+import { cn } from './utils/cn' // Your preferred class merging function
+
+recast.configure({
+  // Custom class merging function (optional)
+  mergeFn: cn,
+  
+  // Performance settings (optional)
+  performance: {
+    enableMonitoring: true,  // Log performance stats in development
+    cacheSize: 500,         // LRU cache size (default: 200)
+  }
+})
+```
+
+### Configuration options
+
+<ParamField path="mergeFn" type="function" default="Built-in merger">
+  Custom function for merging class names. Popular options include `clsx`, `classnames`, or `tailwind-merge`.
+</ParamField>
+
+<ParamField path="performance.enableMonitoring" type="boolean" default="false">
+  Enable performance monitoring in development mode. Logs cache hit rates and computation times.
+</ParamField>
+
+<ParamField path="performance.cacheSize" type="number" default="200">
+  Maximum number of entries in the LRU cache. Increase for better performance with many style variations.
+</ParamField>
+
+## Framework integration
+
+### Tailwind CSS
+
+Recast works perfectly with Tailwind CSS out of the box:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+    },
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2",
+      lg: "h-10 px-8"
+    }
+  }
+})
+```
+
+<Tip>
+  Consider using `tailwind-merge` as your `mergeFn` for better Tailwind class deduplication:
+  
+  ```tsx
+  import { twMerge } from 'tailwind-merge'
+  
+  recast.configure({
+    mergeFn: twMerge
+  })
+  ```
+</Tip>
+
+### CSS Modules
+
+Recast also works with CSS Modules:
+
+```tsx
+import styles from './Button.module.css'
+
+const buttonStyles = recast.styles({
+  base: styles.button,
+  variants: {
+    variant: {
+      primary: styles.primary,
+      secondary: styles.secondary
+    }
+  }
+})
+```
+
+### Styled Components
+
+You can even use Recast with CSS-in-JS solutions:
+
+```tsx
+import styled from 'styled-components'
+
+const StyledButton = styled.button`
+  /* base styles */
+`
+
+const buttonStyles = recast.styles({
+  variants: {
+    variant: {
+      primary: "primary-variant-class",
+      secondary: "secondary-variant-class"
+    }
+  }
+})
+
+const Button = buttonStyles(StyledButton)
+```
+
+## TypeScript support
+
+Recast includes comprehensive TypeScript definitions. For the best experience with nested components, use the provided type helpers:
+
+```tsx
+import { RecastClsProps } from '@rpxl/recast'
+
+interface CardProps extends RecastClsProps<'root' | 'header' | 'content'> {
+  title?: string
+  children: React.ReactNode
+}
+
+function CardPrimitive({ cls, title, children }: CardProps) {
+  return (
+    <div className={cls?.root}>
+      {title && <div className={cls?.header}>{title}</div>}
+      <div className={cls?.content}>{children}</div>
+    </div>
+  )
+}
+```
+
+## Verification
+
+To verify your installation is working correctly:
+
+<Steps>
+  <Step title="Create a test component">
+    ```tsx
+    import { recast } from '@rpxl/recast'
+    
+    const testStyles = recast.styles({
+      base: "p-4 rounded",
+      variants: {
+        color: {
+          blue: "bg-blue-500 text-white",
+          red: "bg-red-500 text-white"
+        }
+      }
+    })
+    
+    const TestComponent = testStyles('div')
+    ```
+  </Step>
+  
+  <Step title="Use the component">
+    ```tsx
+    <TestComponent color="blue">
+      Recast is working! 🎉
+    </TestComponent>
+    ```
+  </Step>
+  
+  <Step title="Check the output">
+    The component should render with the correct classes applied.
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Build your first component with step-by-step instructions
+  </Card>
+  <Card title="Core Concepts" icon="lightbulb" href="/concepts/styles">
+    Learn about styles, variants, and modifiers
+  </Card>
+  <Card title="Examples" icon="code" href="/examples/button">
+    See real-world examples and patterns
+  </Card>
+  <Card title="API Reference" icon="book" href="/api/recast-styles">
+    Explore the complete API documentation
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Module not found error">
+    Make sure you've installed the package correctly and restart your development server:
+    
+    ```bash
+    npm install @rpxl/recast
+    # or
+    yarn add @rpxl/recast
+    ```
+  </Accordion>
+  
+  <Accordion title="TypeScript errors">
+    Ensure you're using TypeScript 4.7 or later. Recast uses advanced TypeScript features for type safety.
+  </Accordion>
+  
+  <Accordion title="Classes not applying correctly">
+    If you're using Tailwind CSS, make sure your build process includes Recast files in the purge/content configuration:
+    
+    ```js tailwind.config.js
+    module.exports = {
+      content: [
+        './src/**/*.{js,ts,jsx,tsx}',
+        './node_modules/@rpxl/recast/**/*.{js,ts,jsx,tsx}', // Add this line
+      ],
+      // ...
+    }
+    ```
+  </Accordion>
+</AccordionGroup> 

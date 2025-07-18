@@ -1,0 +1,450 @@
+---
+title: "Variants"
+description: "Create mutually exclusive styling options for your components"
+---
+
+# Variants
+
+Variants are mutually exclusive styling options that define different visual styles for your components. Only one value from each variant group can be active at a time, making them perfect for properties like color themes, sizes, or visual states.
+
+## Basic usage
+
+Define variants as nested objects within your style configuration:
+
+```tsx
+import { recast } from '@rpxl/recast'
+
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium transition-colors",
+  variants: {
+    // Color variant - only one can be active
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
+      destructive: "bg-red-500 text-white hover:bg-red-600"
+    },
+    // Size variant - only one can be active
+    size: {
+      sm: "px-3 py-1.5 text-sm",
+      md: "px-4 py-2 text-base",
+      lg: "px-6 py-3 text-lg"
+    }
+  }
+})
+
+const Button = buttonStyles(ButtonPrimitive)
+```
+
+Usage with TypeScript autocomplete:
+
+```tsx
+// ✅ Valid combinations
+<Button variant="primary" size="lg">Large Primary</Button>
+<Button variant="secondary" size="sm">Small Secondary</Button>
+
+// ❌ TypeScript error - 'invalid' is not a valid variant
+<Button variant="invalid" size="md">Will not compile</Button>
+```
+
+<Check>
+  **Type safety:** Recast automatically generates TypeScript types for your variants, providing autocomplete and compile-time validation.
+</Check>
+
+## Variant groups
+
+Each variant property defines a group of mutually exclusive options:
+
+<CodeGroup>
+```tsx Visual Variants
+const cardStyles = recast.styles({
+  base: "rounded-lg border p-6",
+  variants: {
+    // Visual appearance variants
+    variant: {
+      default: "border-gray-200 bg-white",
+      outlined: "border-gray-300 bg-transparent",
+      filled: "border-transparent bg-gray-100",
+      gradient: "border-transparent bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+    }
+  }
+})
+```
+
+```tsx Size Variants
+const iconStyles = recast.styles({
+  base: "inline-block",
+  variants: {
+    // Size variants
+    size: {
+      xs: "w-3 h-3",
+      sm: "w-4 h-4", 
+      md: "w-5 h-5",
+      lg: "w-6 h-6",
+      xl: "w-8 h-8",
+      "2xl": "w-10 h-10"
+    }
+  }
+})
+```
+
+```tsx State Variants
+const alertStyles = recast.styles({
+  base: "rounded-md border p-4",
+  variants: {
+    // State-based variants
+    status: {
+      info: "border-blue-200 bg-blue-50 text-blue-800",
+      success: "border-green-200 bg-green-50 text-green-800",
+      warning: "border-yellow-200 bg-yellow-50 text-yellow-800",
+      error: "border-red-200 bg-red-50 text-red-800"
+    }
+  }
+})
+```
+</CodeGroup>
+
+## Default variants
+
+Set default values to reduce prop repetition and ensure consistent behavior:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white",
+      secondary: "bg-gray-200 text-gray-900"
+    },
+    size: {
+      sm: "px-3 py-1.5 text-sm",
+      md: "px-4 py-2 text-base", 
+      lg: "px-6 py-3 text-lg"
+    }
+  },
+  defaults: {
+    variants: {
+      variant: "primary", // Default to primary style
+      size: "md"         // Default to medium size
+    }
+  }
+})
+
+// These are equivalent:
+<Button>Default Button</Button>
+<Button variant="primary" size="md">Explicit Button</Button>
+```
+
+<Tip>
+  **Choose sensible defaults:** Pick the most commonly used variant combination as your default to minimize prop usage in typical scenarios.
+</Tip>
+
+## Nested component variants
+
+For complex components with multiple styling targets, variants can be objects:
+
+```tsx
+const cardStyles = recast.styles({
+  base: {
+    root: "rounded-lg border overflow-hidden",
+    header: "px-6 py-4 border-b",
+    content: "px-6 py-4",
+    footer: "px-6 py-4 border-t"
+  },
+  variants: {
+    variant: {
+      default: {
+        root: "border-gray-200 bg-white",
+        header: "bg-gray-50 border-gray-200",
+        footer: "bg-gray-50 border-gray-200"
+      },
+      primary: {
+        root: "border-blue-200 bg-blue-50",
+        header: "bg-blue-100 border-blue-200",
+        footer: "bg-blue-100 border-blue-200"
+      },
+      destructive: {
+        root: "border-red-200 bg-red-50",
+        header: "bg-red-100 border-red-200", 
+        footer: "bg-red-100 border-red-200"
+      }
+    },
+    size: {
+      sm: {
+        root: "max-w-sm",
+        header: "px-4 py-3",
+        content: "px-4 py-3",
+        footer: "px-4 py-3"
+      },
+      lg: {
+        root: "max-w-2xl",
+        header: "px-8 py-6",
+        content: "px-8 py-6",
+        footer: "px-8 py-6"
+      }
+    }
+  }
+})
+```
+
+## Responsive variants
+
+Use Tailwind's responsive prefixes to create adaptive variants:
+
+```tsx
+const containerStyles = recast.styles({
+  base: "mx-auto px-4",
+  variants: {
+    size: {
+      sm: "max-w-2xl",
+      md: "max-w-4xl lg:max-w-6xl",           // Responsive at lg breakpoint
+      lg: "max-w-6xl lg:max-w-7xl xl:max-w-8xl", // Responsive at lg and xl
+      full: "max-w-none"
+    },
+    padding: {
+      none: "px-0",
+      sm: "px-4 md:px-6",                     // Responsive padding
+      lg: "px-6 md:px-8 lg:px-12"           // Multi-breakpoint padding
+    }
+  }
+})
+```
+
+## Conditional variants
+
+Combine variants with conditionals for sophisticated styling logic:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    },
+    size: {
+      sm: "px-3 py-1.5 text-sm",
+      md: "px-4 py-2 text-base",
+      lg: "px-6 py-3 text-lg"
+    }
+  },
+  conditionals: [
+    {
+      // Large primary buttons get extra emphasis
+      variants: { variant: "primary", size: "lg" },
+      className: "shadow-lg font-bold transform hover:scale-105"
+    },
+    {
+      // Small secondary buttons have subtle styling
+      variants: { variant: "secondary", size: "sm" },
+      className: "opacity-80 hover:opacity-100"
+    }
+  ]
+})
+```
+
+## Best practices
+
+<AccordionGroup>
+  <Accordion title="Use descriptive variant names">
+    Choose names that clearly communicate the variant's purpose and visual result:
+    
+    ```tsx
+    const buttonStyles = recast.styles({
+      variants: {
+        // ✅ Good: Clear and descriptive
+        variant: {
+          primary: "bg-blue-500 text-white",
+          secondary: "bg-gray-200 text-gray-900",
+          destructive: "bg-red-500 text-white",
+          ghost: "bg-transparent hover:bg-gray-100"
+        },
+        
+        // ❌ Bad: Unclear meaning
+        variant: {
+          blue: "bg-blue-500 text-white",
+          gray: "bg-gray-200 text-gray-900",
+          red: "bg-red-500 text-white"
+        }
+      }
+    })
+    ```
+  </Accordion>
+  
+  <Accordion title="Group related options logically">
+    Organize variant groups by their conceptual relationship:
+    
+    ```tsx
+    const componentStyles = recast.styles({
+      variants: {
+        // Visual appearance
+        variant: { primary: "...", secondary: "...", outline: "..." },
+        
+        // Physical dimensions
+        size: { sm: "...", md: "...", lg: "..." },
+        
+        // Behavioral states
+        state: { default: "...", loading: "...", disabled: "..." },
+        
+        // Layout positioning
+        placement: { left: "...", center: "...", right: "..." }
+      }
+    })
+    ```
+  </Accordion>
+  
+  <Accordion title="Maintain consistent naming patterns">
+    Use consistent naming across your design system:
+    
+    ```tsx
+    // ✅ Good: Consistent size naming across components
+    const buttonSizes = { sm: "...", md: "...", lg: "..." }
+    const cardSizes = { sm: "...", md: "...", lg: "..." }
+    const iconSizes = { sm: "...", md: "...", lg: "..." }
+    
+    // ✅ Good: Consistent variant naming
+    const primaryVariants = { primary: "...", secondary: "...", outline: "..." }
+    ```
+  </Accordion>
+  
+  <Accordion title="Consider variant combinations">
+    Design variants to work well together across all possible combinations:
+    
+    ```tsx
+    const buttonStyles = recast.styles({
+      variants: {
+        variant: {
+          primary: "bg-blue-500 text-white hover:bg-blue-600",
+          outline: "border-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+        },
+        size: {
+          sm: "px-3 py-1.5 text-sm",
+          lg: "px-6 py-3 text-lg"
+        }
+      }
+      // Test all combinations:
+      // primary + sm, primary + lg, outline + sm, outline + lg
+    })
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Common patterns
+
+### Semantic color variants
+
+Create meaningful color variants that communicate purpose:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
+      success: "bg-green-500 text-white hover:bg-green-600",
+      warning: "bg-yellow-500 text-white hover:bg-yellow-600",
+      destructive: "bg-red-500 text-white hover:bg-red-600",
+      ghost: "text-blue-500 hover:bg-blue-50",
+      link: "text-blue-500 underline hover:text-blue-600"
+    }
+  }
+})
+```
+
+### Size scale variants
+
+Create a consistent size scale across your design system:
+
+```tsx
+const sizeScale = {
+  xs: "...",
+  sm: "...",
+  md: "...", // base size
+  lg: "...",
+  xl: "...",
+  "2xl": "..."
+}
+
+// Use consistently across components
+const buttonSizes = { ...sizeScale }
+const iconSizes = { ...sizeScale }
+const spacingSizes = { ...sizeScale }
+```
+
+### State-based variants
+
+Handle different component states with variants:
+
+```tsx
+const inputStyles = recast.styles({
+  base: "px-3 py-2 border rounded transition-colors",
+  variants: {
+    state: {
+      default: "border-gray-300 focus:border-blue-500",
+      error: "border-red-500 focus:border-red-600",
+      success: "border-green-500 focus:border-green-600", 
+      disabled: "border-gray-200 bg-gray-50 cursor-not-allowed"
+    }
+  }
+})
+```
+
+## TypeScript integration
+
+Recast automatically generates TypeScript types for your variants:
+
+```tsx
+// Extract variant prop types
+type ButtonProps = ComponentProps<typeof Button>
+// ButtonProps includes: variant?: "primary" | "secondary" | "destructive"
+//                      size?: "sm" | "md" | "lg"
+
+// Create custom component interfaces
+interface PrimaryButtonProps extends Omit<ButtonProps, 'variant'> {
+  variant?: 'primary'
+  // This component only accepts primary variant
+}
+
+// Use in generic components
+function ActionButton<T extends ButtonProps>(props: T) {
+  return <Button {...props} />
+}
+```
+
+## Debugging variants
+
+Use the style extraction method to debug variant combinations:
+
+```tsx
+const buttonStyles = recast.styles({
+  // ... your configuration
+})
+
+// Debug specific variant combinations
+console.log(buttonStyles.extract({ variant: "primary", size: "lg" }))
+// Outputs the computed class string
+
+// Test all combinations programmatically
+const variants = ["primary", "secondary"] as const
+const sizes = ["sm", "md", "lg"] as const
+
+variants.forEach(variant => {
+  sizes.forEach(size => {
+    console.log(`${variant} + ${size}:`, buttonStyles.extract({ variant, size }))
+  })
+})
+```
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Modifiers" icon="toggle-on" href="/concepts/modifiers">
+    Learn about boolean-based conditional styling
+  </Card>
+  <Card title="Conditional Styling" icon="code-branch" href="/concepts/conditional-styling">
+    Combine variants for sophisticated styling logic
+  </Card>
+  <Card title="Composition" icon="puzzle-piece" href="/concepts/composition">
+    Combine multiple style objects together
+  </Card>
+</CardGroup> 

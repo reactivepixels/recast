@@ -1,0 +1,376 @@
+---
+title: "recast.configure()"
+description: "Configure global Recast settings and performance options"
+---
+
+# recast.configure()
+
+The `recast.configure()` function sets global configuration options for Recast, including custom class merging functions and performance settings.
+
+## Syntax
+
+```tsx
+recast.configure(config)
+```
+
+<ParamField path="config" type="RecastConfig" required>
+  Configuration object with global settings
+</ParamField>
+
+**Returns:** `void`
+
+## Configuration Options
+
+### mergeFn
+
+<ParamField path="mergeFn" type="MergeFn">
+  Custom function for merging class names. Replaces the default class concatenation behavior.
+</ParamField>
+
+```tsx
+import { recast } from '@rpxl/recast'
+import { twMerge } from 'tailwind-merge'
+import clsx from 'clsx'
+
+// Using tailwind-merge for better Tailwind class deduplication
+recast.configure({
+  mergeFn: twMerge
+})
+
+// Using clsx for conditional class names
+recast.configure({
+  mergeFn: clsx
+})
+
+// Custom merge function
+recast.configure({
+  mergeFn: (classes, className) => {
+    return `${classes} ${className || ''}`.trim()
+  }
+})
+```
+
+### performance
+
+<ParamField path="performance" type="object">
+  Performance optimization settings
+</ParamField>
+
+#### enableMonitoring
+
+<ParamField path="performance.enableMonitoring" type="boolean" default="false">
+  Enable performance monitoring in development mode. Logs cache hit rates and computation times to the console.
+</ParamField>
+
+#### cacheSize
+
+<ParamField path="performance.cacheSize" type="number" default="200">
+  Maximum number of entries in the LRU cache. Higher values improve performance but use more memory.
+</ParamField>
+
+```tsx
+recast.configure({
+  performance: {
+    enableMonitoring: process.env.NODE_ENV === 'development',
+    cacheSize: 500
+  }
+})
+```
+
+## Complete Configuration Example
+
+```tsx
+import { recast } from '@rpxl/recast'
+import { twMerge } from 'tailwind-merge'
+
+// Configure Recast for optimal Tailwind CSS usage
+recast.configure({
+  // Use tailwind-merge for intelligent class deduplication
+  mergeFn: twMerge,
+  
+  // Performance settings
+  performance: {
+    // Enable monitoring in development
+    enableMonitoring: process.env.NODE_ENV === 'development',
+    
+    // Increase cache size for large applications
+    cacheSize: 1000
+  }
+})
+```
+
+## Merge Function Integration
+
+### Tailwind Merge
+
+Recommended for Tailwind CSS projects to intelligently deduplicate conflicting classes:
+
+```tsx
+import { twMerge } from 'tailwind-merge'
+
+recast.configure({
+  mergeFn: twMerge
+})
+
+// Now conflicting Tailwind classes are handled properly
+const styles = recast.styles({
+  base: "px-4 text-sm",
+  variants: {
+    size: {
+      lg: "px-6 text-lg" // px-6 overrides px-4, text-lg overrides text-sm
+    }
+  }
+})
+
+// Result with twMerge: "px-6 text-lg" (clean)
+// Result without: "px-4 text-sm px-6 text-lg" (redundant classes)
+```
+
+### clsx
+
+For conditional class names and general-purpose class merging:
+
+```tsx
+import clsx from 'clsx'
+
+recast.configure({
+  mergeFn: clsx
+})
+
+// clsx handles various input formats
+const buttonStyles = recast.styles({
+  base: ["flex", "items-center"], // Arrays work
+  variants: {
+    variant: {
+      primary: clsx("bg-blue-500", "text-white") // clsx calls work
+    }
+  }
+})
+```
+
+### Custom Merge Functions
+
+Create your own merge logic for specific needs:
+
+```tsx
+// Custom merge function with prefix support
+function customMerge(classes: string | string[], className?: string): string {
+  const baseClasses = Array.isArray(classes) ? classes.join(' ') : classes
+  const additionalClasses = className || ''
+  
+  // Custom logic: remove duplicates, handle prefixes, etc.
+  const allClasses = `${baseClasses} ${additionalClasses}`.split(' ')
+  const uniqueClasses = [...new Set(allClasses)].filter(Boolean)
+  
+  return uniqueClasses.join(' ')
+}
+
+recast.configure({
+  mergeFn: customMerge
+})
+```
+
+## Performance Monitoring
+
+When `enableMonitoring` is true, Recast logs performance information:
+
+```tsx
+recast.configure({
+  performance: {
+    enableMonitoring: true
+  }
+})
+
+// Console output example:
+// Recast Performance: getRecastClasses took 0.23ms (cache hit)
+// Recast Performance: Style computation took 1.45ms (cache miss)
+// Recast Cache Stats: 85% hit rate (170/200 entries)
+```
+
+### Interpreting Performance Logs
+
+- **Cache hits**: Fast operations using cached results
+- **Cache misses**: Slower operations requiring new computations
+- **Hit rate**: Percentage of operations using cached results
+- **Cache entries**: Current number of cached style combinations
+
+## Cache Size Optimization
+
+Choose cache size based on your application's needs:
+
+```tsx
+// Small applications (< 10 components)
+recast.configure({
+  performance: { cacheSize: 100 }
+})
+
+// Medium applications (10-50 components)
+recast.configure({
+  performance: { cacheSize: 500 }
+})
+
+// Large applications (50+ components, many variants)
+recast.configure({
+  performance: { cacheSize: 2000 }
+})
+```
+
+<Tip>
+  **Memory vs Performance**: Higher cache sizes improve performance but use more memory. Monitor your application's memory usage to find the optimal balance.
+</Tip>
+
+## Resetting Configuration
+
+Clear all configuration and return to defaults:
+
+```tsx
+// Reset to defaults
+recast.configure({})
+
+// Or explicitly set defaults
+recast.configure({
+  mergeFn: undefined, // Use built-in merger
+  performance: {
+    enableMonitoring: false,
+    cacheSize: 200
+  }
+})
+```
+
+## Per-Component Merge Functions
+
+You can override the global merge function for specific components:
+
+```tsx
+// Global configuration
+recast.configure({
+  mergeFn: twMerge
+})
+
+// Per-component override
+const specialButtonStyles = recast.styles({
+  base: "px-4 py-2 rounded",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white"
+    }
+  }
+})
+
+// Use custom merge function for this component only
+const SpecialButton = specialButtonStyles(ButtonPrimitive, clsx)
+```
+
+## Configuration in Different Environments
+
+### Development Environment
+
+```tsx
+if (process.env.NODE_ENV === 'development') {
+  recast.configure({
+    mergeFn: twMerge,
+    performance: {
+      enableMonitoring: true,
+      cacheSize: 100 // Smaller cache for faster debugging
+    }
+  })
+}
+```
+
+### Production Environment
+
+```tsx
+if (process.env.NODE_ENV === 'production') {
+  recast.configure({
+    mergeFn: twMerge,
+    performance: {
+      enableMonitoring: false,
+      cacheSize: 1000 // Larger cache for better performance
+    }
+  })
+}
+```
+
+### Testing Environment
+
+```tsx
+if (process.env.NODE_ENV === 'test') {
+  recast.configure({
+    mergeFn: (classes, className) => `${classes} ${className || ''}`.trim(),
+    performance: {
+      enableMonitoring: false,
+      cacheSize: 10 // Minimal cache for predictable tests
+    }
+  })
+}
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Configure once at application startup">
+    Set global configuration early in your application lifecycle:
+    
+    ```tsx
+    // In your app's entry point (e.g., main.tsx, App.tsx)
+    import { recast } from '@rpxl/recast'
+    import { twMerge } from 'tailwind-merge'
+    
+    recast.configure({
+      mergeFn: twMerge,
+      performance: {
+        enableMonitoring: process.env.NODE_ENV === 'development'
+      }
+    })
+    
+    // Then render your app
+    ```
+  </Accordion>
+  
+  <Accordion title="Use appropriate merge functions">
+    Choose merge functions based on your CSS approach:
+    
+    ```tsx
+    // For Tailwind CSS projects
+    recast.configure({ mergeFn: twMerge })
+    
+    // For general CSS or CSS Modules
+    recast.configure({ mergeFn: clsx })
+    
+    // For custom logic
+    recast.configure({ mergeFn: customMergeFunction })
+    ```
+  </Accordion>
+  
+  <Accordion title="Monitor performance in development">
+    Enable monitoring to identify performance bottlenecks:
+    
+    ```tsx
+    recast.configure({
+      performance: {
+        enableMonitoring: process.env.NODE_ENV === 'development'
+      }
+    })
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## TypeScript Types
+
+```tsx
+interface RecastConfig {
+  mergeFn?: MergeFn
+  performance?: {
+    enableMonitoring?: boolean
+    cacheSize?: number
+  }
+}
+
+type MergeFn = (classes: string | string[], className?: string) => string
+```
+
+## See Also
+
+- [recast.styles()](/api/recast-styles) - Create style objects that use global configuration
+- [Performance Guide](/guides/performance) - Optimize Recast performance
+- [Best Practices](/guides/best-practices) - Configuration strategies 

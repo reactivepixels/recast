@@ -1,0 +1,516 @@
+---
+title: "Modifiers"
+description: "Add boolean-based conditional styling that can be combined"
+---
+
+# Modifiers
+
+Modifiers are boolean-based styling options that can be combined together, unlike variants which are mutually exclusive. They're perfect for states like `disabled`, `loading`, `fullWidth`, or any styling that can be toggled on or off independently.
+
+## Basic usage
+
+Define modifiers as an object where keys are modifier names and values are the classes to apply:
+
+```tsx
+import { recast } from '@rpxl/recast'
+
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    }
+  },
+  modifiers: {
+    // Boolean modifiers that can be combined
+    disabled: "opacity-50 cursor-not-allowed",
+    loading: "cursor-wait opacity-75",
+    fullWidth: "w-full",
+    rounded: "rounded-full",
+    shadow: "shadow-lg"
+  }
+})
+
+const Button = buttonStyles(ButtonPrimitive)
+```
+
+Usage with multiple modifiers:
+
+```tsx
+// ✅ All of these can be combined
+<Button disabled>Disabled Button</Button>
+<Button loading fullWidth>Loading Full Width</Button>
+<Button variant="primary" rounded shadow disabled>
+  Complex Button
+</Button>
+
+// Modifiers work with variants
+<Button variant="secondary" fullWidth rounded>
+  Secondary Full Width Rounded
+</Button>
+```
+
+<Check>
+  **Combinable:** Unlike variants, multiple modifiers can be active simultaneously, giving you flexible boolean-based styling.
+</Check>
+
+## Default modifiers
+
+Set default modifiers that are applied unless explicitly set to `false`:
+
+```tsx
+const cardStyles = recast.styles({
+  base: "border bg-white",
+  modifiers: {
+    shadow: "shadow-sm",
+    rounded: "rounded-lg",
+    padding: "p-6"
+  },
+  defaults: {
+    modifiers: ["shadow", "rounded", "padding"] // Applied by default
+  }
+})
+
+const Card = cardStyles(CardPrimitive)
+
+// These are equivalent:
+<Card>Default Card</Card>
+<Card shadow rounded padding>Explicit Card</Card>
+
+// Disable default modifiers explicitly:
+<Card shadow={false}>Card without shadow</Card>
+<Card rounded={false} padding={false}>Flat card without padding</Card>
+```
+
+<Tip>
+  **Smart defaults:** Use default modifiers for common styling that should be present unless explicitly disabled.
+</Tip>
+
+## Nested component modifiers
+
+For complex components, modifiers can target specific parts:
+
+```tsx
+const cardStyles = recast.styles({
+  base: {
+    root: "border bg-white",
+    header: "px-6 py-4 border-b",
+    content: "px-6 py-4"
+  },
+  modifiers: {
+    shadow: {
+      root: "shadow-lg"
+    },
+    rounded: {
+      root: "rounded-lg",
+      header: "rounded-t-lg"
+    },
+    dense: {
+      header: "px-4 py-2",
+      content: "px-4 py-2"
+    },
+    highlighted: {
+      root: "ring-2 ring-blue-500",
+      header: "bg-blue-50"
+    }
+  }
+})
+
+const Card = cardStyles(CardPrimitive)
+
+// Combine multiple modifiers affecting different parts
+<Card shadow rounded dense highlighted>
+  Complex Card
+</Card>
+```
+
+## Conditional modifiers
+
+Use modifiers in conditional styling for sophisticated logic:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    }
+  },
+  modifiers: {
+    disabled: "cursor-not-allowed",
+    loading: "cursor-wait",
+    fullWidth: "w-full"
+  },
+  conditionals: [
+    {
+      // Disabled primary buttons have different styling
+      variants: { variant: "primary" },
+      modifiers: ["disabled"],
+      className: "bg-blue-300 hover:bg-blue-300"
+    },
+    {
+      // Loading state overrides hover effects
+      modifiers: ["loading"],
+      className: "pointer-events-none opacity-75"
+    },
+    {
+      // Full width buttons center their content differently
+      modifiers: ["fullWidth"],
+      className: "justify-center"
+    }
+  ]
+})
+```
+
+## State management patterns
+
+### Interactive states
+
+Model interactive component states with modifiers:
+
+```tsx
+const inputStyles = recast.styles({
+  base: "px-3 py-2 border rounded transition-colors",
+  variants: {
+    size: {
+      sm: "px-2 py-1 text-sm",
+      md: "px-3 py-2 text-base",
+      lg: "px-4 py-3 text-lg"
+    }
+  },
+  modifiers: {
+    focused: "border-blue-500 ring-2 ring-blue-200",
+    error: "border-red-500 ring-2 ring-red-200",
+    disabled: "bg-gray-50 cursor-not-allowed opacity-60",
+    readonly: "bg-gray-50",
+    required: "border-l-4 border-l-blue-500"
+  }
+})
+
+// Usage reflects component state
+<Input
+  size="md"
+  focused={isFocused}
+  error={hasError}
+  disabled={isDisabled}
+  required
+/>
+```
+
+### Loading states
+
+Handle loading states across different components consistently:
+
+```tsx
+const loadingModifiers = {
+  loading: "cursor-wait opacity-75 pointer-events-none",
+  skeleton: "animate-pulse bg-gray-200",
+  spinner: "relative overflow-hidden"
+}
+
+// Apply to different components
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded",
+  modifiers: loadingModifiers
+})
+
+const cardStyles = recast.styles({
+  base: "border bg-white p-6",
+  modifiers: loadingModifiers
+})
+```
+
+### Layout modifiers
+
+Create flexible layout options with modifiers:
+
+```tsx
+const containerStyles = recast.styles({
+  base: "mx-auto",
+  modifiers: {
+    centered: "text-center",
+    fullHeight: "min-h-screen",
+    sticky: "sticky top-0",
+    scrollable: "overflow-auto",
+    hidden: "hidden",
+    flex: "flex",
+    grid: "grid",
+    responsive: "container px-4 sm:px-6 lg:px-8"
+  }
+})
+
+<Container flex responsive sticky>
+  Flexible Layout Container
+</Container>
+```
+
+## Best practices
+
+<AccordionGroup>
+  <Accordion title="Use descriptive boolean names">
+    Choose modifier names that clearly indicate their boolean nature and effect:
+    
+    ```tsx
+    const componentStyles = recast.styles({
+      modifiers: {
+        // ✅ Good: Clear boolean meaning
+        disabled: "opacity-50 cursor-not-allowed",
+        loading: "cursor-wait",
+        fullWidth: "w-full",
+        hidden: "hidden",
+        active: "bg-blue-100",
+        
+        // ❌ Bad: Unclear or non-boolean
+        blue: "bg-blue-500", // Should be a variant
+        large: "text-lg",    // Should be a variant
+        state: "opacity-50"  // Unclear what state
+      }
+    })
+    ```
+  </Accordion>
+  
+  <Accordion title="Group related modifiers by purpose">
+    Organize modifiers by their functional area:
+    
+    ```tsx
+    const componentStyles = recast.styles({
+      modifiers: {
+        // State modifiers
+        disabled: "opacity-50 cursor-not-allowed",
+        loading: "cursor-wait",
+        active: "bg-blue-100",
+        
+        // Layout modifiers
+        fullWidth: "w-full",
+        fullHeight: "h-full",
+        centered: "mx-auto",
+        
+        // Visual modifiers
+        shadow: "shadow-lg",
+        rounded: "rounded-lg",
+        bordered: "border-2"
+      }
+    })
+    ```
+  </Accordion>
+  
+  <Accordion title="Consider modifier interactions">
+    Design modifiers to work well together:
+    
+    ```tsx
+    const buttonStyles = recast.styles({
+      modifiers: {
+        disabled: "opacity-50 cursor-not-allowed",
+        loading: "cursor-wait",
+        // These modifiers should work together logically
+      },
+      conditionals: [
+        {
+          // Handle conflicting states gracefully
+          modifiers: ["disabled", "loading"],
+          className: "opacity-30" // Combined effect
+        }
+      ]
+    })
+    ```
+  </Accordion>
+  
+  <Accordion title="Use consistent naming across components">
+    Maintain the same modifier names across your design system:
+    
+    ```tsx
+    // ✅ Good: Consistent naming
+    const commonModifiers = {
+      disabled: "opacity-50 cursor-not-allowed",
+      loading: "cursor-wait opacity-75",
+      fullWidth: "w-full"
+    }
+    
+    const buttonModifiers = { ...commonModifiers, /* button-specific */ }
+    const inputModifiers = { ...commonModifiers, /* input-specific */ }
+    const cardModifiers = { ...commonModifiers, /* card-specific */ }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Common patterns
+
+### Accessibility modifiers
+
+Include accessibility considerations in your modifiers:
+
+```tsx
+const componentStyles = recast.styles({
+  base: "transition-colors",
+  modifiers: {
+    // ARIA states as modifiers
+    expanded: "aria-expanded:bg-gray-100",
+    selected: "aria-selected:bg-blue-100",
+    checked: "aria-checked:bg-green-100",
+    
+    // Focus management
+    focusVisible: "focus-visible:outline-none focus-visible:ring-2",
+    focusWithin: "focus-within:ring-2 focus-within:ring-blue-200",
+    
+    // Screen reader considerations
+    srOnly: "sr-only",
+    notSrOnly: "not-sr-only"
+  }
+})
+```
+
+### Responsive modifiers
+
+Create responsive behavior with modifiers:
+
+```tsx
+const layoutStyles = recast.styles({
+  base: "flex",
+  modifiers: {
+    // Mobile-first responsive modifiers
+    mobileStack: "flex-col md:flex-row",
+    hideOnMobile: "hidden md:block",
+    showOnMobile: "block md:hidden",
+    
+    // Breakpoint-specific modifiers
+    lgOnly: "hidden lg:block xl:hidden",
+    desktopCentered: "md:mx-auto",
+    mobileFullWidth: "w-full md:w-auto"
+  }
+})
+```
+
+### Theme-aware modifiers
+
+Support theme switching with modifiers:
+
+```tsx
+const cardStyles = recast.styles({
+  base: "border bg-white dark:bg-gray-900",
+  modifiers: {
+    // Theme-aware modifiers
+    darkBorder: "dark:border-gray-700",
+    lightShadow: "shadow-sm dark:shadow-gray-800/50",
+    themeFriendly: "text-gray-900 dark:text-gray-100",
+    
+    // High contrast support
+    highContrast: "contrast-more:border-black contrast-more:dark:border-white"
+  }
+})
+```
+
+### Animation modifiers
+
+Control animations and transitions with modifiers:
+
+```tsx
+const animatedStyles = recast.styles({
+  base: "transition-all duration-200",
+  modifiers: {
+    // Animation states
+    entering: "animate-in fade-in duration-300",
+    exiting: "animate-out fade-out duration-200",
+    bouncing: "animate-bounce",
+    pulsing: "animate-pulse",
+    
+    // Hover effects
+    hoverScale: "hover:scale-105",
+    hoverLift: "hover:shadow-lg hover:-translate-y-1",
+    hoverGlow: "hover:shadow-xl hover:shadow-blue-500/25",
+    
+    // Reduced motion support
+    respectMotion: "motion-reduce:animate-none motion-reduce:transition-none"
+  }
+})
+```
+
+## TypeScript integration
+
+Recast automatically generates TypeScript types for modifiers:
+
+```tsx
+// Extract modifier prop types
+type ButtonProps = ComponentProps<typeof Button>
+// ButtonProps includes boolean props for each modifier:
+// disabled?: boolean, loading?: boolean, fullWidth?: boolean, etc.
+
+// Create component interfaces with specific modifiers
+interface LoadingButtonProps extends Omit<ButtonProps, 'loading'> {
+  loading: true // Always loading
+}
+
+// Conditional modifier types
+interface ConditionalButtonProps extends ButtonProps {
+  loading?: boolean
+  disabled?: boolean
+  // TypeScript will prevent both loading and disabled being true
+  // if you add conditional logic
+}
+```
+
+## Debugging modifiers
+
+Use extraction and logging to debug modifier combinations:
+
+```tsx
+const buttonStyles = recast.styles({
+  // ... your configuration
+})
+
+// Debug all modifier combinations
+const modifiers = ['disabled', 'loading', 'fullWidth'] as const
+const variant = 'primary'
+
+// Test individual modifiers
+modifiers.forEach(modifier => {
+  const props = { variant, [modifier]: true }
+  console.log(`${variant} + ${modifier}:`, buttonStyles.extract(props))
+})
+
+// Test modifier combinations
+console.log('All modifiers:', buttonStyles.extract({
+  variant,
+  disabled: true,
+  loading: true,
+  fullWidth: true
+}))
+```
+
+## Performance considerations
+
+Modifiers are optimized for performance, but consider these patterns:
+
+```tsx
+// ✅ Good: Stable modifier combinations
+const isDisabled = user.role !== 'admin'
+const isLoading = mutation.isLoading
+
+<Button disabled={isDisabled} loading={isLoading}>
+  Save Changes
+</Button>
+
+// ❌ Avoid: Frequently changing modifier combinations
+<Button disabled={Math.random() > 0.5}>
+  Randomly Disabled
+</Button>
+```
+
+<Warning>
+  **Cache efficiency:** Frequently changing modifier combinations can reduce cache hit rates. Keep modifier states as stable as possible.
+</Warning>
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Conditional Styling" icon="code-branch" href="/concepts/conditional-styling">
+    Learn how to combine modifiers with variants for complex logic
+  </Card>
+  <Card title="Composition" icon="puzzle-piece" href="/concepts/composition">
+    Combine multiple style objects with different modifiers
+  </Card>
+  <Card title="Best Practices" icon="lightbulb" href="/guides/best-practices">
+    Learn advanced patterns for building maintainable design systems
+  </Card>
+</CardGroup> 

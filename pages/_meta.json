@@ -1,0 +1,12 @@
+{
+  "-- Getting Started": {
+    "type": "separator",
+    "title": "Getting Started"
+  },
+  "index": "Introduction",
+  "quick-start": "Quick Start",
+  "theming": "Theming",
+  "advanced-usage": "Advanced Usage",
+  "tailwind-css": "Tailwind CSS",
+  "jsdoc-documentation": "JSDoc Documentation"
+}
