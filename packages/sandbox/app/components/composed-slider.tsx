@@ -1,15 +1,10 @@
 "use client";
 
-import { recast, RecastWithClassNameProps } from "@rpxl/recast";
+import { recast, RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef, HTMLAttributes } from "react";
 
 type SliderProps = HTMLAttributes<HTMLDivElement> &
-  RecastWithClassNameProps<{
-    root: string;
-    track: string;
-    range: string;
-    thumb: string;
-  }>;
+  RecastClsProps<"root" | "track" | "range" | "thumb">;
 
 const SliderPrimitive = forwardRef<HTMLDivElement, SliderProps>(
   ({ cls, children, ...props }, ref) => (
