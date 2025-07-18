@@ -1,99 +1,97 @@
 ---
-description: Build truly reusable component primitives with Recast - the theming abstraction layer for React components
+title: "Introduction"
+description: "Welcome to the new home for your documentation"
 ---
 
-<Hero
-  title="Recast"
-  subtitle="Build truly reusable component primitives by abstracting the theme layer from your components"
-  image="/images/hero.png"
-  cta={{
-    text: "Get Started",
-    link: "/quickstart"
-  }}
-  secondaryCta={{
-    text: "View on GitHub",
-    link: "https://github.com/reactivepixels/recast"
-  }}
-/>
+## Setting up
 
-<Grid cols={2}>
-  <Card icon="component" title="Theme Abstraction">
-    Liberate your component primitives from theme dependencies, allowing them to be written once and used across projects.
+Get your documentation site up and running in minutes.
+
+<Card
+  title="Start here"
+  icon="rocket"
+  href="/quickstart"
+  horizontal
+>
+  Follow our three step quickstart guide.
+</Card>
+
+## Make it yours
+
+Design a docs site that looks great and empowers your users.
+
+<Columns cols={2}>
+  <Card
+    title="Edit locally"
+    icon="pen-to-square"
+    href="/development"
+  >
+    Edit your docs locally and preview them in real time.
   </Card>
-  <Card icon="palette" title="Flexible Theming">
-    Define your own theme props and values without being constrained to predefined theming conventions.
+  <Card
+    title="Customize your site"
+    icon="palette"
+    href="/essentials/settings"
+  >
+    Customize the design and colors of your site to match your brand.
   </Card>
-  <Card icon="code" title="Type Safe">
-    Full TypeScript support with excellent developer experience and type inference.
-  </Card>
-  <Card icon="zap" title="Lightweight">
-    Minimal bundle size with zero runtime overhead - only the styles you use are included.
-  </Card>
-</Grid>
-
-<Section title="Why Recast?">
-  Creating component libraries is a challenging and time-consuming task. Even the seemingly straightforward process of developing a sensible button component can lead to a daunting proliferation of props, primarily driven by the need for theming.
-
-  Consider the numerous instances where theme-related props and styles are embedded in a component - such as **variant**: "primary" | "secondary" | "tertiary" or **size**: "sm" | "md" | "lg". This tight coupling of component props with theme requirements not only results in an ever-expanding list of props but also presents a significant hurdle to reusing components across projects without duplicating code purely for the purposes of theming.
-
-  Recast eliminates the need for adherence to predefined theming props, values, or naming conventions. With Recast, you have the autonomy to engineer your design system according to your unique requirements, allowing you to tailor your design system to precisely fit your project's needs without compromise.
-</Section>
-
-<Section title="How it works">
-  <Steps>
-    <Step title="Define your component">
-      Create your component with Recast's utility functions, focusing on the component logic rather than styling.
-    </Step>
-    <Step title="Create theme definitions">
-      Define theme configurations that specify the visual styling and available props for your components.
-    </Step>
-    <Step title="Compose and use">
-      Compose your themed components and use them across your projects with full type safety.
-    </Step>
-  </Steps>
-</Section>
-
-<Section title="Quick Example">
-  ```tsx
-  import { recast } from '@rpxl/recast'
-  
-  // Define your component
-  const Button = recast('button', {
-    base: 'px-4 py-2 rounded font-medium',
-    variants: {
-      intent: {
-        primary: 'bg-blue-500 text-white hover:bg-blue-600',
-        secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
-      },
-      size: {
-        small: 'text-sm px-3 py-1',
-        large: 'text-lg px-6 py-3',
-      },
-    },
-  })
-  
-  // Use your component
-  <Button intent="primary" size="large">
-    Click me
-  </Button>
-  ```
-</Section>
-
-<Section title="Ready to get started?">
-  <CardGroup cols={2}>
     <Card
-      title="Quick Start"
-      icon="rocket"
-      href="/quickstart"
-    >
-      Get up and running with Recast in minutes
-    </Card>
-    <Card
-      title="API Reference"
-      icon="book"
-      href="/api-reference/recast"
-    >
-      Explore the complete API documentation
-    </Card>
-  </CardGroup>
-</Section>
+    title="Set up navigation"
+    icon="map"
+    href="/essentials/navigation"
+  >
+    Organize your docs to help users find what they need and succeed with your product.
+  </Card>
+  <Card
+    title="API documentation"
+    icon="terminal"
+    href="/api-reference/introduction"
+  >
+    Auto-generate API documentation from OpenAPI specifications.
+  </Card>
+</Columns>
+
+## Create beautiful pages
+
+Everything you need to create world-class documentation.
+
+<Columns cols={2}>
+  <Card
+    title="Write with MDX"
+    icon="pen-fancy"
+    href="/essentials/markdown"
+  >
+    Use MDX to style your docs pages.
+  </Card>
+  <Card
+    title="Code samples"
+    icon="code"
+    href="/essentials/code"
+  >
+    Add sample code to demonstrate how to use your product.
+  </Card>
+  <Card
+    title="Images"
+    icon="image"
+    href="/essentials/images"
+  >
+    Display images and other media.
+  </Card>
+  <Card
+    title="Reusable snippets"
+    icon="recycle"
+    href="/essentials/reusable-snippets"
+  >
+    Write once and reuse across your docs.
+  </Card>
+</Columns>
+
+## Need inspiration?
+
+<Card
+  title="See complete examples"
+  icon="stars"
+  href="https://mintlify.com/customers"
+>
+  Browse our showcase of exceptional documentation sites.
+</Card>

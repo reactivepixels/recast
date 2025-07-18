@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Recast",
   "colors": {
-    "primary": "#3B82F6",
-    "light": "#60A5FA",
-    "dark": "#1D4ED8"
+    "primary": "#181822",
+    "light": "#ffffff",
+    "dark": "#181822"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -18,33 +18,43 @@
             "pages": ["index", "quickstart", "development"]
           },
           {
-            "group": "Components",
+            "group": "Customization",
+            "pages": ["essentials/settings", "essentials/navigation"]
+          },
+          {
+            "group": "Writing content",
             "pages": [
-              "essentials/components",
-              "essentials/theming",
-              "essentials/variants"
+              "essentials/markdown",
+              "essentials/code",
+              "essentials/images",
+              "essentials/reusable-snippets"
             ]
           },
           {
-            "group": "Advanced",
+            "group": "AI tools",
             "pages": [
-              "essentials/advanced-usage",
-              "essentials/customization",
-              "essentials/migration"
+              "ai-tools/cursor",
+              "ai-tools/claude-code",
+              "ai-tools/windsurf"
             ]
           }
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "API reference",
         "groups": [
           {
-            "group": "Core API",
-            "pages": ["api-reference/recast", "api-reference/components"]
+            "group": "API documentation",
+            "pages": ["api-reference/introduction"]
           },
           {
-            "group": "Utilities",
-            "pages": ["api-reference/utils", "api-reference/types"]
+            "group": "Endpoint examples",
+            "pages": [
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete",
+              "api-reference/endpoint/webhook"
+            ]
           }
         ]
       }
@@ -52,14 +62,19 @@
     "global": {
       "anchors": [
         {
-          "anchor": "GitHub",
-          "href": "https://github.com/reactivepixels/recast",
-          "icon": "github"
+          "anchor": "Documentation",
+          "href": "https://mintlify.com/docs",
+          "icon": "book-open-cover"
         },
         {
-          "anchor": "Discussions",
-          "href": "https://github.com/reactivepixels/recast/discussions",
-          "icon": "message-circle"
+          "anchor": "Community",
+          "href": "https://mintlify.com/community",
+          "icon": "slack"
+        },
+        {
+          "anchor": "Blog",
+          "href": "https://mintlify.com/blog",
+          "icon": "newspaper"
         }
       ]
     }
@@ -72,18 +87,20 @@
     "links": [
       {
         "label": "Support",
-        "href": "https://github.com/reactivepixels/recast/issues"
+        "href": "mailto:hi@mintlify.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Get Started",
-      "href": "https://github.com/reactivepixels/recast"
+      "label": "Dashboard",
+      "href": "https://dashboard.mintlify.com"
     }
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/reactivepixels/recast"
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
     }
   }
 }

@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "mint dev",
-    "build": "mint build",
-    "start": "mint dev",
-    "lint": "next lint"
+    "start": "mint dev"
   },
   "dependencies": {
     "@rpxl/recast": "workspace:*",
