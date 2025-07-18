@@ -5,7 +5,7 @@
   },
   "editor.formatOnSave": true,
   "tailwindCSS.experimental.classRegex": [
-    ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+    ["recast\\.styles\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
   "editor.tabSize": 2,
   "tailwindcss-intellisense.trace.server": "messages",

@@ -8,32 +8,64 @@ import type {
   RelaxedStyles,
   RelaxedVariantProps,
   RelaxedModifierProps,
+  ClassNameRecord,
 } from "./types.js";
 import { getRecastClasses } from "./utils/getRecastClasses.js";
 import { omit, isEmptyObject, isString } from "./utils/common.js";
 
+// Global configuration
+interface RecastConfig {
+  mergeFn?: MergeFn;
+}
+
+let globalConfig: RecastConfig = {};
+
 /**
- * Creates a new component with theming capabilities.
- *
- * @template P - The props of the base component
- * @template V - The variant options
- * @template M - The modifier options
- * @param {React.ComponentType<P>} Component - The base component to add theming to
- * @param {RecastStyles<V, M, Pick<P, "cls">>} styles - The styles to apply to the component
- * @param {MergeFn} [mergeFn] - Optional function to merge props
- * @returns {RecastComponent<P, V, M>} A new component with theming capabilities
+ * Configure global defaults for recast
  */
-export function recast<
-  P extends RecastProps<P>,
+export function configure(config: RecastConfig): void {
+  // If config is empty object, reset to default config
+  if (Object.keys(config).length === 0) {
+    globalConfig = {};
+  } else {
+    globalConfig = { ...globalConfig, ...config };
+  }
+}
+
+/**
+ * Interface for the styles object returned by recast.styles()
+ */
+interface RecastStylesObject<
   V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
   M extends { [K in keyof M]: string | string[] },
->(Component: React.ComponentType<P>, styles: RecastStyles<V, M, Pick<P, "cls">>, mergeFn?: MergeFn) {
-  type Props = Omit<P, keyof ExtractVariantProps<V> | keyof ExtractModifierProps<M>> &
-    ExtractVariantProps<V> &
-    ExtractModifierProps<M> & { className?: string };
+> {
+  /**
+   * Apply styles to a React component
+   */
+  <ComponentProps extends RecastProps<ComponentProps>>(
+    Component: React.ComponentType<ComponentProps>,
+    mergeFn?: MergeFn,
+  ): React.ForwardRefExoticComponent<
+    Omit<ComponentProps, keyof ExtractVariantProps<V> | keyof ExtractModifierProps<M>> &
+      ExtractVariantProps<V> &
+      ExtractModifierProps<M> & { className?: string } & React.RefAttributes<React.ElementRef<typeof Component>>
+  >;
 
+  /**
+   * Extract class names without applying to a component
+   */
+  extract(props: ExtractVariantProps<V> & ExtractModifierProps<M>): string | ClassNameRecord;
+}
+
+/**
+ * Creates reusable, portable styles that can be applied to components or extracted as class names
+ */
+export function styles<
+  V extends { [K in keyof V]: { [S in keyof V[K]]: string | string[] } },
+  M extends { [K in keyof M]: string | string[] },
+>(stylesConfig: RecastStyles<V, M, { cls?: ClassNameRecord }>): RecastStylesObject<V, M> {
   const processModifiers = (props: Record<string, unknown>): RelaxedModifierProps => {
-    const modifierKeys = Object.keys(styles.modifiers || {});
+    const modifierKeys = Object.keys(stylesConfig.modifiers || {});
     return modifierKeys.reduce<RelaxedModifierProps>((acc, key) => {
       const value = props[key as keyof typeof props];
       if (typeof value === "boolean") {
@@ -44,7 +76,7 @@ export function recast<
   };
 
   const processVariants = (props: Record<string, unknown>): RelaxedVariantProps => {
-    const variantKeys = Object.keys(styles.variants || {});
+    const variantKeys = Object.keys(stylesConfig.variants || {});
     return variantKeys.reduce<RelaxedVariantProps>((acc, key) => {
       const value = props[key as keyof typeof props];
       if (value !== undefined && isString(value)) {
@@ -54,38 +86,79 @@ export function recast<
     }, {});
   };
 
-  const ComponentWithThemedProps = forwardRef<React.ElementRef<typeof Component>, Props>((props, ref) => {
-    const { className, ...restProps } = props as Props;
+  // Create the callable function for applying to components
+  const applyToComponent = <ComponentProps extends RecastProps<ComponentProps>>(
+    Component: React.ComponentType<ComponentProps>,
+    mergeFn?: MergeFn,
+  ) => {
+    type Props = Omit<ComponentProps, keyof ExtractVariantProps<V> | keyof ExtractModifierProps<M>> &
+      ExtractVariantProps<V> &
+      ExtractModifierProps<M> & { className?: string };
 
-    const modifierProps = processModifiers(restProps);
-    const variantProps = processVariants(restProps);
+    const ComponentWithThemedProps = forwardRef<React.ElementRef<typeof Component>, Props>((props, ref) => {
+      const { className, ...restProps } = props as Props;
 
-    const propsWithoutModifiersAndVariants = omit(
-      [...Object.keys(modifierProps), ...Object.keys(variantProps), "className"],
-      restProps,
-    );
+      const modifierProps = processModifiers(restProps);
+      const variantProps = processVariants(restProps);
 
-    const { className: recastClassesClassName, cls } = getRecastClasses({
-      styles: styles as RelaxedStyles,
+      const propsWithoutModifiersAndVariants = omit(
+        [...Object.keys(modifierProps), ...Object.keys(variantProps), "className"],
+        restProps,
+      );
+
+      const { className: recastClassesClassName, cls } = getRecastClasses({
+        styles: stylesConfig as RelaxedStyles,
+        variants: variantProps,
+        modifiers: modifierProps,
+      });
+
+      const finalMergeFn = mergeFn || globalConfig.mergeFn;
+      const mergedClassName = finalMergeFn
+        ? finalMergeFn(recastClassesClassName, className)
+        : `${recastClassesClassName} ${className || ""}`.trim();
+
+      return (
+        <Component
+          {...(propsWithoutModifiersAndVariants as ComponentProps)}
+          ref={ref}
+          className={mergedClassName}
+          cls={isEmptyObject(cls) ? undefined : cls}
+        />
+      );
+    });
+
+    ComponentWithThemedProps.displayName = `Recast(${Component.displayName || Component.name || "Component"})`;
+
+    return ComponentWithThemedProps;
+  };
+
+  // Create the extract function for getting class names directly
+  const extract = (props: ExtractVariantProps<V> & ExtractModifierProps<M>): string | ClassNameRecord => {
+    const modifierProps = processModifiers(props);
+    const variantProps = processVariants(props);
+
+    const { className, cls } = getRecastClasses({
+      styles: stylesConfig as RelaxedStyles,
       variants: variantProps,
       modifiers: modifierProps,
     });
 
-    const mergedClassName = mergeFn
-      ? mergeFn(recastClassesClassName, className)
-      : `${recastClassesClassName} ${className || ""}`.trim();
+    // If cls is empty, return just the className string
+    // Otherwise return the cls object for nested components
+    return isEmptyObject(cls) ? className : cls;
+  };
 
-    return (
-      <Component
-        {...(propsWithoutModifiersAndVariants as P)}
-        ref={ref}
-        className={mergedClassName}
-        cls={isEmptyObject(cls) ? undefined : cls}
-      />
-    );
-  });
+  // Create the styles object that is both callable and has extract method
+  const stylesObject = applyToComponent as RecastStylesObject<V, M>;
+  stylesObject.extract = extract;
 
-  ComponentWithThemedProps.displayName = `Recast(${Component.displayName || Component.name || "Component"})`;
-
-  return ComponentWithThemedProps;
+  return stylesObject;
 }
+
+/**
+ * Main recast object with styles method and configure
+ */
+export const recast = {
+  styles,
+  configure,
+};

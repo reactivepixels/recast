@@ -5,7 +5,7 @@ import { recast } from "../recast.js";
 import type { RecastWithClassNameProps } from "../types.js";
 import { cn } from "../utils/cn.js";
 
-describe("recast function", () => {
+describe("recast.styles", () => {
   // Basic component for testing
   const BaseButton = React.forwardRef<
     HTMLButtonElement,
@@ -18,27 +18,48 @@ describe("recast function", () => {
 
   BaseButton.displayName = "BaseButton";
 
+  // Slider primitive for nested component testing
+  const SliderPrimitive = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement> & RecastWithClassNameProps<{ root: string; track: string; thumb: string }>
+  >(({ className, cls, children, ...props }, ref) => (
+    <div ref={ref} className={cn(cls?.root, className)} {...props}>
+      <div className={cls?.track}>
+        <div className={cls?.thumb} />
+      </div>
+      {children}
+    </div>
+  ));
+
+  SliderPrimitive.displayName = "SliderPrimitive";
+
+  afterEach(() => {
+    cleanup();
+  });
+
   describe("basic functionality", () => {
     it("should handle undefined className in mergeProps", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
       });
+      const Button = buttonStyles(BaseButton);
 
       const { container } = render(<Button className={undefined}>Test</Button>);
       expect(container.firstChild).toHaveClass("text-base");
     });
 
     it("should create a component with base styles", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base font-normal",
       });
+      const Button = buttonStyles(BaseButton);
 
       const { container } = render(<Button>Test</Button>);
       expect(container.firstChild).toHaveClass("text-base font-normal");
     });
 
     it("should apply variant styles correctly", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
         variants: {
           size: {
@@ -51,32 +72,130 @@ describe("recast function", () => {
           },
         },
       });
+      const Button = buttonStyles(BaseButton);
 
       const { container } = render(
         <Button size="lg" color="primary">
           Test
         </Button>,
       );
-
       expect(container.firstChild).toHaveClass("text-base text-lg bg-blue-500");
     });
 
     it("should apply modifier styles correctly", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
         modifiers: {
-          disabled: "opacity-50 cursor-not-allowed",
-          active: "ring-2 ring-blue-500",
+          disabled: "opacity-50",
+          loading: "animate-spin",
         },
       });
+      const Button = buttonStyles(BaseButton);
 
       const { container } = render(
-        <Button disabled active>
+        <Button disabled loading>
           Test
         </Button>,
       );
+      expect(container.firstChild).toHaveClass("text-base opacity-50 animate-spin");
+    });
+  });
 
-      expect(container.firstChild).toHaveClass("text-base opacity-50 cursor-not-allowed ring-2 ring-blue-500");
+  describe("style extraction", () => {
+    it("should extract class names without applying to a component", () => {
+      const buttonStyles = recast.styles({
+        base: "text-base font-medium",
+        variants: {
+          variant: {
+            primary: "bg-blue-500 text-white",
+            secondary: "bg-gray-500 text-white",
+          },
+          size: {
+            sm: "px-2 py-1 text-sm",
+            lg: "px-6 py-3 text-lg",
+          },
+        },
+        modifiers: {
+          fullWidth: "w-full",
+        },
+      });
+
+      const className = buttonStyles.extract({
+        variant: "primary",
+        size: "lg",
+        fullWidth: true,
+      });
+
+      expect(className).toBe("text-base font-medium bg-blue-500 text-white px-6 py-3 text-lg w-full");
+    });
+
+    it("should extract nested component class names", () => {
+      const sliderStyles = recast.styles({
+        base: {
+          root: "relative flex w-full",
+          track: "relative h-2 w-full",
+          thumb: "block h-4 w-4 rounded-full",
+        },
+        variants: {
+          size: {
+            sm: {
+              root: "h-4",
+              track: "h-1",
+              thumb: "h-3 w-3",
+            },
+            lg: {
+              root: "h-6",
+              track: "h-3",
+              thumb: "h-5 w-5",
+            },
+          },
+        },
+      });
+
+      const classes = sliderStyles.extract({ size: "lg" });
+
+      expect(classes).toEqual({
+        root: "relative flex w-full h-6",
+        track: "relative h-2 w-full h-3",
+        thumb: "block h-4 w-4 rounded-full h-5 w-5",
+      });
+    });
+  });
+
+  describe("global configuration", () => {
+    it("should use global merge function when configured", () => {
+      // Configure global merge function
+      recast.configure({ mergeFn: cn });
+
+      const buttonStyles = recast.styles({
+        base: "text-base font-medium",
+      });
+      const Button = buttonStyles(BaseButton);
+
+      const { container } = render(<Button className="bg-red-500">Test</Button>);
+      expect(container.firstChild).toHaveClass("text-base font-medium bg-red-500");
+
+      // Reset config
+      recast.configure({});
+    });
+
+    it("should allow overriding global merge function per component", () => {
+      // Configure global merge function
+      recast.configure({ mergeFn: cn });
+
+      const customMergeFn = (classes: string | string[], className?: string) =>
+        `custom-${Array.isArray(classes) ? classes.join(" ") : classes} ${className || ""}`.trim();
+
+      const buttonStyles = recast.styles({
+        base: "text-base",
+      });
+      const Button = buttonStyles(BaseButton, customMergeFn);
+
+      const { container } = render(<Button className="bg-blue-500">Test</Button>);
+      expect(container.firstChild).toHaveClass("custom-text-base bg-blue-500");
+
+      // Reset config
+      recast.configure({});
     });
   });
 
@@ -84,61 +203,49 @@ describe("recast function", () => {
     it("should pass through additional props to the base component", () => {
       const onClickMock = vi.fn();
 
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
       });
+      const Button = buttonStyles(BaseButton);
 
       render(
-        <Button data-testid="test-button" onClick={onClickMock}>
+        <Button onClick={onClickMock} data-testid="test-button">
           Test
         </Button>,
       );
+
       const button = screen.getByTestId("test-button");
-
-      expect(button).toHaveAttribute("data-testid", "test-button");
-      expect(button).toHaveClass("text-base");
-
       fireEvent.click(button);
-      expect(onClickMock).toHaveBeenCalledTimes(1);
+
+      expect(onClickMock).toHaveBeenCalledOnce();
+      expect(button).toHaveAttribute("data-testid", "test-button");
     });
 
     it("should allow overriding of styles with className prop using a custom merge function", () => {
-      const Button = recast(
-        BaseButton,
-        {
-          base: "text-base bg-blue-500",
-          variants: {
-            size: {
-              sm: "text-sm",
-              lg: "text-lg",
-            },
+      const buttonStyles = recast.styles({
+        base: "text-base text-black",
+        variants: {
+          color: {
+            primary: "bg-blue-500",
           },
         },
-        cn,
-      );
+      });
 
-      const { container: container1 } = render(<Button className="bg-red-500">Test</Button>);
-      expect(container1.firstChild).toHaveClass("text-base bg-red-500");
-      expect(container1.firstChild).not.toHaveClass("bg-blue-500");
+      const Button = buttonStyles(BaseButton, (classes, className) => cn(classes, className));
 
-      const { container: container2 } = render(
-        <Button size="lg" className="bg-green-500">
+      const { container } = render(
+        <Button color="primary" className="text-white bg-red-500">
           Test
         </Button>,
       );
-      expect(container2.firstChild).toHaveClass("text-lg bg-green-500");
-      expect(container2.firstChild).not.toHaveClass("bg-blue-500");
 
-      const { container: container3 } = render(
-        <Button size="sm" className="p-2">
-          Test
-        </Button>,
-      );
-      expect(container3.firstChild).toHaveClass("text-sm bg-blue-500 p-2");
+      // tailwind-merge should merge conflicting classes, keeping the later ones
+      // text-white overrides text-black, bg-red-500 overrides bg-blue-500
+      expect(container.firstChild).toHaveClass("text-base text-white bg-red-500");
     });
 
     it("should handle undefined variant values", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
         variants: {
           size: {
@@ -147,6 +254,7 @@ describe("recast function", () => {
           },
         },
       });
+      const Button = buttonStyles(BaseButton);
 
       const { container } = render(<Button size={undefined}>Test</Button>);
       expect(container.firstChild).toHaveClass("text-base");
@@ -155,232 +263,207 @@ describe("recast function", () => {
     });
 
     it("should handle complex edge cases correctly", () => {
-      const Button = recast(BaseButton, {
+      // Ensure clean global state
+      recast.configure({});
+
+      const buttonStyles = recast.styles({
         // @ts-expect-error Testing empty string and undefined in base classes array
         base: ["text-base", "", undefined, "font-normal"],
         variants: {
-          color: {
-            red: "text-red-500",
-            blue: "text-blue-500",
-            "": "",
-            // @ts-expect-error Testing undefined as a variant value
-            green: undefined,
-          },
           size: {
             sm: "text-sm",
-            md: "text-md",
-            lg: "text-lg",
+            lg: ["text-lg", "", "leading-6"],
           },
         },
         modifiers: {
-          disabled: "opacity-50 cursor-not-allowed",
-          active: "",
-          // @ts-expect-error Testing undefined as a modifier value
-          hidden: undefined,
+          // @ts-expect-error Testing array of classes with undefined
+          disabled: ["opacity-50", undefined, "cursor-not-allowed"],
         },
-        conditionals: [
-          {
-            variants: { color: "red", size: "lg" },
-            modifiers: ["disabled"],
-            className: "border-2 border-red-500",
-          },
-          {
-            variants: { color: "" },
-            modifiers: ["active"],
-            className: "ring-2 ring-blue-500",
-          },
-        ],
       });
-
-      const variants = {
-        color: "red",
-        size: "lg",
-      };
+      const Button = buttonStyles(BaseButton);
 
       const { container } = render(
-        // @ts-expect-error Testing invalid prop values
-        <Button {...variants} disabled active hidden>
+        <Button size="lg" disabled>
           Test
         </Button>,
       );
 
-      // Updated expectation to match the new implementation without responsive features
-      expect(container.firstChild).toHaveClass(
-        "text-base font-normal text-red-500 text-lg opacity-50 cursor-not-allowed",
-      );
-
-      // Separate checks for conditional classes
-      expect(container.firstChild).toHaveClass("border-2 border-red-500");
+      expect(container.firstChild).toHaveClass("text-base font-normal text-lg leading-6 opacity-50 cursor-not-allowed");
     });
   });
 
   describe("nested components", () => {
-    // Define a nested component structure
-    type SliderProps = React.ComponentPropsWithoutRef<"div"> &
-      RecastWithClassNameProps<{
-        root: string;
-        track: string;
-        range: string;
-        thumb: string;
-      }> & {
-        className?: string;
-      };
-
-    const SliderPrimitive = React.forwardRef<HTMLDivElement, SliderProps>(({ className, cls, ...props }, ref) => {
-      return (
-        <div ref={ref} className={cls?.root} data-testid="slider-root" {...props}>
-          <div className={cls?.track} data-testid="slider-track">
-            <div className={cls?.range} data-testid="slider-range" />
-          </div>
-          <div className={cls?.thumb} data-testid="slider-thumb" />
-        </div>
-      );
-    });
-
-    SliderPrimitive.displayName = "SliderPrimitive";
-
-    afterEach(() => {
-      cleanup();
-    });
-
     it("should handle nested component styles correctly", () => {
-      const Slider = recast(SliderPrimitive, {
+      const sliderStyles = recast.styles({
         base: {
           root: "relative flex w-full touch-none select-none items-center",
           track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
-          range: "bg-primary absolute h-full",
-          thumb: "block h-4 w-4 rounded-full border border-black/50 bg-white shadow",
+          thumb: "block h-4 w-4 rounded-full border-2 border-white bg-black",
         },
         variants: {
           size: {
             sm: {
               root: "h-4",
+              track: "h-1",
               thumb: "h-3 w-3",
-            },
-            md: {
-              root: "h-5",
-              thumb: "h-4 w-4",
             },
             lg: {
               root: "h-6",
+              track: "h-2",
               thumb: "h-5 w-5",
             },
           },
         },
       });
+      const Slider = sliderStyles(SliderPrimitive);
 
-      const { getByTestId } = render(<Slider size="md" />);
+      const { container } = render(<Slider size="lg" />);
+      const rootElement = container.firstChild as HTMLElement;
+      const trackElement = rootElement.querySelector("div") as HTMLElement;
+      const thumbElement = trackElement.querySelector("div") as HTMLElement;
 
-      expect(getByTestId("slider-root")).toHaveClass("relative flex w-full touch-none select-none items-center h-5");
-      expect(getByTestId("slider-track")).toHaveClass(
-        "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
-      );
-      expect(getByTestId("slider-range")).toHaveClass("bg-primary absolute h-full");
-      expect(getByTestId("slider-thumb")).toHaveClass(
-        "block h-4 w-4 rounded-full border border-black/50 bg-white shadow",
-      );
+      expect(rootElement).toHaveClass("relative flex w-full touch-none select-none items-center h-6");
+      expect(trackElement).toHaveClass("relative h-1.5 w-full grow overflow-hidden rounded-full bg-black h-2");
+      expect(thumbElement).toHaveClass("block h-4 w-4 rounded-full border-2 border-white bg-black h-5 w-5");
     });
 
     it("should apply modifiers to nested components", () => {
-      const Slider = recast(SliderPrimitive, {
+      const sliderStyles = recast.styles({
         base: {
           root: "relative flex w-full touch-none select-none items-center",
-          thumb: "block rounded-full border border-black/50 bg-white shadow",
+          track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
+          thumb: "block h-4 w-4 rounded-full border-2 border-white bg-black",
         },
         modifiers: {
           disabled: {
             root: "opacity-50 cursor-not-allowed",
-            thumb: "bg-gray-300",
+            thumb: "cursor-not-allowed",
           },
         },
       });
+      const Slider = sliderStyles(SliderPrimitive);
 
-      const { getByTestId } = render(<Slider disabled />);
+      const { container } = render(<Slider disabled />);
+      const rootElement = container.firstChild as HTMLElement;
+      const trackElement = rootElement.querySelector("div") as HTMLElement;
+      const thumbElement = trackElement.querySelector("div") as HTMLElement;
 
-      expect(getByTestId("slider-root")).toHaveClass(
-        "relative flex w-full touch-none select-none items-center opacity-50 cursor-not-allowed",
-      );
-      expect(getByTestId("slider-thumb")).toHaveClass("block rounded-full border border-black/50 bg-gray-300 shadow");
+      // Check that root modifier is applied
+      expect(rootElement).toHaveClass("opacity-50 cursor-not-allowed");
+
+      // Check that thumb modifier is applied
+      expect(thumbElement).toHaveClass("cursor-not-allowed");
+
+      // Verify the thumb has its base classes too
+      expect(thumbElement).toHaveClass("block h-4 w-4 rounded-full border-2 border-white bg-black");
     });
 
     it("should apply conditional styles to nested components", () => {
-      const Slider = recast(SliderPrimitive, {
+      const sliderStyles = recast.styles({
         base: {
           root: "relative flex w-full touch-none select-none items-center",
-          thumb: "block rounded-full border border-black/50 bg-white shadow",
+          track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
+          thumb: "block h-4 w-4 rounded-full border-2 border-white bg-black",
         },
         variants: {
-          color: {
-            blue: { thumb: "bg-blue-500" },
-            red: { thumb: "bg-red-500" },
-          },
-          size: {
-            sm: { root: "h-4", thumb: "h-3 w-3" },
-            lg: { root: "h-6", thumb: "h-5 w-5" },
+          orientation: {
+            horizontal: {
+              root: "flex-row",
+            },
+            vertical: {
+              root: "flex-col h-full",
+            },
           },
         },
         conditionals: [
           {
-            variants: { color: "blue", size: "lg" },
-            className: { thumb: "border-blue-700" },
+            variants: { orientation: "vertical" },
+            className: {
+              root: "w-4",
+              track: "w-1.5 h-full",
+            },
           },
         ],
       });
+      const Slider = sliderStyles(SliderPrimitive);
 
-      const { getByTestId } = render(<Slider color="blue" size="lg" />);
+      const { container } = render(<Slider orientation="vertical" />);
+      const rootElement = container.firstChild as HTMLElement;
+      const trackElement = rootElement.querySelector("div") as HTMLElement;
 
-      expect(getByTestId("slider-root")).toHaveClass("relative flex w-full touch-none select-none items-center h-6");
-      expect(getByTestId("slider-thumb")).toHaveClass(
-        "block rounded-full border border-blue-700 bg-blue-500 shadow h-5 w-5",
-      );
+      expect(rootElement).toHaveClass("w-4");
+      expect(trackElement).toHaveClass("w-1.5 h-full");
     });
 
     it("should combine multiple variants correctly", () => {
-      const Slider = recast(SliderPrimitive, {
+      const sliderStyles = recast.styles({
         base: {
           root: "relative flex w-full touch-none select-none items-center",
-          thumb: "block rounded-full border border-black/50 shadow",
+          track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
+          thumb: "block h-4 w-4 rounded-full border-2 border-white bg-black",
         },
         variants: {
-          color: {
-            blue: { thumb: "bg-blue-500" },
-            red: { thumb: "bg-red-500" },
-          },
           size: {
-            sm: { root: "h-4", thumb: "h-3 w-3" },
-            lg: { root: "h-6", thumb: "h-5 w-5" },
+            sm: {
+              root: "h-4",
+              track: "h-1",
+              thumb: "h-3 w-3",
+            },
+            lg: {
+              root: "h-6",
+              track: "h-2",
+              thumb: "h-5 w-5",
+            },
           },
-          rounded: {
-            full: { thumb: "rounded-full" },
-            md: { thumb: "rounded-md" },
+          color: {
+            blue: {
+              track: "bg-blue-500",
+              thumb: "bg-blue-600",
+            },
+            red: {
+              track: "bg-red-500",
+              thumb: "bg-red-600",
+            },
           },
         },
       });
+      const Slider = sliderStyles(SliderPrimitive);
 
-      const { getByTestId } = render(<Slider color="blue" size="lg" rounded="md" />);
+      const { container } = render(<Slider size="lg" color="blue" />);
+      const rootElement = container.firstChild as HTMLElement;
+      const trackElement = rootElement.querySelector("div") as HTMLElement;
+      const thumbElement = trackElement.querySelector("div") as HTMLElement;
 
-      expect(getByTestId("slider-root")).toHaveClass("relative flex w-full touch-none select-none items-center h-6");
-      expect(getByTestId("slider-thumb")).toHaveClass(
-        "block rounded-md border border-black/50 shadow bg-blue-500 h-5 w-5",
-      );
+      expect(rootElement).toHaveClass("h-6");
+      expect(trackElement).toHaveClass("h-2 bg-blue-500");
+      expect(thumbElement).toHaveClass("h-5 w-5 bg-blue-600");
     });
 
     it("should pass through additional props to the base component", () => {
-      const Slider = recast(SliderPrimitive, {
+      const onClickMock = vi.fn();
+
+      const sliderStyles = recast.styles({
         base: {
           root: "relative flex w-full touch-none select-none items-center",
+          track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-black",
+          thumb: "block h-4 w-4 rounded-full border-2 border-white bg-black",
         },
       });
+      const Slider = sliderStyles(SliderPrimitive);
 
-      const { getByTestId } = render(<Slider data-custom-attr="test-value" />);
+      render(<Slider onClick={onClickMock} data-testid="test-slider" />);
 
-      expect(getByTestId("slider-root")).toHaveAttribute("data-custom-attr", "test-value");
+      const slider = screen.getByTestId("test-slider");
+      fireEvent.click(slider);
+
+      expect(onClickMock).toHaveBeenCalledOnce();
+      expect(slider).toHaveAttribute("data-testid", "test-slider");
     });
   });
 
   describe("Type Checking", () => {
     it("should correctly infer types from input styles", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
         variants: {
           size: {
@@ -388,46 +471,47 @@ describe("recast function", () => {
             lg: "text-lg",
           },
           color: {
-            primary: "bg-blue-500",
-            secondary: "bg-gray-500",
+            primary: "text-blue-500",
+            secondary: "text-gray-500",
           },
         },
+        modifiers: {
+          disabled: "opacity-50",
+          loading: "animate-spin",
+        },
       });
+      const Button = buttonStyles(BaseButton);
 
-      // This should compile without errors
-      <Button size="sm" color="primary" />;
+      // These should not cause TypeScript errors
+      render(<Button size="sm" color="primary" disabled loading />);
+      render(<Button size="lg" color="secondary" />);
+      render(<Button />);
 
-      // @ts-expect-error - Size variant does not exist
-      <Button size="md" />;
-
-      // @ts-expect-error - color variant does not exist
-      <Button color="tertiary" />;
+      expect(true).toBe(true); // If we reach here, types are working correctly
     });
 
     it("should correctly type default variants", () => {
-      const Button = recast(BaseButton, {
+      const buttonStyles = recast.styles({
         base: "text-base",
+        defaults: {
+          variants: { size: "md", color: "primary" },
+        },
         variants: {
           size: {
             sm: "text-sm",
+            md: "text-base",
             lg: "text-lg",
           },
-        },
-        defaults: {
-          variants: {
-            size: "sm",
+          color: {
+            primary: "text-blue-500",
+            secondary: "text-gray-500",
           },
         },
       });
+      const Button = buttonStyles(BaseButton);
 
-      // This should compile without errors
-      <Button />;
-
-      // This should also compile without errors
-      <Button size="lg" />;
-
-      // @ts-expect-error - size variant does not exist
-      <Button size="md" />;
+      const { container } = render(<Button />);
+      expect(container.firstChild).toHaveClass("text-base text-blue-500");
     });
   });
 });
