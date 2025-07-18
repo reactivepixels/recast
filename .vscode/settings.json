@@ -1,14 +1,16 @@
 {
-  "eslint.runtime": "node",
+  "css.lint.unknownAtRules": "ignore",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "css.lint.unknownAtRules": "ignore",
+  "editor.formatOnSave": true,
   "tailwindCSS.experimental.classRegex": [
     ["recast\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.printWidth": 80,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  "editor.tabSize": 2,
+  "tailwindcss-intellisense.trace.server": "messages",
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+  "editor.semanticHighlighting.enabled": true,
+  "terminal.integrated.minimumContrastRatio": 1
 }
