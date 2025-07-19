@@ -1,356 +1,256 @@
 ---
 title: "Styles"
-description: "Learn how to create reusable style definitions with Recast"
+description: "Learn how to create reusable style definitions with recast.styles()"
 ---
 
 # Styles
 
-The `recast.styles()` function is the foundation of Recast. It creates reusable style definitions that can be applied to any React component, separating your styling logic from component implementation.
+The `recast.styles()` function is the foundation of Recast. It creates reusable style definitions that you can apply to any React component.
 
-## Basic syntax
+## Basic Syntax
 
-The simplest style definition includes a `base` property with classes that apply to all instances:
-
-```tsx
-import { recast } from '@rpxl/recast'
-
-const cardStyles = recast.styles({
-  base: "rounded-lg border bg-white p-6 shadow-sm"
-})
-
-// Apply to any component
-const Card = cardStyles('div')
-const ArticleCard = cardStyles('article')
-const SectionCard = cardStyles('section')
-```
-
-<Tip>
-  **Component agnostic:** Style definitions work with any component or HTML element. The styling logic is completely separate from the component implementation.
-</Tip>
-
-## Style configuration
-
-A complete style configuration can include several properties:
-
-<ParamField path="base" type="string | object">
-  Base classes applied to all instances. Can be a string for simple components or an object for nested styling.
-</ParamField>
-
-<ParamField path="variants" type="object">
-  Mutually exclusive styling options. Only one value per variant group can be active at a time.
-</ParamField>
-
-<ParamField path="modifiers" type="object">
-  Boolean-based styles that can be combined. Multiple modifiers can be active simultaneously.
-</ParamField>
-
-<ParamField path="conditionals" type="array">
-  Advanced styling rules that apply only when specific variant/modifier combinations are met.
-</ParamField>
-
-<ParamField path="defaults" type="object">
-  Default values for variants and modifiers to reduce prop repetition.
-</ParamField>
-
-## Return value
-
-The `recast.styles()` function returns a style object with two main capabilities:
-
-### 1. Component application
-
-Apply styles to a component by calling the style object as a function:
-
-```tsx
+<CodeGroup>
+```tsx Simple Button
 const buttonStyles = recast.styles({
-  base: "px-4 py-2 rounded",
+  base: "px-4 py-2 rounded font-medium",
   variants: {
     variant: {
       primary: "bg-blue-500 text-white",
-      secondary: "bg-gray-200 text-gray-800"
+      secondary: "bg-gray-200 text-gray-900"
     }
-  }
-})
-
-// Apply to different components
-const Button = buttonStyles('button')
-const LinkButton = buttonStyles('a')
-const CustomButton = buttonStyles(MyButtonComponent)
-```
-
-### 2. Style extraction
-
-Extract computed class names without rendering a component:
-
-```tsx
-// Get class names for specific props
-const primaryClasses = buttonStyles.extract({ variant: "primary" })
-// Returns: "px-4 py-2 rounded bg-blue-500 text-white"
-
-// Use with other libraries or systems
-<motion.button className={primaryClasses}>
-  Animated Button
-</motion.button>
-```
-
-## Simple components
-
-For components with a single styling target, use a string-based configuration:
-
-```tsx
-const buttonStyles = recast.styles({
-  base: "inline-flex items-center justify-center rounded font-medium transition-colors",
-  variants: {
-    variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-600",
-      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
-      outline: "border border-gray-300 bg-transparent hover:bg-gray-50"
-    },
-    size: {
-      sm: "px-3 py-1.5 text-sm",
-      md: "px-4 py-2 text-base",
-      lg: "px-6 py-3 text-lg"
-    }
-  },
-  defaults: {
-    variants: { variant: "primary", size: "md" }
   }
 })
 
 const Button = buttonStyles(ButtonPrimitive)
-
-// Usage with full TypeScript support
-<Button variant="outline" size="lg">
-  Click me
-</Button>
 ```
 
-## Complex components
+```tsx Usage
+<Button variant="primary">Primary Button</Button>
+<Button variant="secondary">Secondary Button</Button>
+```
+</CodeGroup>
 
-For components with multiple styling targets, use object-based configuration:
+## Style Configuration
+
+The style configuration object supports five main properties:
+
+<AccordionGroup>
+<Accordion title="base - Foundation styles">
+Classes applied to all instances of the component:
 
 ```tsx
+base: "px-4 py-2 rounded font-medium transition-colors"
+```
+
+Can also be an object for complex components:
+```tsx
+base: {
+  root: "rounded-lg border bg-white",
+  header: "px-6 py-4 border-b",
+  content: "px-6 py-4"
+}
+```
+</Accordion>
+
+<Accordion title="variants - Mutually exclusive options">
+Different visual styles (only one can be active):
+
+```tsx
+variants: {
+  variant: {
+    default: "bg-primary text-primary-foreground",
+    secondary: "bg-secondary text-secondary-foreground"
+  },
+  size: {
+    sm: "h-9 px-3 text-sm",
+    lg: "h-11 px-8 text-base"
+  }
+}
+```
+</Accordion>
+
+<Accordion title="modifiers - Boolean flags">
+Styles that can be combined:
+
+```tsx
+modifiers: {
+  disabled: "opacity-50 cursor-not-allowed",
+  loading: "cursor-wait",
+  fullWidth: "w-full"
+}
+```
+</Accordion>
+
+<Accordion title="defaults - Reduce repetition">
+Set default values for variants:
+
+```tsx
+defaults: {
+  variants: { variant: "default", size: "default" }
+}
+```
+</Accordion>
+
+<Accordion title="conditionals - Advanced logic">
+Apply styles only when specific conditions are met:
+
+```tsx
+conditionals: [
+  {
+    variants: { variant: "default" },
+    modifiers: ["loading"],
+    className: "bg-primary/70"
+  }
+]
+```
+</Accordion>
+</AccordionGroup>
+
+## What You Get Back
+
+The `recast.styles()` function returns a style object with two key capabilities:
+
+### 1. Component Application
+
+Apply styles to any React component:
+
+<CodeGroup>
+```tsx Apply to Component
+const Button = buttonStyles(ButtonPrimitive)
+const Link = buttonStyles('a') // Works with HTML elements too
+```
+
+```tsx Usage
+<Button variant="default" size="lg" disabled>
+  Styled Button
+</Button>
+```
+</CodeGroup>
+
+### 2. Style Extraction
+
+Extract computed class names for advanced use cases:
+
+```tsx
+const classes = buttonStyles.extract({ 
+  variant: "default", 
+  size: "lg",
+  disabled: true 
+})
+// Returns: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground h-11 px-8 opacity-50 cursor-not-allowed"
+```
+
+<Tip>
+**Use extraction for:** Server-side rendering, integration with animation libraries, or when you need raw class names.
+</Tip>
+
+## Simple vs Complex Components
+
+### Simple Components (String Base)
+
+For single-element components, use a string base:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md text-sm font-medium",
+  variants: {
+    variant: {
+      default: "bg-primary text-primary-foreground",
+      secondary: "bg-secondary text-secondary-foreground"
+    }
+  }
+})
+```
+
+### Complex Components (Object Base)
+
+For multi-element components, use an object base:
+
+<CodeGroup>
+```tsx Card Styles
 const cardStyles = recast.styles({
   base: {
-    root: "rounded-lg border bg-white shadow-sm overflow-hidden",
-    header: "px-6 py-4 border-b bg-gray-50",
-    title: "text-lg font-semibold text-gray-900",
-    description: "mt-1 text-sm text-gray-600",
-    content: "px-6 py-4",
-    footer: "px-6 py-4 border-t bg-gray-50"
+    root: "rounded-lg border bg-card text-card-foreground shadow-sm",
+    header: "flex flex-col space-y-1.5 p-6",
+    title: "text-2xl font-semibold leading-none tracking-tight",
+    content: "p-6 pt-0"
   },
   variants: {
     size: {
       sm: {
-        root: "max-w-sm",
-        header: "px-4 py-3",
-        content: "px-4 py-3",
-        footer: "px-4 py-3"
-      },
-      lg: {
-        root: "max-w-2xl",
-        header: "px-8 py-6",
-        content: "px-8 py-6", 
-        footer: "px-8 py-6"
+        header: "p-4",
+        content: "p-4 pt-0"
       }
     }
   }
 })
+```
 
-const Card = cardStyles(CardPrimitive)
-
-// Your primitive receives computed classes via the `cls` prop
-function CardPrimitive({ cls, title, description, children }) {
+```tsx Card Primitive
+function CardPrimitive({ cls, title, children }) {
   return (
     <div className={cls?.root}>
       <div className={cls?.header}>
         <h3 className={cls?.title}>{title}</h3>
-        {description && <p className={cls?.description}>{description}</p>}
       </div>
       <div className={cls?.content}>{children}</div>
-      <div className={cls?.footer}>
-        <p>Footer content</p>
-      </div>
     </div>
   )
 }
+
+const Card = cardStyles(CardPrimitive)
 ```
+</CodeGroup>
 
-<Check>
-  **TypeScript integration:** For nested components, use the `RecastClsProps<T>` type helper to get full type safety for the `cls` prop.
-</Check>
+## Performance
 
-## Performance considerations
+Recast automatically optimizes style computation:
 
-Recast includes built-in performance optimizations:
+- **Memoization**: Results are cached to avoid recomputation
+- **LRU Cache**: Prevents memory leaks in long-running applications
+- **Fast Extraction**: Style extraction is optimized for performance
+
+<Frame>
+```tsx Performance Example
+// First call - computed and cached
+const classes1 = buttonStyles.extract({ variant: "default" })
+
+// Second call - returns cached result instantly  
+const classes2 = buttonStyles.extract({ variant: "default" })
+
+// Only different combinations trigger new computations
+const classes3 = buttonStyles.extract({ variant: "secondary" })
+```
+</Frame>
+
+<Warning>
+**Performance Tip:** Create style objects outside of components, not inside render functions. This ensures styles are created once and reused.
+</Warning>
+
+## Best Practices
 
 <CardGroup cols={2}>
-  <Card title="Memoization" icon="memory">
-    All style computations are cached using intelligent memoization strategies
-  </Card>
-  <Card title="LRU Cache" icon="database">
-    Prevents memory leaks by limiting cache size (default: 200 entries)
-  </Card>
+<Card title="Create Once" icon="clock">
+  Define style objects outside components to avoid recreation on every render
+</Card>
+<Card title="Use Defaults" icon="settings">
+  Set sensible defaults to reduce prop repetition in your components
+</Card>
+<Card title="Semantic Names" icon="tag">
+  Use meaningful variant names like `variant` and `size` rather than generic names
+</Card>
+<Card title="Composition Ready" icon="puzzle-piece">
+  Design styles to work well with `recast.compose()` for maximum reusability
+</Card>
 </CardGroup>
 
-### Monitoring performance
+## Next Steps
 
-Enable performance monitoring in development to track cache efficiency:
-
-```tsx
-import { recast } from '@rpxl/recast'
-
-recast.configure({
-  performance: {
-    enableMonitoring: true, // Logs cache hit rates and computation times
-    cacheSize: 500,        // Increase cache size for better performance
-  }
-})
-```
-
-## Best practices
-
-<AccordionGroup>
-  <Accordion title="Use descriptive base classes">
-    Include essential layout and interaction styles in the base to ensure consistent behavior across all variants:
-    
-    ```tsx
-    const buttonStyles = recast.styles({
-      // ✅ Good: Includes essential button behavior
-      base: "inline-flex items-center justify-center rounded font-medium transition-colors focus-visible:outline-none disabled:opacity-50",
-      
-      // ❌ Bad: Missing essential styles
-      base: "rounded",
-    })
-    ```
-  </Accordion>
-  
-  <Accordion title="Group related variants logically">
-    Organize variants by their purpose to make the API intuitive:
-    
-    ```tsx
-    const componentStyles = recast.styles({
-      variants: {
-        // Visual appearance
-        variant: { primary: "...", secondary: "..." },
-        
-        // Size/scale
-        size: { sm: "...", md: "...", lg: "..." },
-        
-        // State-based styling
-        state: { loading: "...", error: "...", success: "..." }
-      }
-    })
-    ```
-  </Accordion>
-  
-  <Accordion title="Set sensible defaults">
-    Reduce prop repetition by setting commonly used variants as defaults:
-    
-    ```tsx
-    const buttonStyles = recast.styles({
-      variants: {
-        variant: { primary: "...", secondary: "..." },
-        size: { sm: "...", md: "...", lg: "..." }
-      },
-      defaults: {
-        variants: { variant: "primary", size: "md" } // Most common combination
-      }
-    })
-    ```
-  </Accordion>
-  
-  <Accordion title="Keep styles focused">
-    Each style definition should have a single responsibility. Use composition to combine multiple concerns:
-    
-    ```tsx
-    // ✅ Good: Focused on button appearance
-    const buttonStyles = recast.styles({
-      base: "inline-flex items-center justify-center rounded font-medium",
-      variants: { variant: { primary: "...", secondary: "..." } }
-    })
-    
-    // ✅ Good: Focused on interactive states
-    const interactiveStyles = recast.styles({
-      base: "transition-colors focus-visible:outline-none",
-      modifiers: { disabled: "opacity-50 cursor-not-allowed" }
-    })
-    
-    // Combine using composition
-    const Button = recast.compose([buttonStyles, interactiveStyles])(ButtonPrimitive)
-    ```
-  </Accordion>
-</AccordionGroup>
-
-## Common patterns
-
-### Responsive variants
-
-Use Tailwind's responsive prefixes for adaptive styling:
-
-```tsx
-const containerStyles = recast.styles({
-  base: "mx-auto px-4",
-  variants: {
-    size: {
-      sm: "max-w-2xl",
-      md: "max-w-4xl lg:max-w-6xl",
-      lg: "max-w-6xl lg:max-w-7xl xl:max-w-8xl",
-      full: "max-w-none"
-    }
-  }
-})
-```
-
-### Theme-aware styling
-
-Create styles that work with your design system:
-
-```tsx
-const alertStyles = recast.styles({
-  base: "rounded-md border p-4",
-  variants: {
-    variant: {
-      info: "border-blue-200 bg-blue-50 text-blue-800",
-      warning: "border-yellow-200 bg-yellow-50 text-yellow-800", 
-      error: "border-red-200 bg-red-50 text-red-800",
-      success: "border-green-200 bg-green-50 text-green-800"
-    }
-  }
-})
-```
-
-### Accessibility-first styling
-
-Include accessibility considerations in your base styles:
-
-```tsx
-const buttonStyles = recast.styles({
-  base: [
-    "inline-flex items-center justify-center rounded font-medium",
-    "transition-colors duration-200",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-    "disabled:opacity-50 disabled:pointer-events-none",
-    "active:scale-95"
-  ].join(" "),
-  variants: {
-    variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-600 focus-visible:ring-blue-500",
-      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus-visible:ring-gray-500"
-    }
-  }
-})
-```
-
-## Next steps
-
-<CardGroup cols={3}>
-  <Card title="Variants" icon="layer-group" href="/concepts/variants">
-    Learn about mutually exclusive styling options
-  </Card>
-  <Card title="Modifiers" icon="toggle-on" href="/concepts/modifiers">
-    Discover boolean-based conditional styling
-  </Card>
-  <Card title="Composition" icon="puzzle-piece" href="/concepts/composition">
-    Combine multiple style objects together
-  </Card>
+<CardGroup cols={2}>
+<Card title="Variants & Modifiers" icon="sliders" href="/concepts/variants-and-modifiers">
+  Learn the difference between variants and modifiers
+</Card>
+<Card title="Composition" icon="layer-group" href="/concepts/composition">
+  Combine multiple style objects for complex components
+</Card>
 </CardGroup> 

@@ -1,0 +1,207 @@
+---
+title: "Variants & Modifiers"
+description: "Learn the two ways to style components with Recast"
+---
+
+# Variants & Modifiers
+
+Recast provides two complementary ways to style your components: **variants** for mutually exclusive options and **modifiers** for combinable boolean flags.
+
+## Variants
+
+Variants are mutually exclusive styling options. Only one value from each variant group can be active at a time.
+
+<CodeGroup>
+```tsx Button Variants
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white",
+      secondary: "bg-gray-200 text-gray-900"
+    },
+    size: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-6 py-3 text-lg"
+    }
+  }
+})
+
+const Button = buttonStyles(ButtonPrimitive)
+```
+
+```tsx Usage
+<Button variant="primary" size="lg">
+  Primary Large Button
+</Button>
+
+<Button variant="secondary" size="sm">
+  Secondary Small Button  
+</Button>
+```
+</CodeGroup>
+
+<Tip>
+Think of variants like radio buttons - you can only select one option from each group.
+</Tip>
+
+### Common Variant Patterns
+
+<AccordionGroup>
+<Accordion title="Visual Variants">
+```tsx
+variant: {
+  primary: "bg-blue-500 text-white",
+  secondary: "bg-gray-200 text-gray-900", 
+  danger: "bg-red-500 text-white"
+}
+```
+</Accordion>
+
+<Accordion title="Size Variants">
+```tsx
+size: {
+  sm: "h-8 px-3 text-sm",
+  md: "h-9 px-4 py-2", 
+  lg: "h-10 px-6 text-lg"
+}
+```
+</Accordion>
+</AccordionGroup>
+
+## Modifiers
+
+Modifiers are boolean-based styles that can be combined. Multiple modifiers can be active simultaneously.
+
+<CodeGroup>
+```tsx Button Modifiers
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium",
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
+    loading: "cursor-wait",
+    fullWidth: "w-full",
+    elevated: "shadow-lg"
+  }
+})
+```
+
+```tsx Usage
+<Button disabled>
+  Disabled Button
+</Button>
+
+<Button loading fullWidth elevated>
+  Loading Full-Width Elevated Button
+</Button>
+```
+</CodeGroup>
+
+<Tip>
+Think of modifiers like checkboxes - you can combine multiple flags together.
+</Tip>
+
+### Common Modifier Patterns
+
+<AccordionGroup>
+<Accordion title="State Modifiers">
+```tsx
+modifiers: {
+  disabled: "opacity-50 cursor-not-allowed",
+  loading: "cursor-wait animate-pulse",
+  active: "ring-2 ring-blue-500"
+}
+```
+</Accordion>
+
+<Accordion title="Layout Modifiers">
+```tsx
+modifiers: {
+  fullWidth: "w-full",
+  centered: "mx-auto",
+  elevated: "shadow-lg"
+}
+```
+</Accordion>
+</AccordionGroup>
+
+## Combining Variants & Modifiers
+
+The power of Recast comes from combining variants and modifiers:
+
+```tsx Complete Example
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    },
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2",
+      lg: "h-10 px-6 text-lg"
+    }
+  },
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
+    fullWidth: "w-full",
+    loading: "cursor-wait"
+  },
+  defaults: {
+    variants: { variant: "primary", size: "md" }
+  }
+})
+
+const Button = buttonStyles(ButtonPrimitive)
+```
+
+<Frame>
+```tsx Usage Examples
+// Uses defaults: variant="primary" size="md"
+<Button>Default Button</Button>
+
+// Override variants, add modifiers
+<Button variant="secondary" size="lg" fullWidth disabled>
+  Large Secondary Full-Width Disabled Button
+</Button>
+
+// Multiple modifiers
+<Button loading fullWidth>
+  Loading Full-Width Button
+</Button>
+```
+</Frame>
+
+## Default Values
+
+Set default values to reduce repetition:
+
+<CodeGroup>
+```tsx With Defaults
+const buttonStyles = recast.styles({
+  variants: {
+    variant: { primary: "...", secondary: "..." },
+    size: { sm: "...", md: "...", lg: "..." }
+  },
+  defaults: {
+    variants: { variant: "primary", size: "md" }
+  }
+})
+
+// These are equivalent:
+<Button>Click me</Button>
+<Button variant="primary" size="md">Click me</Button>
+```
+
+```tsx Without Defaults
+// Must specify every time:
+<Button variant="primary" size="md">Click me</Button>
+<Button variant="primary" size="md">Another button</Button>
+```
+</CodeGroup>
+
+<Check>
+**Key Takeaway:** Use variants for mutually exclusive options (like colors or sizes) and modifiers for combinable flags (like states or layout properties).
+</Check> 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "almond",
   "name": "Recast",
   "description": "Build components once. Use everywhere.",
   "logo": {
@@ -9,9 +9,9 @@
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#181822",
-    "light": "#ffffff",
-    "dark": "#181822"
+    "primary": "#3B82F6",
+    "light": "#F8FAFC",
+    "dark": "#0F172A"
   },
   "anchors": [
     {
@@ -35,37 +35,13 @@
         "group": "Core Concepts",
         "pages": [
           "concepts/styles",
-          "concepts/variants",
-          "concepts/modifiers",
-          "concepts/composition",
-          "concepts/conditional-styling"
-        ]
-      },
-      {
-        "group": "Examples",
-        "pages": [
-          "examples/button",
-          "examples/card",
-          "examples/form-components",
-          "examples/layout-components"
-        ]
-      },
-      {
-        "group": "Guides",
-        "pages": [
-          "guides/typescript",
-          "guides/performance",
-          "guides/best-practices"
+          "concepts/variants-and-modifiers",
+          "concepts/composition"
         ]
       },
       {
         "group": "API Reference",
-        "pages": [
-          "api/recast-styles",
-          "api/recast-compose",
-          "api/recast-configure",
-          "api/types"
-        ]
+        "pages": ["api/recast-styles", "api/recast-compose"]
       }
     ]
   }

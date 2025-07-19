@@ -1,50 +1,32 @@
 ---
 title: "Quickstart"
-description: "Build your first styled component with Recast in 10 minutes"
+description: "Build your first styled component in 5 minutes"
 ---
 
-# Build your first component
+import Button from './components/Button'
 
-This guide will walk you through creating a complete button component using Recast. You'll learn the core concepts while building something useful.
+# Quickstart
 
-<Note>
-  **Already installed Recast?** Jump straight to [Step 1](#step-1-create-a-component-primitive). Otherwise, follow our [installation guide](/installation) first.
-</Note>
+Get up and running with Recast in just a few minutes. We'll build a complete button component from scratch.
 
-## What you'll build
+## What we'll build
 
-By the end of this guide, you'll have a fully-typed, reusable button component with multiple variants, sizes, and modifiers:
+A flexible button component with multiple variants and states:
 
-<CodeGroup>
-```tsx Final Component
-<Button variant="primary" size="lg">
-  Primary Button
-</Button>
+<Frame>
+<div className="flex gap-3 items-center p-5">
+  <Button variant="default" size="lg">Default Button</Button>
+  <Button variant="secondary" disabled>Secondary Disabled</Button>
+  <Button variant="outline">Outline Button</Button>
+</div>
+</Frame>
 
-<Button variant="secondary" size="sm" disabled>
-  Disabled Button
-</Button>
-
-<Button variant="outline" loading fullWidth>
-  Loading Button
-</Button>
-```
-
-```tsx Final Output
-const Button = buttonStyles(ButtonPrimitive)
-
-// Full TypeScript support with autocomplete
-// Performance optimized with built-in caching
-// Completely reusable across projects
-```
-</CodeGroup>
-
-## Step 1: Create a component primitive
-
-First, create a basic button component that accepts standard HTML button props:
+<Steps>
+<Step title="Create your primitive component">
+Start with a basic, unstyled button component:
 
 ```tsx ButtonPrimitive.tsx
-import React, { ButtonHTMLAttributes, forwardRef } from 'react'
+import { forwardRef, ButtonHTMLAttributes } from 'react'
 
 interface ButtonPrimitiveProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
@@ -59,358 +41,158 @@ export const ButtonPrimitive = forwardRef<HTMLButtonElement, ButtonPrimitiveProp
     )
   }
 )
-
-ButtonPrimitive.displayName = 'ButtonPrimitive'
 ```
+</Step>
 
-<Tip>
-  **Why create a primitive?** This separation allows your component logic to be completely independent of styling. You can reuse this primitive across different projects with entirely different visual designs.
-</Tip>
+<Step title="Define your styles">
+Create a style definition using `recast.styles()`:
 
-## Step 2: Define your styles
-
-Now create a reusable style definition using Recast:
-
-```tsx Button.tsx
+```tsx Button.styles.ts
 import { recast } from '@rpxl/recast'
-import { ButtonPrimitive } from './ButtonPrimitive'
 
-const buttonStyles = recast.styles({
-  // Base classes applied to all variants
-  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+export const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   
-  // Mutually exclusive variants
   variants: {
     variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-600",
-      secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-      outline: "border border-gray-200 bg-transparent hover:bg-gray-50",
-      ghost: "hover:bg-gray-100",
+      default: "bg-primary text-primary-foreground hover:bg-primary/90",
+      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+      ghost: "hover:bg-accent hover:text-accent-foreground",
+      link: "text-primary underline-offset-4 hover:underline"
     },
     size: {
-      sm: "h-8 px-3 text-sm",
-      md: "h-9 px-4 py-2",
-      lg: "h-10 px-6 text-lg",
+      default: "h-10 px-4 py-2",
+      sm: "h-9 rounded-md px-3",
+      lg: "h-11 rounded-md px-8",
+      icon: "h-10 w-10"
     }
   },
   
-  // Boolean modifiers that can be combined
   modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
     loading: "cursor-wait",
-    fullWidth: "w-full",
+    fullWidth: "w-full"
   },
   
-  // Set sensible defaults
   defaults: {
-    variants: { variant: "primary", size: "md" }
+    variants: { variant: "default", size: "default" }
   }
 })
-
-// Apply styles to your primitive
-export const Button = buttonStyles(ButtonPrimitive)
 ```
+</Step>
 
-## Step 3: Use your styled component
+<Step title="Create your styled component">
+Apply the styles to your primitive:
 
-Your button is now ready to use with full TypeScript support:
+```tsx Button.tsx
+import { buttonStyles } from './Button.styles'
+import { ButtonPrimitive } from './ButtonPrimitive'
+
+export const Button = buttonStyles(ButtonPrimitive)
+export type ButtonProps = ComponentProps<typeof Button>
+```
+</Step>
+
+<Step title="Use your component">
+Now you can use your button with full TypeScript support:
 
 <CodeGroup>
 ```tsx Basic Usage
-import { Button } from './Button'
-
-function App() {
-  return (
-    <div>
-      <Button>Default Button</Button>
-      <Button variant="secondary" size="lg">Large Secondary</Button>
-      <Button variant="outline" size="sm">Small Outline</Button>
-    </div>
-  )
-}
+<Button>Default Button</Button>
+<Button variant="secondary">Secondary</Button>
+<Button size="lg">Large Button</Button>
 ```
 
 ```tsx With Modifiers
-function LoadingExample() {
-  const [isLoading, setIsLoading] = useState(false)
+<Button disabled>Disabled</Button>
+<Button loading>Loading...</Button>
+<Button fullWidth>Full Width</Button>
+```
+
+```tsx Combined
+<Button variant="secondary" size="lg" fullWidth>
+  Large Secondary Full-Width Button
+</Button>
+```
+</CodeGroup>
+</Step>
+</Steps>
+
+## What you get
+
+<CardGroup cols={2}>
+<Card title="Type Safety" icon="shield-check">
+  Full TypeScript autocomplete and error checking for all variants and modifiers
+</Card>
+<Card title="Performance" icon="bolt">
+  Automatic memoization means your styles are computed once and cached
+</Card>
+<Card title="Flexibility" icon="adjustments-horizontal">
+  Easy to extend with new variants, modifiers, and conditional styling
+</Card>
+<Card title="Developer Experience" icon="sparkles">
+  Clean API that's intuitive to use and easy to maintain
+</Card>
+</CardGroup>
+
+## Advanced: Adding conditional styles
+
+For more complex styling logic, use conditionals:
+
+```tsx Advanced Button
+const advancedButtonStyles = recast.styles({
+  base: "...",
+  variants: { /* ... */ },
+  modifiers: { /* ... */ },
   
-  return (
-    <Button 
-      variant="primary" 
-      loading={isLoading}
-      fullWidth
-      onClick={() => setIsLoading(!isLoading)}
-    >
-      {isLoading ? 'Loading...' : 'Click me'}
-    </Button>
-  )
-}
+  conditionals: [
+    {
+      variants: { variant: "default" },
+      modifiers: ["loading"],
+      className: "bg-primary/70" // Lighter primary when default + loading
+    }
+  ]
+})
+```
+
+## Advanced: Style extraction
+
+Extract computed styles for use with other libraries:
+
+<CodeGroup>
+```tsx Style Extraction
+// Get computed class names
+const defaultButtonClasses = buttonStyles.extract({ 
+  variant: "default", 
+  size: "lg" 
+})
+// Result: "inline-flex items-center ... bg-primary text-primary-foreground ... h-11 px-8"
+```
+
+```tsx With External Libraries
+// Use with Framer Motion
+<motion.button 
+  className={buttonStyles.extract({ variant: "default" })}
+  whileHover={{ scale: 1.05 }}
+>
+  Animated Button
+</motion.button>
 ```
 </CodeGroup>
 
 <Check>
-  **TypeScript magic:** Notice how you get full autocomplete for `variant`, `size`, `loading`, and `fullWidth`. Invalid combinations are caught at compile time!
+**You're ready!** You now have a fully functional, type-safe, performant button component. Apply these same patterns to build any component in your design system.
 </Check>
 
-## Step 4: Add conditional styling
-
-Let's add more sophisticated styling logic using conditionals:
-
-```tsx Button.tsx
-const buttonStyles = recast.styles({
-  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-  
-  variants: {
-    variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-600",
-      secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-      outline: "border border-gray-200 bg-transparent hover:bg-gray-50",
-      destructive: "bg-red-500 text-white hover:bg-red-600",
-    },
-    size: {
-      sm: "h-8 px-3 text-sm",
-      md: "h-9 px-4 py-2", 
-      lg: "h-10 px-6 text-lg",
-    }
-  },
-  
-  modifiers: {
-    loading: "cursor-wait",
-    fullWidth: "w-full",
-    rounded: "rounded-full",
-  },
-  
-  // Apply styles only when specific conditions are met
-  conditionals: [
-    {
-      // Large destructive buttons get extra emphasis
-      variants: { variant: "destructive", size: "lg" },
-      className: "shadow-lg font-bold"
-    },
-    {
-      // Loading state disables hover effects
-      modifiers: ["loading"],
-      className: "pointer-events-none opacity-75"
-    },
-    {
-      // Rounded primary buttons get a special gradient
-      variants: { variant: "primary" },
-      modifiers: ["rounded"],
-      className: "bg-gradient-to-r from-blue-500 to-blue-600"
-    }
-  ],
-  
-  defaults: {
-    variants: { variant: "primary", size: "md" }
-  }
-})
-```
-
-Now your button adapts its styling based on prop combinations:
-
-```tsx
-<Button variant="destructive" size="lg">
-  {/* Gets shadow-lg font-bold from conditional */}
-  Delete Account
-</Button>
-
-<Button variant="primary" rounded>
-  {/* Gets gradient background from conditional */}
-  Gradient Button
-</Button>
-```
-
-## Step 5: Extract styles for advanced use cases
-
-Sometimes you need the computed class names without rendering a component:
-
-```tsx
-// Extract class names for any prop combination
-const primaryLarge = buttonStyles.extract({ variant: "primary", size: "lg" })
-// Returns: "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-blue-500 text-white hover:bg-blue-600 h-10 px-6 text-lg"
-
-// Use with other components or libraries
-function CustomComponent() {
-  return (
-    <motion.button 
-      className={primaryLarge}
-      whileHover={{ scale: 1.05 }}
-    >
-      Animated Button
-    </motion.button>
-  )
-}
-```
-
-<Tip>
-  **Use cases for `.extract()`:**
-  - Server-side rendering optimization
-  - Integration with animation libraries
-  - Dynamic styling in complex applications
-  - Testing style computation logic
-</Tip>
-
-## Step 6: Add TypeScript types (optional)
-
-For better TypeScript integration in your team, create proper interfaces:
-
-```tsx types.ts
-import { ComponentProps } from 'react'
-import type { Button } from './Button'
-
-// Extract the component's prop types
-export type ButtonProps = ComponentProps<typeof Button>
-
-// Create specific variants for common use cases
-export interface PrimaryButtonProps extends Omit<ButtonProps, 'variant'> {
-  variant?: 'primary'
-}
-
-export interface SecondaryButtonProps extends Omit<ButtonProps, 'variant'> {
-  variant?: 'secondary'
-}
-```
-
-## What you've learned
+## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Component Separation" icon="layer-group">
-    How to separate component logic from styling for maximum reusability
-  </Card>
-  <Card title="Variants & Modifiers" icon="sliders-h">
-    The difference between mutually exclusive variants and combinable modifiers
-  </Card>
-  <Card title="Conditional Styling" icon="code-branch">
-    How to apply styles based on specific prop combinations
-  </Card>
-  <Card title="Style Extraction" icon="extract">
-    Using `.extract()` for advanced use cases and integrations
-  </Card>
-</CardGroup>
-
-## Next steps
-
-<Steps>
-  <Step title="Explore core concepts">
-    Dive deeper into [variants](/concepts/variants), [modifiers](/concepts/modifiers), and [composition](/concepts/composition)
-  </Step>
-  
-  <Step title="See more examples">
-    Check out our [examples](/examples/button) for more complex components like cards, forms, and layouts
-  </Step>
-  
-  <Step title="Learn best practices">
-    Read our [best practices guide](/guides/best-practices) for tips on building maintainable design systems
-  </Step>
-  
-  <Step title="Explore the API">
-    Browse the complete [API reference](/api/recast-styles) for advanced features
-  </Step>
-</Steps>
-
-## Complete example
-
-Here's the full button component we built:
-
-<details>
-<summary>Complete Button Component Code</summary>
-
-```tsx ButtonPrimitive.tsx
-import React, { ButtonHTMLAttributes, forwardRef } from 'react'
-
-interface ButtonPrimitiveProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode
-}
-
-export const ButtonPrimitive = forwardRef<HTMLButtonElement, ButtonPrimitiveProps>(
-  ({ children, ...props }, ref) => {
-    return (
-      <button ref={ref} {...props}>
-        {children}
-      </button>
-    )
-  }
-)
-
-ButtonPrimitive.displayName = 'ButtonPrimitive'
-```
-
-```tsx Button.tsx
-import { recast } from '@rpxl/recast'
-import { ButtonPrimitive } from './ButtonPrimitive'
-
-const buttonStyles = recast.styles({
-  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-  
-  variants: {
-    variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-600",
-      secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-      outline: "border border-gray-200 bg-transparent hover:bg-gray-50",
-      destructive: "bg-red-500 text-white hover:bg-red-600",
-    },
-    size: {
-      sm: "h-8 px-3 text-sm",
-      md: "h-9 px-4 py-2", 
-      lg: "h-10 px-6 text-lg",
-    }
-  },
-  
-  modifiers: {
-    loading: "cursor-wait",
-    fullWidth: "w-full",
-    rounded: "rounded-full",
-  },
-  
-  conditionals: [
-    {
-      variants: { variant: "destructive", size: "lg" },
-      className: "shadow-lg font-bold"
-    },
-    {
-      modifiers: ["loading"],
-      className: "pointer-events-none opacity-75"
-    },
-    {
-      variants: { variant: "primary" },
-      modifiers: ["rounded"],
-      className: "bg-gradient-to-r from-blue-500 to-blue-600"
-    }
-  ],
-  
-  defaults: {
-    variants: { variant: "primary", size: "md" }
-  }
-})
-
-export const Button = buttonStyles(ButtonPrimitive)
-```
-
-```tsx Usage
-import { Button } from './Button'
-
-function App() {
-  return (
-    <div className="space-y-4">
-      <Button>Default Button</Button>
-      <Button variant="secondary" size="lg">Large Secondary</Button>
-      <Button variant="outline" size="sm">Small Outline</Button>
-      <Button variant="destructive" size="lg">Delete</Button>
-      <Button variant="primary" rounded loading fullWidth>
-        Loading...
-      </Button>
-    </div>
-  )
-}
-```
-</details>
-
-## Need help?
-
-<CardGroup cols={2}>
-  <Card title="Join the Discussion" icon="github" href="https://github.com/reactivepixels/recast/discussions">
-    Ask questions and share your components with the community
-  </Card>
-  <Card title="Report Issues" icon="bug" href="https://github.com/reactivepixels/recast/issues">
-    Found a bug or have a feature request? Let us know!
-  </Card>
+<Card title="Learn Core Concepts" icon="book-open" href="/concepts/styles">
+  Dive deeper into styles, variants, and modifiers
+</Card>
+<Card title="Explore Composition" icon="puzzle-piece" href="/concepts/composition">
+  Learn how to combine multiple style objects for complex components
+</Card>
 </CardGroup>
