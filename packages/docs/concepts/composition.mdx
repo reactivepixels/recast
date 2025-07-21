@@ -1,0 +1,349 @@
+---
+title: "Composition"
+description: "Composition allows you to combine multiple style objects into a single, unified style definition. This enables modular design where you can build complex components from simpler, focused style modules."
+---
+
+## Basic Composition
+
+Use `recast.compose()` to combine multiple style objects:
+
+<CodeGroup>
+```tsx Style Modules
+// Base functionality
+const baseStyles = recast.styles({
+  base: "transition-colors focus-visible:outline-none",
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed"
+  }
+})
+
+// Visual appearance  
+const colorStyles = recast.styles({
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    }
+  }
+})
+
+// Size variants
+const sizeStyles = recast.styles({
+  variants: {
+    size: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-6 py-3 text-lg"  
+    }
+  }
+})
+```
+
+```tsx Compose Together
+const buttonStyles = recast.compose([
+  baseStyles,
+  colorStyles, 
+  sizeStyles
+])
+
+const Button = buttonStyles(ButtonPrimitive)
+```
+</CodeGroup>
+
+## Why Use Composition?
+
+<CardGroup cols={2}>
+<Card title="Reusability" icon="recycle">
+  Share style modules across different components for consistency
+</Card>
+<Card title="Maintainability" icon="wrench">
+  Update one style module and all composed components inherit the changes
+</Card>
+<Card title="Separation of Concerns" icon="layer-group">
+  Keep different styling concerns (colors, sizes, states) in separate modules
+</Card>
+<Card title="Testing" icon="test-tube">
+  Test individual style modules in isolation before composing them
+</Card>
+</CardGroup>
+
+## How Composition Works
+
+Later style objects override earlier ones for conflicting properties:
+
+<AccordionGroup>
+<Accordion title="Base Classes - Concatenated">
+Base classes from all style objects are combined:
+
+```tsx
+const styles1 = recast.styles({ base: "flex items-center" })
+const styles2 = recast.styles({ base: "rounded border" })
+
+const composed = recast.compose([styles1, styles2])
+// Result: base is "flex items-center rounded border"
+```
+</Accordion>
+
+<Accordion title="Variants - Deep Merged">
+Variant groups are merged, with later objects adding to or overriding:
+
+```tsx
+const styles1 = recast.styles({
+  variants: {
+    size: { sm: "text-sm", md: "text-base" },
+    color: { blue: "text-blue-500" }
+  }
+})
+
+const styles2 = recast.styles({
+  variants: {
+    size: { lg: "text-lg" }, // Adds to size variants
+    variant: { primary: "font-bold" } // New variant group
+  }
+})
+
+// Result combines all variants:
+// size: { sm: "text-sm", md: "text-base", lg: "text-lg" }
+// color: { blue: "text-blue-500" }  
+// variant: { primary: "font-bold" }
+```
+</Accordion>
+
+<Accordion title="Modifiers - Deep Merged">
+Modifiers from all style objects are combined:
+
+```tsx
+const styles1 = recast.styles({
+  modifiers: { disabled: "opacity-50", loading: "cursor-wait" }
+})
+
+const styles2 = recast.styles({
+  modifiers: { fullWidth: "w-full", loading: "animate-pulse" } // Overrides loading
+})
+
+// Result: { disabled: "opacity-50", loading: "animate-pulse", fullWidth: "w-full" }
+```
+</Accordion>
+</AccordionGroup>
+
+## Composition Patterns
+
+### Layer-Based Composition
+
+Organize styles in logical layers from general to specific:
+
+```tsx Layer Pattern
+// Layer 1: Foundation (accessibility, transitions)
+const foundationStyles = recast.styles({
+  base: "transition-all duration-200 focus-visible:outline-none",
+  modifiers: { disabled: "cursor-not-allowed opacity-50" }
+})
+
+// Layer 2: Layout (sizing, spacing)
+const layoutStyles = recast.styles({
+  base: "inline-flex items-center justify-center",
+  variants: {
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2", 
+      lg: "h-10 px-6 text-lg"
+    }
+  }
+})
+
+// Layer 3: Visual (colors, borders)
+const visualStyles = recast.styles({
+  base: "rounded font-medium",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    }
+  }
+})
+
+// Compose from foundation to visual
+const Button = recast.compose([
+  foundationStyles,
+  layoutStyles,
+  visualStyles
+])(ButtonPrimitive)
+```
+
+### Feature-Based Composition
+
+Build components by composing specific features:
+
+<CodeGroup>
+```tsx Feature Modules
+// Core button functionality
+const buttonCore = recast.styles({
+  base: "inline-flex items-center justify-center rounded font-medium",
+  variants: {
+    size: { sm: "px-3 py-1 text-sm", md: "px-4 py-2", lg: "px-6 py-3 text-lg" }
+  }
+})
+
+// Loading state feature
+const loadingFeature = recast.styles({
+  modifiers: {
+    loading: "cursor-wait opacity-75"
+  }
+})
+
+// Icon support feature  
+const iconFeature = recast.styles({
+  modifiers: {
+    iconOnly: "aspect-square p-0",
+    iconLeft: "[&>svg]:mr-2",
+    iconRight: "[&>svg]:ml-2"
+  }
+})
+```
+
+```tsx Feature Combinations
+// Create different button types
+const BasicButton = recast.compose([buttonCore])(ButtonPrimitive)
+
+const LoadingButton = recast.compose([
+  buttonCore, 
+  loadingFeature
+])(ButtonPrimitive)
+
+const FullButton = recast.compose([
+  buttonCore,
+  loadingFeature, 
+  iconFeature
+])(ButtonPrimitive)
+```
+</CodeGroup>
+
+## Shared Style Libraries
+
+Create reusable style modules that work across components:
+
+```tsx Shared Modules
+// styles/shared/colors.ts
+export const colorStyles = recast.styles({
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
+      danger: "bg-red-500 text-white hover:bg-red-600"
+    }
+  }
+})
+
+// styles/shared/sizes.ts
+export const sizeStyles = recast.styles({
+  variants: {
+    size: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-6 py-3 text-lg"
+    }
+  }
+})
+
+// components/Button.tsx
+const Button = recast.compose([
+  buttonBaseStyles,
+  colorStyles,
+  sizeStyles
+])(ButtonPrimitive)
+
+// components/Badge.tsx  
+const Badge = recast.compose([
+  badgeBaseStyles,
+  colorStyles, // Reuse the same color system
+  sizeStyles   // Reuse the same size system
+])(BadgePrimitive)
+```
+
+## TypeScript Support
+
+Composed style objects maintain full TypeScript support:
+
+<CodeGroup>
+```tsx TypeScript Integration
+const layoutStyles = recast.styles({
+  variants: { spacing: { normal: "gap-2", wide: "gap-4" } }
+})
+
+const colorStyles = recast.styles({
+  variants: { variant: { primary: "bg-blue-500", secondary: "bg-gray-500" } },
+  modifiers: { disabled: "opacity-50" }
+})
+
+const ComposedButton = recast.compose([layoutStyles, colorStyles])(ButtonPrimitive)
+
+// TypeScript automatically infers the combined prop types:
+type ComposedButtonProps = ComponentProps<typeof ComposedButton>
+// Result: {
+//   spacing?: "normal" | "wide"
+//   variant?: "primary" | "secondary"
+//   disabled?: boolean
+//   // + all ButtonPrimitive props
+// }
+```
+</CodeGroup>
+
+## Performance Tips
+
+<AccordionGroup>
+<Accordion title="Compose Once">
+Create composed styles outside components, not on every render:
+
+```tsx
+// ✅ Good: Compose once outside render
+const Button = recast.compose([layoutStyles, colorStyles])(ButtonPrimitive)
+
+function App() {
+  return <Button variant="primary">Good Performance</Button>
+}
+
+// ❌ Bad: Composing on every render
+function App() {
+  const Button = recast.compose([layoutStyles, colorStyles])(ButtonPrimitive)
+  return <Button variant="primary">Poor Performance</Button>
+}
+```
+</Accordion>
+
+<Accordion title="Keep Composition Reasonable">
+Limit composition to 3-5 style objects for optimal performance:
+
+```tsx
+// ✅ Good: Focused composition
+const Button = recast.compose([
+  baseStyles,
+  colorStyles, 
+  sizeStyles,
+  stateStyles
+])(ButtonPrimitive)
+
+// ❌ Avoid: Too many style objects
+const Button = recast.compose([
+  style1, style2, style3, style4, style5,
+  style6, style7, style8 // Too complex
+])(ButtonPrimitive)
+```
+</Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+<CardGroup cols={2}>
+<Card title="Order by Specificity" icon="sort">
+  Compose from most general to most specific to ensure proper overrides
+</Card>
+<Card title="Single Responsibility" icon="target">
+  Each style module should have one clear purpose (colors, layout, states, etc.)
+</Card>
+<Card title="Consistent Naming" icon="tag">
+  Use consistent variant and modifier names across all style modules
+</Card>
+<Card title="Test Modules" icon="beaker">
+  Test individual style modules before composing them together
+</Card>
+</CardGroup>

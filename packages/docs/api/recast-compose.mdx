@@ -1,0 +1,430 @@
+---
+title: "recast.compose()"
+description: "The `recast.compose()` function combines multiple style objects into a single, unified style object. This enables modular, reusable styling by breaking complex designs into focused, composable pieces."
+---
+
+## Syntax
+
+```tsx
+recast.compose(styleObjects)
+```
+
+<ParamField path="styleObjects" type="RecastStylesObject[]" required>
+  Array of style objects created with `recast.styles()`. Must contain at least one style object.
+</ParamField>
+
+**Returns:** `RecastStylesObject` - A new composed style object with merged styles from all input objects
+
+## How Composition Works
+
+When composing style objects, Recast merges them using the following rules:
+
+### Merge Order
+
+Later style objects override earlier ones for conflicting properties:
+
+```tsx
+const baseStyles = recast.styles({
+  base: "px-4 py-2",
+  variants: { size: { md: "text-base" } }
+})
+
+const colorStyles = recast.styles({
+  base: "bg-blue-500", // Added to base
+  variants: { 
+    size: { lg: "text-lg" }, // Merged with existing sizes
+    variant: { primary: "text-white" } // New variant group
+  }
+})
+
+const composed = recast.compose([baseStyles, colorStyles])
+// Result: base classes are "px-4 py-2 bg-blue-500"
+// Result: size variants are { md: "text-base", lg: "text-lg" }
+```
+
+### Property Merging
+
+<AccordionGroup>
+  <Accordion title="Base - Concatenated" icon="palette">
+    Base classes from all style objects are concatenated together:
+    
+    ```tsx
+    const styles1 = recast.styles({ base: "flex items-center" })
+    const styles2 = recast.styles({ base: "rounded-md border" })
+    
+    const composed = recast.compose([styles1, styles2])
+    // Result: base is "flex items-center rounded-md border"
+    ```
+  </Accordion>
+  
+  <Accordion title="Variants - Deep merged" icon="layer-group">
+    Variant groups are merged, with later objects adding to or overriding earlier ones:
+    
+    ```tsx
+    const styles1 = recast.styles({
+      variants: {
+        size: { sm: "text-sm", md: "text-base" },
+        color: { blue: "text-blue-500" }
+      }
+    })
+    
+    const styles2 = recast.styles({
+      variants: {
+        size: { lg: "text-lg" }, // Adds to size variants
+        variant: { primary: "font-bold" } // New variant group
+      }
+    })
+    
+    // Result combines all variants:
+    // size: { sm: "text-sm", md: "text-base", lg: "text-lg" }
+    // color: { blue: "text-blue-500" }
+    // variant: { primary: "font-bold" }
+    ```
+  </Accordion>
+  
+  <Accordion title="Modifiers - Deep merged" icon="toggle-on">
+    Modifiers from all style objects are combined:
+    
+    ```tsx
+    const styles1 = recast.styles({
+      modifiers: { disabled: "opacity-50", loading: "cursor-wait" }
+    })
+    
+    const styles2 = recast.styles({
+      modifiers: { fullWidth: "w-full", loading: "animate-pulse" } // Overrides loading
+    })
+    
+    // Result: { disabled: "opacity-50", loading: "animate-pulse", fullWidth: "w-full" }
+    ```
+  </Accordion>
+  
+  <Accordion title="Defaults - Deep merged" icon="gear">
+    Default values are combined, with later objects taking precedence:
+    
+    ```tsx
+    const styles1 = recast.styles({
+      defaults: {
+        variants: { size: "md", color: "blue" },
+        modifiers: ["rounded"]
+      }
+    })
+    
+    const styles2 = recast.styles({
+      defaults: {
+        variants: { size: "lg" }, // Overrides size default
+        modifiers: ["shadow"] // Adds to modifiers
+      }
+    })
+    
+    // Result: 
+    // variants: { size: "lg", color: "blue" }
+    // modifiers: ["rounded", "shadow"]
+    ```
+  </Accordion>
+  
+  <Accordion title="Conditionals - Concatenated" icon="code-branch">
+    Conditional rules from all style objects are combined in order:
+    
+    ```tsx
+    const styles1 = recast.styles({
+      conditionals: [
+        { modifiers: ["disabled"], className: "opacity-50" }
+      ]
+    })
+    
+    const styles2 = recast.styles({
+      conditionals: [
+        { variants: { size: "lg" }, className: "font-bold" }
+      ]
+    })
+    
+    // Result: Both conditionals are active
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Basic Example
+
+```tsx
+// Base layout styles
+const layoutStyles = recast.styles({
+  base: "inline-flex items-center justify-center",
+  variants: {
+    spacing: {
+      tight: "gap-1",
+      normal: "gap-2",
+      loose: "gap-4"
+    }
+  }
+})
+
+// Color theme styles
+const colorStyles = recast.styles({
+  base: "rounded font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
+    }
+  }
+})
+
+// Interactive behavior styles
+const interactiveStyles = recast.styles({
+  base: "focus-visible:outline-none focus-visible:ring-2",
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
+    loading: "cursor-wait"
+  }
+})
+
+// Compose all styles together
+const Button = recast.compose([
+  layoutStyles,
+  colorStyles,
+  interactiveStyles
+])(ButtonPrimitive)
+
+// Usage with all composed features
+<Button 
+  spacing="normal"    // From layoutStyles
+  variant="primary"   // From colorStyles
+  disabled={isDisabled} // From interactiveStyles
+>
+  Composed Button
+</Button>
+```
+
+## Advanced Patterns
+
+### Layer-based Composition
+
+Organize styles in logical layers from general to specific:
+
+```tsx
+// Layer 1: Foundation (most general)
+const foundationStyles = recast.styles({
+  base: "transition-all duration-200 focus-visible:outline-none",
+  modifiers: {
+    disabled: "cursor-not-allowed opacity-50"
+  }
+})
+
+// Layer 2: Layout structure
+const layoutStyles = recast.styles({
+  base: "inline-flex items-center justify-center",
+  variants: {
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2",
+      lg: "h-10 px-6 text-lg"
+    }
+  }
+})
+
+// Layer 3: Visual design
+const visualStyles = recast.styles({
+  base: "rounded-md font-medium",
+  variants: {
+    variant: {
+      solid: "shadow-sm",
+      outline: "border-2",
+      ghost: "shadow-none"
+    }
+  }
+})
+
+// Layer 4: Color theme (most specific)
+const colorStyles = recast.styles({
+  variants: {
+    color: {
+      blue: "bg-blue-500 text-white hover:bg-blue-600",
+      red: "bg-red-500 text-white hover:bg-red-600"
+    }
+  }
+})
+
+// Compose from general to specific
+const Button = recast.compose([
+  foundationStyles,
+  layoutStyles,
+  visualStyles,
+  colorStyles
+])(ButtonPrimitive)
+```
+
+### Feature-based Composition
+
+Compose styles based on specific features or capabilities:
+
+```tsx
+// Core button functionality
+const buttonCore = recast.styles({
+  base: "inline-flex items-center justify-center rounded font-medium",
+  variants: {
+    size: { sm: "px-3 py-1.5 text-sm", md: "px-4 py-2", lg: "px-6 py-3 text-lg" }
+  }
+})
+
+// Loading state feature
+const loadingFeature = recast.styles({
+  modifiers: {
+    loading: "cursor-wait opacity-75 pointer-events-none"
+  },
+  conditionals: [
+    {
+      modifiers: ["loading"],
+      className: "relative overflow-hidden"
+    }
+  ]
+})
+
+// Icon support feature
+const iconFeature = recast.styles({
+  modifiers: {
+    iconOnly: "aspect-square p-0",
+    iconLeft: "[&>svg]:mr-2",
+    iconRight: "[&>svg]:ml-2"
+  }
+})
+
+// Create different button types by composing different features
+const BasicButton = recast.compose([buttonCore])(ButtonPrimitive)
+const LoadingButton = recast.compose([buttonCore, loadingFeature])(ButtonPrimitive)
+const IconButton = recast.compose([buttonCore, iconFeature])(ButtonPrimitive)
+const FullButton = recast.compose([buttonCore, loadingFeature, iconFeature])(ButtonPrimitive)
+```
+
+## TypeScript Integration
+
+Composed style objects maintain full TypeScript support:
+
+```tsx
+const layoutStyles = recast.styles({
+  variants: { spacing: { normal: "gap-2", wide: "gap-4" } }
+})
+
+const colorStyles = recast.styles({
+  variants: { variant: { primary: "bg-blue-500", secondary: "bg-gray-500" } },
+  modifiers: { disabled: "opacity-50" }
+})
+
+const ComposedButton = recast.compose([layoutStyles, colorStyles])(ButtonPrimitive)
+
+// TypeScript automatically infers the combined prop types:
+type ComposedButtonProps = ComponentProps<typeof ComposedButton>
+// Result: {
+//   spacing?: "normal" | "wide"
+//   variant?: "primary" | "secondary" 
+//   disabled?: boolean
+//   // + all ButtonPrimitive props
+// }
+
+// Full autocomplete and type checking
+<ComposedButton 
+  spacing="wide"      // ✅ Valid
+  variant="primary"   // ✅ Valid
+  disabled={true}     // ✅ Valid
+  // variant="invalid" // ❌ TypeScript error
+/>
+```
+
+## Performance Considerations
+
+Composition is optimized for performance:
+
+- **Memoization**: Style merging is cached to avoid recomputation
+- **Single composition**: Compose styles once, not on every render
+- **Efficient merging**: Deep merging uses optimized algorithms
+
+```tsx
+// ✅ Good: Compose once outside render
+const Button = recast.compose([layoutStyles, colorStyles])(ButtonPrimitive)
+
+function App() {
+  return <Button variant="primary">Good Performance</Button>
+}
+
+// ❌ Bad: Composing on every render
+function App() {
+  const Button = recast.compose([layoutStyles, colorStyles])(ButtonPrimitive)
+  return <Button variant="primary">Poor Performance</Button>
+}
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Order by specificity">
+    Compose from most general to most specific to ensure proper overrides:
+    
+    ```tsx
+    // ✅ Good: General to specific
+    const Button = recast.compose([
+      baseStyles,        // Most general
+      layoutStyles,      
+      colorStyles,       
+      interactionStyles  // Most specific
+    ])(ButtonPrimitive)
+    ```
+  </Accordion>
+  
+  <Accordion title="Keep style objects focused">
+    Each style object should have a single, clear responsibility:
+    
+    ```tsx
+    // ✅ Good: Clear responsibilities
+    const layoutStyles = recast.styles({ /* only layout */ })
+    const colorStyles = recast.styles({ /* only colors */ })
+    const stateStyles = recast.styles({ /* only states */ })
+    ```
+  </Accordion>
+  
+  <Accordion title="Reuse style modules">
+    Share common style modules across different components:
+    
+    ```tsx
+    const colorScheme = recast.styles({
+      variants: {
+        variant: { primary: "...", secondary: "..." }
+      }
+    })
+    
+    // Reuse across components
+    const Button = recast.compose([buttonBase, colorScheme])(ButtonPrimitive)
+    const Badge = recast.compose([badgeBase, colorScheme])(BadgePrimitive)
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Error Handling
+
+<Warning>
+  **Empty array error:** `recast.compose([])` will throw an error. Always provide at least one style object.
+</Warning>
+
+```tsx
+// ❌ Will throw error
+const invalid = recast.compose([])
+
+// ✅ Single style object returns unchanged
+const single = recast.compose([buttonStyles]) // Returns buttonStyles unchanged
+
+// ✅ Multiple style objects get composed
+const multiple = recast.compose([baseStyles, colorStyles])
+```
+
+## Debugging Composition
+
+Use the `extract` method to debug composed styles:
+
+```tsx
+const composed = recast.compose([layoutStyles, colorStyles])
+
+// Debug the composed result
+console.log(composed.extract({ variant: "primary", spacing: "wide" }))
+
+// Compare with individual style objects
+console.log(layoutStyles.extract({ spacing: "wide" }))
+console.log(colorStyles.extract({ variant: "primary" }))
+```

@@ -1,14 +1,11 @@
 import { cn } from "../../utils/cn.js";
 import { Slot } from "@radix-ui/react-slot";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.HTMLAttributes<HTMLElement> & {
   asChild?: boolean;
-} & RecastWithClassNameProps<{
-    root: string;
-    inner: string;
-  }>;
+} & RecastClsProps<"root" | "inner">;
 
 const Component = forwardRef<HTMLElement, Props>(
   ({ cls, children, className, asChild, ...props }, ref) => {

@@ -1,18 +1,14 @@
 import { cn } from "../../utils/cn.js";
 import * as RadixCheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixCheckboxPrimitive.Root
 > & {
   icon: React.ComponentType;
-} & RecastWithClassNameProps<{
-    root?: string;
-    indicator?: string;
-    icon?: string;
-  }>;
+} & RecastClsProps<"root" | "indicator" | "icon">;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixCheckboxPrimitive.Root>,
@@ -25,7 +21,7 @@ const Component = forwardRef<
       {...props}
     >
       <RadixCheckboxPrimitive.Indicator className={cls?.indicator}>
-        <Icon className={cls?.indicator} />
+        <Icon className={cls?.icon} />
       </RadixCheckboxPrimitive.Indicator>
     </RadixCheckboxPrimitive.Root>
   );

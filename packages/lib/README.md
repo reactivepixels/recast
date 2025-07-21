@@ -8,249 +8,472 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/@rpxl/recast)](https://bundlephobia.com/package/@rpxl/recast@2.0.0)
 
-## TL;DR
+# Recast
 
-Recast is a fundamentally different approach to building React components to maximise reusability.
+A powerful and flexible styling library for React components that provides type-safe, reusable styles with built-in performance optimizations.
 
-## 1. Introduction
+## Performance Optimizations
 
-### 1.1 Why Recast?
+Recast includes several built-in performance optimizations to ensure fast rendering:
 
-Creating component libraries is a challenging and time-consuming task. Even the seemingly straightforward process of developing a sensible button component can lead to a daunting proliferation of props, primarily driven by the need for theming. Consider the numerous instances where theme-related props and styles are embedded in a component - such as **variant**: "primary" | "secondary" | "tertiary" or **size**: "sm" | "md" | "lg". This tight coupling of component props with theme requirements not only results in an ever-expanding list of props but also presents a significant hurdle to reusing components across projects without duplicating code purely for the purposes of theming.
+- **Memoization**: All style computations are cached using intelligent memoization strategies.
+- **LRU Caching**: Prevents memory leaks by limiting cache size (default: 200 entries).
+- **Performance Monitoring**: Logs performance stats in development mode when enabled.
 
-Imagine being able to liberate your component primitives from theme dependencies, allowing them to be written once and used across projects.
+Configure performance options globally:
 
-### 1.2 What is Recast?
+```ts
+import { recast } from "@rpxl/recast";
 
-Recast is not just a collection of small utilities; it is an approach/pattern to building **truly** reusable component primitives by abstracting the theme layer from the internal workings of a component.
+recast.configure({
+  performance: {
+    enableMonitoring: true,
+    cacheSize: 100, // Customize cache size
+  },
+});
+```
 
-The specific values that a Recast "primitive" can receive are not specified within the component, instead these are defined by wrapping the component with a styles definition that will form the theme API.
-
-### 1.3 Who is Recast for?
-
-Recast is for any individual/team who wants to build a truly reusable component library that can be used across projects without duplicating code purely for the purposes of theming.
-
-## 2. Getting Started
-
-### 2.1 Installation
+## Installation
 
 ```bash
 npm install @rpxl/recast
 ```
 
-### 2.2 Basic Usage
-
-1. Import Recast:
+## Quick Start
 
 ```ts
 import { recast } from "@rpxl/recast";
+
+// 1. Create reusable styles
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "bg-gray-200 text-gray-800 hover:bg-gray-300",
+    },
+    size: {
+      sm: "px-3 py-2 text-sm",
+      md: "px-4 py-2 text-base",
+      lg: "px-6 py-3 text-lg",
+    },
+  },
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
+    fullWidth: "w-full",
+  },
+  defaults: {
+    variants: { variant: "primary", size: "md" },
+  },
+});
+
+// 2. Apply to a component
+const Button = buttonStyles(ButtonPrimitive);
+
+// 3. Use with full type safety
+<Button variant="secondary" size="lg" disabled>
+  Click me
+</Button>
 ```
 
-2. Create a basic component:
+## Core Features
+
+### 1. Reusable Styles
+
+Create portable style objects that can be applied to any component:
 
 ```ts
-const Button = recast(ButtonPrimitive, {
+const buttonStyles = recast.styles({
   base: "bg-blue-500 text-white px-4 py-2 rounded",
   variants: {
     size: {
-      sm: "text-sm",
-      md: "text-base",
-      lg: "text-lg",
+      sm: "text-sm px-2 py-1",
+      md: "text-base px-4 py-2",
+      lg: "text-lg px-6 py-3",
     },
   },
 });
+
+// Apply to different components
+const Button = buttonStyles(ButtonPrimitive);
+const Link = buttonStyles(LinkPrimitive);
 ```
 
-3. Use the component:
+### 2. Variants and Modifiers
 
-```jsx
-<Button size="md">Click me</Button>
-```
-
-## 3. Core Concepts
-
-### 3.1 Base Styles
-
-Base styles are applied to all instances of the component:
+**Variants** are mutually exclusive options:
 
 ```ts
-const Button = recast(ButtonPrimitive, {
-  base: "bg-blue-500 text-white px-4 py-2 rounded",
-});
-```
-
-### 3.2 Variants
-
-Variants allow you to define different style variations:
-
-```ts
-const Button = recast(ButtonPrimitive, {
-  base: "bg-blue-500 text-white px-4 py-2 rounded",
+const styles = recast.styles({
   variants: {
-    size: {
-      sm: "text-sm",
-      md: "text-base",
-      lg: "text-lg",
-    },
     color: {
       primary: "bg-blue-500",
       secondary: "bg-gray-500",
     },
-  },
-});
-```
-
-### 3.3 Modifiers
-
-Modifiers are boolean props that can be applied to change styles:
-
-```ts
-const Button = recast(ButtonPrimitive, {
-  base: "bg-blue-500 text-white px-4 py-2 rounded",
-  modifiers: {
-    disabled: "opacity-50 cursor-not-allowed",
-    active: "ring-2 ring-blue-300",
-  },
-});
-```
-
-### 3.4 Conditional Styling
-
-Apply styles based on specific combinations of variants and modifiers:
-
-```ts
-const Button = recast(ButtonPrimitive, {
-  base: "bg-blue-500 text-white px-4 py-2 rounded",
-  variants: {
     size: {
       sm: "text-sm",
       lg: "text-lg",
     },
   },
+});
+```
+
+**Modifiers** are boolean flags that can be combined:
+
+```ts
+const styles = recast.styles({
   modifiers: {
-    disabled: "opacity-50",
+    disabled: "opacity-50 cursor-not-allowed",
+    loading: "animate-pulse",
+    fullWidth: "w-full",
+  },
+});
+
+// Usage: <Button disabled loading fullWidth />
+```
+
+### 3. Conditional Styling
+
+Apply styles only when specific conditions are met:
+
+```ts
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded",
+  variants: {
+    variant: { primary: "bg-blue-500", secondary: "bg-gray-500" },
+    size: { sm: "text-sm", lg: "text-lg" },
+  },
+  modifiers: {
+    disabled: "cursor-not-allowed",
   },
   conditionals: [
     {
-      variants: { size: "lg" },
+      variants: { variant: "primary", size: "lg" },
+      className: "shadow-lg font-bold",
+    },
+    {
       modifiers: ["disabled"],
-      className: "border-2 border-red-500",
+      className: "opacity-50",
+    },
+    {
+      variants: { variant: "primary" },
+      modifiers: ["disabled"],
+      className: "bg-blue-300", // Override primary when disabled
     },
   ],
 });
 ```
 
-## 4. Advanced Usage
+### 4. Default Values
 
-### 4.1 Nested Component Structure
-
-Recast excels at managing complex React component structures. For example, a slider component composed of multiple elements can have styles applied independently to each part.
-
-### 4.2 Default Variants and Modifiers
-
-Set default values for variants and modifiers:
+Set default variants and modifiers to reduce prop clutter:
 
 ```ts
-const Button = recast(ButtonPrimitive, {
-  base: "bg-blue-500 text-white px-4 py-2 rounded",
+const buttonStyles = recast.styles({
   variants: {
-    size: {
-      sm: "text-sm",
-      md: "text-base",
-      lg: "text-lg",
-    },
+    variant: { primary: "bg-blue-500", secondary: "bg-gray-500" },
+    size: { sm: "text-sm", md: "text-base", lg: "text-lg" },
+  },
+  modifiers: {
+    rounded: "rounded-md",
   },
   defaults: {
-    variants: { size: "md" },
+    variants: { variant: "primary", size: "md" },
+    modifiers: ["rounded"], // Always applied unless explicitly set to false
+  },
+});
+
+// These are equivalent:
+<Button />
+<Button variant="primary" size="md" rounded />
+```
+
+### 5. Style Composition
+
+Combine multiple style objects for modular design:
+
+```ts
+const baseStyles = recast.styles({
+  base: "inline-flex items-center justify-center",
+});
+
+const colorStyles = recast.styles({
+  variants: {
+    color: {
+      primary: "bg-blue-500 text-white",
+      secondary: "bg-gray-500 text-white",
+    },
+  },
+});
+
+const sizeStyles = recast.styles({
+  variants: {
+    size: {
+      sm: "px-2 py-1 text-sm",
+      lg: "px-6 py-3 text-lg",
+    },
+  },
+});
+
+// Compose into a single style object
+const ComposedButton = recast.compose([baseStyles, colorStyles, sizeStyles])(ButtonPrimitive);
+```
+
+### 6. Nested Styles and Subcomponents
+
+Style complex components with multiple parts using object syntax:
+
+```ts
+const sliderStyles = recast.styles({
+  base: {
+    root: "relative flex w-full touch-none select-none items-center",
+    track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-secondary",
+    range: "absolute h-full bg-primary",
+    thumb: "block h-4 w-4 rounded-full border-2 border-primary bg-background",
+  },
+  variants: {
+    size: {
+      sm: {
+        root: "h-4",
+        track: "h-1",
+        thumb: "h-3 w-3",
+      },
+      lg: {
+        root: "h-6",
+        track: "h-2",
+        thumb: "h-5 w-5",
+      },
+    },
+  },
+});
+
+const Slider = sliderStyles(SliderPrimitive);
+
+// Your primitive component receives a `cls` prop with computed class names
+function SliderPrimitive({ cls, ...props }: SliderProps) {
+  return (
+    <div className={cls?.root} {...props}>
+      <div className={cls?.track}>
+        <div className={cls?.range} />
+      </div>
+      <div className={cls?.thumb} />
+    </div>
+  );
+}
+```
+
+**TypeScript Integration:**
+
+```ts
+import { RecastClsProps } from "@rpxl/recast";
+
+interface SliderProps extends RecastClsProps<"root" | "track" | "range" | "thumb"> {
+  value?: number;
+  onChange?: (value: number) => void;
+}
+```
+
+### 7. Class Name Extraction
+
+Extract computed class names without rendering components:
+
+```ts
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded",
+  variants: {
+    variant: { primary: "bg-blue-500", secondary: "bg-gray-500" },
+    size: { sm: "text-sm", lg: "text-lg" },
+  },
+});
+
+// For simple components (returns string)
+const className = buttonStyles.extract({ variant: "primary", size: "lg" });
+// Result: "px-4 py-2 rounded bg-blue-500 text-lg"
+
+// For nested components (returns object)
+const sliderClasses = sliderStyles.extract({ size: "lg" });
+// Result: {
+//   root: "relative flex w-full touch-none select-none items-center h-6",
+//   track: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-secondary h-2",
+//   range: "absolute h-full bg-primary",
+//   thumb: "block h-4 w-4 rounded-full border-2 border-primary bg-background h-5 w-5"
+// }
+```
+
+**Use Cases:**
+
+- Server-side rendering
+- Static site generation
+- Testing style logic
+- External styling systems
+
+### 8. Global Configuration
+
+Configure Recast behavior globally:
+
+```ts
+import { recast } from "@rpxl/recast";
+import { cn } from "./utils/cn"; // Your preferred class merging function
+
+recast.configure({
+  mergeFn: cn, // Custom class merging function (e.g., clsx, classnames)
+  performance: {
+    enableMonitoring: true, // Log performance stats in development
+    cacheSize: 500, // Customize LRU cache size (default: 200)
   },
 });
 ```
 
-### 4.3 Combining with Other Styling Solutions
+## API Reference
 
-Recast can be used alongside other styling solutions like Tailwind CSS or CSS-in-JS libraries. This flexibility allows you to integrate Recast into your existing projects seamlessly.
+### `recast.styles(config)`
 
-## 5. API Reference
+Create a reusable style object.
 
-### 5.1 recast Function
+**Parameters:**
 
-The main function for creating Recast components:
+- `config`: Style configuration object
+
+**Returns:** Style object with `extract` method and component application function
+
+### `recast.compose(styleObjects)`
+
+Combine multiple style objects into one.
+
+**Parameters:**
+
+- `styleObjects`: Array of style objects to compose
+
+**Returns:** New composed style object
+
+### `recast.configure(config)`
+
+Set global configuration.
+
+**Parameters:**
+
+- `config.mergeFn`: Custom class merging function
+- `config.performance.enableMonitoring`: Enable performance logging
+- `config.performance.cacheSize`: Set cache size limit
+
+### `styleObject.extract(props)`
+
+Extract class names for given props.
+
+**Parameters:**
+
+- `props`: Variant and modifier props
+
+**Returns:** String (simple components) or object (nested components)
+
+## Advanced Performance
+
+For advanced use cases, you can access performance utilities directly:
 
 ```ts
-recast(Component, styles: RecastStyles): RecastComponent
+import { memoize, memoizeWithLRU, withPerformanceMonitoring } from "@rpxl/recast";
+
+// Custom memoization
+const memoizedFn = memoize(expensiveFunction);
+
+// LRU cache with custom size
+const cachedFn = memoizeWithLRU(expensiveFunction, 50);
+
+// Performance monitoring
+const monitoredFn = withPerformanceMonitoring(myFunction, "functionName");
 ```
 
-### 5.2 RecastStyles
+## Best Practices
 
-The structure for defining styles in Recast:
+1. **Create reusable style libraries:** Share styles across components and projects
+2. **Use composition:** Break complex styles into smaller, composable pieces
+3. **Set sensible defaults:** Reduce prop repetition in your components
+4. **Leverage TypeScript:** Get full type safety for variants and modifiers
+5. **Extract for SSR:** Use `.extract()` for server-side rendering optimization
+6. **Configure globally:** Set up merge functions and performance options once
+
+## Migration from v5
+
+The new API is not backward compatible. Key changes:
+
+- `recast(Component, styles)` → `recast.styles(styles)(Component)`
+- Added `recast.compose()` for style composition
+- Added `recast.configure()` for global settings
+- Added `.extract()` method for class name extraction
+- Improved TypeScript support with `RecastClsProps`
+
+## Examples
+
+### Button Component
 
 ```ts
-interface RecastStyles {
-  base?: string | string[];
-  variants?: Record<string, Record<string, string | string[]>>;
-  modifiers?: Record<string, string | string[]>;
-  conditionals?: Array<{
-    variants?: Record<string, string>;
-    modifiers?: string[];
-    className: string | string[];
-  }>;
-  defaults?: {
-    variants?: Record<string, string>;
-    modifiers?: string[];
-  };
-}
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  variants: {
+    variant: {
+      default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+      destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+      outline: "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground",
+      secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+      ghost: "hover:bg-accent hover:text-accent-foreground",
+      link: "text-primary underline-offset-4 hover:underline",
+    },
+    size: {
+      default: "h-9 px-4 py-2",
+      sm: "h-8 rounded-md px-3 text-xs",
+      lg: "h-10 rounded-md px-8",
+      icon: "h-9 w-9",
+    },
+  },
+  defaults: {
+    variants: { variant: "default", size: "default" },
+  },
+});
+
+export const Button = buttonStyles(ButtonPrimitive);
 ```
 
-## 6. Best Practices
+### Card Component with Nested Styles
 
-1. Keep your primitive components simple and focused on functionality.
-2. Use Recast to handle all styling concerns.
-3. Use conditionals for complex style combinations.
-4. Set sensible defaults to reduce prop clutter in usage.
-5. Use TypeScript for better type checking and developer experience.
+```ts
+const cardStyles = recast.styles({
+  base: {
+    root: "rounded-xl border bg-card text-card-foreground shadow",
+    header: "flex flex-col space-y-1.5 p-6",
+    title: "font-semibold leading-none tracking-tight",
+    description: "text-sm text-muted-foreground",
+    content: "p-6 pt-0",
+    footer: "flex items-center p-6 pt-0",
+  },
+  variants: {
+    size: {
+      sm: {
+        root: "max-w-sm",
+        header: "p-4",
+        content: "p-4 pt-0",
+        footer: "p-4 pt-0",
+      },
+      lg: {
+        root: "max-w-2xl",
+        header: "p-8",
+        content: "p-8 pt-0",
+        footer: "p-8 pt-0",
+      },
+    },
+  },
+});
 
-## 7. Troubleshooting
+export const Card = cardStyles(CardPrimitive);
+```
 
-Common issues when using Recast:
+## Contributing
 
-1. Styles not applying correctly: Ensure that your className strings are valid and that you're using the correct variant and modifier names.
-2. TypeScript errors: Make sure you're using the latest version of Recast and that your types are correctly defined.
-3. Performance issues: If you're experiencing performance problems, try to minimize the use of complex conditional styles and consider memoizing your components.
-
-## 8. Contributing to Recast
-
-We welcome contributions to Recast! Here's how you can help:
-
-1. Fork the repository and create your branch from `main`.
-2. If you've added code that should be tested, add tests.
-3. Ensure the test suite passes.
-4. Make sure your code lints.
-5. Issue that pull request!
-
-Please refer to the [CONTRIBUTING.md](https://github.com/reactivepixels/recast/blob/main/CONTRIBUTING.md) file for more detailed information.
-
-## 9. Changelog
-
-Recent changes and updates to Recast:
-
-- v2.0.0: Major release with improved TypeScript support and performance optimizations.
-- v1.5.0: Added support for nested component structures.
-- v1.4.0: Introduced conditional styling feature.
-- v1.2.0: Added support for default variants and modifiers.
-- v1.0.0: Initial stable release of Recast.
-
-For a complete list of changes, please refer to the [CHANGELOG.md](https://github.com/reactivepixels/recast/blob/main/CHANGELOG.md) file.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/reactivepixels/recast/blob/main/CONTRIBUTING.md) for details.
 
 ## Documentation
 
-For full documentation, visit [here](https://reactivepixels.github.io/recast).
+Full documentation: [https://reactivepixels.github.io/recast](https://reactivepixels.github.io/recast)
 
-## Acknowledgments
+## License
 
-Recast draws inspiration from several excellent projects in the CSS-in-JS and variant-based styling ecosystem:
-
-- [Tailwind Variants](https://www.tailwind-variants.org/): For its approach to combining Tailwind with a first-class variant API.
-- [Stitches](https://stitches.dev/): For pioneering many concepts in variant-based styling and near-zero runtime CSS-in-JS.
-- [CVA (Class Variance Authority)](https://cva.style/docs): For its work on creating variant APIs for traditional CSS approaches.
-
-We're grateful to these projects for pushing the boundaries of component styling and inspiring aspects of Recast's design.
+MIT License - see [LICENSE](https://github.com/reactivepixels/recast/blob/main/LICENSE) for details.

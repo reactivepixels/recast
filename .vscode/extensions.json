@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "catppuccin.catppuccin-vsc",
+    "catppuccin.catppuccin-vsc-icons",
+    "astro-build.astro-vscode"
+  ]
+}

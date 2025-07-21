@@ -1,9 +1,21 @@
 import type { ClassNameRecord } from "../types.js";
-import { normalizeClasses, mergeArrays } from "./common.js";
+import { normalizeClasses, mergeArrays, memoize } from "./common.js";
 
 /**
+ * Internal unmemoized version of mergeStringClassNames
+ */
+function mergeStringClassNamesInternal(objValue?: string | string[], value?: string | string[]): string {
+  const normalized = mergeArrays(normalizeClasses(objValue).split(" "), normalizeClasses(value).split(" "));
+  return normalized.filter(Boolean).join(" ");
+}
+
+/**
+ * Memoized version of mergeStringClassNames for optimal performance.
  * Merges two values by normalizing them and concatenating them with a space.
  * If only one value is provided, it is normalized and returned.
+ *
+ * This function is memoized because it's called frequently during class generation
+ * and often receives the same input combinations.
  *
  * @param objValue - The first value to merge. It can be a single value, an array of values, or undefined.
  * @param value - The second value to merge. It can be a single value, an array of values, or undefined.
@@ -12,10 +24,7 @@ import { normalizeClasses, mergeArrays } from "./common.js";
  * mergeStringClassNames("btn", "btn-primary") // returns "btn btn-primary"
  * mergeStringClassNames(["btn", "btn-lg"], "btn-primary") // returns "btn btn-lg btn-primary"
  */
-export const mergeStringClassNames = (objValue?: string | string[], value?: string | string[]): string => {
-  const normalized = mergeArrays(normalizeClasses(objValue).split(" "), normalizeClasses(value).split(" "));
-  return normalized.filter(Boolean).join(" ");
-};
+export const mergeStringClassNames = memoize(mergeStringClassNamesInternal);
 
 /**
  * Merges class names from a target and source object, normalizing and concatenating them.

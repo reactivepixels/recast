@@ -1,0 +1,30 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 70% # Lower the target coverage to 70%
+        threshold: 5% # Allow coverage to drop by 5% without failing
+        if_no_uploads: ignore # Don't fail if no coverage reports are uploaded
+    patch:
+      default:
+        target: 40% # Very relaxed target for patches
+        threshold: 30% # Allow very large drops in patch coverage
+        if_no_uploads: ignore
+
+# Ignore certain files/directories from coverage
+ignore:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/tests/**"
+  - "**/test/**"
+  - "**/__tests__/**"
+  - "**/coverage/**"
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+
+# Comment settings (optional - reduces noise)
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false

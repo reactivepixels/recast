@@ -1,15 +1,12 @@
 import { cn } from "../../utils/cn.js";
 import * as RadixProgressPrimitive from "@radix-ui/react-progress";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixProgressPrimitive.Root
 > &
-  RecastWithClassNameProps<{
-    root: string;
-    indicator: string;
-  }>;
+  RecastClsProps<"root" | "indicator">;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixProgressPrimitive.Root>,

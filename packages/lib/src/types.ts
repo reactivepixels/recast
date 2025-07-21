@@ -24,11 +24,20 @@ export type Leaves<T> = {
 }[keyof T];
 
 /**
- * Adds an optional `cls` prop to a component's props for Recast class object properties.
+ * Adds an optional `cls` prop with typed class name properties for Recast components.
+ *
+ * @template T - Union of string literals representing the class name keys
+ * @example
+ * ```typescript
+ * type Props = HTMLAttributes<HTMLDivElement> & RecastClsProps<'root' | 'track' | 'thumb'>;
+ *
+ * // Results in:
+ * // { cls?: { root?: string, track?: string, thumb?: string } }
+ * ```
  */
-export type RecastWithClassNameProps<Props extends { [K in keyof Props]: string }> = {
+export type RecastClsProps<T extends string> = {
   /** Recast class object properties */
-  cls?: { [P in keyof Props]?: string };
+  cls?: { [K in T]?: string };
 };
 
 /**
@@ -147,7 +156,7 @@ export interface RelaxedStyles {
     [key: string]: string | string[] | ClassNameRecord;
   };
   conditionals?: Array<{
-    variants?: { [key: string]: string };
+    variants?: { [key: string]: string | string[] };
     modifiers?: string | string[];
     className: string | string[] | ClassNameRecord;
   }>;

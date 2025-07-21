@@ -1,0 +1,139 @@
+:root {
+  --primary: oklch(0.6008 0.2079 267.9);
+  --blue-accent: oklch(0.8663 0.0549 252.67);
+
+  /* Opacity variants - using the same base colors with alpha */
+  --primary-10: oklch(0.6008 0.2079 267.9 / 0.1);
+  --primary-15: oklch(0.6008 0.2079 267.9 / 0.15);
+  --primary-0: oklch(0.6008 0.2079 267.9 / 0);
+  --blue-accent-0: oklch(0.8663 0.0549 252.67 / 0);
+  --blue-accent-05: oklch(0.8663 0.0549 252.67 / 0.05);
+  --blue-accent-10: oklch(0.8663 0.0549 252.67 / 0.1);
+  --blue-accent-15: oklch(0.8663 0.0549 252.67 / 0.15);
+
+  /* White with opacity */
+  --white-05: oklch(1 0 0 / 0.05);
+  --white-10: oklch(1 0 0 / 0.1);
+  --white-15: oklch(1 0 0 / 0.15);
+  --white-0: oklch(1 0 0 / 0);
+}
+
+.blueprint-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.7rem;
+  background-clip: content-box;
+  box-shadow: inset 0 0 10px var(--primary-10);
+}
+
+.blueprint-card::before {
+  content: '';
+  background: radial-gradient(50% 50% at 50% 50%, var(--primary-10) 0%, var(--primary-0) 100%);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.blueprint-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--primary-10);
+  border-radius: 0.7rem;
+  pointer-events: none;
+}
+
+/* Base button styles */
+.button-base {
+  position: relative;
+  display: inline-flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  cursor: pointer;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  margin-top: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  outline: none;
+  text-decoration: none;
+  overflow: hidden;
+  padding: 12px 24px;
+  font-weight: 700;
+}
+
+/* Solid button variant */
+.button-solid {
+  background-color: var(--primary);
+  background-image: linear-gradient(var(--white-10), var(--white-0));
+  color: white;
+  box-shadow: 0 4px 12px var(--primary-10);
+}
+
+/* Outline button variant */
+.button-outline {
+  position: relative;
+  height: 40px;
+  color: white;
+  box-shadow: inset 0 0 0 1px var(--blue-accent-15);
+  background: radial-gradient(31.2% 40.91% at 50% 151.14%, var(--blue-accent-10) 0%, var(--blue-accent-0) 100%), var(--blue-accent-05);
+  backdrop-filter: blur(8px);
+}
+
+.button-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--blue-accent-15), var(--primary-10));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.button-rounded {
+  border-radius: 0.5em;
+}
+
+.button-pill {
+  border-radius: 999px;
+}
+
+.button-small {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  padding-inline: 16px;
+}
+
+.button-medium {
+  height: 60px;
+  line-height: 60px;
+  font-size: 16px;
+  padding-inline: 24px;
+}
+
+.button-large {
+  height: 80px;
+  line-height: 80px;
+  font-size: 18px;
+  padding-inline: 32px;
+}
+
+.button-glow {
+  background: linear-gradient(135deg, #cfef00, #a8c700);
+  border: 1px solid transparent;
+  color: black;
+  box-shadow: 0 4px 12px rgba(207, 239, 0, 0.3);
+}
+
+.button-skeuomo {
+  color: #080808;
+  background: #e8e8e8;
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
