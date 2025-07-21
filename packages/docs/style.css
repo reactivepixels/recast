@@ -4,6 +4,7 @@
 
   /* Opacity variants - using the same base colors with alpha */
   --primary-10: oklch(0.6008 0.2079 267.9 / 0.1);
+  --primary-15: oklch(0.6008 0.2079 267.9 / 0.15);
   --primary-0: oklch(0.6008 0.2079 267.9 / 0);
   --blue-accent-0: oklch(0.8663 0.0549 252.67 / 0);
   --blue-accent-05: oklch(0.8663 0.0549 252.67 / 0.05);
@@ -11,7 +12,9 @@
   --blue-accent-15: oklch(0.8663 0.0549 252.67 / 0.15);
 
   /* White with opacity */
+  --white-05: oklch(1 0 0 / 0.05);
   --white-10: oklch(1 0 0 / 0.1);
+  --white-15: oklch(1 0 0 / 0.15);
   --white-0: oklch(1 0 0 / 0);
 }
 
@@ -49,12 +52,17 @@
   align-items: center;
   justify-content: center;
   font-family: inherit;
-  border-radius: 999px;
   cursor: pointer;
   text-wrap: nowrap;
   white-space: nowrap;
   margin-top: 0;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  outline: none;
+  text-decoration: none;
+  overflow: hidden;
+  padding: 12px 24px;
+  font-weight: 700;
 }
 
 /* Solid button variant */
@@ -62,22 +70,32 @@
   background-color: var(--primary);
   background-image: linear-gradient(var(--white-10), var(--white-0));
   color: white;
-  padding: 12px 24px;
-  font-weight: 500;
-  font-size: 14px;
+  box-shadow: 0 4px 12px var(--primary-10);
 }
 
 /* Outline button variant */
 .button-outline {
+  position: relative;
   height: 40px;
-  font-size: 14px;
-  font-weight: 400;
+  color: white;
   box-shadow: inset 0 0 0 1px var(--blue-accent-15);
   background: radial-gradient(31.2% 40.91% at 50% 151.14%, var(--blue-accent-10) 0%, var(--blue-accent-0) 100%), var(--blue-accent-05);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
 }
 
-/* Medium size modifier */
+.button-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--blue-accent-15), var(--primary-10));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.button-pill {
+  border-radius: 999px;
+}
 
 .button-small {
   height: 40px;
@@ -98,4 +116,25 @@
   line-height: 80px;
   font-size: 18px;
   padding-inline: 32px;
+}
+
+.button-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 24px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, #cfef00, #a8c700);
+  border: 1px solid transparent;
+  color: black;
+  box-shadow: 0 4px 12px rgba(207, 239, 0, 0.3);
+}
+
+.button-skeuomo {
+  color: #080808;
+  padding: 0.7em 1.7em;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  cursor: pointer;
+  border: 1px solid #e8e8e8;
+  transition: all 0.3s;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
 }

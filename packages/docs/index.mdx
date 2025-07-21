@@ -23,17 +23,33 @@ import { FadeCarousel } from '/snippets/fade-carousel.jsx'
         </p>
       </div>
 
-      <FadeCarousel className="h-32">
-        <div className="absolute w-full h-full flex items-center justify-center">
-          <button className="button-base button-outline button-small w-full">Recast</button>
-        </div>
-        <div className="absolute w-full h-full flex items-center justify-center">
-          <button className="button-base button-solid button-medium w-full">Recast</button>
-        </div>
-        <div className="absolute w-full h-full flex items-center justify-center">
-          <button className="button-base button-outline button-large">Recast</button>
-        </div>
-      </FadeCarousel>
+      <div className="h-64">
+        <FadeCarousel className="relative flex flex-col gap-2">
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#212121] p-8 rounded-lg">
+            <button className="button-base button-outline button-small button-pill w-full">Recast</button>
+            <button className="button-base button-outline button-medium button-pill w-full">Recast</button>
+            <button className="button-base button-outline button-large button-pill w-full">Recast</button>
+          </div>
+
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#fefefe] p-8 rounded-lg">
+            <button className="button-base button-solid button-small button-pill w-full">Recast</button>
+            <button className="button-base button-solid button-medium button-pill w-full">Recast</button>
+            <button className="button-base button-solid button-large button-pill w-full">Recast</button>
+          </div>
+
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#212121] p-8 rounded-lg">
+            <button className="button-base button-glow button-outline button-small button-pill w-full">Recast</button>
+            <button className="button-base button-glow button-outline button-medium button-pill w-full">Recast</button>
+            <button className="button-base button-glow button-outline button-large button-pill w-full">Recast</button>
+          </div>
+
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#e8e8e8] p-8 rounded-lg">
+            <button className="button-base button-skeuomo button-small button-pill w-full">Recast</button>
+            <button className="button-base button-skeuomo button-medium w-full">Recast</button>
+            <button className="button-base button-skeuomo button-large w-full">Recast</button>
+          </div>
+        </FadeCarousel>
+      </div>
     </section>
   </BlueprintCard>
 </Frame>
