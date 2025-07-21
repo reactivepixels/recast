@@ -1,0 +1,489 @@
+---
+title: recast.compose()
+description: Combine multiple style objects into a single, unified style definition
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+# recast.compose()
+
+Combine multiple style objects into a single, unified style definition. This enables modular design where you can build complex components from simpler, focused style modules.
+
+## Syntax
+
+```tsx
+recast.compose(styleObjects)
+```
+
+## Parameters
+
+### `styleObjects` *(array)*
+
+Array of style objects created with `recast.styles()` to be combined.
+
+- **Type:** `RecastStylesObject[]`
+- **Required:** Yes
+- **Minimum length:** 1
+
+**Example:**
+```tsx
+const baseStyles = recast.styles({ /* ... */ })
+const colorStyles = recast.styles({ /* ... */ })
+const sizeStyles = recast.styles({ /* ... */ })
+
+const composedStyles = recast.compose([
+  baseStyles,
+  colorStyles,
+  sizeStyles
+])
+```
+
+## Return value
+
+### `RecastStylesObject`
+
+Returns a new style object with the same interface as `recast.styles()`:
+
+- **`(component)`** - Apply styles to a React component
+- **`.extract(props)`** - Extract computed class names
+
+The composed object combines all properties from the input style objects according to specific merging rules.
+
+## Merging behavior
+
+### Base classes - Concatenated
+
+Base classes from all style objects are combined in order:
+
+```tsx
+const styles1 = recast.styles({
+  base: "flex items-center"
+})
+
+const styles2 = recast.styles({
+  base: "rounded border px-4 py-2"
+})
+
+const composed = recast.compose([styles1, styles2])
+// Result: base is "flex items-center rounded border px-4 py-2"
+```
+
+For object-based base classes, properties are merged:
+
+```tsx
+const styles1 = recast.styles({
+  base: {
+    root: "flex",
+    item: "p-2"
+  }
+})
+
+const styles2 = recast.styles({
+  base: {
+    root: "rounded", // Merged with previous root
+    header: "border-b" // New property
+  }
+})
+
+// Result: 
+// base: {
+//   root: "flex rounded",
+//   item: "p-2", 
+//   header: "border-b"
+// }
+```
+
+### Variants - Deep merged
+
+Variant groups are merged, with later objects adding to or overriding earlier ones:
+
+```tsx
+const colorStyles = recast.styles({
+  variants: {
+    variant: {
+      default: "bg-black text-white",
+      secondary: "bg-slate-100 text-slate-900"
+    }
+  }
+})
+
+const sizeStyles = recast.styles({
+  variants: {
+    size: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-6 py-3 text-lg"
+    },
+    variant: {
+      outline: "border border-input" // Adds to variant group
+    }
+  }
+})
+
+// Combined result:
+// variants: {
+//   variant: {
+//     default: "bg-black text-white",
+//     secondary: "bg-slate-100 text-slate-900", 
+//     outline: "border border-input"
+//   },
+//   size: {
+//     sm: "px-3 py-1 text-sm",
+//     md: "px-4 py-2",
+//     lg: "px-6 py-3 text-lg"
+//   }
+// }
+```
+
+**Variant override:**
+```tsx
+const styles1 = recast.styles({
+  variants: {
+    variant: {
+      default: "bg-black text-white"
+    }
+  }
+})
+
+const styles2 = recast.styles({
+  variants: {
+    variant: {
+      default: "bg-blue-500 text-white" // Overrides previous default
+    }
+  }
+})
+```
+
+### Modifiers - Merged
+
+Modifiers from all style objects are combined, with later objects overriding earlier ones for the same modifier name:
+
+```tsx
+const baseStyles = recast.styles({
+  modifiers: {
+    disabled: "opacity-50",
+    loading: "cursor-wait"
+  }
+})
+
+const enhancedStyles = recast.styles({
+  modifiers: {
+    loading: "cursor-wait animate-pulse", // Overrides loading
+    fullWidth: "w-full" // Adds new modifier
+  }
+})
+
+// Result:
+// modifiers: {
+//   disabled: "opacity-50",
+//   loading: "cursor-wait animate-pulse",
+//   fullWidth: "w-full"
+// }
+```
+
+### Conditionals - Concatenated
+
+Conditional rules from all style objects are combined in order:
+
+```tsx
+const styles1 = recast.styles({
+  conditionals: [
+    {
+      variants: { variant: "default" },
+      modifiers: ["loading"],
+      className: "bg-black/70"
+    }
+  ]
+})
+
+const styles2 = recast.styles({
+  conditionals: [
+    {
+      variants: { size: "sm" },
+      modifiers: ["fullWidth"],
+      className: "min-h-8"
+    }
+  ]
+})
+
+// Both conditional rules are preserved
+```
+
+### Defaults - Merged
+
+Default values are merged, with later objects taking precedence:
+
+```tsx
+const styles1 = recast.styles({
+  defaults: {
+    variants: { variant: "default", size: "md" }
+  }
+})
+
+const styles2 = recast.styles({
+  defaults: {
+    variants: { variant: "secondary" } // Overrides variant default
+  }
+})
+
+// Result:
+// defaults: {
+//   variants: { variant: "secondary", size: "md" }
+// }
+```
+
+## Examples
+
+### Layer-based composition
+
+```tsx
+// Foundation layer
+const foundationStyles = recast.styles({
+  base: "transition-all duration-200 focus-visible:outline-none",
+  modifiers: {
+    disabled: "cursor-not-allowed opacity-50"
+  }
+})
+
+// Layout layer
+const layoutStyles = recast.styles({
+  base: "inline-flex items-center justify-center",
+  variants: {
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2",
+      lg: "h-10 px-6 text-lg"
+    }
+  }
+})
+
+// Visual layer
+const visualStyles = recast.styles({
+  base: "rounded font-medium",
+  variants: {
+    variant: {
+      default: "bg-black text-white hover:bg-black/90",
+      secondary: "bg-slate-100 text-slate-900 hover:bg-slate-100/80"
+    }
+  },
+  defaults: {
+    variants: { variant: "default", size: "md" }
+  }
+})
+
+// Compose layers from foundation to visual
+const Button = recast.compose([
+  foundationStyles,
+  layoutStyles,
+  visualStyles
+])(ButtonPrimitive)
+```
+
+### Feature-based composition
+
+```tsx
+// Core functionality
+const buttonCore = recast.styles({
+  base: "inline-flex items-center justify-center rounded font-medium",
+  variants: {
+    size: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-6 py-3 text-lg"
+    }
+  }
+})
+
+// Loading feature
+const loadingFeature = recast.styles({
+  modifiers: {
+    loading: "cursor-wait opacity-75"
+  },
+  conditionals: [
+    {
+      modifiers: ["loading"],
+      className: "pointer-events-none"
+    }
+  ]
+})
+
+// Icon feature
+const iconFeature = recast.styles({
+  modifiers: {
+    iconOnly: "aspect-square p-0",
+    iconLeft: "[&>svg]:mr-2",
+    iconRight: "[&>svg]:ml-2"
+  }
+})
+
+// Different button variations
+const BasicButton = recast.compose([buttonCore])(ButtonPrimitive)
+
+const LoadingButton = recast.compose([
+  buttonCore,
+  loadingFeature
+])(ButtonPrimitive)
+
+const FullButton = recast.compose([
+  buttonCore,
+  loadingFeature,
+  iconFeature
+])(ButtonPrimitive)
+```
+
+### Shared style libraries
+
+```tsx
+// Shared color system
+export const colorSystem = recast.styles({
+  variants: {
+    variant: {
+      default: "bg-black text-white hover:bg-black/90",
+      secondary: "bg-slate-100 text-slate-900 hover:bg-slate-100/80",
+      destructive: "bg-red-500 text-white hover:bg-red-500/90"
+    }
+  }
+})
+
+// Shared size system
+export const sizeSystem = recast.styles({
+  variants: {
+    size: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-6 py-3 text-lg"
+    }
+  }
+})
+
+// Button component
+const buttonBase = recast.styles({
+  base: "inline-flex items-center justify-center rounded font-medium"
+})
+
+export const Button = recast.compose([
+  buttonBase,
+  colorSystem,
+  sizeSystem
+])(ButtonPrimitive)
+
+// Badge component using the same systems
+const badgeBase = recast.styles({
+  base: "inline-flex items-center rounded-full font-medium"
+})
+
+export const Badge = recast.compose([
+  badgeBase,
+  colorSystem,
+  sizeSystem
+])(BadgePrimitive)
+```
+
+## TypeScript support
+
+Composed style objects maintain full TypeScript support with merged types:
+
+```tsx
+const layoutStyles = recast.styles({
+  variants: {
+    spacing: { normal: "gap-2", wide: "gap-4" }
+  }
+})
+
+const colorStyles = recast.styles({
+  variants: {
+    variant: { default: "bg-black", secondary: "bg-slate-100" }
+  },
+  modifiers: {
+    disabled: "opacity-50"
+  }
+})
+
+const ComposedButton = recast.compose([
+  layoutStyles,
+  colorStyles
+])(ButtonPrimitive)
+
+// TypeScript automatically infers combined types:
+type ComposedButtonProps = ComponentProps<typeof ComposedButton>
+// Result: {
+//   spacing?: "normal" | "wide"
+//   variant?: "default" | "secondary"
+//   disabled?: boolean
+//   // + all ButtonPrimitive props
+// }
+```
+
+## Performance considerations
+
+<CardGrid>
+  <Card title="Compose Once" icon="rocket">
+    Create composed styles outside components to avoid recreation on every render
+  </Card>
+  <Card title="Reasonable Limits" icon="chart">
+    Limit composition to 3-5 style objects for optimal performance
+  </Card>
+  <Card title="Caching" icon="database">
+    Composed styles benefit from the same memoization as individual style objects
+  </Card>
+</CardGrid>
+
+**Good:**
+```tsx
+// ✅ Compose once outside render
+const Button = recast.compose([
+  baseStyles,
+  colorStyles,
+  sizeStyles
+])(ButtonPrimitive)
+
+function App() {
+  return <Button variant="default">Good Performance</Button>
+}
+```
+
+**Avoid:**
+```tsx
+// ❌ Composing on every render
+function App() {
+  const Button = recast.compose([
+    baseStyles,
+    colorStyles,
+    sizeStyles
+  ])(ButtonPrimitive)
+  
+  return <Button variant="default">Poor Performance</Button>
+}
+```
+
+## Best practices
+
+<CardGrid>
+  <Card title="Logical Order" icon="list-format">
+    Compose from general to specific: foundation → layout → visual
+  </Card>
+  <Card title="Single Responsibility" icon="target">
+    Keep each style module focused on one concern
+  </Card>
+  <Card title="Reusable Modules" icon="recycle">
+    Design style modules to be shared across different components
+  </Card>
+  <Card title="Meaningful Names" icon="pencil">
+    Use descriptive names for style modules to improve maintainability
+  </Card>
+</CardGrid>
+
+## See also
+
+<CardGrid>
+  <Card title="recast.styles()" icon="palette">
+    Learn how to create individual style definitions
+  </Card>
+  <Card title="Composition Guide" icon="open-book">
+    Patterns and best practices for modular design systems
+  </Card>
+</CardGrid>
+
+:::tip[Composition strategy]
+Start with small, focused style modules and combine them as needed. This approach leads to more maintainable and reusable code than large, monolithic style objects.
+::: 

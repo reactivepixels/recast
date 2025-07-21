@@ -1,0 +1,265 @@
+---
+title: Styles
+description: Learn how to create reusable style definitions with recast.styles()
+---
+
+import { Card, CardGrid, Tabs, TabItem } from '@astrojs/starlight/components'
+
+# Styles
+
+Create reusable style definitions that can be applied to any React component.
+
+## Basic syntax
+
+```tsx
+recast.styles(styleConfig)
+```
+
+**Parameters:**
+- `styleConfig` - Configuration object defining the styles, variants, modifiers, and defaults
+
+**Returns:** `RecastStylesObject` - A style object that can be applied to components or used to extract class names
+
+## Configuration properties
+
+### Base classes
+
+Foundation classes applied to all instances:
+
+<Tabs>
+  <TabItem label="String Base (Simple)">
+    For single-element components:
+
+    ```tsx
+    const styles = recast.styles({
+      base: "px-4 py-2 rounded font-medium"
+    })
+    ```
+  </TabItem>
+  <TabItem label="Object Base (Complex)">
+    For multi-element components:
+
+    ```tsx
+    const styles = recast.styles({
+      base: {
+        root: "rounded-lg border bg-white",
+        header: "px-6 py-4 border-b",
+        content: "px-6 py-4"
+      }
+    })
+    ```
+  </TabItem>
+</Tabs>
+
+### Variants
+
+Mutually exclusive styling options (radio button behavior):
+
+```tsx
+variants: {
+  variant: {
+    default: "bg-black text-white",
+    secondary: "bg-slate-100 text-slate-900"
+  },
+  size: {
+    sm: "h-9 px-3 text-sm",
+    lg: "h-11 px-8 text-base"
+  }
+}
+```
+
+### Modifiers
+
+Boolean flags that can be combined (checkbox behavior):
+
+```tsx
+modifiers: {
+  disabled: "opacity-50 cursor-not-allowed",
+  loading: "cursor-wait",
+  fullWidth: "w-full"
+}
+```
+
+### Defaults
+
+Default values to reduce prop repetition:
+
+```tsx
+defaults: {
+  variants: { variant: "default", size: "default" }
+}
+```
+
+### Conditionals
+
+Apply styles only when specific conditions are met:
+
+```tsx
+conditionals: [
+  {
+    variants: { variant: "default" },
+    modifiers: ["loading"],
+    className: "bg-black/70"
+  }
+]
+```
+
+## What you get back
+
+The style object provides two main capabilities:
+
+### 1. Component application
+
+Apply styles to any React component:
+
+```tsx
+const Button = buttonStyles(ButtonPrimitive)
+const LinkButton = buttonStyles('a')
+```
+
+Usage:
+```tsx
+<Button variant="default" size="lg" disabled>
+  Styled Button
+</Button>
+```
+
+### 2. Style extraction
+
+Extract computed class names for advanced use cases:
+
+```tsx
+const classes = buttonStyles.extract({ 
+  variant: "default", 
+  size: "lg",
+  disabled: true 
+})
+// Returns: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-black text-white h-11 px-8 opacity-50 cursor-not-allowed"
+```
+
+:::tip[Use extraction for]
+Server-side rendering, integration with animation libraries, or when you need raw class names.
+:::
+
+## Examples
+
+### Simple button
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md text-sm font-medium",
+  variants: {
+    variant: {
+      default: "bg-black text-white",
+      secondary: "bg-slate-100 text-slate-900"
+    }
+  }
+})
+```
+
+### Complex component with nested styling
+
+```tsx
+const cardStyles = recast.styles({
+  base: {
+    root: "rounded-lg border bg-card text-card-foreground shadow-sm",
+    header: "flex flex-col space-y-1.5 p-6",
+    title: "text-2xl font-semibold leading-none tracking-tight",
+    content: "p-6 pt-0"
+  },
+  variants: {
+    size: {
+      sm: {
+        header: "p-4",
+        content: "p-4 pt-0"
+      }
+    }
+  }
+})
+
+// Primitive receives styles via cls prop
+function CardPrimitive({ cls, title, children }) {
+  return (
+    <div className={cls?.root}>
+      <div className={cls?.header}>
+        <h3 className={cls?.title}>{title}</h3>
+      </div>
+      <div className={cls?.content}>{children}</div>
+    </div>
+  )
+}
+
+const Card = cardStyles(CardPrimitive)
+```
+
+## TypeScript integration
+
+Recast automatically generates TypeScript types:
+
+```tsx
+const buttonStyles = recast.styles({
+  variants: {
+    variant: { default: "...", secondary: "..." },
+    size: { sm: "...", md: "...", lg: "..." }
+  },
+  modifiers: {
+    disabled: "...",
+    loading: "..."
+  }
+})
+
+const Button = buttonStyles(ButtonPrimitive)
+
+// TypeScript automatically infers:
+type ButtonProps = {
+  variant?: "default" | "secondary"
+  size?: "sm" | "md" | "lg"
+  disabled?: boolean
+  loading?: boolean
+  className?: string
+  // + all ButtonPrimitive props
+}
+```
+
+## Performance
+
+<CardGrid>
+  <Card title="Automatic Memoization" icon="rocket">
+    All style computations are cached for fast repeated access
+  </Card>
+  <Card title="LRU Cache" icon="database">
+    Prevents memory leaks with configurable cache size limits
+  </Card>
+</CardGrid>
+
+:::caution[Performance tip]
+Create style objects outside of components to avoid recreation on every render.
+:::
+
+## Best practices
+
+<CardGrid>
+  <Card title="Semantic Naming" icon="pencil">
+    Use meaningful names like `variant` and `size` rather than generic names
+  </Card>
+  <Card title="Set Defaults" icon="setting">
+    Define sensible defaults to reduce prop repetition
+  </Card>
+  <Card title="Single Responsibility" icon="target">
+    Keep each style object focused on one concern
+  </Card>
+  <Card title="Compose Ready" icon="puzzle">
+    Design styles to work well with `recast.compose()`
+  </Card>
+</CardGrid>
+
+## See also
+
+<CardGrid>
+  <Card title="Variants & Modifiers" icon="list-format">
+    Learn the difference between variants and modifiers
+  </Card>
+  <Card title="Composition" icon="puzzle">
+    Combine multiple style objects
+  </Card>
+</CardGrid> 

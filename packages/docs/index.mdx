@@ -3,7 +3,9 @@ title: "Introduction"
 description: "A powerful and flexible styling library for React components that provides type-safe, reusable styles with built-in performance optimizations."
 ---
 
-import { Button } from '/snippets/button.mdx'
+import { Button } from '/snippets/button.jsx'
+import { BlueprintCard } from '/snippets/blueprint-card.jsx'
+
 
 # Features
 
@@ -33,21 +35,19 @@ Here's how easy it is to create a reusable button component:
 import { recast } from '@rpxl/recast'
 
 const buttonStyles = recast.styles({
-  base: "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  base: "button-base",
   variants: {
     variant: {
-      default: "bg-black text-white hover:bg-black/90 dark:bg-white dark:hover:bg-white/90",
-      destructive: "bg-red-500 text-white hover:bg-red-500/90 dark:bg-red-500 dark:hover:bg-red-500/90",
-      outline: "border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-      secondary: "bg-slate-100 text-slate-900 hover:bg-slate-100/80 dark:bg-slate-800 dark:text-slate-50 dark:hover:bg-slate-800/80",
-      ghost: "hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-slate-50",
-      link: "text-pink-500 underline-offset-4 hover:underline dark:text-pink-400"
+      default: "button-solid",
+      outline: "button-outline",
+      ... // Add more variants here
     },
     size: {
-      default: "h-10 px-4 py-2",
-      sm: "h-9 rounded-md px-3",
-      lg: "h-11 rounded-md px-8",
-      icon: "h-10 w-10"
+      default: "button-medium",
+      sm: "button-small",
+      md: "button-medium",
+      lg: "button-large",
+      ... // Add more sizes here
     }
   },
   defaults: {
@@ -72,48 +72,53 @@ const Button = buttonStyles(ButtonPrimitive)
 **Result:**
 
 <Frame>
-<div className="flex gap-3 items-center p-5">
-  <Button variant="outline" size="lg">
-    Click me
-  </Button>
-  <Button variant="default" size="sm">
-    Small button
-  </Button>
-</div>
-</Frame>
+  <BlueprintCard>
+    <section className="flex flex-col gap-8">
+      <div className="max-w-xl flex flex-col gap-4">
+        <div className="flex flex-col gap-1 w-min">
+          <div className="w-full flex gap-2 items-center before:flex-1 before:bg-gradient-to-r before:from-transparent before:to-black/25 dark:before:to-white/25 before:h-px after:flex-1 after:bg-gradient-to-r dark:after:from-white/25 after:from-black/25 after:to-transparent after:h-px">
+            <span className="text-xs font-light">Component</span>
+          </div>
+          <h1 className="font-semibold dark:text-white text-black text-4xl text-foreground">Button</h1>
+        </div>
 
-### All Button Variants
+        <p className="font-extralight text-balance tracking-wide leading-snug line-clamp-2 max-w-md">
+          A control that allows the user to click and trigger an action.
+        </p>
+      </div>
 
-<Frame>
-<div className="flex flex-wrap gap-3 items-center p-5">
-  <Button variant="default">Default</Button>
-  <Button variant="secondary">Secondary</Button>
-  <Button variant="destructive">Destructive</Button>
-  <Button variant="outline">Outline</Button>
-  <Button variant="ghost">Ghost</Button>
-  <Button variant="link">Link</Button>
-</div>
+      <div className="flex flex-col gap-2 items-center">
+        <h4 className="text-xs uppercase font-mono">outline:md</h4>
+        <button className="button-base button-outline button-medium w-full">Outline</button>
+      </div>
+
+      <div className="flex flex-col gap-2 items-center">
+        <h4 className="text-xs uppercase font-mono">default:sm</h4>
+        <button className="button-base button-solid button-smal w-full">Default</button>
+      </div>
+    </section>
+  </BlueprintCard>
 </Frame>
 
 ## Why Recast?
 
-<AccordionGroup>
-  <Accordion title="🎯 True Component Reusability">
+<CardGroup cols={1}>
+  <Card title="True Component Reusability" icon="rotate">
     Traditional component libraries force you to choose between reusability and customization. With Recast, your component primitives are completely theme-agnostic. Write a button once, style it differently in every project.
-  </Accordion>
+  </Card>
   
-  <Accordion title="🚀 Developer Experience">
+  <Card title="Developer Experience" icon="code">
     Full TypeScript integration means you get autocomplete for every variant and modifier. No more guessing what props are available or accidentally using invalid combinations.
-  </Accordion>
+  </Card>
   
-  <Accordion title="⚡ Performance by Default">
+  <Card title="Performance by Default" icon="bolt">
     Recast includes intelligent caching and memoization strategies that prevent unnecessary re-computations. Your components stay fast even with complex styling logic.
-  </Accordion>
+  </Card>
   
-  <Accordion title="🎨 Design System Friendly">
+  <Card title="Design System Friendly" icon="palette">
     Whether you're using Tailwind CSS, CSS Modules, or any other styling solution, Recast adapts to your workflow. No vendor lock-in, no predefined design tokens.
-  </Accordion>
-</AccordionGroup>
+  </Card>
+</CardGroup>
 
 ## Core concepts
 
@@ -174,7 +179,7 @@ const Button = buttonStyles(ButtonPrimitive)
   <Card title="GitHub Repository" icon="github" href="https://github.com/reactivepixels/recast">
     View source code, report issues, and contribute
   </Card>
-  <Card title="NPM Package" icon="box" href="https://www.npmjs.com/package/@rpxl/recast">
+  <Card title="NPM Package" icon="npm" href="https://www.npmjs.com/package/@rpxl/recast">
     View package details and download statistics
   </Card>
 </CardGroup>
