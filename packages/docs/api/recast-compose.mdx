@@ -1,11 +1,7 @@
 ---
 title: "recast.compose()"
-description: "Combine multiple style objects for modular design"
+description: "The `recast.compose()` function combines multiple style objects into a single, unified style object. This enables modular, reusable styling by breaking complex designs into focused, composable pieces."
 ---
-
-# recast.compose()
-
-The `recast.compose()` function combines multiple style objects into a single, unified style object. This enables modular, reusable styling by breaking complex designs into focused, composable pieces.
 
 ## Syntax
 
@@ -49,7 +45,7 @@ const composed = recast.compose([baseStyles, colorStyles])
 ### Property Merging
 
 <AccordionGroup>
-  <Accordion title="base - Concatenated">
+  <Accordion title="Base - Concatenated" icon="palette">
     Base classes from all style objects are concatenated together:
     
     ```tsx
@@ -61,7 +57,7 @@ const composed = recast.compose([baseStyles, colorStyles])
     ```
   </Accordion>
   
-  <Accordion title="variants - Deep merged">
+  <Accordion title="Variants - Deep merged" icon="layer-group">
     Variant groups are merged, with later objects adding to or overriding earlier ones:
     
     ```tsx
@@ -86,7 +82,7 @@ const composed = recast.compose([baseStyles, colorStyles])
     ```
   </Accordion>
   
-  <Accordion title="modifiers - Deep merged">
+  <Accordion title="Modifiers - Deep merged" icon="toggle-on">
     Modifiers from all style objects are combined:
     
     ```tsx
@@ -102,7 +98,7 @@ const composed = recast.compose([baseStyles, colorStyles])
     ```
   </Accordion>
   
-  <Accordion title="defaults - Deep merged">
+  <Accordion title="Defaults - Deep merged" icon="gear">
     Default values are combined, with later objects taking precedence:
     
     ```tsx
@@ -126,7 +122,7 @@ const composed = recast.compose([baseStyles, colorStyles])
     ```
   </Accordion>
   
-  <Accordion title="conditionals - Concatenated">
+  <Accordion title="Conditionals - Concatenated" icon="code-branch">
     Conditional rules from all style objects are combined in order:
     
     ```tsx
@@ -299,35 +295,6 @@ const IconButton = recast.compose([buttonCore, iconFeature])(ButtonPrimitive)
 const FullButton = recast.compose([buttonCore, loadingFeature, iconFeature])(ButtonPrimitive)
 ```
 
-### Conditional Composition
-
-Create different component variants by composing conditionally:
-
-```tsx
-const createButton = (features: string[]) => {
-  const styleObjects = [baseButtonStyles] // Always include base
-  
-  if (features.includes('loading')) {
-    styleObjects.push(loadingStyles)
-  }
-  
-  if (features.includes('icons')) {
-    styleObjects.push(iconStyles)
-  }
-  
-  if (features.includes('animations')) {
-    styleObjects.push(animationStyles)
-  }
-  
-  return recast.compose(styleObjects)(ButtonPrimitive)
-}
-
-// Create different button variants
-const SimpleButton = createButton([])
-const LoadingButton = createButton(['loading'])
-const AnimatedIconButton = createButton(['icons', 'animations'])
-```
-
 ## TypeScript Integration
 
 Composed style objects maintain full TypeScript support:
@@ -461,9 +428,3 @@ console.log(composed.extract({ variant: "primary", spacing: "wide" }))
 console.log(layoutStyles.extract({ spacing: "wide" }))
 console.log(colorStyles.extract({ variant: "primary" }))
 ```
-
-## See Also
-
-- [recast.styles()](/api/recast-styles) - Create individual style objects
-- [Style Composition](/concepts/composition) - Composition patterns and examples
-- [Best Practices](/guides/best-practices) - Advanced composition strategies 

@@ -1,11 +1,7 @@
 ---
 title: "recast.styles()"
-description: "Create reusable style definitions for components"
+description: "Create reusable style definitions that can be applied to any React component."
 ---
-
-# recast.styles()
-
-Create reusable style definitions that can be applied to any React component.
 
 ## Syntax
 
@@ -22,7 +18,7 @@ recast.styles(styleConfig)
 ## Configuration Properties
 
 <AccordionGroup>
-<Accordion title="base" icon="foundation">
+<Accordion title="base" icon="palette">
 Foundation classes applied to all instances:
 
 <CodeGroup>
@@ -45,7 +41,7 @@ const styles = recast.styles({
 </Accordion>
 
 <Accordion title="variants" icon="layer-group">
-Mutually exclusive styling options (radio button behavior):
+Mutually exclusive styling options:
 
 ```tsx
 variants: {
@@ -63,7 +59,7 @@ variants: {
 </Accordion>
 
 <Accordion title="modifiers" icon="toggle-on">
-Boolean flags that can be combined (checkbox behavior):
+Boolean flags that can be combined:
 
 ```tsx
 modifiers: {
@@ -74,7 +70,7 @@ modifiers: {
 ```
 </Accordion>
 
-<Accordion title="defaults" icon="settings">
+<Accordion title="defaults" icon="gear">
 Default values to reduce prop repetition:
 
 ```tsx
@@ -132,106 +128,14 @@ const classes = buttonStyles.extract({
 })
 // Returns: "px-4 py-2 rounded ... bg-blue-500 text-white ... px-6 py-3 text-lg"
 ```
-
-```tsx Use with Libraries
-// Framer Motion
-<motion.button 
-  className={buttonStyles.extract({ variant: "primary" })}
-  whileHover={{ scale: 1.05 }}
->
-  Animated Button
-</motion.button>
-
-// Server-side rendering
-const classes = buttonStyles.extract(props)
-return `<button class="${classes}">${children}</button>`
-```
 </CodeGroup>
-
-## Examples
-
-### Simple Button
-
-<Frame>
-```tsx
-const buttonStyles = recast.styles({
-  base: "inline-flex items-center justify-center rounded font-medium transition-colors",
-  variants: {
-    variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-600",
-      secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300"
-    },
-    size: {
-      sm: "h-8 px-3 text-sm",
-      md: "h-9 px-4 py-2",
-      lg: "h-10 px-6 text-lg"
-    }
-  },
-  modifiers: {
-    disabled: "opacity-50 cursor-not-allowed",
-    fullWidth: "w-full"
-  },
-  defaults: {
-    variants: { variant: "primary", size: "md" }
-  }
-})
-
-const Button = buttonStyles(ButtonPrimitive)
-```
-</Frame>
-
-### Complex Component with Nested Styling
-
-<Frame>
-```tsx
-const cardStyles = recast.styles({
-  base: {
-    root: "rounded-lg border bg-white shadow-sm",
-    header: "px-6 py-4 border-b",
-    title: "text-lg font-semibold",
-    content: "px-6 py-4"
-  },
-  variants: {
-    size: {
-      sm: {
-        header: "px-4 py-2",
-        content: "px-4 py-3"
-      },
-      lg: {
-        header: "px-8 py-6", 
-        content: "px-8 py-6"
-      }
-    }
-  },
-  modifiers: {
-    elevated: {
-      root: "shadow-lg"
-    }
-  }
-})
-
-// Primitive receives styles via cls prop
-function CardPrimitive({ cls, title, children }) {
-  return (
-    <div className={cls?.root}>
-      <div className={cls?.header}>
-        <h3 className={cls?.title}>{title}</h3>
-      </div>
-      <div className={cls?.content}>{children}</div>
-    </div>
-  )
-}
-
-const Card = cardStyles(CardPrimitive)
-```
-</Frame>
 
 ## TypeScript Integration
 
 Recast automatically generates TypeScript types:
 
-<Frame>
-```tsx
+<CodeGroup>
+```tsx TypeScript Integration
 const buttonStyles = recast.styles({
   variants: {
     variant: { primary: "...", secondary: "..." },
@@ -255,7 +159,7 @@ type ButtonProps = {
   // + all ButtonPrimitive props
 }
 ```
-</Frame>
+</CodeGroup>
 
 ## Performance
 
@@ -288,14 +192,3 @@ type ButtonProps = {
   Design styles to work well with `recast.compose()`
 </Card>
 </CardGroup>
-
-## See Also
-
-<CardGroup cols={2}>
-<Card title="Composition" icon="layer-group" href="/concepts/composition">
-  Combine multiple style objects
-</Card>
-<Card title="recast.compose()" icon="puzzle-piece" href="/api/recast-compose">
-  API reference for combining styles
-</Card>
-</CardGroup> 

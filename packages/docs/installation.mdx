@@ -9,18 +9,6 @@ description: "Install and configure Recast in your React project"
   Recast requires **React 17 or later** and works with any CSS framework or styling solution.
 </Note>
 
-<CardGroup cols={3}>
-  <Card title="React 17+" icon="react">
-    Compatible with React 17, 18, and 19
-  </Card>
-  <Card title="TypeScript" icon="code">
-    Full TypeScript support included
-  </Card>
-  <Card title="CSS Framework" icon="palette">
-    Works with Tailwind, CSS Modules, and more
-  </Card>
-</CardGroup>
-
 ## Install the package
 
 Choose your preferred package manager:
@@ -186,6 +174,7 @@ import { recast } from '@rpxl/recast'
 
 const buttonStyles = recast.styles({
   base: "inline-flex items-center justify-center rounded-md font-medium",
+
   variants: {
     variant: {
       primary: "bg-primary text-primary-foreground",
@@ -203,7 +192,6 @@ const buttonStyles = recast.styles({
   }
 })
 
-// TypeScript will provide full autocomplete for all variants and modifiers
 const Button = buttonStyles('button')
 ```
 
@@ -289,7 +277,7 @@ To verify your installation is working correctly:
       }
     })
     
-    const TestComponent = testStyles('div')
+    const TestComponent = testStyles("div")
     ```
   </Step>
   
@@ -305,52 +293,3 @@ To verify your installation is working correctly:
     The component should render with the correct classes applied.
   </Step>
 </Steps>
-
-## Next steps
-
-<CardGroup cols={2}>
-  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
-    Build your first component with step-by-step instructions
-  </Card>
-  <Card title="Core Concepts" icon="lightbulb" href="/concepts/styles">
-    Learn about styles, variants, and modifiers
-  </Card>
-  <Card title="Examples" icon="code" href="/examples/button">
-    See real-world examples and patterns
-  </Card>
-  <Card title="API Reference" icon="book" href="/api/recast-styles">
-    Explore the complete API documentation
-  </Card>
-</CardGroup>
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="Module not found error">
-    Make sure you've installed the package correctly and restart your development server:
-    
-    ```bash
-    npm install @rpxl/recast
-    # or
-    yarn add @rpxl/recast
-    ```
-  </Accordion>
-  
-  <Accordion title="TypeScript errors">
-    Ensure you're using TypeScript 4.7 or later. Recast uses advanced TypeScript features for type safety.
-  </Accordion>
-  
-  <Accordion title="Classes not applying correctly">
-    If you're using Tailwind CSS, make sure your build process includes Recast files in the purge/content configuration:
-    
-    ```js tailwind.config.js
-    module.exports = {
-      content: [
-        './src/**/*.{js,ts,jsx,tsx}',
-        './node_modules/@rpxl/recast/**/*.{js,ts,jsx,tsx}', // Add this line
-      ],
-      // ...
-    }
-    ```
-  </Accordion>
-</AccordionGroup> 

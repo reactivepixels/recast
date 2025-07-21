@@ -5,71 +5,7 @@ description: "A powerful and flexible styling library for React components that 
 
 import { Button } from '/snippets/button.jsx'
 import { BlueprintCard } from '/snippets/blueprint-card.jsx'
-
-
-# Features
-
-Create **truly reusable** component primitives that can be styled differently across projects without code duplication.
-
-<CardGroup cols={2}>
-  <Card title="Type-Safe Styling" icon="shield-check">
-    Full TypeScript support with intelligent autocomplete for variants and modifiers
-  </Card>
-  <Card title="Performance Optimized" icon="bolt">
-    Built-in memoization and LRU caching for fast re-renders
-  </Card>
-  <Card title="Framework Agnostic" icon="cubes">
-    Works with any CSS framework - Tailwind, CSS Modules, styled-components
-  </Card>
-  <Card title="Zero Runtime" icon="feather">
-    Minimal bundle size with tree-shaking support
-  </Card>
-</CardGroup>
-
-## Quick example
-
-Here's how easy it is to create a reusable button component:
-
-<CodeGroup>
-```tsx Component
-import { recast } from '@rpxl/recast'
-
-const buttonStyles = recast.styles({
-  base: "button-base",
-  variants: {
-    variant: {
-      default: "button-solid",
-      outline: "button-outline",
-      ... // Add more variants here
-    },
-    size: {
-      default: "button-medium",
-      sm: "button-small",
-      md: "button-medium",
-      lg: "button-large",
-      ... // Add more sizes here
-    }
-  },
-  defaults: {
-    variants: { variant: "default", size: "default" }
-  }
-})
-
-const Button = buttonStyles(ButtonPrimitive)
-```
-
-```tsx Usage
-<Button variant="outline" size="lg">
-  Click me
-</Button>
-
-<Button variant="default" size="sm">
-  Small button
-</Button>
-```
-</CodeGroup>
-
-**Result:**
+import { FadeCarousel } from '/snippets/fade-carousel.jsx'
 
 <Frame>
   <BlueprintCard>
@@ -87,18 +23,69 @@ const Button = buttonStyles(ButtonPrimitive)
         </p>
       </div>
 
-      <div className="flex flex-col gap-2 items-center">
-        <h4 className="text-xs uppercase font-mono">outline:md</h4>
-        <button className="button-base button-outline button-medium w-full">Outline</button>
-      </div>
-
-      <div className="flex flex-col gap-2 items-center">
-        <h4 className="text-xs uppercase font-mono">default:sm</h4>
-        <button className="button-base button-solid button-smal w-full">Default</button>
-      </div>
+      <FadeCarousel className="h-32">
+        <div className="absolute w-full h-full flex items-center justify-center">
+          <button className="button-base button-outline button-small w-full">Recast</button>
+        </div>
+        <div className="absolute w-full h-full flex items-center justify-center">
+          <button className="button-base button-solid button-medium w-full">Recast</button>
+        </div>
+        <div className="absolute w-full h-full flex items-center justify-center">
+          <button className="button-base button-outline button-large">Recast</button>
+        </div>
+      </FadeCarousel>
     </section>
   </BlueprintCard>
 </Frame>
+
+
+
+
+# Features
+
+Create **truly reusable** component primitives that can be styled differently across projects without code duplication.
+
+
+<CardGroup cols={2}>
+  <Card title="Type-Safe Styling" icon="shield-check">
+    Full TypeScript support with intelligent autocomplete for variants and modifiers
+  </Card>
+  <Card title="Performance Optimized" icon="bolt">
+    Built-in memoization and LRU caching for fast re-renders
+  </Card>
+  <Card title="Framework Agnostic" icon="cubes">
+    Works with any CSS framework - Tailwind, CSS Modules, styled-components
+  </Card>
+  <Card title="Zero Runtime" icon="feather">
+    Minimal bundle size with tree-shaking support
+  </Card>
+</CardGroup>
+
+## Get started
+
+<Steps>
+  <Step title="Install Recast">
+    Add Recast to your React project
+    
+    <CodeGroup>
+    ```bash npm
+    npm install @rpxl/recast
+    ```
+    
+    ```bash yarn
+    yarn add @rpxl/recast
+    ```
+    
+    ```bash pnpm
+    pnpm add @rpxl/recast
+    ```
+    </CodeGroup>
+  </Step>
+  
+  <Step title="Create your first styled component">
+    Follow our [quickstart guide](/quickstart) to build your first component with Recast
+  </Step>
+</Steps>
 
 ## Why Recast?
 
@@ -142,36 +129,6 @@ const Button = buttonStyles(ButtonPrimitive)
     Style complex components with multiple parts
   </Card>
 </CardGroup>
-
-## Get started
-
-<Steps>
-  <Step title="Install Recast">
-    Add Recast to your React project
-    
-    <CodeGroup>
-    ```bash npm
-    npm install @rpxl/recast
-    ```
-    
-    ```bash yarn
-    yarn add @rpxl/recast
-    ```
-    
-    ```bash pnpm
-    pnpm add @rpxl/recast
-    ```
-    </CodeGroup>
-  </Step>
-  
-  <Step title="Create your first styled component">
-    Follow our [quickstart guide](/quickstart) to build your first component with Recast
-  </Step>
-  
-  <Step title="Explore examples">
-    Check out our [examples](/examples/button) to see Recast in action with real-world components
-  </Step>
-</Steps>
 
 ## Community and support
 

@@ -3,29 +3,38 @@ title: "Quickstart"
 description: "Build your first styled component in 5 minutes"
 ---
 
-import Button from './components/Button'
-
-# Quickstart
-
-Get up and running with Recast in just a few minutes. We'll build a complete button component from scratch.
+import { BlueprintCard } from '/snippets/blueprint-card.jsx'
 
 ## What we'll build
 
-A flexible button component with multiple variants and states:
+We'll build a flexible button component with multiple variants and states from scratch.
 
 <Frame>
-<div className="flex gap-3 items-center p-5">
-  <Button variant="default" size="lg">Default Button</Button>
-  <Button variant="secondary" disabled>Secondary Disabled</Button>
-  <Button variant="outline">Outline Button</Button>
-</div>
+  <BlueprintCard>
+    <section className="flex flex-col gap-8">
+      <div className="max-w-xl flex flex-col gap-4">
+        <div className="flex flex-col gap-1 w-min">
+          <div className="w-full flex gap-2 items-center before:flex-1 before:bg-gradient-to-r before:from-transparent before:to-black/25 dark:before:to-white/25 before:h-px after:flex-1 after:bg-gradient-to-r dark:after:from-white/25 after:from-black/25 after:to-transparent after:h-px">
+            <span className="text-xs font-light">Component</span>
+          </div>
+          <h1 className="font-semibold dark:text-white text-black text-4xl text-foreground">Button</h1>
+        </div>
+
+        <p className="font-extralight text-balance tracking-wide leading-snug line-clamp-2 max-w-md">
+          A control that allows the user to click and trigger an action.
+        </p>
+      </div>
+
+      <button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-900 dark:hover:text-white dark:hover:bg-gray-700">Register</button>
+    </section>
+  </BlueprintCard>
 </Frame>
 
 <Steps>
 <Step title="Create your primitive component">
 Start with a basic, unstyled button component:
 
-```tsx ButtonPrimitive.tsx
+```tsx button-primitive.tsx
 import { forwardRef, ButtonHTMLAttributes } from 'react'
 
 interface ButtonPrimitiveProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -47,20 +56,20 @@ export const ButtonPrimitive = forwardRef<HTMLButtonElement, ButtonPrimitiveProp
 <Step title="Define your styles">
 Create a style definition using `recast.styles()`:
 
-```tsx Button.styles.ts
+```tsx button.styles.ts
 import { recast } from '@rpxl/recast'
 
 export const buttonStyles = recast.styles({
-  base: "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  base: "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   
   variants: {
     variant: {
-      default: "bg-primary text-primary-foreground hover:bg-primary/90",
-      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
-      link: "text-primary underline-offset-4 hover:underline"
+      default: "bg-blue-600 text-white hover:bg-blue-700",
+      destructive: "bg-red-600 text-white hover:bg-red-700",
+      outline: "border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900",
+      secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
+      ghost: "hover:bg-gray-100 hover:text-gray-900",
+      link: "text-blue-600 underline-offset-4 hover:underline"
     },
     size: {
       default: "h-10 px-4 py-2",
@@ -86,9 +95,9 @@ export const buttonStyles = recast.styles({
 <Step title="Create your styled component">
 Apply the styles to your primitive:
 
-```tsx Button.tsx
-import { buttonStyles } from './Button.styles'
-import { ButtonPrimitive } from './ButtonPrimitive'
+```tsx button.tsx
+import { buttonStyles } from './button.styles'
+import { ButtonPrimitive } from './button-primitive'
 
 export const Button = buttonStyles(ButtonPrimitive)
 export type ButtonProps = ComponentProps<typeof Button>
@@ -119,23 +128,6 @@ Now you can use your button with full TypeScript support:
 </CodeGroup>
 </Step>
 </Steps>
-
-## What you get
-
-<CardGroup cols={2}>
-<Card title="Type Safety" icon="shield-check">
-  Full TypeScript autocomplete and error checking for all variants and modifiers
-</Card>
-<Card title="Performance" icon="bolt">
-  Automatic memoization means your styles are computed once and cached
-</Card>
-<Card title="Flexibility" icon="adjustments-horizontal">
-  Easy to extend with new variants, modifiers, and conditional styling
-</Card>
-<Card title="Developer Experience" icon="sparkles">
-  Clean API that's intuitive to use and easy to maintain
-</Card>
-</CardGroup>
 
 ## Advanced: Adding conditional styles
 
@@ -185,14 +177,3 @@ const defaultButtonClasses = buttonStyles.extract({
 <Check>
 **You're ready!** You now have a fully functional, type-safe, performant button component. Apply these same patterns to build any component in your design system.
 </Check>
-
-## Next Steps
-
-<CardGroup cols={2}>
-<Card title="Learn Core Concepts" icon="book-open" href="/concepts/styles">
-  Dive deeper into styles, variants, and modifiers
-</Card>
-<Card title="Explore Composition" icon="puzzle-piece" href="/concepts/composition">
-  Learn how to combine multiple style objects for complex components
-</Card>
-</CardGroup>

@@ -1,11 +1,7 @@
 ---
 title: "Variants & Modifiers"
-description: "Learn the two ways to style components with Recast"
+description: "Recast provides two complementary ways to style your components: **variants** for mutually exclusive options and **modifiers** for combinable boolean flags."
 ---
-
-# Variants & Modifiers
-
-Recast provides two complementary ways to style your components: **variants** for mutually exclusive options and **modifiers** for combinable boolean flags.
 
 ## Variants
 
@@ -157,7 +153,7 @@ const buttonStyles = recast.styles({
 const Button = buttonStyles(ButtonPrimitive)
 ```
 
-<Frame>
+<CodeGroup>
 ```tsx Usage Examples
 // Uses defaults: variant="primary" size="md"
 <Button>Default Button</Button>
@@ -172,7 +168,7 @@ const Button = buttonStyles(ButtonPrimitive)
   Loading Full-Width Button
 </Button>
 ```
-</Frame>
+</CodeGroup>
 
 ## Default Values
 

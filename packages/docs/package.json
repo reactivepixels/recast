@@ -7,6 +7,7 @@
     "start": "mint dev"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.20.0",
     "@rpxl/recast": "workspace:*",
     "@rpxl/recast-primitives": "workspace:*",
     "@types/react": "^18.3.20",

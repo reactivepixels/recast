@@ -1,11 +1,7 @@
 ---
 title: "Composition"
-description: "Combine multiple style objects for modular, reusable design systems"
+description: "Composition allows you to combine multiple style objects into a single, unified style definition. This enables modular design where you can build complex components from simpler, focused style modules."
 ---
-
-# Composition
-
-Composition allows you to combine multiple style objects into a single, unified style definition. This enables modular design where you can build complex components from simpler, focused style modules.
 
 ## Basic Composition
 
@@ -268,7 +264,7 @@ const Badge = recast.compose([
 
 Composed style objects maintain full TypeScript support:
 
-<Frame>
+<CodeGroup>
 ```tsx TypeScript Integration
 const layoutStyles = recast.styles({
   variants: { spacing: { normal: "gap-2", wide: "gap-4" } }
@@ -290,7 +286,7 @@ type ComposedButtonProps = ComponentProps<typeof ComposedButton>
 //   // + all ButtonPrimitive props
 // }
 ```
-</Frame>
+</CodeGroup>
 
 ## Performance Tips
 
@@ -351,14 +347,3 @@ const Button = recast.compose([
   Test individual style modules before composing them together
 </Card>
 </CardGroup>
-
-## Next Steps
-
-<CardGroup cols={2}>
-<Card title="API Reference" icon="book" href="/api/recast-compose">
-  Complete documentation for the compose function
-</Card>
-<Card title="Advanced Styles" icon="cog" href="/api/recast-styles">
-  Learn about conditionals and advanced style features
-</Card>
-</CardGroup> 

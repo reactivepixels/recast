@@ -1,11 +1,7 @@
 ---
 title: "Styles"
-description: "Learn how to create reusable style definitions with recast.styles()"
+description: "The `recast.styles()` function is the foundation of Recast. It creates reusable style definitions that you can apply to any React component."
 ---
-
-# Styles
-
-The `recast.styles()` function is the foundation of Recast. It creates reusable style definitions that you can apply to any React component.
 
 ## Basic Syntax
 
@@ -34,12 +30,22 @@ const Button = buttonStyles(ButtonPrimitive)
 
 The style configuration object supports five main properties:
 
-<AccordionGroup>
-<Accordion title="base - Foundation styles">
-Classes applied to all instances of the component:
+
+<CardGroup cols={1}>
+<Card title="Base - Foundation styles" icon="palette">
+Classes applied to all instances of the component. Each key accepts a string of classnames or an array of classname strings for better readability:
 
 ```tsx
 base: "px-4 py-2 rounded font-medium transition-colors"
+```
+
+Or as an array for better readability with long classname lists:
+```tsx
+base: [
+  "px-4 py-2 rounded font-medium",
+  "transition-colors hover:bg-gray-100",
+  "focus:outline-none focus:ring-2 focus:ring-blue-500"
+]
 ```
 
 Can also be an object for complex components:
@@ -50,9 +56,9 @@ base: {
   content: "px-6 py-4"
 }
 ```
-</Accordion>
+</Card>
 
-<Accordion title="variants - Mutually exclusive options">
+<Card title="Variants - Mutually exclusive options" icon="layer-group">
 Different visual styles (only one can be active):
 
 ```tsx
@@ -67,9 +73,9 @@ variants: {
   }
 }
 ```
-</Accordion>
+</Card>
 
-<Accordion title="modifiers - Boolean flags">
+<Card title="Modifiers - Boolean flags" icon="toggle-on">
 Styles that can be combined:
 
 ```tsx
@@ -79,9 +85,9 @@ modifiers: {
   fullWidth: "w-full"
 }
 ```
-</Accordion>
+</Card>
 
-<Accordion title="defaults - Reduce repetition">
+<Card title="Defaults - Reduce repetition" icon="gear">
 Set default values for variants:
 
 ```tsx
@@ -89,9 +95,9 @@ defaults: {
   variants: { variant: "default", size: "default" }
 }
 ```
-</Accordion>
+</Card>
 
-<Accordion title="conditionals - Advanced logic">
+<Card title="Conditionals - Advanced logic" icon="code-branch">
 Apply styles only when specific conditions are met:
 
 ```tsx
@@ -103,8 +109,8 @@ conditionals: [
   }
 ]
 ```
-</Accordion>
-</AccordionGroup>
+</Card>
+</CardGroup>
 
 ## What You Get Back
 
@@ -150,8 +156,11 @@ const classes = buttonStyles.extract({
 
 For single-element components, use a string base:
 
-```tsx
-const buttonStyles = recast.styles({
+<CodeGroup>
+```tsx button.styles.ts
+import { recast } from '@rpxl/recast'
+
+export const buttonStyles = recast.styles({
   base: "inline-flex items-center justify-center rounded-md text-sm font-medium",
   variants: {
     variant: {
@@ -162,13 +171,31 @@ const buttonStyles = recast.styles({
 })
 ```
 
+```tsx button.tsx
+import { buttonStyles } from './button.styles'
+
+function ButtonPrimitive({ className, children, ...props }) {
+  return (
+    // You can use the className prop to apply the recast generated styles to the button
+    <button className={className} {...props}>
+      {children}
+    </button>
+  )
+}
+
+const Button = buttonStyles(ButtonPrimitive)
+```
+</CodeGroup>
+
 ### Complex Components (Object Base)
 
 For multi-element components, use an object base:
 
 <CodeGroup>
-```tsx Card Styles
-const cardStyles = recast.styles({
+```tsx card.styles.ts
+import { recast } from '@rpxl/recast'
+
+export const cardStyles = recast.styles({
   base: {
     root: "rounded-lg border bg-card text-card-foreground shadow-sm",
     header: "flex flex-col space-y-1.5 p-6",
@@ -186,10 +213,15 @@ const cardStyles = recast.styles({
 })
 ```
 
-```tsx Card Primitive
-function CardPrimitive({ cls, title, children }) {
+```tsx card.tsx
+import { cardStyles } from './card.styles'
+import { cn } from './utils/cn'
+
+function CardPrimitive({ cls, className, title, children }) {
   return (
-    <div className={cls?.root}>
+    // Nested components will receive a separate className prop 
+    // that should be merged with the recast generated styles
+    <div className={cn(cls?.root, className)}>
       <div className={cls?.header}>
         <h3 className={cls?.title}>{title}</h3>
       </div>
@@ -211,6 +243,7 @@ Recast automatically optimizes style computation:
 - **Fast Extraction**: Style extraction is optimized for performance
 
 <Frame>
+<div className="flex flex-col gap-2 w-full">
 ```tsx Performance Example
 // First call - computed and cached
 const classes1 = buttonStyles.extract({ variant: "default" })
@@ -221,6 +254,7 @@ const classes2 = buttonStyles.extract({ variant: "default" })
 // Only different combinations trigger new computations
 const classes3 = buttonStyles.extract({ variant: "secondary" })
 ```
+</div>
 </Frame>
 
 <Warning>
@@ -237,20 +271,9 @@ const classes3 = buttonStyles.extract({ variant: "secondary" })
   Set sensible defaults to reduce prop repetition in your components
 </Card>
 <Card title="Semantic Names" icon="tag">
-  Use meaningful variant names like `variant` and `size` rather than generic names
+  Use meaningful variant names like `variant` and `size`.
 </Card>
 <Card title="Composition Ready" icon="puzzle-piece">
   Design styles to work well with `recast.compose()` for maximum reusability
 </Card>
 </CardGroup>
-
-## Next Steps
-
-<CardGroup cols={2}>
-<Card title="Variants & Modifiers" icon="sliders" href="/concepts/variants-and-modifiers">
-  Learn the difference between variants and modifiers
-</Card>
-<Card title="Composition" icon="layer-group" href="/concepts/composition">
-  Combine multiple style objects for complex components
-</Card>
-</CardGroup> 
