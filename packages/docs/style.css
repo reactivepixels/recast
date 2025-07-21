@@ -93,6 +93,10 @@
   transition: opacity 0.3s ease;
 }
 
+.button-rounded {
+  border-radius: 0.5em;
+}
+
 .button-pill {
   border-radius: 999px;
 }
@@ -119,8 +123,6 @@
 }
 
 .button-glow {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 100px;
   background: linear-gradient(135deg, #cfef00, #a8c700);
   border: 1px solid transparent;
   color: black;
@@ -129,7 +131,6 @@
 
 .button-skeuomo {
   color: #080808;
-  border-radius: 0.5em;
   background: #e8e8e8;
   cursor: pointer;
   border: 1px solid #e8e8e8;
