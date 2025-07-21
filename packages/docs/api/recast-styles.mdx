@@ -17,83 +17,89 @@ recast.styles(styleConfig)
 
 ## Configuration Properties
 
-<AccordionGroup>
-<Accordion title="base" icon="palette">
-Foundation classes applied to all instances:
+<ParamField path="base" type="string | string[] | object">
+  Foundation classes applied to all instances.
 
-<CodeGroup>
-```tsx String Base (Simple)
-const styles = recast.styles({
-  base: "px-4 py-2 rounded font-medium"
-})
-```
+  <CodeGroup>
+    ```tsx String Base (Simple)
+    const styles = recast.styles({
+      base: "px-4 py-2 rounded font-medium"
+    })
+    ```
 
-```tsx Object Base (Complex)
-const styles = recast.styles({
-  base: {
-    root: "rounded-lg border bg-white",
-    header: "px-6 py-4 border-b",
-    content: "px-6 py-4"
-  }
-})
-```
-</CodeGroup>
-</Accordion>
+    ```tsx Object Base (Complex)
+    const styles = recast.styles({
+      base: {
+        root: "rounded-lg border bg-white",
+        header: "px-6 py-4 border-b",
+        content: "px-6 py-4"
+      }
+    })
+    ```
+  </CodeGroup>
+</ParamField>
 
-<Accordion title="variants" icon="layer-group">
-Mutually exclusive styling options:
+<ParamField path="variants" type="object">
+  Mutually exclusive styling options.
 
-```tsx
-variants: {
-  variant: {
-    primary: "bg-blue-500 text-white",
-    secondary: "bg-gray-200 text-gray-900"
-  },
-  size: {
-    sm: "px-3 py-1 text-sm",
-    md: "px-4 py-2",
-    lg: "px-6 py-3 text-lg"
-  }
-}
-```
-</Accordion>
+  <CodeGroup>
+    ```tsx
+    variants: {
+      variant: {
+        primary: "bg-blue-500 text-white",
+        secondary: "bg-gray-200 text-gray-900"
+      },
+      size: {
+        sm: "px-3 py-1 text-sm",
+        md: "px-4 py-2",
+        lg: "px-6 py-3 text-lg"
+      }
+    }
+    ```
+  </CodeGroup>
+</ParamField>
 
-<Accordion title="modifiers" icon="toggle-on">
-Boolean flags that can be combined:
+<ParamField path="modifiers" type="object">
+  Boolean flags that can be combined.
 
-```tsx
-modifiers: {
-  disabled: "opacity-50 cursor-not-allowed",
-  loading: "cursor-wait",
-  fullWidth: "w-full"
-}
-```
-</Accordion>
+  <CodeGroup>
+    ```tsx
+    modifiers: {
+      disabled: "opacity-50 cursor-not-allowed",
+      loading: "cursor-wait",
+      fullWidth: "w-full"
+    }
+    ```
+  </CodeGroup>
+</ParamField>
 
-<Accordion title="defaults" icon="gear">
-Default values to reduce prop repetition:
+<ParamField path="defaults" type="object">
+  Default values to reduce prop repetition.
 
-```tsx
-defaults: {
-  variants: { variant: "primary", size: "md" }
-}
-```
-</Accordion>
+  <CodeGroup>
+    ```tsx
+    defaults: {
+      variants: { variant: "primary", size: "md" }
+    }
+    ```
+  </CodeGroup>
+</ParamField>
 
-<Accordion title="conditionals" icon="code-branch">
-Apply styles only when specific conditions are met:
+<ParamField path="conditionals" type="array">
+  Apply styles only when specific conditions are met.
 
-```tsx
-conditionals: [
-  {
-    variants: { variant: "primary" },
-    modifiers: ["loading"],
-    className: "bg-blue-400"
-  }
-]
-```
-</Accordion>
-</AccordionGroup>
+  <CodeGroup>
+    ```tsx
+    conditionals: [
+      {
+        variants: { variant: "primary" },
+        modifiers: ["loading"],
+        className: "bg-blue-400"
+      }
+    ]
+    ```
+  </CodeGroup>
+</ParamField>
 
 ## Return Value
 

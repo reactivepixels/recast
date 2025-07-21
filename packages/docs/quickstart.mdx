@@ -37,9 +37,7 @@ Start with a basic, unstyled button component:
 ```tsx button-primitive.tsx
 import { forwardRef, ButtonHTMLAttributes } from 'react'
 
-interface ButtonPrimitiveProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode
-}
+type ButtonPrimitiveProps = ButtonHTMLAttributes<HTMLButtonElement>
 
 export const ButtonPrimitive = forwardRef<HTMLButtonElement, ButtonPrimitiveProps>(
   ({ children, ...props }, ref) => {
@@ -61,7 +59,6 @@ import { recast } from '@rpxl/recast'
 
 export const buttonStyles = recast.styles({
   base: "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-  
   variants: {
     variant: {
       default: "bg-blue-600 text-white hover:bg-blue-700",
@@ -78,13 +75,11 @@ export const buttonStyles = recast.styles({
       icon: "h-10 w-10"
     }
   },
-  
   modifiers: {
     disabled: "opacity-50 cursor-not-allowed",
     loading: "cursor-wait",
     fullWidth: "w-full"
   },
-  
   defaults: {
     variants: { variant: "default", size: "default" }
   }
@@ -100,7 +95,6 @@ import { buttonStyles } from './button.styles'
 import { ButtonPrimitive } from './button-primitive'
 
 export const Button = buttonStyles(ButtonPrimitive)
-export type ButtonProps = ComponentProps<typeof Button>
 ```
 </Step>
 

@@ -129,7 +129,7 @@ const buttonStyles = recast.styles({
 Recast also works with CSS Modules:
 
 ```tsx
-import styles from './Button.module.css'
+import styles from './button.module.css'
 
 const buttonStyles = recast.styles({
   base: styles.button,
@@ -174,7 +174,6 @@ import { recast } from '@rpxl/recast'
 
 const buttonStyles = recast.styles({
   base: "inline-flex items-center justify-center rounded-md font-medium",
-
   variants: {
     variant: {
       primary: "bg-primary text-primary-foreground",
@@ -204,10 +203,11 @@ For complex components with multiple parts, Recast provides special type helpers
 import { recast } from '@rpxl/recast'
 
 export const cardStyles = recast.styles({
-  root: "rounded-lg border bg-card text-card-foreground shadow-sm",
-  header: "flex flex-col space-y-1.5 p-6",
-  content: "p-6 pt-0"
-}, {
+  base: {
+    root: "rounded-lg border bg-card text-card-foreground shadow-sm",
+    header: "flex flex-col space-y-1.5 p-6",
+    content: "p-6 pt-0"
+  },
   variants: {
     variant: {
       default: {
@@ -291,5 +291,11 @@ To verify your installation is working correctly:
   
   <Step title="Check the output">
     The component should render with the correct classes applied.
+
+    <Note>
+      "px-4 py-2 rounded font-medium bg-blue-500 text-white"
+    </Note>
   </Step>
+
+
 </Steps>

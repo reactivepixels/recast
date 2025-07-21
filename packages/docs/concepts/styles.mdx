@@ -219,7 +219,7 @@ import { cn } from './utils/cn'
 
 function CardPrimitive({ cls, className, title, children }) {
   return (
-    // Nested components will receive a separate className prop 
+    // Nested components can receive a separate className prop 
     // that should be merged with the recast generated styles
     <div className={cn(cls?.root, className)}>
       <div className={cls?.header}>
