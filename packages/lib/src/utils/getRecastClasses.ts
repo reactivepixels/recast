@@ -7,6 +7,7 @@ import { getDefaultModifierClasses } from "./getDefaultModifierClasses.js";
 import { getDefaultVariantClasses } from "./getDefaultVariantClasses.js";
 import { getModifierClasses } from "./getModifierClasses.js";
 import { getVariantClasses } from "./getVariantClasses.js";
+import { memoizeWithLRU, withPerformanceMonitoring } from "./common.js";
 
 type RecastClasses = {
   styles: RelaxedStyles;
@@ -21,12 +22,13 @@ type ClassGeneratorProps = {
 };
 
 /**
+ * Internal unmemoized version of getRecastClasses.
  * Generates and combines CSS classes based on the provided styles, variants, and modifiers.
  *
  * @param {RecastClasses} params - The input parameters
  * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
  */
-export function getRecastClasses({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
+function getRecastClassesInternal({ styles, variants, modifiers }: RecastClasses): RelaxedRecastStyleProps {
   // Early return for empty inputs
   if (!styles || Object.keys(styles).length === 0) {
     return RECAST_STYLE_PROPS;
@@ -56,3 +58,19 @@ export function getRecastClasses({ styles, variants, modifiers }: RecastClasses)
 
   return { className, cls: result.cls };
 }
+
+/**
+ * Memoized version of getRecastClasses with LRU caching for optimal performance.
+ * Generates and combines CSS classes based on the provided styles, variants, and modifiers.
+ *
+ * This function uses LRU caching because it's called on every render of every component,
+ * and the same input combinations are often repeated, making caching very effective.
+ * The LRU cache prevents memory leaks by limiting cache size.
+ *
+ * @param {RecastClasses} params - The input parameters
+ * @returns {RelaxedRecastStyleProps} An object containing the generated className and cls properties
+ */
+export const getRecastClasses = withPerformanceMonitoring(
+  memoizeWithLRU(getRecastClassesInternal, 200), // Limit cache to 200 entries
+  "getRecastClasses",
+);

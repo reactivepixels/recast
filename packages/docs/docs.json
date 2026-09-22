@@ -1,0 +1,48 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "Recast",
+  "description": "Build components once. Use everywhere.",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#4c72fa",
+    "light": "#F8FAFC",
+    "dark": "#0F172A"
+  },
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/reactivepixels/recast"
+    },
+    {
+      "name": "npm",
+      "icon": "box",
+      "url": "https://www.npmjs.com/package/@rpxl/recast"
+    }
+  ],
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting Started",
+        "pages": ["index", "installation", "quickstart"]
+      },
+      {
+        "group": "Core Concepts",
+        "pages": [
+          "concepts/styles",
+          "concepts/variants-and-modifiers",
+          "concepts/composition"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "pages": ["api/recast-styles", "api/recast-compose"]
+      }
+    ]
+  }
+}

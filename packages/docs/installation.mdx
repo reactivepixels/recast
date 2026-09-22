@@ -1,0 +1,301 @@
+---
+title: "Installation"
+description: "Install and configure Recast in your React project"
+---
+
+## Requirements
+
+<Note>
+  Recast requires **React 17 or later** and works with any CSS framework or styling solution.
+</Note>
+
+## Install the package
+
+Choose your preferred package manager:
+
+<CodeGroup>
+```bash npm
+npm install @rpxl/recast
+```
+
+```bash yarn
+yarn add @rpxl/recast
+```
+
+```bash pnpm
+pnpm add @rpxl/recast
+```
+
+```bash bun
+bun add @rpxl/recast
+```
+</CodeGroup>
+
+## Basic usage
+
+Import Recast and start creating styled components:
+
+```tsx
+import { recast } from '@rpxl/recast'
+
+const buttonStyles = recast.styles({
+  base: "px-4 py-2 rounded font-medium",
+  variants: {
+    variant: {
+      primary: "bg-blue-500 text-white",
+      secondary: "bg-gray-200 text-gray-800"
+    }
+  }
+})
+
+const Button = buttonStyles(YourButtonComponent)
+```
+
+<Tip>
+  That's it! No additional configuration is required to start using Recast.
+</Tip>
+
+## Global configuration (optional)
+
+For advanced use cases, you can configure Recast globally:
+
+```tsx
+import { recast } from '@rpxl/recast'
+import { cn } from './utils/cn' // Your preferred class merging function
+
+recast.configure({
+  // Custom class merging function (optional)
+  mergeFn: cn,
+  
+  // Performance settings (optional)
+  performance: {
+    enableMonitoring: true,  // Log performance stats in development
+    cacheSize: 500,         // LRU cache size (default: 200)
+  }
+})
+```
+
+### Configuration options
+
+<ParamField path="mergeFn" type="function" default="Built-in merger">
+  Custom function for merging class names. Popular options include [`clsx`](https://github.com/lukeed/clsx), [`classnames`](https://github.com/JedWatson/classnames), or [`tailwind-merge`](https://github.com/dcastil/tailwind-merge).
+</ParamField>
+
+<ParamField path="performance.enableMonitoring" type="boolean" default="false">
+  Enable performance monitoring in development mode. Logs cache hit rates and computation times.
+</ParamField>
+
+<ParamField path="performance.cacheSize" type="number" default="200">
+  Maximum number of entries in the LRU cache. Increase for better performance with many style variations.
+</ParamField>
+
+## Framework integration
+
+### Tailwind CSS
+
+Recast works perfectly with Tailwind CSS out of the box:
+
+```tsx
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-colors",
+  variants: {
+    variant: {
+      primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+    },
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2",
+      lg: "h-10 px-8"
+    }
+  }
+})
+```
+
+<Tip>
+  Consider using [`tailwind-merge`](https://github.com/dcastil/tailwind-merge) as your `mergeFn` for better Tailwind class deduplication:
+  
+  ```tsx
+  import { twMerge } from 'tailwind-merge'
+  
+  recast.configure({
+    mergeFn: twMerge
+  })
+  ```
+</Tip>
+
+### CSS Modules
+
+Recast also works with CSS Modules:
+
+```tsx
+import styles from './button.module.css'
+
+const buttonStyles = recast.styles({
+  base: styles.button,
+  variants: {
+    variant: {
+      primary: styles.primary,
+      secondary: styles.secondary
+    }
+  }
+})
+```
+
+### Styled Components
+
+You can even use Recast with CSS-in-JS solutions:
+
+```tsx
+import styled from 'styled-components'
+
+const StyledButton = styled.button`
+  /* base styles */
+`
+
+const buttonStyles = recast.styles({
+  variants: {
+    variant: {
+      primary: "primary-variant-class",
+      secondary: "secondary-variant-class"
+    }
+  }
+})
+
+const Button = buttonStyles(StyledButton)
+```
+
+## TypeScript support
+
+Recast includes comprehensive TypeScript definitions out of the box. All style definitions, variants, and modifiers are fully typed, providing excellent autocomplete and type safety:
+
+```tsx
+import { recast } from '@rpxl/recast'
+
+const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md font-medium",
+  variants: {
+    variant: {
+      primary: "bg-primary text-primary-foreground",
+      secondary: "bg-secondary text-secondary-foreground"
+    },
+    size: {
+      sm: "h-8 px-3 text-sm",
+      md: "h-9 px-4 py-2",
+      lg: "h-10 px-8"
+    }
+  },
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
+    loading: "animate-spin"
+  }
+})
+
+const Button = buttonStyles('button')
+```
+
+## Nested component support
+
+For complex components with multiple parts, Recast provides special type helpers to ensure type safety across all component parts:
+
+<CodeGroup>
+```tsx card-styles.tsx
+import { recast } from '@rpxl/recast'
+
+export const cardStyles = recast.styles({
+  base: {
+    root: "rounded-lg border bg-card text-card-foreground shadow-sm",
+    header: "flex flex-col space-y-1.5 p-6",
+    content: "p-6 pt-0"
+  },
+  variants: {
+    variant: {
+      default: {
+        root: "border-border",
+        header: "border-b border-border"
+      },
+      elevated: {
+        root: "border-0 shadow-lg",
+        header: "bg-muted/50"
+      }
+    },
+    size: {
+      sm: {
+        root: "text-sm",
+        header: "p-4",
+        content: "p-4 pt-0"
+      },
+      lg: {
+        root: "text-lg",
+        header: "p-8",
+        content: "p-8 pt-0"
+      }
+    }
+  }
+})
+```
+
+```tsx card-component.tsx
+import { RecastClsProps } from '@rpxl/recast'
+import { cardStyles } from './card-styles'
+
+interface CardProps extends RecastClsProps<'root' | 'header' | 'content'> {
+  title?: string
+  children: React.ReactNode
+}
+
+function CardPrimitive({ cls, title, children }: CardProps) {
+  return (
+    <div className={cls?.root}>
+      {title && <div className={cls?.header}>{title}</div>}
+      <div className={cls?.content}>{children}</div>
+    </div>
+  )
+}
+
+// Create the styled component
+const Card = cardStyles(CardPrimitive)
+```
+</CodeGroup>
+
+## Verification
+
+To verify your installation is working correctly:
+
+<Steps>
+  <Step title="Create a test component">
+    ```tsx
+    import { recast } from '@rpxl/recast'
+    
+    const testStyles = recast.styles({
+      base: "p-4 rounded",
+      variants: {
+        color: {
+          blue: "bg-blue-500 text-white",
+          red: "bg-red-500 text-white"
+        }
+      }
+    })
+    
+    const TestComponent = testStyles("div")
+    ```
+  </Step>
+  
+  <Step title="Use the component">
+    ```tsx
+    <TestComponent color="blue">
+      Recast is working! 🎉
+    </TestComponent>
+    ```
+  </Step>
+  
+  <Step title="Check the output">
+    The component should render with the correct classes applied.
+
+    <Note>
+      "px-4 py-2 rounded font-medium bg-blue-500 text-white"
+    </Note>
+  </Step>
+
+
+</Steps>

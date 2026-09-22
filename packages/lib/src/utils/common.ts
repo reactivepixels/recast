@@ -151,6 +151,97 @@ export function memoize<TArgs extends unknown[], TReturn>(
 }
 
 /**
+ * Enhanced caching system with configurable cache size limits and LRU eviction.
+ * Provides better memory management for frequently called functions.
+ */
+export function memoizeWithLRU<TArgs extends unknown[], TReturn>(
+  fn: (...args: TArgs) => TReturn,
+  maxCacheSize: number = 100,
+) {
+  const cache = new Map<string, { value: TReturn; lastAccessed: number }>();
+  let cacheHits = 0;
+  let cacheMisses = 0;
+
+  const memoizedFn = (...args: TArgs): TReturn => {
+    const key = JSON.stringify(args);
+    const now = Date.now();
+
+    if (cache.has(key)) {
+      const cached = cache.get(key)!;
+      cached.lastAccessed = now;
+      cache.delete(key);
+      cache.set(key, cached); // Move to end (most recently used)
+      cacheHits++;
+      return cached.value;
+    }
+
+    // Cache miss - compute result
+    const result = fn(...args);
+    cacheMisses++;
+
+    // If cache is full, remove least recently used item
+    if (cache.size >= maxCacheSize) {
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey !== undefined) {
+        cache.delete(oldestKey);
+      }
+    }
+
+    cache.set(key, { value: result, lastAccessed: now });
+    return result;
+  };
+
+  // Add utility methods
+  memoizedFn.clearCache = () => {
+    cache.clear();
+    cacheHits = 0;
+    cacheMisses = 0;
+  };
+
+  memoizedFn.getCacheStats = () => ({
+    size: cache.size,
+    maxSize: maxCacheSize,
+    hitRate: cacheHits + cacheMisses > 0 ? cacheHits / (cacheHits + cacheMisses) : 0,
+  });
+
+  return memoizedFn;
+}
+
+/**
+ * Performance monitoring utility for development mode.
+ * Tracks function execution times and call counts.
+ */
+export function withPerformanceMonitoring<TArgs extends unknown[], TReturn>(
+  fn: (...args: TArgs) => TReturn,
+  name: string,
+): (...args: TArgs) => TReturn {
+  if (process.env.NODE_ENV !== "development") {
+    return fn; // No monitoring in production
+  }
+
+  let callCount = 0;
+  let totalTime = 0;
+
+  const monitoredFn = (...args: TArgs): TReturn => {
+    const start = performance.now();
+    const result = fn(...args);
+    const end = performance.now();
+
+    callCount++;
+    totalTime += end - start;
+
+    // Log performance stats periodically
+    if (callCount % 100 === 0) {
+      console.log(`[Recast Performance] ${name}: ${callCount} calls, avg ${(totalTime / callCount).toFixed(2)}ms`);
+    }
+
+    return result;
+  };
+
+  return monitoredFn;
+}
+
+/**
  * Omits specified keys from an object.
  * @param keysToOmit - The keys to omit from the object.
  * @param originalObject - The original object.

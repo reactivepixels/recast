@@ -1,6 +1,6 @@
 import { cn } from "../../utils/cn.js";
 import * as RadixScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<
@@ -12,13 +12,7 @@ type Props = React.ComponentPropsWithoutRef<
     >,
     "orientation"
   > &
-  RecastWithClassNameProps<{
-    root: string;
-    viewport: string;
-    thumb: string;
-    corner: string;
-    scrollbar: string;
-  }>;
+  RecastClsProps<"root" | "viewport" | "thumb" | "corner" | "scrollbar">;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixScrollAreaPrimitive.Root>,

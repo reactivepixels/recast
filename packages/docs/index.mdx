@@ -1,0 +1,166 @@
+---
+title: "Introduction"
+description: "A powerful and flexible styling library for React components that provides type-safe, reusable styles with built-in performance optimizations."
+---
+
+import { Button } from '/snippets/button.jsx'
+import { BlueprintCard } from '/snippets/blueprint-card.jsx'
+import { FadeCarousel } from '/snippets/fade-carousel.jsx'
+
+<Frame>
+  <BlueprintCard>
+    <section className="flex flex-col gap-8">
+      <div className="max-w-xl flex flex-col gap-4">
+        <div className="flex flex-col gap-1 w-min">
+          <div className="w-full flex gap-2 items-center before:flex-1 before:bg-gradient-to-r before:from-transparent before:to-black/25 dark:before:to-white/25 before:h-px after:flex-1 after:bg-gradient-to-r dark:after:from-white/25 after:from-black/25 after:to-transparent after:h-px">
+            <span className="text-xs font-light">Component</span>
+          </div>
+          <h1 className="font-semibold dark:text-white text-black text-4xl text-foreground">Button</h1>
+        </div>
+
+        <p className="font-extralight text-balance tracking-wide leading-snug line-clamp-2 max-w-md">
+          A control that allows the user to click and trigger an action.
+        </p>
+      </div>
+
+      <div className="h-64">
+        <FadeCarousel className="relative flex flex-col gap-2">
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#212121] p-8 rounded-lg">
+            <button className="button-base button-outline button-small button-pill w-full">Recast</button>
+            <button className="button-base button-outline button-medium button-pill w-full">Recast</button>
+            <button className="button-base button-outline button-large button-pill w-full">Recast</button>
+          </div>
+
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#fefefe] p-8 rounded-lg">
+            <button className="button-base button-solid button-small button-pill w-full">Recast</button>
+            <button className="button-base button-solid button-medium button-pill w-full">Recast</button>
+            <button className="button-base button-solid button-large button-pill w-full">Recast</button>
+          </div>
+
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#212121] p-8 rounded-lg">
+            <button className="button-base button-glow button-outline button-small button-rounded w-full">Recast</button>
+            <button className="button-base button-glow button-outline button-medium button-rounded w-full">Recast</button>
+            <button className="button-base button-glow button-outline button-large button-rounded w-full">Recast</button>
+          </div>
+
+          <div className="w-full h-64 flex-col md:flex-row flex items-center justify-center gap-4 bg-[#e8e8e8] p-8 rounded-lg">
+            <button className="button-base button-skeuomo button-small button-rounded w-full">Recast</button>
+            <button className="button-base button-skeuomo button-medium button-rounded w-full">Recast</button>
+            <button className="button-base button-skeuomo button-large button-rounded w-full">Recast</button>
+          </div>
+        </FadeCarousel>
+      </div>
+    </section>
+  </BlueprintCard>
+</Frame>
+
+
+
+
+# Features
+
+Create **truly reusable** component primitives that can be styled differently across projects without code duplication.
+
+
+<CardGroup cols={2}>
+  <Card title="Type-Safe Styling" icon="shield-check">
+    Full TypeScript support with intelligent autocomplete for variants and modifiers
+  </Card>
+  <Card title="Performance Optimized" icon="bolt">
+    Built-in memoization and LRU caching for fast re-renders
+  </Card>
+  <Card title="Framework Agnostic" icon="cubes">
+    Works with any CSS framework - Tailwind, CSS Modules, styled-components
+  </Card>
+  <Card title="Zero Runtime" icon="feather">
+    Minimal bundle size with tree-shaking support
+  </Card>
+</CardGroup>
+
+## Get started
+
+<Steps>
+  <Step title="Install Recast">
+    Add Recast to your React project
+    
+    <CodeGroup>
+    ```bash npm
+    npm install @rpxl/recast
+    ```
+    
+    ```bash yarn
+    yarn add @rpxl/recast
+    ```
+    
+    ```bash pnpm
+    pnpm add @rpxl/recast
+    ```
+    </CodeGroup>
+  </Step>
+  
+  <Step title="Create your first styled component">
+    Follow our [quickstart guide](/quickstart) to build your first component with Recast
+  </Step>
+</Steps>
+
+## Why Recast?
+
+<CardGroup cols={1}>
+  <Card title="True Component Reusability" icon="rotate">
+    Traditional component libraries force you to choose between reusability and customization. With Recast, your component primitives are completely theme-agnostic. Write a button once, style it differently in every project.
+  </Card>
+  
+  <Card title="Developer Experience" icon="code">
+    Full TypeScript integration means you get autocomplete for every variant and modifier. No more guessing what props are available or accidentally using invalid combinations.
+  </Card>
+  
+  <Card title="Performance by Default" icon="bolt">
+    Recast includes intelligent caching and memoization strategies that prevent unnecessary re-computations. Your components stay fast even with complex styling logic.
+  </Card>
+  
+  <Card title="Design System Friendly" icon="palette">
+    Whether you're using Tailwind CSS, CSS Modules, or any other styling solution, Recast adapts to your workflow. No vendor lock-in, no predefined design tokens.
+  </Card>
+
+  <Card title="Nested & Complex Component Styling" icon="puzzle">
+    Unlike other similar libraries, Recast lets you style deeply nested, multi-part components with ease. Further enabling true design system flexibility for complex UIs.
+  </Card>
+</CardGroup>
+
+## Core concepts
+
+<CardGroup cols={3}>
+  <Card title="Styles" icon="palette" href="/concepts/styles">
+    Learn how to create reusable style definitions
+  </Card>
+  <Card title="Variants" icon="layer-group" href="/concepts/variants">
+    Create mutually exclusive styling options
+  </Card>
+  <Card title="Modifiers" icon="toggle-on" href="/concepts/modifiers">
+    Add boolean-based conditional styling
+  </Card>
+  <Card title="Composition" icon="puzzle-piece" href="/concepts/composition">
+    Combine multiple style objects together
+  </Card>
+  <Card title="Conditionals" icon="code-branch" href="/concepts/conditional-styling">
+    Apply styles based on specific combinations
+  </Card>
+  <Card title="Nested Styles" icon="sitemap" href="/concepts/nested-styles">
+    Style complex components with multiple parts
+  </Card>
+</CardGroup>
+
+## Community and support
+
+<CardGroup cols={2}>
+  <Card title="GitHub Repository" icon="github" href="https://github.com/reactivepixels/recast">
+    View source code, report issues, and contribute
+  </Card>
+  <Card title="NPM Package" icon="npm" href="https://www.npmjs.com/package/@rpxl/recast">
+    View package details and download statistics
+  </Card>
+</CardGroup>
+
+<Note>
+  Recast is inspired by amazing projects like [CVA](https://cva.style/docs), [Stitches](https://stitches.dev/), and [Tailwind Variants](https://www.tailwind-variants.org/). We're grateful for their contributions to the component styling ecosystem.
+</Note>

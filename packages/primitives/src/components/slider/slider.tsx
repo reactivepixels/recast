@@ -1,15 +1,10 @@
 import { cn } from "../../utils/cn.js";
 import * as RadixSliderPrimitive from "@radix-ui/react-slider";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import React, { forwardRef } from "react";
 
 type Props = React.ComponentPropsWithoutRef<typeof RadixSliderPrimitive.Root> &
-  RecastWithClassNameProps<{
-    root: string;
-    track: string;
-    range: string;
-    thumb: string;
-  }>;
+  RecastClsProps<"root" | "track" | "range" | "thumb">;
 
 const Component = forwardRef<
   React.ElementRef<typeof RadixSliderPrimitive.Root>,

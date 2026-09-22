@@ -1,18 +1,14 @@
 import { cn } from "../../utils/cn.js";
 import * as RadixAccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { RecastWithClassNameProps } from "@rpxl/recast";
+import { RecastClsProps } from "@rpxl/recast";
 import * as React from "react";
 
 type Props = React.ComponentPropsWithoutRef<
   typeof RadixAccordionPrimitive.Trigger
 > & {
   icon: React.ComponentType;
-} & RecastWithClassNameProps<{
-    root: string;
-    trigger: string;
-    icon: string;
-  }>;
+} & RecastClsProps<"root" | "trigger" | "icon">;
 
 const Component = React.forwardRef<
   React.ElementRef<typeof RadixAccordionPrimitive.Trigger>,

@@ -19,7 +19,8 @@ const Component = forwardRef<HTMLButtonElement, Props>(
 
 Component.displayName = "ButtonPrimitive";
 
-export const Button = recast(Component, {
+// Create reusable button styles using the new API
+const buttonStyles = recast.styles({
   defaults: {
     variants: { variant: "primary", size: "md" },
   },
@@ -43,11 +44,6 @@ export const Button = recast(Component, {
      * Controls the visual style of the button
      *
      * @default 'primary'
-     *
-     * @description Possible values:
-     * - `'primary'` - Blue background with white text, used for main actions.
-     * - `'secondary'` - Red background with white text, used for secondary actions.
-     * - `'tertiary'` - Green background with white text, used for tertiary actions.
      */
     variant: {
       primary: "bg-blue-500 text-white",
@@ -58,13 +54,11 @@ export const Button = recast(Component, {
      * Controls the size of the button
      *
      * @default 'md'
-     *
-     * @description Possible values:
-     * - `'sm'` - Small text size
-     * - `'md'` - Medium text size
-     * - `'lg'` - Large text size
      */
     size: {
+      /**
+       * Small text size
+       */
       sm: "text-sm",
       md: "text-md",
       lg: "text-2xl",
@@ -73,9 +67,11 @@ export const Button = recast(Component, {
   modifiers: {
     /**
      * Makes the component interactive with hover effects
-     * @param {boolean} interactive - When true, adds hover and active states
      */
     interactive:
       "hover:scale-105 hover:shadow-md active:scale-100 cursor-pointer",
   },
 });
+
+// Apply styles to the component using the new API
+export const Button = buttonStyles(Component);

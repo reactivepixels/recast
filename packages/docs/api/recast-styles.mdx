@@ -1,0 +1,200 @@
+---
+title: "recast.styles()"
+description: "Create reusable style definitions that can be applied to any React component."
+---
+
+## Syntax
+
+```tsx
+recast.styles(styleConfig)
+```
+
+<ParamField path="styleConfig" type="RecastStyles" required>
+  Configuration object defining the styles, variants, modifiers, and defaults
+</ParamField>
+
+**Returns:** `RecastStylesObject` - A style object that can be applied to components or used to extract class names
+
+## Configuration Properties
+
+<ParamField path="base" type="string | string[] | object">
+  Foundation classes applied to all instances.
+
+  <CodeGroup>
+    ```tsx String Base (Simple)
+    const styles = recast.styles({
+      base: "px-4 py-2 rounded font-medium"
+    })
+    ```
+
+    ```tsx Object Base (Complex)
+    const styles = recast.styles({
+      base: {
+        root: "rounded-lg border bg-white",
+        header: "px-6 py-4 border-b",
+        content: "px-6 py-4"
+      }
+    })
+    ```
+  </CodeGroup>
+</ParamField>
+
+<ParamField path="variants" type="object">
+  Mutually exclusive styling options.
+
+  <CodeGroup>
+    ```tsx
+    variants: {
+      variant: {
+        primary: "bg-blue-500 text-white",
+        secondary: "bg-gray-200 text-gray-900"
+      },
+      size: {
+        sm: "px-3 py-1 text-sm",
+        md: "px-4 py-2",
+        lg: "px-6 py-3 text-lg"
+      }
+    }
+    ```
+  </CodeGroup>
+</ParamField>
+
+<ParamField path="modifiers" type="object">
+  Boolean flags that can be combined.
+
+  <CodeGroup>
+    ```tsx
+    modifiers: {
+      disabled: "opacity-50 cursor-not-allowed",
+      loading: "cursor-wait",
+      fullWidth: "w-full"
+    }
+    ```
+  </CodeGroup>
+</ParamField>
+
+<ParamField path="defaults" type="object">
+  Default values to reduce prop repetition.
+
+  <CodeGroup>
+    ```tsx
+    defaults: {
+      variants: { variant: "primary", size: "md" }
+    }
+    ```
+  </CodeGroup>
+</ParamField>
+
+<ParamField path="conditionals" type="array">
+  Apply styles only when specific conditions are met.
+
+  <CodeGroup>
+    ```tsx
+    conditionals: [
+      {
+        variants: { variant: "primary" },
+        modifiers: ["loading"],
+        className: "bg-blue-400"
+      }
+    ]
+    ```
+  </CodeGroup>
+</ParamField>
+
+## Return Value
+
+The style object provides two main capabilities:
+
+### Component Application
+
+Apply styles to any React component:
+
+<CodeGroup>
+```tsx Apply to Component
+const Button = buttonStyles(ButtonPrimitive)
+const LinkButton = buttonStyles('a')
+```
+
+```tsx Usage
+<Button variant="primary" size="lg" disabled>
+  Styled Button
+</Button>
+```
+</CodeGroup>
+
+### Style Extraction
+
+Extract computed class names for advanced use cases:
+
+<CodeGroup>
+```tsx Extract Classes
+const classes = buttonStyles.extract({ 
+  variant: "primary", 
+  size: "lg" 
+})
+// Returns: "px-4 py-2 rounded ... bg-blue-500 text-white ... px-6 py-3 text-lg"
+```
+</CodeGroup>
+
+## TypeScript Integration
+
+Recast automatically generates TypeScript types:
+
+<CodeGroup>
+```tsx TypeScript Integration
+const buttonStyles = recast.styles({
+  variants: {
+    variant: { primary: "...", secondary: "..." },
+    size: { sm: "...", md: "...", lg: "..." }
+  },
+  modifiers: {
+    disabled: "...",
+    loading: "..."
+  }
+})
+
+const Button = buttonStyles(ButtonPrimitive)
+
+// TypeScript automatically infers:
+type ButtonProps = {
+  variant?: "primary" | "secondary"
+  size?: "sm" | "md" | "lg"
+  disabled?: boolean
+  loading?: boolean
+  className?: string
+  // + all ButtonPrimitive props
+}
+```
+</CodeGroup>
+
+## Performance
+
+<CardGroup cols={2}>
+<Card title="Automatic Memoization" icon="memory">
+  All style computations are cached for fast repeated access
+</Card>
+<Card title="LRU Cache" icon="database">
+  Prevents memory leaks with configurable cache size limits
+</Card>
+</CardGroup>
+
+<Warning>
+**Performance Tip:** Create style objects outside of components to avoid recreation on every render.
+</Warning>
+
+## Best Practices
+
+<CardGroup cols={2}>
+<Card title="Semantic Naming" icon="tag">
+  Use meaningful names like `variant` and `size` rather than generic names
+</Card>
+<Card title="Set Defaults" icon="settings">
+  Define sensible defaults to reduce prop repetition
+</Card>
+<Card title="Single Responsibility" icon="target">
+  Keep each style object focused on one concern
+</Card>
+<Card title="Compose Ready" icon="puzzle-piece">
+  Design styles to work well with `recast.compose()`
+</Card>
+</CardGroup>

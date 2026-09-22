@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { recast } from "@rpxl/recast";
+
+// Enable performance debug mode globally for the sandbox
+recast.configure({
+  performance: {
+    enableMonitoring: true,
+    cacheSize: 1,
+  },
+});
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

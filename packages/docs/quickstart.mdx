@@ -1,0 +1,173 @@
+---
+title: "Quickstart"
+description: "Build your first styled component in 5 minutes"
+---
+
+import { BlueprintCard } from '/snippets/blueprint-card.jsx'
+
+## What we'll build
+
+We'll build a flexible button component with multiple variants and states from scratch.
+
+<Frame>
+  <BlueprintCard>
+    <section className="flex flex-col gap-8">
+      <div className="max-w-xl flex flex-col gap-4">
+        <div className="flex flex-col gap-1 w-min">
+          <div className="w-full flex gap-2 items-center before:flex-1 before:bg-gradient-to-r before:from-transparent before:to-black/25 dark:before:to-white/25 before:h-px after:flex-1 after:bg-gradient-to-r dark:after:from-white/25 after:from-black/25 after:to-transparent after:h-px">
+            <span className="text-xs font-light">Component</span>
+          </div>
+          <h1 className="font-semibold dark:text-white text-black text-4xl text-foreground">Button</h1>
+        </div>
+
+        <p className="font-extralight text-balance tracking-wide leading-snug line-clamp-2 max-w-md">
+          A control that allows the user to click and trigger an action.
+        </p>
+      </div>
+
+      <button type="button" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-900 dark:hover:text-white dark:hover:bg-gray-700">Register</button>
+    </section>
+  </BlueprintCard>
+</Frame>
+
+<Steps>
+<Step title="Create your primitive component">
+Start with a basic, unstyled button component:
+
+```tsx button-primitive.tsx
+import { forwardRef, ButtonHTMLAttributes } from 'react'
+
+type ButtonPrimitiveProps = ButtonHTMLAttributes<HTMLButtonElement>
+
+export const ButtonPrimitive = forwardRef<HTMLButtonElement, ButtonPrimitiveProps>(
+  ({ children, ...props }, ref) => {
+    return (
+      <button ref={ref} {...props}>
+        {children}
+      </button>
+    )
+  }
+)
+```
+</Step>
+
+<Step title="Define your styles">
+Create a style definition using `recast.styles()`:
+
+```tsx button.styles.ts
+import { recast } from '@rpxl/recast'
+
+export const buttonStyles = recast.styles({
+  base: "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  variants: {
+    variant: {
+      default: "bg-blue-600 text-white hover:bg-blue-700",
+      destructive: "bg-red-600 text-white hover:bg-red-700",
+      outline: "border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900",
+      secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
+      ghost: "hover:bg-gray-100 hover:text-gray-900",
+      link: "text-blue-600 underline-offset-4 hover:underline"
+    },
+    size: {
+      default: "h-10 px-4 py-2",
+      sm: "h-9 rounded-md px-3",
+      lg: "h-11 rounded-md px-8",
+      icon: "h-10 w-10"
+    }
+  },
+  modifiers: {
+    disabled: "opacity-50 cursor-not-allowed",
+    loading: "cursor-wait",
+    fullWidth: "w-full"
+  },
+  defaults: {
+    variants: { variant: "default", size: "default" }
+  }
+})
+```
+</Step>
+
+<Step title="Create your styled component">
+Apply the styles to your primitive:
+
+```tsx button.tsx
+import { buttonStyles } from './button.styles'
+import { ButtonPrimitive } from './button-primitive'
+
+export const Button = buttonStyles(ButtonPrimitive)
+```
+</Step>
+
+<Step title="Use your component">
+Now you can use your button with full TypeScript support:
+
+<CodeGroup>
+```tsx Basic Usage
+<Button>Default Button</Button>
+<Button variant="secondary">Secondary</Button>
+<Button size="lg">Large Button</Button>
+```
+
+```tsx With Modifiers
+<Button disabled>Disabled</Button>
+<Button loading>Loading...</Button>
+<Button fullWidth>Full Width</Button>
+```
+
+```tsx Combined
+<Button variant="secondary" size="lg" fullWidth>
+  Large Secondary Full-Width Button
+</Button>
+```
+</CodeGroup>
+</Step>
+</Steps>
+
+## Advanced: Adding conditional styles
+
+For more complex styling logic, use conditionals:
+
+```tsx Advanced Button
+const advancedButtonStyles = recast.styles({
+  base: "...",
+  variants: { /* ... */ },
+  modifiers: { /* ... */ },
+  
+  conditionals: [
+    {
+      variants: { variant: "default" },
+      modifiers: ["loading"],
+      className: "bg-primary/70" // Lighter primary when default + loading
+    }
+  ]
+})
+```
+
+## Advanced: Style extraction
+
+Extract computed styles for use with other libraries:
+
+<CodeGroup>
+```tsx Style Extraction
+// Get computed class names
+const defaultButtonClasses = buttonStyles.extract({ 
+  variant: "default", 
+  size: "lg" 
+})
+// Result: "inline-flex items-center ... bg-primary text-primary-foreground ... h-11 px-8"
+```
+
+```tsx With External Libraries
+// Use with Framer Motion
+<motion.button 
+  className={buttonStyles.extract({ variant: "default" })}
+  whileHover={{ scale: 1.05 }}
+>
+  Animated Button
+</motion.button>
+```
+</CodeGroup>
+
+<Check>
+**You're ready!** You now have a fully functional, type-safe, performant button component. Apply these same patterns to build any component in your design system.
+</Check>
